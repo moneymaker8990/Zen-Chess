@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large data files (optional - uncomment if you want to exclude these)
+# pgnmentor-downloads/
+# pgnmentor-pgns/
+*.zip
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Android/iOS build artifacts
+zen-and-the-art-of-chess/android/app/build/
+zen-and-the-art-of-chess/android/.gradle/
+zen-and-the-art-of-chess/android/capacitor-cordova-android-plugins/
+zen-and-the-art-of-chess/ios/App/Pods/
+*.apk
+*.aab
+*.ipa
+
+# Capacitor auto-generated
+zen-and-the-art-of-chess/android/app/src/main/assets/public/
+zen-and-the-art-of-chess/ios/App/App/public/
+

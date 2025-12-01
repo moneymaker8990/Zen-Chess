@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Zen Chess</string>
+    <string name="title_activity_main">Zen Chess</string>
+    <string name="package_name">com.zenchess.app</string>
+    <string name="custom_url_scheme">com.zenchess.app</string>
+</resources>

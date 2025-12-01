@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Zen Chess PWA Icons</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #1a1a1a;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+    canvas {
+      display: block;
+      margin: 20px auto;
+      border: 2px solid #333;
+    }
+    button {
+      background: #a855f7;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:hover {
+      background: #9333ea;
+    }
+    h1 { color: #fbbf24; }
+    .instructions {
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: left;
+      background: #262626;
+      padding: 20px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>♔ Zen Chess Icon Generator</h1>
+  <p>Click the buttons below to download your PWA icons</p>
+  
+  <h3>192x192 Icon</h3>
+  <canvas id="canvas192" width="192" height="192"></canvas>
+  <button onclick="download('canvas192', 'pwa-192x192.png')">Download 192x192</button>
+  
+  <h3>512x512 Icon</h3>
+  <canvas id="canvas512" width="512" height="512"></canvas>
+  <button onclick="download('canvas512', 'pwa-512x512.png')">Download 512x512</button>
+
+  <div class="instructions">
+    <h3>Instructions:</h3>
+    <ol>
+      <li>Click both download buttons above</li>
+      <li>Move the downloaded files to your <code>public/</code> folder</li>
+      <li>Run <code>npm run build</code> to rebuild</li>
+      <li>Deploy to Vercel!</li>
+    </ol>
+  </div>
+
+  <script>
+    function drawIcon(canvas) {
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const center = size / 2;
+      
+      // Background
+      ctx.fillStyle = '#161512';
+      ctx.fillRect(0, 0, size, size);
+      
+      // Outer circle
+      ctx.beginPath();
+      ctx.arc(center, center, size * 0.45, 0, Math.PI * 2);
+      ctx.strokeStyle = '#a855f7';
+      ctx.lineWidth = size * 0.03;
+      ctx.stroke();
+      
+      // Inner decorative circle
+      ctx.beginPath();
+      ctx.arc(center, center, size * 0.38, 0, Math.PI * 2);
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = size * 0.005;
+      ctx.setLineDash([size * 0.02, size * 0.02]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Gradient for king
+      const gradient = ctx.createLinearGradient(
+        center - size * 0.2, center - size * 0.2,
+        center + size * 0.2, center + size * 0.2
+      );
+      gradient.addColorStop(0, '#fbbf24');
+      gradient.addColorStop(1, '#d97706');
+      
+      // King symbol
+      ctx.font = `${size * 0.4}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = gradient;
+      ctx.fillText('♔', center, center + size * 0.02);
+    }
+    
+    function download(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+    
+    // Draw icons on load
+    drawIcon(document.getElementById('canvas192'));
+    drawIcon(document.getElementById('canvas512'));
+  </script>
+</body>
+</html>
+
