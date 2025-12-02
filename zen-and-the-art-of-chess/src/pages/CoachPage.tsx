@@ -14,6 +14,11 @@ import {
   useRefreshRecommendations,
   useProfileConfidence,
 } from '@/state/coachStore';
+import { 
+  useAgentMessages, 
+  useAgentStore 
+} from '@/lib/agents/agentOrchestrator';
+import { AGENT_PERSONALITIES } from '@/lib/agents/agentTypes';
 import type { ActionType, SessionMood } from '@/lib/coachTypes';
 
 // ============================================
@@ -163,7 +168,12 @@ export function CoachPage() {
   const { getInsight, getDailyPlan } = useCoachStore();
   const state = useCoachStore((s) => s.state);
   
+  // Agent messages
+  const agentMessages = useAgentMessages();
+  const { markActedOn, dismissMessage } = useAgentStore();
+  
   const [isTyping, setIsTyping] = useState(true);
+  const [showAgentPanel, setShowAgentPanel] = useState(false);
   
   // Calculate session time
   const sessionMinutes = (Date.now() - state.sessionStartTime) / 60000;
@@ -321,6 +331,126 @@ export function CoachPage() {
             {insights.strongPhase && (
               <InsightPill text={insights.strongPhase} />
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Agent Messages Panel */}
+      {!isTyping && agentMessages.length > 0 && (
+        <div className="mt-8 space-y-4">
+          <button
+            onClick={() => setShowAgentPanel(!showAgentPanel)}
+            className="flex items-center justify-between w-full"
+          >
+            <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+              🤖 Agent Messages ({agentMessages.length})
+            </p>
+            <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
+              {showAgentPanel ? '▲' : '▼'}
+            </span>
+          </button>
+          
+          {showAgentPanel && (
+            <div className="space-y-3">
+              {agentMessages.map((msg) => {
+                const personality = AGENT_PERSONALITIES[msg.agentId];
+                return (
+                  <div
+                    key={msg.id}
+                    className="p-4 rounded-xl"
+                    style={{ 
+                      background: `${personality.color}10`,
+                      border: `1px solid ${personality.color}30`,
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0"
+                        style={{ background: `${personality.color}30` }}
+                      >
+                        {personality.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium text-sm" style={{ color: personality.color }}>
+                            {personality.name}
+                          </span>
+                          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                            {msg.category}
+                          </span>
+                        </div>
+                        <p className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+                          {msg.title}
+                        </p>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                          {msg.body}
+                        </p>
+                        {msg.primaryAction && (
+                          <button
+                            onClick={() => {
+                              markActedOn(msg.id);
+                              if (msg.primaryAction?.route) {
+                                navigate(msg.primaryAction.route);
+                              }
+                            }}
+                            className="mt-3 px-4 py-2 rounded-lg text-sm font-medium transition-all hover:scale-[1.02]"
+                            style={{ 
+                              background: personality.color,
+                              color: 'white',
+                            }}
+                          >
+                            {msg.primaryAction.label}
+                          </button>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => dismissMessage(msg.id)}
+                        className="p-1 rounded hover:bg-white/10 shrink-0"
+                        style={{ color: 'var(--text-muted)' }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Meet Your Agents */}
+      {!isTyping && (
+        <div className="mt-8 space-y-4">
+          <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+            Your AI Coaching Team
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            {Object.values(AGENT_PERSONALITIES).slice(0, 6).map((agent) => (
+              <div
+                key={agent.id}
+                className="p-3 rounded-xl flex items-center gap-3"
+                style={{ 
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-subtle)',
+                }}
+              >
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0"
+                  style={{ background: `${agent.color}20` }}
+                >
+                  {agent.icon}
+                </div>
+                <div className="min-w-0">
+                  <div className="font-medium text-sm truncate" style={{ color: 'var(--text-primary)' }}>
+                    {agent.name}
+                  </div>
+                  <div className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
+                    {agent.voiceTone}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

@@ -11,6 +11,7 @@ import { useCoachStore } from '@/state/coachStore';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { createSimpleGameMetrics } from '@/lib/coachTypes';
 import { stockfish } from '@/engine/stockfish';
+import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
 import type { GameMode, EngineEvaluation } from '@/lib/types';
 import type { Square } from 'chess.js';
 
@@ -43,6 +44,7 @@ export function PlayPage() {
   const { progress } = useProgressStore();
   const { recordEvent, recordGame } = useCoachStore();
   const boardStyles = useBoardStyles();
+  const triggerAgent = useAgentTrigger();
 
   // Tilt detection system (gentle awareness)
   const {
@@ -60,8 +62,10 @@ export function PlayPage() {
   useEffect(() => {
     if (tiltState.interventionRequired && tiltState.interventionType !== 'NONE') {
       setShowIntervention(true);
+      // Fire agent trigger for tilt
+      triggerAgent({ type: 'TILT_DETECTED', severity: tiltState.score });
     }
-  }, [tiltState.interventionRequired, tiltState.interventionType]);
+  }, [tiltState.interventionRequired, tiltState.interventionType, tiltState.score, triggerAgent]);
 
   // Initialize engine
   useEffect(() => {
@@ -169,8 +173,38 @@ export function PlayPage() {
       
       recordGame(metrics);
       recordEvent('GAME_END', { result, mode: 'vs_engine' });
+      
+      // Fire agent triggers for game result
+      triggerAgent({ type: 'GAME_END', result, accuracy });
+      
+      // Check for losing streak
+      const recentGames = JSON.parse(localStorage.getItem('zen-chess-coach') || '{}')?.state?.state?.recentGames || [];
+      const consecutiveLosses = recentGames.filter((g: any, i: number) => {
+        if (i >= 3) return false;
+        return g.result === 'LOSS';
+      }).length;
+      
+      if (result === 'loss' && consecutiveLosses >= 2) {
+        triggerAgent({ type: 'LOSING_STREAK', count: consecutiveLosses + 1 });
+      }
+      if (result === 'win') {
+        const consecutiveWins = recentGames.filter((g: any, i: number) => {
+          if (i >= 5) return false;
+          return g.result === 'WIN';
+        }).length;
+        if (consecutiveWins >= 2) {
+          triggerAgent({ type: 'WINNING_STREAK', count: consecutiveWins + 1 });
+        }
+      }
+      
+      // Check for low accuracy
+      if (accuracy < 50) {
+        triggerAgent({ type: 'ACCURACY_LOW', accuracy });
+      } else if (accuracy > 85) {
+        triggerAgent({ type: 'ACCURACY_HIGH', accuracy });
+      }
     }
-  }, [game, selectedMode, orientation, moveHistory.length, recordGame, recordEvent]);
+  }, [game, selectedMode, orientation, moveHistory.length, recordGame, recordEvent, triggerAgent]);
 
   // Get possible moves for a square
   const getMoveOptions = useCallback((square: Square) => {

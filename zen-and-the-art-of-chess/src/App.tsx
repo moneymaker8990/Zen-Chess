@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Layout } from '@/components/Layout';
 import { PageTransition } from '@/components/PageTransition';
+import { AgentToastContainer } from '@/components/AgentPanel';
+import { initializeAgents } from '@/lib/agents/agentOrchestrator';
 import { HomePage } from '@/pages/HomePage';
 import { DayPage } from '@/pages/DayPage';
 import { PlayPage } from '@/pages/PlayPage';
@@ -95,15 +97,18 @@ function AnimatedRoutes() {
 function App() {
   const { updateStreak } = useProgressStore();
 
-  // Initialize coach and update streak on app load
+  // Initialize coach, agents, and update streak on app load
   useEffect(() => {
     updateStreak();
     initializeCoach();
+    initializeAgents();
   }, [updateStreak]);
 
   return (
     <Layout>
       <AnimatedRoutes />
+      {/* Floating agent notifications */}
+      <AgentToastContainer />
     </Layout>
   );
 }

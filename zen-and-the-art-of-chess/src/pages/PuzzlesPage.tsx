@@ -4,6 +4,7 @@ import { Chess, Square } from 'chess.js';
 import { puzzles } from '@/data/puzzles';
 import { useCoachStore } from '@/state/coachStore';
 import { useBoardSettingsStore, useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
+import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
 import { MOVE_HINT_STYLES } from '@/lib/constants';
 import type { MoveHintStyle } from '@/lib/constants';
 import type { ChessPuzzle, PatternType } from '@/lib/types';
@@ -115,7 +116,9 @@ function getDailyPuzzle(): ChessPuzzle {
 export function PuzzlesPage() {
   // Coach integration
   const { recordEvent, recordPuzzle } = useCoachStore();
+  const triggerAgent = useAgentTrigger();
   const puzzleStartTime = useRef<number>(Date.now());
+  const puzzleStreakRef = useRef<number>(0);
   
   // Navigation State
   const [mode, setMode] = useState<PuzzleMode>('menu');
@@ -347,6 +350,15 @@ export function PuzzlesPage() {
       themes: currentPuzzle.themes 
     });
     
+    // Track puzzle streak for agents
+    puzzleStreakRef.current += 1;
+    triggerAgent({ type: 'PUZZLE_COMPLETE', solved: true, time: timeSeconds });
+    
+    // Notify agents of puzzle streaks
+    if (puzzleStreakRef.current === 5 || puzzleStreakRef.current === 10) {
+      triggerAgent({ type: 'PUZZLE_STREAK', count: puzzleStreakRef.current });
+    }
+    
     setStats(prev => {
       const newStreak = prev.currentStreak + 1;
       const newRating = Math.max(100, prev.rating + ratingChange);
@@ -427,6 +439,10 @@ export function PuzzlesPage() {
         timeSeconds, 
         themes: currentPuzzle.themes 
       });
+      
+      // Reset puzzle streak and notify agents
+      puzzleStreakRef.current = 0;
+      triggerAgent({ type: 'PUZZLE_COMPLETE', solved: false, time: timeSeconds });
       
       // Only penalize stats in competitive modes (rush/streak)
       // For rated/daily/custom, just track for analytics but don't penalize retries

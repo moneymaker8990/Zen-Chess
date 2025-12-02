@@ -1,6 +1,8 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useProgressStore } from '@/state/useStore';
+import { AgentNotificationCenter } from '@/components/AgentPanel';
+import { useAgentStore } from '@/lib/agents/agentOrchestrator';
 
 interface LayoutProps {
   children: ReactNode;
@@ -179,6 +181,12 @@ export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const { progress } = useProgressStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const setCurrentPage = useAgentStore((s) => s.setCurrentPage);
+
+  // Track page changes for agents
+  useEffect(() => {
+    setCurrentPage(location.pathname);
+  }, [location.pathname, setCurrentPage]);
 
   const isFullscreen = location.pathname.includes('/calm-play');
 
@@ -244,19 +252,20 @@ export function Layout({ children }: LayoutProps) {
 
         {/* Bottom section */}
         <div className="p-4 space-y-3" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-          {/* Streak display */}
-          <div className="card p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ background: 'rgba(251, 191, 36, 0.15)' }}>
-                <span className="text-amber-400">{Icons.fire}</span>
-              </div>
-              <div>
-                <div className="text-2xl font-display font-semibold" style={{ color: 'var(--accent-gold)' }}>
-                  {progress.streakDays}
-                </div>
-                <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Day Streak</div>
-              </div>
+          {/* Agent Notification + Streak Row */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AgentNotificationCenter />
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Agents</span>
+            </div>
+            
+            {/* Streak display */}
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full"
+              style={{ background: 'rgba(251, 191, 36, 0.15)' }}>
+              <span className="text-amber-400">{Icons.fire}</span>
+              <span className="font-medium" style={{ color: 'var(--accent-gold)' }}>
+                {progress.streakDays}
+              </span>
             </div>
           </div>
 
@@ -352,7 +361,11 @@ export function Layout({ children }: LayoutProps) {
             </span>
           </NavLink>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Agent Notification Center */}
+            <AgentNotificationCenter />
+            
+            {/* Streak */}
             <div className="flex items-center gap-1 px-2 py-1 rounded-full"
               style={{ background: 'rgba(251, 191, 36, 0.15)' }}>
               <span className="text-amber-400 text-sm">{Icons.fire}</span>
