@@ -24,6 +24,7 @@ import {
   AgentInsightsSummary,
   RecentAgentActivity,
 } from '@/components/AgentDashboard';
+import { ChatInterface } from '@/components/AICoach';
 import type { ActionType, SessionMood } from '@/lib/coachTypes';
 
 // ============================================
@@ -179,6 +180,7 @@ export function CoachPage() {
   
   const [isTyping, setIsTyping] = useState(true);
   const [showAgentPanel, setShowAgentPanel] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
   
   // Calculate session time
   const sessionMinutes = (Date.now() - state.sessionStartTime) / 60000;
@@ -285,6 +287,40 @@ export function CoachPage() {
           <MiniStat label="Games" value={stats.gamesPlayed} subvalue={`${stats.wins}W/${stats.losses}L`} />
           <MiniStat label="Puzzles" value={stats.puzzlesSolved} />
           <MiniStat label="Mindful" value={`${stats.meditationMinutes}m`} />
+        </div>
+      )}
+
+      {/* AI Coach Chat Toggle */}
+      {!isTyping && (
+        <div className="mb-6">
+          <button
+            onClick={() => setShowAIChat(!showAIChat)}
+            className="w-full p-4 rounded-xl font-medium transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+            style={{ 
+              background: showAIChat 
+                ? 'linear-gradient(135deg, #10b981, #059669)' 
+                : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+              color: 'white',
+            }}
+          >
+            <span className="text-xl">🧘</span>
+            {showAIChat ? 'Hide AI Coach Chat' : '✨ Talk to AI Coach (Powered by Claude)'}
+          </button>
+        </div>
+      )}
+
+      {/* AI Coach Chat Interface */}
+      {!isTyping && showAIChat && (
+        <div className="mb-8" style={{ height: '500px' }}>
+          <ChatInterface 
+            initialAgent="coach"
+            showAgentSelector={true}
+            context={{
+              rating: 1200,
+              currentStreak: stats.puzzlesSolved,
+              tiltLevel: tiltRisk ? 70 : 20,
+            }}
+          />
         </div>
       )}
 

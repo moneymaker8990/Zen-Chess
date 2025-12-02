@@ -45,7 +45,10 @@ import { SpacedRepetitionPage } from '@/pages/SpacedRepetitionPage';
 import { BlindfoldTrainerPage } from '@/pages/BlindfoldTrainerPage';
 import { IntuitionTrainerPage } from '@/pages/IntuitionTrainerPage';
 import { WeaknessDetectorPage } from '@/pages/WeaknessDetectorPage';
+import { PricingPage } from '@/pages/PricingPage';
+import { AuthPage } from '@/pages/AuthPage';
 import { useProgressStore } from '@/state/useStore';
+import { useAuthStore } from '@/state/useAuthStore';
 import { initializeCoach } from '@/state/coachStore';
 
 // Wrapper component that adds page transitions to routes
@@ -96,6 +99,10 @@ function AnimatedRoutes() {
         <Route path="/blindfold" element={<PageTransition><BlindfoldTrainerPage /></PageTransition>} />
         <Route path="/intuition" element={<PageTransition><IntuitionTrainerPage /></PageTransition>} />
         <Route path="/weakness-detector" element={<PageTransition><WeaknessDetectorPage /></PageTransition>} />
+        
+        {/* Auth & Monetization */}
+        <Route path="/pricing" element={<PageTransition><PricingPage /></PageTransition>} />
+        <Route path="/auth" element={<PageTransition><AuthPage /></PageTransition>} />
       </Routes>
     </AnimatePresence>
   );
@@ -125,13 +132,15 @@ function AppContent() {
 
 function App() {
   const { updateStreak } = useProgressStore();
+  const { initialize: initializeAuth } = useAuthStore();
 
-  // Initialize coach, agents, and update streak on app load
+  // Initialize coach, agents, auth and update streak on app load
   useEffect(() => {
     updateStreak();
     initializeCoach();
     initializeAgents();
-  }, [updateStreak]);
+    initializeAuth();
+  }, [updateStreak, initializeAuth]);
 
   return (
     <ErrorBoundary>

@@ -1,0 +1,96 @@
+{
+  "weeklySchedule": {
+    "sunday": {
+      "contentType": "chess_tip",
+      "theme": "Weekly wisdom to start the week",
+      "bestPostTime": ["9:00", "19:00"]
+    },
+    "monday": {
+      "contentType": "tilt_guardian",
+      "theme": "Combat Monday tilt",
+      "bestPostTime": ["12:00", "20:00"]
+    },
+    "tuesday": {
+      "contentType": "mindfulness",
+      "theme": "Mindset Tuesday",
+      "bestPostTime": ["9:00", "19:00"]
+    },
+    "wednesday": {
+      "contentType": "puzzle_challenge",
+      "theme": "Workout Wednesday",
+      "bestPostTime": ["12:00", "18:00"]
+    },
+    "thursday": {
+      "contentType": "legend_feature",
+      "theme": "Throwback Thursday (legends)",
+      "bestPostTime": ["9:00", "20:00"]
+    },
+    "friday": {
+      "contentType": "rating_improvement",
+      "theme": "Friday motivation",
+      "bestPostTime": ["17:00", "21:00"]
+    },
+    "saturday": {
+      "contentType": "beginner_mistake",
+      "theme": "Saturday learning",
+      "bestPostTime": ["10:00", "20:00"]
+    }
+  },
+  "platforms": {
+    "tiktok": {
+      "optimalLength": "30-60 seconds",
+      "aspectRatio": "9:16",
+      "resolution": "1080x1920",
+      "bestTimes": ["9:00", "12:00", "19:00", "22:00"],
+      "hashtagLimit": 5,
+      "tips": [
+        "Use trending sounds",
+        "Hook in first 1-2 seconds",
+        "Add captions (80% watch muted)",
+        "Engage in first hour of posting"
+      ]
+    },
+    "instagram_reels": {
+      "optimalLength": "30-90 seconds",
+      "aspectRatio": "9:16",
+      "resolution": "1080x1920",
+      "bestTimes": ["11:00", "13:00", "19:00"],
+      "hashtagLimit": 30,
+      "tips": [
+        "Share to stories",
+        "Use location tags",
+        "Engage with comments",
+        "Cross-promote to feed"
+      ]
+    },
+    "youtube_shorts": {
+      "optimalLength": "30-60 seconds",
+      "aspectRatio": "9:16",
+      "resolution": "1080x1920",
+      "bestTimes": ["12:00", "15:00", "18:00"],
+      "hashtagLimit": 3,
+      "tips": [
+        "Optimize title for search",
+        "Add end screen",
+        "Include channel CTA",
+        "Create playlists"
+      ]
+    }
+  },
+  "monthlyThemes": {
+    "january": "New Year, New Rating - Goal Setting",
+    "february": "Love Your Chess Journey",
+    "march": "March Madness - Rapid Improvement",
+    "april": "Spring Cleaning Your Chess",
+    "may": "Mental Game Month",
+    "june": "Summer Study Series",
+    "july": "Legends of Chess",
+    "august": "Back to Basics",
+    "september": "Fall Into Focus",
+    "october": "Spooky Blunders",
+    "november": "Gratitude for Growth",
+    "december": "Year in Review"
+  }
+}
+
+

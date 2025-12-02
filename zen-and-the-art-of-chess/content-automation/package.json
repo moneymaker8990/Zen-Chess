@@ -1,0 +1,30 @@
+{
+  "name": "zen-chess-content-automation",
+  "version": "1.0.0",
+  "description": "AI-powered content automation for Zen Chess social media marketing",
+  "type": "module",
+  "scripts": {
+    "generate:script": "tsx scripts/generateScript.ts",
+    "generate:voice": "tsx scripts/generateVoice.ts",
+    "generate:images": "tsx scripts/generateImages.ts",
+    "daily": "tsx scripts/dailyContent.ts",
+    "schedule": "tsx scripts/scheduler.ts",
+    "batch": "tsx scripts/batchGenerate.ts",
+    "test": "tsx scripts/testSetup.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.3",
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0",
+    "@types/node": "^20.10.0",
+    "@types/node-cron": "^3.0.11"
+  }
+}
+
+

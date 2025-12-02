@@ -1,0 +1,61 @@
+{
+  "hooks": {
+    "controversial": [
+      "Most chess advice is completely wrong...",
+      "Stop solving puzzles. Seriously.",
+      "Your rating doesn't matter. Here's what does.",
+      "Chess coaches don't want you to know this...",
+      "I'm about to say something controversial..."
+    ],
+    "curiosity": [
+      "I didn't believe this until I tried it...",
+      "There's a reason GMs do this before every game...",
+      "This one thing changed my entire approach to chess...",
+      "What if I told you losing is actually good?",
+      "The secret no one talks about in chess..."
+    ],
+    "relatable": [
+      "Every chess player has done this at 2am...",
+      "POV: You just lost 100 rating points in one session",
+      "That feeling when you blunder a winning game...",
+      "We need to talk about chess tilt.",
+      "If you've ever rage-quit a chess game, this is for you."
+    ],
+    "challenge": [
+      "You're losing games you should win because...",
+      "Can you find the winning move? Most can't.",
+      "95% of players miss this pattern.",
+      "Rate yourself: Do you do this?",
+      "Only 1% of players know this trick."
+    ],
+    "story": [
+      "I was stuck at 1200 for two years. Then this happened...",
+      "My coach said something that changed everything...",
+      "The game that made me quit chess... and come back stronger.",
+      "What Magnus Carlsen does that you don't...",
+      "A grandmaster told me the real secret to improving..."
+    ]
+  },
+  "ctas": {
+    "soft": [
+      "Try it in your next game.",
+      "Let me know if this helps.",
+      "Comment your experience below.",
+      "Share this with someone who needs it."
+    ],
+    "medium": [
+      "Link in bio if you want to try it yourself.",
+      "I made an app that helps with this - link in bio.",
+      "Follow for more chess mindset tips.",
+      "Save this for your next session."
+    ],
+    "direct": [
+      "Download Zen Chess - link in bio.",
+      "The Tilt Guardian is waiting for you - link in bio.",
+      "Start your 365-day journey today.",
+      "Join thousands of mindful chess players."
+    ]
+  }
+}
+
+

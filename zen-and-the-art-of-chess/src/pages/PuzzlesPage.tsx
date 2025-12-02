@@ -133,6 +133,8 @@ export function PuzzlesPage() {
   const [moveIndex, setMoveIndex] = useState(0);
   const [feedback, setFeedback] = useState<'correct' | 'incorrect' | 'complete' | null>(null);
   const [showHint, setShowHint] = useState(false);
+  const [hintLevel, setHintLevel] = useState<0 | 1 | 2>(0); // 0=none, 1=highlight piece, 2=show full move
+  const [hintSquares, setHintSquares] = useState<{ from?: Square; to?: Square }>({});
   
   // Rush Mode State
   const [rushTimer, setRushTimer] = useState(180); // 3 minutes
@@ -248,6 +250,8 @@ export function PuzzlesPage() {
     setOptionSquares({});
     setFeedback(null);
     setShowHint(false);
+    setHintLevel(0);
+    setHintSquares({});
     
     // If puzzle has setup move data, animate the opponent's last move
     if (puzzle.beforeFen && puzzle.setupMove) {
@@ -577,6 +581,9 @@ export function PuzzlesPage() {
                 setLastMove({ from: response.from as Square, to: response.to as Square });
                 setMoveIndex(moveIndex + 2);
                 setFeedback(null);
+                // Reset hints for the next move
+                setHintLevel(0);
+                setHintSquares({});
               }
             }
           }, 500);
@@ -639,6 +646,63 @@ export function PuzzlesPage() {
     }
   }, [mode, selectRatedPuzzle, filteredPuzzles, startPuzzle]);
 
+  // Get hint squares from the expected move
+  const getHintFromMove = useCallback((moveNotation: string): { from?: Square; to?: Square } => {
+    if (!currentPuzzle) return {};
+    
+    // Try to parse the move using chess.js
+    const tempGame = new Chess(game.fen());
+    try {
+      const move = tempGame.move(moveNotation);
+      if (move) {
+        return { from: move.from as Square, to: move.to as Square };
+      }
+    } catch {
+      // If notation parsing fails, try if it's already in "e2e4" format
+      if (moveNotation.length >= 4) {
+        const from = moveNotation.slice(0, 2) as Square;
+        const to = moveNotation.slice(2, 4) as Square;
+        return { from, to };
+      }
+    }
+    return {};
+  }, [game, currentPuzzle]);
+
+  // Handle hint button - progressive hints
+  const handleHint = useCallback(() => {
+    if (!currentPuzzle || feedback === 'complete') return;
+    
+    const expectedMove = currentPuzzle.solution[moveIndex];
+    if (!expectedMove) return;
+    
+    const squares = getHintFromMove(expectedMove);
+    
+    if (hintLevel === 0) {
+      // Level 1: Highlight the piece that should move
+      setHintLevel(1);
+      setShowHint(true);
+      setHintSquares({ from: squares.from });
+    } else if (hintLevel === 1) {
+      // Level 2: Show the full move (from and to squares)
+      setHintLevel(2);
+      setHintSquares(squares);
+    }
+  }, [currentPuzzle, moveIndex, feedback, hintLevel, getHintFromMove]);
+
+  // Auto-play the correct move (for "Show Move" button)
+  const showCorrectMove = useCallback(() => {
+    if (!currentPuzzle || feedback === 'complete') return;
+    
+    const expectedMove = currentPuzzle.solution[moveIndex];
+    if (!expectedMove) return;
+    
+    const squares = getHintFromMove(expectedMove);
+    if (squares.from && squares.to) {
+      // Make the move automatically
+      handleMove(squares.from, squares.to);
+    }
+  }, [currentPuzzle, moveIndex, feedback, getHintFromMove, handleMove]);
+
   // Custom square styles
   const customSquareStyles = useMemo(() => ({
     ...optionSquares,
@@ -653,7 +717,21 @@ export function PuzzlesPage() {
     ...(showIncorrectShake && lastMove && {
       [lastMove.to]: { backgroundColor: 'rgba(239, 68, 68, 0.4)' },
     }),
-  }), [optionSquares, lastMove, feedback, showIncorrectShake]);
+    // Hint highlights - pulsing yellow/gold for the piece to move
+    ...(hintSquares.from && {
+      [hintSquares.from]: { 
+        backgroundColor: 'rgba(251, 191, 36, 0.5)',
+        boxShadow: 'inset 0 0 0 3px rgba(251, 191, 36, 0.8)',
+      },
+    }),
+    // Hint for destination square (level 2)
+    ...(hintSquares.to && hintLevel >= 2 && {
+      [hintSquares.to]: { 
+        backgroundColor: 'rgba(74, 222, 128, 0.4)',
+        boxShadow: 'inset 0 0 0 3px rgba(74, 222, 128, 0.8)',
+      },
+    }),
+  }), [optionSquares, lastMove, feedback, showIncorrectShake, hintSquares, hintLevel]);
 
   const boardOrientation = currentPuzzle 
     ? (currentPuzzle.fen.includes(' w ') ? 'white' : 'black')
@@ -1250,13 +1328,28 @@ export function PuzzlesPage() {
               
               {/* Controls */}
               <div className="flex gap-3">
-                <button
-                  onClick={() => setShowHint(true)}
-                  disabled={showHint || feedback === 'complete'}
-                  className="btn-secondary flex-1"
-                >
-                  💡 Hint
-                </button>
+                {hintLevel < 2 ? (
+                  <button
+                    onClick={handleHint}
+                    disabled={feedback === 'complete'}
+                    className="btn-secondary flex-1"
+                  >
+                    💡 {hintLevel === 0 ? 'Hint' : 'More Hint'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={showCorrectMove}
+                    disabled={feedback === 'complete'}
+                    className="flex-1 py-2 px-4 rounded-lg font-medium transition-all hover:scale-[1.02]"
+                    style={{ 
+                      background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.3), rgba(34, 197, 94, 0.2))',
+                      border: '1px solid rgba(74, 222, 128, 0.5)',
+                      color: '#4ade80',
+                    }}
+                  >
+                    ▶️ Show Move
+                  </button>
+                )}
                 <button 
                   onClick={() => startPuzzle(currentPuzzle)} 
                   className="btn-ghost flex-1"
@@ -1313,12 +1406,29 @@ export function PuzzlesPage() {
                   ))}
                 </div>
 
-                {/* Hint */}
-                {showHint && (
-                  <div className="p-3 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
-                    <p className="text-sm" style={{ color: '#f59e0b' }}>
-                      💡 {currentPuzzle.explanation?.split('.')[0] || 'Look for tactical opportunities!'}
-                    </p>
+                {/* Hint - Progressive hints */}
+                {hintLevel >= 1 && (
+                  <div className="p-3 rounded-lg space-y-2" style={{ background: 'var(--bg-elevated)' }}>
+                    {hintLevel === 1 && (
+                      <p className="text-sm" style={{ color: '#fbbf24' }}>
+                        💡 <span className="font-medium">The highlighted piece should move.</span>
+                        {currentPuzzle.explanation && (
+                          <span className="block mt-1 opacity-80">
+                            {currentPuzzle.explanation.split('.')[0]}
+                          </span>
+                        )}
+                      </p>
+                    )}
+                    {hintLevel >= 2 && (
+                      <p className="text-sm" style={{ color: '#4ade80' }}>
+                        ✨ <span className="font-medium">Move from the yellow square to the green square.</span>
+                        {currentPuzzle.explanation && (
+                          <span className="block mt-1 opacity-80">
+                            {currentPuzzle.explanation}
+                          </span>
+                        )}
+                      </p>
+                    )}
                   </div>
                 )}
               </div>

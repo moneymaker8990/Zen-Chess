@@ -163,3 +163,4 @@ export type Profile = Database['public']['Tables']['profiles']['Row'];
 export type UserProgress = Database['public']['Tables']['user_progress']['Row'];
 export type Subscription = Database['public']['Tables']['subscriptions']['Row'];
 
+

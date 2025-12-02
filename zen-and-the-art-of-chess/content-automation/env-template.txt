@@ -1,0 +1,34 @@
+# =============================================
+# ZEN CHESS CONTENT AUTOMATION - API KEYS
+# =============================================
+# Rename this file to .env and fill in your keys
+# NEVER commit the .env file to git!
+# =============================================
+
+# Anthropic (Claude) - For AI script generation
+# Get your key at: https://console.anthropic.com/
+ANTHROPIC_API_KEY=sk-ant-api03-xxxxxxxxxxxxx
+
+# ElevenLabs - For voice generation
+# Get your key at: https://elevenlabs.io/ -> Profile -> API Key
+ELEVENLABS_API_KEY=xxxxxxxxxxxxx
+
+# ElevenLabs Voice ID - Your cloned voice
+# Find this in: Voice Lab -> Your Voice -> Voice ID
+ELEVENLABS_VOICE_ID=xxxxxxxxxxxxx
+
+# Leonardo.AI - For image generation
+# Get your key at: https://leonardo.ai/ -> Settings -> API
+LEONARDO_API_KEY=xxxxxxxxxxxxx
+
+# =============================================
+# OPTIONAL - For auto-posting (advanced)
+# =============================================
+
+# TikTok Session ID (for automated posting)
+# TIKTOK_SESSION_ID=xxxxxxxxxxxxx
+
+# Instagram/Meta Access Token
+# INSTAGRAM_ACCESS_TOKEN=xxxxxxxxxxxxx
+
+

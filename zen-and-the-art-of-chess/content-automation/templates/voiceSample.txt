@@ -1,0 +1,44 @@
+============================================================
+VOICE CLONING SAMPLE SCRIPT
+============================================================
+
+Record yourself reading this script clearly and naturally.
+Take your time, speak at a conversational pace.
+This should take about 2-3 minutes.
+
+------------------------------------------------------------
+BEGIN READING:
+------------------------------------------------------------
+
+Chess is not just a game of calculation. It's a battle of minds, a test of patience, and an exercise in self-control.
+
+When I first started playing chess seriously, I thought improvement was all about memorizing openings and solving puzzles. But I was wrong. The biggest breakthroughs came when I started working on my mental game.
+
+Think about your last losing streak. Were you making calculation errors, or were you tilting? Most players lose more games from emotion than from lack of skill.
+
+That's why I built Zen Chess - to train not just your chess, but your mind. The Tilt Guardian watches your games and steps in before you spiral. It's like having a coach who knows exactly when you need to take a break.
+
+Picture this: You've just lost three games in a row. The old you would play another, and another, chasing that rating back. But the Tilt Guardian appears: "Stop. Breathe. The next game you play in this state will likely be your worst."
+
+It's not about playing more games. It's about playing better games. Quality over quantity. That's the Zen Chess philosophy.
+
+Whether you're a beginner stuck at 800 or an intermediate player aiming for 1500, the mental game is what separates players who plateau from players who break through.
+
+Play better by playing smarter. Master the board, master your mind.
+
+------------------------------------------------------------
+END OF SCRIPT
+------------------------------------------------------------
+
+TIPS FOR RECORDING:
+1. Use a quiet room
+2. Phone recording is fine (Voice Memos app)
+3. Hold phone 6-12 inches from mouth
+4. Speak naturally, like talking to a friend
+5. It's okay to pause and restart sections
+6. Save as MP3 or M4A file
+
+UPLOAD TO:
+elevenlabs.io → Voice Lab → Add Voice → Instant Voice Cloning
+
+

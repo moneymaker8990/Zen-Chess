@@ -30,3 +30,4 @@ export const supabase = createClient<Database>(
 // Check if Supabase is properly configured
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
+
