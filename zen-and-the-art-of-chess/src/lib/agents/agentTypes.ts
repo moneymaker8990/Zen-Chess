@@ -15,7 +15,12 @@ export type AgentId =
   | 'pattern'         // Pattern memory & spaced repetition
   | 'journey'         // 365-day curriculum guide
   | 'legend'          // Legend game study curator
-  | 'mindfulness';    // Meditation & breathing prompts
+  | 'mindfulness'     // Meditation & breathing prompts
+  // Background agents
+  | 'insight-engine'  // Deep pattern analysis
+  | 'motivator'       // Celebrations and encouragement
+  | 'focus-guardian'  // Distraction monitoring
+  | 'session-manager';// Session quality tracking
 
 export interface AgentPersonality {
   id: AgentId;
@@ -90,6 +95,39 @@ export const AGENT_PERSONALITIES: Record<AgentId, AgentPersonality> = {
     color: '#4ade80',
     voiceTone: 'zen',
     description: 'Guides meditation and breathing for chess clarity',
+  },
+  // Background agents - work silently, surface insights
+  'insight-engine': {
+    id: 'insight-engine',
+    name: 'Insight Engine',
+    icon: '🔮',
+    color: '#8b5cf6',
+    voiceTone: 'analytical',
+    description: 'Discovers hidden patterns in your play',
+  },
+  'motivator': {
+    id: 'motivator',
+    name: 'Motivator',
+    icon: '💪',
+    color: '#f59e0b',
+    voiceTone: 'encouraging',
+    description: 'Celebrates wins and lifts you through losses',
+  },
+  'focus-guardian': {
+    id: 'focus-guardian',
+    name: 'Focus Guardian',
+    icon: '🎯',
+    color: '#06b6d4',
+    voiceTone: 'analytical',
+    description: 'Protects your deep work and monitors focus',
+  },
+  'session-manager': {
+    id: 'session-manager',
+    name: 'Session Manager',
+    icon: '⏱️',
+    color: '#64748b',
+    voiceTone: 'analytical',
+    description: 'Optimizes your training sessions',
   },
 };
 

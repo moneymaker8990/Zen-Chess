@@ -3,6 +3,7 @@
 // Central brain that manages all agents
 // ============================================
 
+import { useMemo } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { 
@@ -27,6 +28,12 @@ import {
   createPatternAgent,
   createJourneyAgent,
   createMindfulnessAgent,
+  createInsightEngineAgent,
+  createMotivatorAgent,
+  createFocusGuardianAgent,
+  createOpeningSageAgent,
+  createLegendCuratorAgent,
+  createSessionManagerAgent,
 } from './agents';
 
 // ============================================
@@ -62,7 +69,14 @@ function createInitialState(): AgentOrchestratorState {
     lastInteractionTime: Date.now(),
     notificationsEnabled: true,
     agentVerbosity: 'normal',
-    enabledAgents: ['coach', 'tilt-guardian', 'training', 'pattern', 'journey', 'mindfulness'],
+    enabledAgents: [
+      // Core agents
+      'coach', 'tilt-guardian', 'training', 'pattern', 'journey', 'mindfulness',
+      // Specialized agents  
+      'opening', 'legend',
+      // Background agents (run silently)
+      'insight-engine', 'motivator', 'focus-guardian', 'session-manager',
+    ],
   };
 }
 
@@ -71,12 +85,23 @@ function createInitialState(): AgentOrchestratorState {
 // ============================================
 
 const agents = {
+  // Core visible agents
   'coach': createCoachAgent(),
   'tilt-guardian': createTiltGuardianAgent(),
   'training': createTrainingAgent(),
   'pattern': createPatternAgent(),
   'journey': createJourneyAgent(),
   'mindfulness': createMindfulnessAgent(),
+  
+  // Enhanced specialized agents
+  'opening': createOpeningSageAgent(),
+  'legend': createLegendCuratorAgent(),
+  
+  // Background/invisible agents (work silently, surface insights)
+  'insight-engine': createInsightEngineAgent(),
+  'motivator': createMotivatorAgent(),
+  'focus-guardian': createFocusGuardianAgent(),
+  'session-manager': createSessionManagerAgent(),
 };
 
 // ============================================
@@ -480,20 +505,29 @@ export const useAgentStore = create<AgentStore>()(
 
 /** Hook to get active messages */
 export function useAgentMessages() {
-  return useAgentStore((s) => s.state.activeMessages.filter(m => !m.dismissedAt));
+  const messages = useAgentStore((s) => s.state.activeMessages);
+  // Filter in useMemo to avoid creating new array on every render
+  return useMemo(
+    () => messages.filter(m => !m.dismissedAt),
+    [messages]
+  );
 }
 
 /** Hook to get unread count */
 export function useUnreadCount() {
-  return useAgentStore((s) => 
-    s.state.activeMessages.filter(m => !m.readAt && !m.dismissedAt).length
+  const messages = useAgentStore((s) => s.state.activeMessages);
+  return useMemo(
+    () => messages.filter(m => !m.readAt && !m.dismissedAt).length,
+    [messages]
   );
 }
 
 /** Hook to get urgent messages */
 export function useUrgentMessages() {
-  return useAgentStore((s) => 
-    s.state.activeMessages.filter(m => m.priority === 'urgent' && !m.dismissedAt)
+  const messages = useAgentStore((s) => s.state.activeMessages);
+  return useMemo(
+    () => messages.filter(m => m.priority === 'urgent' && !m.dismissedAt),
+    [messages]
   );
 }
 

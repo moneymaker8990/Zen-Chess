@@ -5,6 +5,7 @@ import { puzzles } from '@/data/puzzles';
 import { useCoachStore } from '@/state/coachStore';
 import { useBoardSettingsStore, useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
 import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
+import { AgentWatching, ContextualAgentTip } from '@/components/AgentPresence';
 import { MOVE_HINT_STYLES } from '@/lib/constants';
 import type { MoveHintStyle } from '@/lib/constants';
 import type { ChessPuzzle, PatternType } from '@/lib/types';
@@ -677,13 +678,19 @@ export function PuzzlesPage() {
       <div className="space-y-8 animate-fade-in">
         {/* Hero Header */}
         <section className="text-center lg:text-left">
-          <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
-            Puzzle Training
-          </h1>
+          <div className="flex items-center justify-center lg:justify-start gap-3 mb-2">
+            <h1 className="text-3xl lg:text-4xl font-display font-medium" style={{ color: 'var(--text-primary)' }}>
+              Puzzle Training
+            </h1>
+            <AgentWatching agents={['training', 'pattern']} />
+          </div>
           <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
             Sharpen your tactical vision with {puzzles.length}+ puzzles
           </p>
         </section>
+
+        {/* Agent Tip */}
+        <ContextualAgentTip currentPage="/train" />
 
         {/* Rating & Tier Card */}
         <div className="card p-6">

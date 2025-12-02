@@ -12,6 +12,7 @@ import { useBoardStyles } from '@/state/boardSettingsStore';
 import { createSimpleGameMetrics } from '@/lib/coachTypes';
 import { stockfish } from '@/engine/stockfish';
 import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
+import { AgentWatching, ContextualAgentTip } from '@/components/AgentPresence';
 import type { GameMode, EngineEvaluation } from '@/lib/types';
 import type { Square } from 'chess.js';
 
@@ -513,7 +514,10 @@ export function PlayPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-display font-medium" style={{ color: 'var(--text-primary)' }}>Play</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-display font-medium" style={{ color: 'var(--text-primary)' }}>Play</h1>
+            <AgentWatching agents={['coach', 'tilt-guardian']} />
+          </div>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
             {engineLoading ? 'Loading engine...' : engineReady ? '✓ Engine ready' : '✗ Engine unavailable'}
           </p>
@@ -526,6 +530,9 @@ export function PlayPage() {
           <span>Calm Play Mode</span>
         </button>
       </div>
+
+      {/* Contextual Agent Tip */}
+      <ContextualAgentTip currentPage="/play" />
 
       {/* Mode selector */}
       <div className="flex gap-3 flex-wrap">

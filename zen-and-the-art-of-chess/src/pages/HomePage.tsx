@@ -2,12 +2,97 @@ import { useNavigate } from 'react-router-dom';
 import { useProgressStore } from '@/state/useStore';
 import { phaseInfo, getDayByNumber } from '@/data/days';
 import { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { TodaysFocusWidget } from '@/components/CoachDashboard';
+import { AgentQuickActions, AgentWatching } from '@/components/AgentPresence';
+import { useAgentTrigger, useAgentMessages, useAgentStore } from '@/lib/agents/agentOrchestrator';
+import { AGENT_PERSONALITIES } from '@/lib/agents/agentTypes';
 import type { ActionType } from '@/lib/coachTypes';
 
 // ============================================
 // ENHANCED HOME PAGE - Chess.com Style Dashboard
 // ============================================
+
+// Agent Insight Banner - Shows top agent message
+function AgentInsightBanner() {
+  const navigate = useNavigate();
+  const messages = useAgentMessages();
+  const { markActedOn, dismissMessage } = useAgentStore();
+  
+  // Get most important unread message
+  const topMessage = useMemo(() => {
+    const unread = messages.filter(m => !m.readAt && !m.dismissedAt);
+    if (unread.length === 0) return null;
+    
+    // Priority order
+    const priorityOrder = { urgent: 0, high: 1, normal: 2, low: 3 };
+    return unread.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])[0];
+  }, [messages]);
+  
+  if (!topMessage) return null;
+  
+  const personality = AGENT_PERSONALITIES[topMessage.agentId];
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex items-center gap-4 p-4 rounded-xl"
+      style={{ 
+        background: `linear-gradient(135deg, ${personality.color}15, ${personality.color}05)`,
+        border: `1px solid ${personality.color}30`,
+      }}
+    >
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center text-xl shrink-0"
+        style={{ background: `${personality.color}25` }}
+      >
+        {personality.icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="font-medium text-sm" style={{ color: personality.color }}>
+            {personality.name}
+          </span>
+          {topMessage.priority === 'urgent' && (
+            <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-400">
+              Urgent
+            </span>
+          )}
+        </div>
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          {topMessage.body.length > 100 ? topMessage.body.slice(0, 100) + '...' : topMessage.body}
+        </p>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        {topMessage.primaryAction && (
+          <button
+            onClick={() => {
+              markActedOn(topMessage.id);
+              if (topMessage.primaryAction?.route) {
+                navigate(topMessage.primaryAction.route);
+              }
+            }}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:scale-105"
+            style={{ 
+              background: personality.color,
+              color: 'white',
+            }}
+          >
+            {topMessage.primaryAction.label}
+          </button>
+        )}
+        <button
+          onClick={() => dismissMessage(topMessage.id)}
+          className="p-2 rounded-lg transition-colors hover:bg-white/10"
+          style={{ color: 'var(--text-muted)' }}
+        >
+          ✕
+        </button>
+      </div>
+    </motion.div>
+  );
+}
 
 interface GameRecord {
   id: string;
@@ -78,6 +163,9 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Agent Message - If there's something important */}
+      <AgentInsightBanner />
 
       {/* Main Grid */}
       <div className="grid lg:grid-cols-3 gap-6">

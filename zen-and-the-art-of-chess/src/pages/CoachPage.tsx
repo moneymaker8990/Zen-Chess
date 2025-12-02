@@ -19,6 +19,11 @@ import {
   useAgentStore 
 } from '@/lib/agents/agentOrchestrator';
 import { AGENT_PERSONALITIES } from '@/lib/agents/agentTypes';
+import { 
+  AgentsOverviewCard, 
+  AgentInsightsSummary,
+  RecentAgentActivity,
+} from '@/components/AgentDashboard';
 import type { ActionType, SessionMood } from '@/lib/coachTypes';
 
 // ============================================
@@ -419,39 +424,20 @@ export function CoachPage() {
         </div>
       )}
 
-      {/* Meet Your Agents */}
+      {/* Agent Insights Summary */}
       {!isTyping && (
         <div className="mt-8 space-y-4">
           <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-            Your AI Coaching Team
+            Agent Analysis
           </p>
-          <div className="grid grid-cols-2 gap-3">
-            {Object.values(AGENT_PERSONALITIES).slice(0, 6).map((agent) => (
-              <div
-                key={agent.id}
-                className="p-3 rounded-xl flex items-center gap-3"
-                style={{ 
-                  background: 'var(--bg-secondary)',
-                  border: '1px solid var(--border-subtle)',
-                }}
-              >
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0"
-                  style={{ background: `${agent.color}20` }}
-                >
-                  {agent.icon}
-                </div>
-                <div className="min-w-0">
-                  <div className="font-medium text-sm truncate" style={{ color: 'var(--text-primary)' }}>
-                    {agent.name}
-                  </div>
-                  <div className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
-                    {agent.voiceTone}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <AgentInsightsSummary />
+        </div>
+      )}
+
+      {/* Meet Your Agents */}
+      {!isTyping && (
+        <div className="mt-8 space-y-4">
+          <AgentsOverviewCard />
         </div>
       )}
     </div>

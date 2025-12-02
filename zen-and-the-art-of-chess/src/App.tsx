@@ -4,7 +4,9 @@ import { AnimatePresence } from 'framer-motion';
 import { Layout } from '@/components/Layout';
 import { PageTransition } from '@/components/PageTransition';
 import { AgentToastContainer } from '@/components/AgentPanel';
+import { AgentStatusBar } from '@/components/AgentPresence';
 import { initializeAgents } from '@/lib/agents/agentOrchestrator';
+import { useAgentAwareness } from '@/hooks/useAgentAwareness';
 import { HomePage } from '@/pages/HomePage';
 import { DayPage } from '@/pages/DayPage';
 import { PlayPage } from '@/pages/PlayPage';
@@ -94,6 +96,22 @@ function AnimatedRoutes() {
   );
 }
 
+// Agent-aware inner component that tracks navigation
+function AppContent() {
+  // This hook automatically tracks page navigation and session time
+  useAgentAwareness();
+  
+  return (
+    <>
+      <AnimatedRoutes />
+      {/* Floating agent notifications */}
+      <AgentToastContainer />
+      {/* Subtle agent status bar */}
+      <AgentStatusBar />
+    </>
+  );
+}
+
 function App() {
   const { updateStreak } = useProgressStore();
 
@@ -106,9 +124,7 @@ function App() {
 
   return (
     <Layout>
-      <AnimatedRoutes />
-      {/* Floating agent notifications */}
-      <AgentToastContainer />
+      <AppContent />
     </Layout>
   );
 }

@@ -13,6 +13,11 @@ interface TiltGuardianMemory {
   userRespondsWellToInterventions: boolean;
   averageRecoveryMinutes: number;
   lastTiltSeverity: number;
+  consecutiveLosses: number;
+  lastGameResult: 'win' | 'loss' | 'draw' | null;
+  rapidGamesCount: number;
+  lastGameTime: number;
+  blunderCountSession: number;
 }
 
 export function createTiltGuardianAgent(): Agent {
@@ -23,6 +28,11 @@ export function createTiltGuardianAgent(): Agent {
     userRespondsWellToInterventions: true,
     averageRecoveryMinutes: 5,
     lastTiltSeverity: 0,
+    consecutiveLosses: 0,
+    lastGameResult: null,
+    rapidGamesCount: 0,
+    lastGameTime: 0,
+    blunderCountSession: 0,
   };
 
   return {
@@ -165,13 +175,60 @@ export function createTiltGuardianAgent(): Agent {
         }
 
         case 'GAME_END': {
-          // After a loss following intervention, check if they took the advice
-          if (trigger.result === 'loss' && 
-              Date.now() - memory.lastIntervention < 10 * 60 * 1000) {
-            // They didn't take the break...
+          const result = trigger.result as 'win' | 'loss' | 'draw';
+          const accuracy = trigger.accuracy || 0;
+          const blunders = trigger.blunders || 0;
+          const now = Date.now();
+          
+          // Track consecutive losses
+          if (result === 'loss') {
+            memory.consecutiveLosses++;
+          } else {
+            memory.consecutiveLosses = 0;
+          }
+          memory.lastGameResult = result;
+          memory.blunderCountSession += blunders;
+          
+          // Detect rapid re-queue (revenge gaming)
+          const timeSinceLastGame = now - memory.lastGameTime;
+          memory.lastGameTime = now;
+          
+          if (timeSinceLastGame < 30000 && result === 'loss') {
+            memory.rapidGamesCount++;
+          } else if (result !== 'loss') {
+            memory.rapidGamesCount = 0;
+          }
+          
+          saveMemory();
+
+          // LEVEL 1: Revenge gaming detection (most critical)
+          if (memory.rapidGamesCount >= 2) {
+            memory.lastIntervention = now;
+            memory.interventionCount++;
+            saveMemory();
+            
             return createMessage('tilt-guardian', {
-              title: 'I Tried to Warn You',
-              body: "That loss was predictable. Not because you're bad, but because no one plays well when tilted. Please - take a break now.",
+              title: '🛑 REVENGE GAMING',
+              body: "You're queuing instantly after losses. This is the #1 sign of tilt. Your next game is almost guaranteed to be worse. Stop.",
+              category: 'intervention',
+              priority: 'urgent',
+              primaryAction: {
+                label: 'Cool Down Now',
+                route: '/mind',
+              },
+              isPersistent: true,
+              showAsToast: true,
+            });
+          }
+
+          // LEVEL 2: They ignored previous warning and lost again
+          if (result === 'loss' && now - memory.lastIntervention < 10 * 60 * 1000) {
+            memory.interventionCount++;
+            saveMemory();
+            
+            return createMessage('tilt-guardian', {
+              title: '⚠️ Told You So',
+              body: "That loss was predictable. Not because you're bad - because no one plays well when tilted. Please take a break now.",
               category: 'intervention',
               priority: 'high',
               primaryAction: {
@@ -181,6 +238,42 @@ export function createTiltGuardianAgent(): Agent {
               isPersistent: true,
             });
           }
+
+          // LEVEL 3: Severe accuracy drop
+          if (accuracy > 0 && accuracy < 40 && result === 'loss') {
+            return createMessage('tilt-guardian', {
+              title: '📉 Performance Warning',
+              body: `${accuracy}% accuracy is way below your baseline. Frustration is clouding your calculation. Please pause.`,
+              category: 'intervention',
+              priority: 'high',
+              primaryAction: {
+                label: 'Take Break',
+                route: '/mind',
+              },
+              showAsToast: true,
+            });
+          }
+          
+          // LEVEL 4: Blunder spike
+          if (blunders >= 3) {
+            return createMessage('tilt-guardian', {
+              title: '🛡️ Blunder Alert',
+              body: `${blunders} blunders this game. That's not normal for you. Mental fatigue or frustration may be affecting your play.`,
+              category: 'insight',
+              priority: 'normal',
+            });
+          }
+
+          // Mild accuracy warning
+          if (accuracy > 0 && accuracy < 55 && result === 'loss' && now - memory.lastIntervention > 15 * 60 * 1000) {
+            return createMessage('tilt-guardian', {
+              title: '🛡️ Quality Check',
+              body: `${accuracy}% accuracy – below your usual standard. Consider reviewing before the next game.`,
+              category: 'insight',
+              priority: 'low',
+            });
+          }
+
           return null;
         }
 
