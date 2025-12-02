@@ -27,3 +27,5 @@ foreach ($legend in $legends) {
 
 Write-Host "✅ Done! Check $DataDir for generated JSON files." -ForegroundColor Green
 
+
+

@@ -30,3 +30,5 @@ console.log('First game length:', firstGame?.length || 0);
 console.log('First 300 chars:');
 console.log(firstGame?.substring(0, 300) || 'NOT FOUND');
 
+
+

@@ -29,3 +29,5 @@ console.log(`\nActual [Event] tags: ${eventCount}`);
 // Best method
 console.log(`\nBest match: Method ${eventCount === method4.length ? '4' : eventCount === method1.length ? '1' : 'unknown'}`);
 
+
+

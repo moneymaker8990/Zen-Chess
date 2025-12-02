@@ -143,3 +143,5 @@ export default pgnOpenings;
 fs.writeFileSync('./src/data/openings/pgn-openings.ts', output);
 console.log(`\n✅ Total: ${allLines.length} lines written to pgn-openings.ts`);
 
+
+

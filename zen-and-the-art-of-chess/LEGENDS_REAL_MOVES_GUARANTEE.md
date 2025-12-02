@@ -56,3 +56,5 @@ Playing against a legend means:
 
 This ensures maximum authenticity while still allowing the legend to play in positions they've never seen before.
 
+
+

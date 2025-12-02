@@ -1179,3 +1179,5 @@ export const allDeepTacticalVariations: CourseVariation[] = [
 
 export default allDeepTacticalVariations;
 
+
+

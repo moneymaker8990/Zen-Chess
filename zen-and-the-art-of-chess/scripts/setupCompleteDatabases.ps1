@@ -71,3 +71,5 @@ Write-Host "Your legends are now ready with comprehensive game databases!" -Fore
 Write-Host "Play against them in the app - they'll use their actual moves!" -ForegroundColor Cyan
 Write-Host ""
 
+
+

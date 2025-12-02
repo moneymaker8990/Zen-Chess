@@ -943,3 +943,5 @@ export function BlindfoldTrainerPage() {
 
 export default BlindfoldTrainerPage;
 
+
+

@@ -5,8 +5,13 @@ import { Layout } from '@/components/Layout';
 import { PageTransition } from '@/components/PageTransition';
 import { AgentToastContainer } from '@/components/AgentPanel';
 import { AgentStatusBar } from '@/components/AgentPresence';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { OnboardingWrapper } from '@/components/Onboarding';
+import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
+import { AchievementNotificationContainer } from '@/components/AchievementNotification';
 import { initializeAgents } from '@/lib/agents/agentOrchestrator';
 import { useAgentAwareness } from '@/hooks/useAgentAwareness';
+import { useGlobalShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { HomePage } from '@/pages/HomePage';
 import { DayPage } from '@/pages/DayPage';
 import { PlayPage } from '@/pages/PlayPage';
@@ -100,6 +105,8 @@ function AnimatedRoutes() {
 function AppContent() {
   // This hook automatically tracks page navigation and session time
   useAgentAwareness();
+  // Enable global keyboard shortcuts
+  useGlobalShortcuts();
   
   return (
     <>
@@ -108,6 +115,10 @@ function AppContent() {
       <AgentToastContainer />
       {/* Subtle agent status bar */}
       <AgentStatusBar />
+      {/* Keyboard shortcuts help modal */}
+      <KeyboardShortcutsHelp />
+      {/* Achievement notifications */}
+      <AchievementNotificationContainer />
     </>
   );
 }
@@ -123,9 +134,13 @@ function App() {
   }, [updateStreak]);
 
   return (
-    <Layout>
-      <AppContent />
-    </Layout>
+    <ErrorBoundary>
+      <OnboardingWrapper>
+        <Layout>
+          <AppContent />
+        </Layout>
+      </OnboardingWrapper>
+    </ErrorBoundary>
   );
 }
 

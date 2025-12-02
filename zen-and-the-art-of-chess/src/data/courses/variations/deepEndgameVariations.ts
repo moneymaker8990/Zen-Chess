@@ -850,3 +850,5 @@ export const allDeepEndgameVariations: CourseVariation[] = [
 
 export default allDeepEndgameVariations;
 
+
+

@@ -71,3 +71,5 @@ console.log('\n📋 DIAGNOSIS:');
 console.log('If positions show "NOT FOUND" for common openings, the FEN format may not match.');
 console.log('Compare the FEN format in the index vs what the game sends.\n');
 
+
+

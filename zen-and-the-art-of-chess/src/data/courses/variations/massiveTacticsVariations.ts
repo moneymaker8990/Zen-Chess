@@ -226,3 +226,5 @@ export const massiveTacticsVariations: CourseVariation[] = [
 
 export default massiveTacticsVariations;
 
+
+

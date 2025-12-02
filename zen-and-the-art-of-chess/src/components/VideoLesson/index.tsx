@@ -288,3 +288,5 @@ export function VideoThumbnailCard({ content, onClick, completed = false }: Vide
 
 export default VideoLesson;
 
+
+

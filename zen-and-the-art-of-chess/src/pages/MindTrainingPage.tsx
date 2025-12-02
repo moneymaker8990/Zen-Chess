@@ -731,3 +731,5 @@ export function MindTrainingPage() {
 
 export default MindTrainingPage;
 
+
+

@@ -337,3 +337,5 @@ export const allBulkPositionalVariations: CourseVariation[] = [
 
 export default allBulkPositionalVariations;
 
+
+
