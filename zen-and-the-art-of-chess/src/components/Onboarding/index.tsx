@@ -302,12 +302,11 @@ function ExperienceStep({
             key={option.id}
             onClick={() => onChange(option.id as any)}
             className={`w-full p-4 rounded-xl text-left transition-all hover:scale-[1.02] ${
-              value === option.id ? 'ring-2' : ''
+              value === option.id ? 'ring-2 ring-purple-500' : ''
             }`}
             style={{ 
               background: value === option.id ? 'rgba(168, 85, 247, 0.2)' : 'var(--bg-secondary)',
               border: '1px solid var(--border-subtle)',
-              ringColor: '#a855f7',
             }}
           >
             <div className="flex items-center gap-4">
@@ -378,12 +377,11 @@ function GoalsStep({
             key={goal.id}
             onClick={() => toggleGoal(goal.id)}
             className={`p-4 rounded-xl text-left transition-all hover:scale-[1.02] ${
-              value.includes(goal.id) ? 'ring-2' : ''
+              value.includes(goal.id) ? 'ring-2 ring-purple-500' : ''
             }`}
             style={{ 
               background: value.includes(goal.id) ? 'rgba(168, 85, 247, 0.2)' : 'var(--bg-secondary)',
               border: '1px solid var(--border-subtle)',
-              ringColor: '#a855f7',
             }}
           >
             <span className="text-2xl">{goal.icon}</span>
@@ -449,11 +447,10 @@ function StyleStep({
               key={option.id}
               onClick={() => onChangeTilt(option.id as any)}
               className={`p-3 rounded-xl text-center transition-all ${
-                tiltValue === option.id ? 'ring-2' : ''
+                tiltValue === option.id ? 'ring-2 ring-red-500' : ''
               }`}
               style={{ 
                 background: tiltValue === option.id ? 'rgba(239, 68, 68, 0.2)' : 'var(--bg-secondary)',
-                ringColor: '#ef4444',
               }}
             >
               <span className="text-xl">{option.icon}</span>
@@ -476,11 +473,10 @@ function StyleStep({
               key={option.id}
               onClick={() => onChangeTime(option.id as any)}
               className={`p-3 rounded-xl text-center transition-all ${
-                timeValue === option.id ? 'ring-2' : ''
+                timeValue === option.id ? 'ring-2 ring-blue-500' : ''
               }`}
               style={{ 
                 background: timeValue === option.id ? 'rgba(59, 130, 246, 0.2)' : 'var(--bg-secondary)',
-                ringColor: '#3b82f6',
               }}
             >
               <span className="text-xl">{option.icon}</span>

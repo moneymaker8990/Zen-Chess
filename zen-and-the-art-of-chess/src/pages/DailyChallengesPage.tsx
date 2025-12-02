@@ -1928,9 +1928,9 @@ export function DailyChallengesPage() {
         } else {
           // Play opponent's response if applicable
           setMoveIndex(prev => prev + 1);
-          if (currentChallenge.solution[moveIndex + 1]) {
+          if (currentChallenge.solution?.[moveIndex + 1]) {
             setTimeout(() => {
-              const opponentMove = currentChallenge.solution[moveIndex + 1];
+              const opponentMove = currentChallenge.solution?.[moveIndex + 1];
               if (opponentMove) {
                 const responseGame = new Chess(gameCopy.fen());
                 try {
@@ -2087,11 +2087,10 @@ export function DailyChallengesPage() {
               return (
                 <div
                   key={day}
-                  className={`p-3 rounded-xl text-center transition-all ${isToday ? 'ring-2' : ''}`}
+                  className={`p-3 rounded-xl text-center transition-all ${isToday ? 'ring-2 ring-purple-500' : ''}`}
                   style={{ 
                     background: completed ? dayTheme.color + '30' : 'var(--bg-tertiary)',
                     opacity: isFuture ? 0.5 : 1,
-                    ringColor: dayTheme.color
                   }}
                 >
                   <div className="text-2xl mb-1">{completed ? '✅' : dayTheme.icon}</div>

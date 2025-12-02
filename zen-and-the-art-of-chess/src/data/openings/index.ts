@@ -437,7 +437,7 @@ export const allOpenings: OpeningLine[] = [
   ...moreOpenings,
   ...expandedSystems,
   ...indianDefenseLines,   // 50+ lines for Indian systems
-  ...pgnOpenings,          // 61,000+ lines from PGN database
+  ...(pgnOpenings as OpeningLine[]),          // 61,000+ lines from PGN database
 ];
 
 // Get openings by category

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface PageTransitionProps {
@@ -7,7 +7,7 @@ interface PageTransitionProps {
 }
 
 // Smooth, fast page transition variants
-const pageVariants = {
+const pageVariants: Variants = {
   initial: {
     opacity: 0,
     y: 8,
@@ -17,7 +17,7 @@ const pageVariants = {
     y: 0,
     transition: {
       duration: 0.2,
-      ease: [0.25, 0.46, 0.45, 0.94], // Custom ease for smooth feel
+      ease: [0.25, 0.46, 0.45, 0.94] as const, // Custom ease for smooth feel
     },
   },
   exit: {
@@ -25,7 +25,7 @@ const pageVariants = {
     y: -8,
     transition: {
       duration: 0.15,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   },
 };

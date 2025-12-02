@@ -277,6 +277,7 @@ function NoteDetail({
   onDelete: () => void;
   onMarkReviewed: () => void;
 }) {
+  const boardStyles = useBoardStyles();
   return (
     <div className="glass-card p-5 space-y-4">
       <div className="flex items-start justify-between">

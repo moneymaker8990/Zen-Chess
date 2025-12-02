@@ -259,10 +259,9 @@ export function RecentAgentActivity() {
             key={message.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`card p-4 transition-all ${isUnread ? 'ring-1' : ''}`}
+            className={`card p-4 transition-all ${isUnread ? 'ring-1 ring-purple-500' : ''}`}
             style={{ 
               background: 'var(--bg-secondary)',
-              ringColor: isUnread ? personality.color : 'transparent',
             }}
             onClick={() => markRead(message.id)}
           >
@@ -287,7 +286,7 @@ export function RecentAgentActivity() {
                     <span className="w-2 h-2 rounded-full" style={{ background: personality.color }} />
                   )}
                   <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>
-                    {formatTimeAgo(message.createdAt)}
+                    {formatTimeAgo(message.timestamp)}
                   </span>
                 </div>
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>

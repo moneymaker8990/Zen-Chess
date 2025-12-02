@@ -270,6 +270,7 @@ function MistakeDetail({
   onReview: () => void;
   onDelete: () => void;
 }) {
+  const boardStyles = useBoardStyles();
   const formatEval = (ev: number) => {
     if (ev > 0) return `+${(ev / 100).toFixed(1)}`;
     return (ev / 100).toFixed(1);

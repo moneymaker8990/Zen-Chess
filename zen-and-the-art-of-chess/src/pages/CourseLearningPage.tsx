@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Chessboard } from 'react-chessboard';
+import type { Square } from 'chess.js';
 import { Chess } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { useBackNavigation } from '@/components/BackButton';
@@ -249,13 +250,13 @@ export default function CourseLearningPage() {
   }, [advanceMove, nextVariation]);
 
   // Build arrows from current move
-  const customArrows = useMemo(() => {
+  const customArrows = useMemo((): [Square, Square, string][] => {
     if (!currentMove?.arrows) return [];
     return currentMove.arrows.map(arrow => [
-      arrow.from,
-      arrow.to,
+      arrow.from as Square,
+      arrow.to as Square,
       getArrowColor(arrow.color)
-    ] as [string, string, string]);
+    ]);
   }, [currentMove]);
 
   // Build highlights

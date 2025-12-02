@@ -256,22 +256,39 @@ export interface AgentOrchestratorState {
 // ============================================
 
 export type AgentTrigger =
-  | { type: 'PAGE_ENTER'; page: string }
-  | { type: 'PAGE_LEAVE'; page: string }
-  | { type: 'GAME_START' }
-  | { type: 'GAME_END'; result: 'win' | 'loss' | 'draw'; accuracy?: number }
-  | { type: 'PUZZLE_COMPLETE'; solved: boolean; time: number }
+  // Navigation
+  | { type: 'PAGE_ENTER'; page: string; previousPage?: string }
+  | { type: 'PAGE_LEAVE'; page: string; timeSpent?: number; interactions?: number }
+  // Games
+  | { type: 'GAME_START'; mode?: string; timestamp?: number }
+  | { type: 'GAME_END'; result: 'win' | 'loss' | 'draw'; accuracy?: number; duration?: number; moveCount?: number; blunders?: number }
+  | { type: 'MOVE_MADE'; fen?: string; move?: string; moveTime?: number; totalMoves?: number }
+  | { type: 'BLUNDER_MADE'; evaluation?: number; count?: number; move?: string | number }
+  // Puzzles
+  | { type: 'PUZZLE_START'; puzzleId?: string; difficulty?: string; themes?: string[] }
+  | { type: 'PUZZLE_COMPLETE'; solved: boolean; time: number; hintUsed?: boolean; difficulty?: number }
   | { type: 'PUZZLE_STREAK'; count: number }
+  | { type: 'HINT_USED' }
+  // Streaks & Detection
   | { type: 'LOSING_STREAK'; count: number }
   | { type: 'WINNING_STREAK'; count: number }
   | { type: 'TILT_DETECTED'; severity: number }
+  // Session
   | { type: 'SESSION_LONG'; minutes: number }
   | { type: 'IDLE'; minutes: number }
   | { type: 'SESSION_START' }
   | { type: 'SESSION_END' }
+  // Study
+  | { type: 'STUDY_START'; topic?: string; studyType?: string; topicId?: string }
+  | { type: 'STUDY_END'; topic?: string; duration?: number; completed?: boolean }
+  // Progress
   | { type: 'PATTERN_DUE'; count: number }
   | { type: 'DAY_CHANGE'; newDay: number }
   | { type: 'STREAK_MILESTONE'; days: number }
+  | { type: 'MEDITATION_COMPLETE'; duration: number }
+  | { type: 'LESSON_COMPLETE'; lessonId?: string }
+  // Custom
+  | { type: 'CUSTOM'; eventName: string; data?: Record<string, unknown> }
   | { type: 'ACHIEVEMENT_UNLOCKED'; achievementId: string }
   | { type: 'ACCURACY_LOW'; accuracy: number }
   | { type: 'ACCURACY_HIGH'; accuracy: number }
@@ -354,6 +371,11 @@ export const AGENT_COOLDOWNS: Record<AgentId, number> = {
   'journey': 1440,          // Once per day
   'legend': 120,
   'mindfulness': 45,
+  // Background agents
+  'insight-engine': 180,    // Less frequent, deeper analysis
+  'motivator': 5,           // Frequent encouragement
+  'focus-guardian': 15,     // Monitor focus regularly
+  'session-manager': 30,    // Session optimization
 };
 
 // Message templates for consistent voice
