@@ -47,6 +47,7 @@ import { IntuitionTrainerPage } from '@/pages/IntuitionTrainerPage';
 import { WeaknessDetectorPage } from '@/pages/WeaknessDetectorPage';
 import { PricingPage } from '@/pages/PricingPage';
 import { AuthPage } from '@/pages/AuthPage';
+import { AICoachDashboard } from '@/pages/AICoachDashboard';
 import { useProgressStore } from '@/state/useStore';
 import { useAuthStore } from '@/state/useAuthStore';
 import { initializeCoach } from '@/state/coachStore';
@@ -103,6 +104,9 @@ function AnimatedRoutes() {
         {/* Auth & Monetization */}
         <Route path="/pricing" element={<PageTransition><PricingPage /></PageTransition>} />
         <Route path="/auth" element={<PageTransition><AuthPage /></PageTransition>} />
+        
+        {/* AI Coach Hub */}
+        <Route path="/ai-coach" element={<PageTransition><AICoachDashboard /></PageTransition>} />
       </Routes>
     </AnimatePresence>
   );
