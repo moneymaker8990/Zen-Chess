@@ -566,7 +566,8 @@ export function WeaknessDetectorPage() {
                 }`}
                 style={{ 
                   background: selectedCategory === cat ? info.color + '30' : 'var(--bg-tertiary)',
-                  ringColor: info.color
+                  borderColor: selectedCategory === cat ? info.color : 'transparent',
+                  borderWidth: selectedCategory === cat ? '2px' : '0px'
                 }}
               >
                 <span>{info.icon}</span>

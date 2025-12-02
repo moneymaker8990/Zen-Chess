@@ -612,8 +612,7 @@ export function SpacedRepetitionPage() {
                 }),
                 ...(solved && lastMove && {
                   [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
-                }),
-                ...(failed && { backgroundColor: 'rgba(239, 68, 68, 0.2)' })
+                })
               }}
               arePiecesDraggable={!solved && !failed}
               onPieceDrop={(from, to) => handleMove(from as Square, to as Square)}
@@ -876,7 +875,7 @@ export function SpacedRepetitionPage() {
                   setSelectedPuzzles(newSelected);
                 }}
                 className={`card p-4 text-left transition-all ${isSelected ? 'ring-2' : ''}`}
-                style={{ ringColor: 'var(--accent-primary)' }}
+                style={{ borderColor: isSelected ? 'var(--accent-primary)' : 'transparent' }}
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex flex-wrap gap-1">

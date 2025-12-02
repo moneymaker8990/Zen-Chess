@@ -124,7 +124,7 @@ export function PuzzlesPage() {
   const [currentPuzzle, setCurrentPuzzle] = useState<ChessPuzzle | null>(null);
   const [game, setGame] = useState(new Chess());
   const [moveFrom, setMoveFrom] = useState<Square | null>(null);
-  const [optionSquares, setOptionSquares] = useState<Record<string, { backgroundColor: string }>>({});
+  const [optionSquares, setOptionSquares] = useState<Record<string, React.CSSProperties>>({});
   const [lastMove, setLastMove] = useState<{ from: Square; to: Square } | null>(null);
   const [moveIndex, setMoveIndex] = useState(0);
   const [feedback, setFeedback] = useState<'correct' | 'incorrect' | 'complete' | null>(null);
