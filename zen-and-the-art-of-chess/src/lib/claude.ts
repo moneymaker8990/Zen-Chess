@@ -231,7 +231,7 @@ export async function getAgentResponse(
 
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 500,
       system: systemPrompt,
       messages,
@@ -363,7 +363,7 @@ export async function* streamAgentResponse(
 
   try {
     const stream = await anthropic.messages.stream({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 500,
       system: systemPrompt,
       messages,

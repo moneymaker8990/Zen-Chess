@@ -54,7 +54,7 @@ Provide a JSON response with this exact structure:
 Be specific and instructive. This is for a ${context?.rating || 1200} rated player.`;
 
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 1500,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -164,7 +164,7 @@ Make it specific, achievable, and balanced between tactics, strategy, and mental
 Focus extra attention on their weaknesses while reinforcing strengths.`;
 
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 3000,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -237,7 +237,7 @@ Respond in JSON format:
 Be encouraging but honest. Sound like Magnus Carlsen commenting mixed with a zen master.`;
 
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 500,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -331,7 +331,7 @@ Provide a psychological profile in JSON format:
 Be insightful and specific. This helps personalize their entire experience.`;
 
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 1500,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -424,7 +424,7 @@ Provide a comprehensive review in JSON format:
 Be specific, constructive, and encouraging. Focus on teaching, not judging.`;
 
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 2000,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -517,7 +517,7 @@ Should the AI coach intervene? Respond in JSON:
 Only intervene when truly helpful. Don't interrupt unnecessarily.`;
 
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 500,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -586,7 +586,7 @@ Create an inspiring message in JSON format:
 Make it feel personal, warm, and motivating. Not generic.`;
 
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 500,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -637,7 +637,7 @@ Explain:
 Keep it conversational and educational (3-5 sentences).`;
 
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 400,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -703,7 +703,7 @@ Identify patterns and provide analysis in JSON format:
 Be specific and actionable. These insights should feel personalized.`;
 
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 1500,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -742,7 +742,7 @@ export async function testClaudeConnection(): Promise<{
   
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 50,
       messages: [{ 
         role: 'user', 
