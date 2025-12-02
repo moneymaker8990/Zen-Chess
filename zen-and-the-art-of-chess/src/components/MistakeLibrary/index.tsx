@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { useMistakeLibraryStore } from '@/state/trainingStore';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import { PageHeader } from '@/components/Tutorial';
 import type { MistakeEntry, MistakeType, RootCause } from '@/lib/trainingTypes';
 
@@ -32,6 +33,7 @@ const rootCauseLabels: Record<RootCause, string> = {
 
 export function MistakeLibrary() {
   const { mistakes, getMistakeStats, markReviewed, deleteMistake } = useMistakeLibraryStore();
+  const boardStyles = useBoardStyles();
   
   const [filterType, setFilterType] = useState<MistakeType | 'ALL'>('ALL');
   const [filterCause, setFilterCause] = useState<RootCause | 'ALL'>('ALL');
@@ -292,8 +294,8 @@ function MistakeDetail({
           boardOrientation={mistake.playerColor}
           arePiecesDraggable={false}
           boardWidth={280}
-          customDarkSquareStyle={{ backgroundColor: '#4a6670' }}
-          customLightSquareStyle={{ backgroundColor: '#8ba4a8' }}
+          customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+          customLightSquareStyle={boardStyles.customLightSquareStyle}
         />
         <p className="text-zen-600 text-xs text-center mt-2">
           Move {mistake.moveNumber} • Playing as {mistake.playerColor}

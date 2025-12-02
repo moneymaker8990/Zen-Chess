@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Chess, Square } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
+import { useBoardStyles } from '@/state/boardSettingsStore';
+import { BackButton } from '@/components/BackButton';
 import { stockfish } from '@/engine/stockfish';
 import { getLegendMove, getLegendGames } from '@/engine/legendEngine';
 import {
@@ -19,6 +21,7 @@ type Tab = 'play' | 'guess';
 export function LegendDetailPage() {
   const { legendId } = useParams<{ legendId: string }>();
   const navigate = useNavigate();
+  const boardStyles = useBoardStyles();
   const { addNote } = useNotesStore();
   const { recordGamePlayed, recordPuzzleSolved } = useStudyStore();
   const { markGameReviewed, isGameReviewed, getGameReview, getLegendStats } = useLegendGameReviewStore();
@@ -387,12 +390,9 @@ export function LegendDetailPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <button
-            onClick={() => navigate('/greats')}
-            className="text-zen-400 hover:text-zen-200 mb-4 text-sm"
-          >
-            ← Back to Greats
-          </button>
+          <div className="mb-4">
+            <BackButton fallback="/greats" label="Back to Greats" className="text-zen-400 hover:text-zen-200" />
+          </div>
           <h1 className="text-3xl font-serif text-zen-100">{legendData.name}</h1>
           <p className="text-gold-400 font-serif italic mt-1">{legendData.tagline}</p>
         </div>
@@ -424,106 +424,228 @@ export function LegendDetailPage() {
 
       {/* Play vs Legend Tab */}
       {activeTab === 'play' && (
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div className="glass-card p-6">
-            <div className="mb-4">
-              <Chessboard
-                position={game.fen()}
-                onSquareClick={onSquareClick}
-                onPieceDrop={onDrop}
-                boardOrientation={playerColor}
-                customSquareStyles={{
-                  ...optionSquares,
-                  ...(lastMove && {
-                    [lastMove.from]: { backgroundColor: 'rgba(251, 191, 36, 0.4)' },
-                    [lastMove.to]: { backgroundColor: 'rgba(251, 191, 36, 0.4)' },
-                  }),
-                }}
-                customDarkSquareStyle={{ backgroundColor: '#4a6670' }}
-                customLightSquareStyle={{ backgroundColor: '#8ba4a8' }}
-                animationDuration={200}
-                arePiecesDraggable={!isThinking}
-                boardWidth={480}
-              />
+        <div className="space-y-8">
+          {/* Game Area - Board and Controls */}
+          <div className="grid lg:grid-cols-[1fr,360px] gap-8 items-start">
+            {/* Chessboard */}
+            <div className="glass-card p-6">
+              <div className="w-full max-w-[520px] mx-auto">
+                <Chessboard
+                  position={game.fen()}
+                  onSquareClick={onSquareClick}
+                  onPieceDrop={onDrop}
+                  boardOrientation={playerColor}
+                  customSquareStyles={{
+                    ...optionSquares,
+                    ...(lastMove && {
+                      [lastMove.from]: { backgroundColor: 'rgba(251, 191, 36, 0.4)' },
+                      [lastMove.to]: { backgroundColor: 'rgba(251, 191, 36, 0.4)' },
+                    }),
+                  }}
+                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                  customLightSquareStyle={boardStyles.customLightSquareStyle}
+                  animationDuration={200}
+                  arePiecesDraggable={!isThinking}
+                />
+              </div>
+
+              {game.isGameOver() && (
+                <div className="mt-6 p-4 bg-zen-800/60 rounded-lg text-center">
+                  <p className="text-lg font-medium text-zen-100">
+                    {game.isCheckmate()
+                      ? `Checkmate! ${game.turn() === 'w' ? 'Black' : 'White'} wins`
+                      : game.isDraw()
+                      ? 'Draw'
+                      : 'Game Over'}
+                  </p>
+                </div>
+              )}
+
+              {isThinking && (
+                <div className="mt-6 text-center text-zen-400">
+                  <span className="inline-flex items-center gap-2">
+                    <span className="w-2 h-2 bg-gold-400 rounded-full animate-pulse"></span>
+                    {legendData.name} is thinking...
+                  </span>
+                </div>
+              )}
             </div>
 
-            {game.isGameOver() && (
-              <div className="mt-4 p-4 bg-zen-800/60 rounded-lg text-center">
-                <p className="text-lg font-medium text-zen-100">
-                  {game.isCheckmate()
-                    ? `Checkmate! ${game.turn() === 'w' ? 'Black' : 'White'} wins`
-                    : game.isDraw()
-                    ? 'Draw'
-                    : 'Game Over'}
-                </p>
-              </div>
-            )}
+            {/* Game Controls - Compact sidebar */}
+            <div className="space-y-4">
+              <div className="glass-card p-5">
+                <h3 className="text-base font-medium text-zen-100 mb-3">Game Settings</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-zen-500 text-xs uppercase tracking-wider mb-2 block">Play as</label>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setPlayerColor('white');
+                          resetGame();
+                        }}
+                        className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all ${
+                          playerColor === 'white'
+                            ? 'bg-white text-zen-900 shadow-md'
+                            : 'bg-zen-800/60 text-zen-400 hover:bg-zen-700/60'
+                        }`}
+                      >
+                        ♔ White
+                      </button>
+                      <button
+                        onClick={() => {
+                          setPlayerColor('black');
+                          resetGame();
+                        }}
+                        className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all ${
+                          playerColor === 'black'
+                            ? 'bg-zen-900 text-white border border-zen-600 shadow-md'
+                            : 'bg-zen-800/60 text-zen-400 hover:bg-zen-700/60'
+                        }`}
+                      >
+                        ♚ Black
+                      </button>
+                    </div>
+                  </div>
 
-            {isThinking && (
-              <div className="mt-4 text-center text-zen-400">
-                {legendData.name} is thinking...
+                  <button onClick={resetGame} className="zen-button-primary w-full">
+                    New Game
+                  </button>
+                </div>
               </div>
-            )}
+
+              {/* Quick style tags */}
+              <div className="glass-card p-5">
+                <h3 className="text-base font-medium text-zen-100 mb-3">Playing Style</h3>
+                <div className="flex flex-wrap gap-2">
+                  {legendData.styleTags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-xs px-3 py-1.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="glass-card p-6">
-              <h3 className="text-lg font-medium text-zen-100 mb-4">Settings</h3>
-              
-              <div className="space-y-4">
+          {/* Expanded Legend Biography Section */}
+          <div className="glass-card p-8 overflow-hidden">
+            <div className="flex items-start gap-8">
+              {/* Left column - key info */}
+              <div className="w-72 flex-shrink-0 space-y-6">
                 <div>
-                  <label className="text-zen-400 text-sm mb-2 block">Player Color</label>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        setPlayerColor('white');
-                        resetGame();
-                      }}
-                      className={`px-4 py-2 rounded ${
-                        playerColor === 'white'
-                          ? 'bg-gold-500/20 text-gold-400'
-                          : 'bg-zen-800 text-zen-400 hover:bg-zen-700'
-                      }`}
-                    >
-                      White
-                    </button>
-                    <button
-                      onClick={() => {
-                        setPlayerColor('black');
-                        resetGame();
-                      }}
-                      className={`px-4 py-2 rounded ${
-                        playerColor === 'black'
-                          ? 'bg-gold-500/20 text-gold-400'
-                          : 'bg-zen-800 text-zen-400 hover:bg-zen-700'
-                      }`}
-                    >
-                      Black
-                    </button>
-                  </div>
+                  <h2 className="text-2xl font-serif text-zen-100 mb-1">{legendData.bio.fullName}</h2>
+                  <p className="text-gold-400 italic">{legendData.bio.nationality}</p>
                 </div>
 
-                {/* Removed bot strength option - legends play at their authentic historical strength */}
-                {/* The level is still used internally for fallback positions, but not exposed to users */}
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <span className="text-zen-500 block text-xs uppercase tracking-wider mb-1">Born</span>
+                    <span className="text-zen-300">{legendData.bio.born}</span>
+                  </div>
+                  {legendData.bio.died && (
+                    <div>
+                      <span className="text-zen-500 block text-xs uppercase tracking-wider mb-1">Died</span>
+                      <span className="text-zen-300">{legendData.bio.died}</span>
+                    </div>
+                  )}
+                  {legendData.bio.worldChampion && (
+                    <div>
+                      <span className="text-zen-500 block text-xs uppercase tracking-wider mb-1">World Champion</span>
+                      <span className="text-gold-400 font-medium">{legendData.bio.worldChampion}</span>
+                    </div>
+                  )}
+                  {legendData.bio.peakRating && (
+                    <div>
+                      <span className="text-zen-500 block text-xs uppercase tracking-wider mb-1">Peak Rating</span>
+                      <span className="text-zen-200 font-mono">{legendData.bio.peakRating}</span>
+                    </div>
+                  )}
+                </div>
 
-                <button onClick={resetGame} className="zen-button-primary w-full">
-                  New Game
-                </button>
+                <div>
+                  <span className="text-zen-500 block text-xs uppercase tracking-wider mb-2">Titles</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {legendData.bio.titles.map((title) => (
+                      <span key={title} className="text-xs px-2 py-1 rounded bg-zen-800/80 text-zen-300">
+                        {title}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="glass-card p-6">
-              <h3 className="text-lg font-medium text-zen-100 mb-4">About {legendData.name}</h3>
-              <p className="text-zen-400 text-sm mb-4">{legendData.description}</p>
-              <div className="flex flex-wrap gap-2">
-                {legendData.styleTags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs px-3 py-1 rounded-full bg-zen-800/60 text-zen-400"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              {/* Right column - biography and details */}
+              <div className="flex-1 min-w-0 space-y-8">
+                {/* Biography */}
+                <div>
+                  <h3 className="text-lg font-medium text-zen-100 mb-3 flex items-center gap-2">
+                    <span className="text-gold-400">◈</span> Biography
+                  </h3>
+                  <p className="text-zen-400 leading-relaxed">{legendData.bio.biography}</p>
+                </div>
+
+                {/* Playing Style */}
+                <div>
+                  <h3 className="text-lg font-medium text-zen-100 mb-3 flex items-center gap-2">
+                    <span className="text-gold-400">◈</span> Playing Style
+                  </h3>
+                  <p className="text-zen-400 leading-relaxed">{legendData.bio.playingStyle}</p>
+                </div>
+
+                {/* What Makes Them Great */}
+                <div>
+                  <h3 className="text-lg font-medium text-zen-100 mb-3 flex items-center gap-2">
+                    <span className="text-gold-400">◈</span> What Makes {legendData.name.split(' ')[0]} Great
+                  </h3>
+                  <ul className="space-y-2">
+                    {legendData.bio.whatMakesThemGreat.map((point, i) => (
+                      <li key={i} className="flex items-start gap-3 text-zen-400">
+                        <span className="text-gold-500 mt-1.5 text-xs">●</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Famous Games */}
+                <div>
+                  <h3 className="text-lg font-medium text-zen-100 mb-3 flex items-center gap-2">
+                    <span className="text-gold-400">◈</span> Famous Games to Study
+                  </h3>
+                  <ul className="space-y-2">
+                    {legendData.bio.famousGames.map((game, i) => (
+                      <li key={i} className="flex items-start gap-3 text-zen-400">
+                        <span className="text-gold-500/60 font-mono text-sm">{i + 1}.</span>
+                        <span>{game}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Famous Quotes */}
+                {legendData.bio.famousQuotes && legendData.bio.famousQuotes.length > 0 && (
+                  <div className="border-l-2 border-gold-500/30 pl-6 space-y-4">
+                    <h3 className="text-lg font-medium text-zen-100 mb-3">Notable Quotes</h3>
+                    {legendData.bio.famousQuotes.map((quote, i) => (
+                      <blockquote key={i} className="text-zen-400 italic">
+                        "{quote}"
+                      </blockquote>
+                    ))}
+                  </div>
+                )}
+
+                {/* Legacy */}
+                <div className="pt-4 border-t border-zen-800/50">
+                  <h3 className="text-lg font-medium text-zen-100 mb-3 flex items-center gap-2">
+                    <span className="text-gold-400">◈</span> Legacy
+                  </h3>
+                  <p className="text-zen-400 leading-relaxed">{legendData.bio.legacy}</p>
+                </div>
               </div>
             </div>
           </div>

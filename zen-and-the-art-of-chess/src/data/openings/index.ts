@@ -1,8 +1,10 @@
 // ============================================
 // OPENING LINES DATABASE
-// 30 essential lines from major openings
-// Each line takes you into the middlegame
+// Comprehensive database with tiered learning
+// Essential lines for learning + full database for exploration
 // ============================================
+
+export type LinePriority = 'essential' | 'recommended' | 'advanced' | 'reference';
 
 export interface OpeningLine {
   id: string;
@@ -16,7 +18,25 @@ export interface OpeningLine {
   difficulty: 1 | 2 | 3 | 4 | 5;
   category: 'e4' | 'd4' | 'c4' | 'nf3' | 'other';
   side?: 'white' | 'black';  // Optional - determined by opening course
+  priority?: LinePriority;   // Learning tier (undefined = reference/database)
 }
+
+// Helper to get learning lines only (essential + recommended)
+export const getLearningLines = (lines: OpeningLine[]): OpeningLine[] => 
+  lines.filter(l => l.priority === 'essential' || l.priority === 'recommended');
+
+// Helper to get essential lines only
+export const getEssentialLines = (lines: OpeningLine[]): OpeningLine[] => 
+  lines.filter(l => l.priority === 'essential');
+
+// Helper to count by priority
+export const countByPriority = (lines: OpeningLine[]) => ({
+  essential: lines.filter(l => l.priority === 'essential').length,
+  recommended: lines.filter(l => l.priority === 'recommended').length,
+  advanced: lines.filter(l => l.priority === 'advanced').length,
+  reference: lines.filter(l => !l.priority || l.priority === 'reference').length,
+  total: lines.length,
+});
 
 export const openingLines: OpeningLine[] = [
   // ==========================================
@@ -34,6 +54,7 @@ export const openingLines: OpeningLine[] = [
     difficulty: 2,
     category: 'e4',
     side: 'white',
+    priority: 'essential',
   },
   {
     id: 'italian-evans',
@@ -46,6 +67,7 @@ export const openingLines: OpeningLine[] = [
     keyIdeas: ['Rapid piece development', 'Open lines for attack', 'Pressure on f7'],
     difficulty: 3,
     category: 'e4',
+    priority: 'essential',
   },
 
   // ==========================================
@@ -399,9 +421,13 @@ import { d4OpeningsLines } from './d4-openings-lines';
 import { otherOpeningsLines } from './other-openings-lines';
 import { moreOpenings } from './more-openings';
 import { expandedSystems } from './expanded-systems';
+import { pgnOpenings } from './pgn-openings';
+import { indianDefenseLines } from './indian-defenses';
+import { italianGameLines } from './italian-lines';
 
-// Combine all openings
+// Combine all openings - including the massive PGN-generated database
 export const allOpenings: OpeningLine[] = [
+  ...italianGameLines,     // 50 curated Italian Game lines (first for priority)
   ...openingLines,
   ...expandedOpenings,
   ...ruyLopezLines,
@@ -410,6 +436,8 @@ export const allOpenings: OpeningLine[] = [
   ...otherOpeningsLines,
   ...moreOpenings,
   ...expandedSystems,
+  ...indianDefenseLines,   // 50+ lines for Indian systems
+  ...pgnOpenings,          // 61,000+ lines from PGN database
 ];
 
 // Get openings by category

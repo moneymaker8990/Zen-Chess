@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { useNotesStore, useStudyStore } from '@/state/notesStore';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import { PageHeader } from '@/components/Tutorial';
 import type { ChessNote, NoteCategory } from '@/lib/notesTypes';
 
@@ -43,6 +44,7 @@ const categoryColors: Record<NoteCategory, string> = {
 export function MasterNotebook() {
   const { notes, addNote, updateNote, deleteNote, searchNotes } = useNotesStore();
   const { recordNoteCreated } = useStudyStore();
+  const boardStyles = useBoardStyles();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState<NoteCategory | 'ALL'>('ALL');
@@ -311,8 +313,8 @@ function NoteDetail({
                 position={pos.fen}
                 arePiecesDraggable={false}
                 boardWidth={280}
-                customDarkSquareStyle={{ backgroundColor: '#4a6670' }}
-                customLightSquareStyle={{ backgroundColor: '#8ba4a8' }}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
               />
               {pos.caption && (
                 <p className="text-zen-500 text-xs mt-2 italic">{pos.caption}</p>

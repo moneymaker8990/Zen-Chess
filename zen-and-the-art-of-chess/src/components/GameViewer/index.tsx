@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Chessboard } from 'react-chessboard';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import type { InstructiveGame, AnnotatedMove } from '@/data/instructiveGames/types';
+import { 
+  fetchLegendGames, 
+  findLegendGame, 
+  parsePgnToMoves, 
+  getPlayerLegendId,
+  LEGEND_IDS 
+} from '@/lib/pgnParser';
 
 interface GameViewerProps {
   game: InstructiveGame;
@@ -11,28 +19,80 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
   const [currentMoveIndex, setCurrentMoveIndex] = useState(-1); // -1 = starting position
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [autoPlaySpeed, setAutoPlaySpeed] = useState(2000);
+  const [loadedMoves, setLoadedMoves] = useState<AnnotatedMove[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadedFromLegend, setLoadedFromLegend] = useState<string | null>(null);
+  const boardStyles = useBoardStyles();
+  
+  // Use loaded moves if game has no moves
+  const effectiveMoves = game.moves.length > 0 ? game.moves : loadedMoves;
+  
+  // Try to load moves from legend data if game has no moves
+  useEffect(() => {
+    if (game.moves.length > 0) return;
+    
+    async function loadFromLegends() {
+      setIsLoading(true);
+      
+      // Determine which legend to try based on player names
+      const whiteLegend = getPlayerLegendId(game.white);
+      const blackLegend = getPlayerLegendId(game.black);
+      
+      const legendsToTry = new Set<string>();
+      if (whiteLegend) legendsToTry.add(whiteLegend);
+      if (blackLegend) legendsToTry.add(blackLegend);
+      
+      // If no specific legends found, try all of them
+      if (legendsToTry.size === 0) {
+        LEGEND_IDS.forEach(id => legendsToTry.add(id));
+      }
+      
+      for (const legendId of legendsToTry) {
+        try {
+          const games = await fetchLegendGames(legendId);
+          const match = findLegendGame(games, game.white, game.black, game.year);
+          
+          if (match) {
+            const moves = parsePgnToMoves(match.pgn);
+            if (moves.length > 0) {
+              setLoadedMoves(moves);
+              setLoadedFromLegend(legendId);
+              setIsLoading(false);
+              return;
+            }
+          }
+        } catch (error) {
+          console.warn(`Failed to load from ${legendId}:`, error);
+        }
+      }
+      
+      setIsLoading(false);
+    }
+    
+    loadFromLegends();
+  }, [game.id, game.white, game.black, game.year, game.moves.length]);
   
   const startingFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
   
   const getCurrentFen = () => {
-    if (currentMoveIndex === -1 || game.moves.length === 0) {
+    if (currentMoveIndex === -1 || effectiveMoves.length === 0) {
       return startingFen;
     }
-    return game.moves[currentMoveIndex]?.fen || startingFen;
+    return effectiveMoves[currentMoveIndex]?.fen || startingFen;
   };
   
   const getCurrentMove = (): AnnotatedMove | null => {
-    if (currentMoveIndex === -1 || !game.moves[currentMoveIndex]) {
+    if (currentMoveIndex === -1 || !effectiveMoves[currentMoveIndex]) {
       return null;
     }
-    return game.moves[currentMoveIndex];
+    return effectiveMoves[currentMoveIndex];
   };
 
   // Navigation
   const goToStart = () => setCurrentMoveIndex(-1);
-  const goToEnd = () => setCurrentMoveIndex(game.moves.length - 1);
+  const goToEnd = () => setCurrentMoveIndex(effectiveMoves.length - 1);
   const goForward = () => {
-    if (currentMoveIndex < game.moves.length - 1) {
+    if (currentMoveIndex < effectiveMoves.length - 1) {
       setCurrentMoveIndex(prev => prev + 1);
     }
   };
@@ -66,19 +126,19 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentMoveIndex, game.moves.length]);
+  }, [currentMoveIndex, effectiveMoves.length]);
 
   // Auto-play
   useEffect(() => {
     if (!isAutoPlaying) return;
-    if (currentMoveIndex >= game.moves.length - 1) {
+    if (currentMoveIndex >= effectiveMoves.length - 1) {
       setIsAutoPlaying(false);
       return;
     }
 
     const timer = setTimeout(goForward, autoPlaySpeed);
     return () => clearTimeout(timer);
-  }, [isAutoPlaying, currentMoveIndex, autoPlaySpeed, game.moves.length]);
+  }, [isAutoPlaying, currentMoveIndex, autoPlaySpeed, effectiveMoves.length]);
 
   const currentMove = getCurrentMove();
 
@@ -118,8 +178,8 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
           <Chessboard
             position={getCurrentFen()}
             boardOrientation="white"
-            customDarkSquareStyle={{ backgroundColor: '#4a6670' }}
-            customLightSquareStyle={{ backgroundColor: '#8ba4a8' }}
+            customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+            customLightSquareStyle={boardStyles.customLightSquareStyle}
             arePiecesDraggable={false}
             boardWidth={480}
           />
@@ -141,11 +201,24 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
 
           {/* Move indicator */}
           <div className="text-center text-zen-500 text-sm">
-            Move {currentMoveIndex + 1} of {game.moves.length}
-            {currentMoveIndex >= 0 && game.moves[currentMoveIndex] && (
-              <span className="ml-2 text-gold-400 font-mono">
-                {getMoveLabel(currentMoveIndex)} {game.moves[currentMoveIndex].move}
-              </span>
+            {isLoading ? (
+              <span className="text-gold-400">Loading game moves...</span>
+            ) : effectiveMoves.length === 0 ? (
+              <span className="text-zen-600">No moves available for this game</span>
+            ) : (
+              <>
+                Move {currentMoveIndex + 1} of {effectiveMoves.length}
+                {currentMoveIndex >= 0 && effectiveMoves[currentMoveIndex] && (
+                  <span className="ml-2 text-gold-400 font-mono">
+                    {getMoveLabel(currentMoveIndex)} {effectiveMoves[currentMoveIndex].move}
+                  </span>
+                )}
+                {loadedFromLegend && (
+                  <span className="ml-2 text-emerald-500 text-xs">
+                    (loaded from {loadedFromLegend} database)
+                  </span>
+                )}
+              </>
             )}
           </div>
 
@@ -209,45 +282,53 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
           {/* Move list */}
           <div className="glass-card p-5 max-h-64 overflow-y-auto">
             <h3 className="text-sm text-zen-500 uppercase tracking-wider mb-3">Move List</h3>
-            <div className="space-y-1 font-mono text-sm">
-              {game.moves.reduce<JSX.Element[]>((acc, move, i) => {
-                if (i % 2 === 0) {
-                  const moveNumber = Math.floor(i / 2) + 1;
-                  const whiteMove = move;
-                  const blackMove = game.moves[i + 1];
-                  
-                  acc.push(
-                    <div 
-                      key={i}
-                      className="flex gap-2"
-                    >
-                      <span className="text-zen-600 w-8">{moveNumber}.</span>
-                      <button
-                        onClick={() => setCurrentMoveIndex(i)}
-                        className={`px-1 rounded hover:bg-zen-800/50 ${
-                          currentMoveIndex === i ? 'bg-gold-500/20 text-gold-400' : 
-                          whiteMove.isKeyMove ? 'text-gold-400/70' : 'text-zen-300'
-                        }`}
+            {isLoading ? (
+              <div className="text-zen-500 text-sm">Loading moves...</div>
+            ) : effectiveMoves.length === 0 ? (
+              <div className="text-zen-600 text-sm italic">
+                No annotated moves available for this game yet.
+              </div>
+            ) : (
+              <div className="space-y-1 font-mono text-sm">
+                {effectiveMoves.reduce<JSX.Element[]>((acc, move, i) => {
+                  if (i % 2 === 0) {
+                    const moveNumber = Math.floor(i / 2) + 1;
+                    const whiteMove = move;
+                    const blackMove = effectiveMoves[i + 1];
+                    
+                    acc.push(
+                      <div 
+                        key={i}
+                        className="flex gap-2"
                       >
-                        {whiteMove.move}
-                      </button>
-                      {blackMove && (
+                        <span className="text-zen-600 w-8">{moveNumber}.</span>
                         <button
-                          onClick={() => setCurrentMoveIndex(i + 1)}
+                          onClick={() => setCurrentMoveIndex(i)}
                           className={`px-1 rounded hover:bg-zen-800/50 ${
-                            currentMoveIndex === i + 1 ? 'bg-gold-500/20 text-gold-400' : 
-                            blackMove.isKeyMove ? 'text-gold-400/70' : 'text-zen-300'
+                            currentMoveIndex === i ? 'bg-gold-500/20 text-gold-400' : 
+                            whiteMove.isKeyMove ? 'text-gold-400/70' : 'text-zen-300'
                           }`}
                         >
-                          {blackMove.move}
+                          {whiteMove.move}
                         </button>
-                      )}
-                    </div>
-                  );
-                }
-                return acc;
-              }, [])}
-            </div>
+                        {blackMove && (
+                          <button
+                            onClick={() => setCurrentMoveIndex(i + 1)}
+                            className={`px-1 rounded hover:bg-zen-800/50 ${
+                              currentMoveIndex === i + 1 ? 'bg-gold-500/20 text-gold-400' : 
+                              blackMove.isKeyMove ? 'text-gold-400/70' : 'text-zen-300'
+                            }`}
+                          >
+                            {blackMove.move}
+                          </button>
+                        )}
+                      </div>
+                    );
+                  }
+                  return acc;
+                }, [])}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,12 +1,13 @@
 // ============================================
 // COMPREHENSIVE CHESS CURRICULUM
 // 80+ lessons with deep instructional content
+// Every step has a FEN position!
 // ============================================
 
 export interface LessonStep {
   title: string;
   content: string;
-  fen?: string; // Chess position to show
+  fen: string; // Chess position to show - REQUIRED
   highlights?: string[]; // Squares to highlight
   arrows?: [string, string][]; // Arrows to draw [from, to]
 }
@@ -22,7 +23,6 @@ export interface Lesson {
   objectives: string[];
   steps: LessonStep[];
   keyPoints: string[];
-  practicePositions?: { fen: string; solution: string; hint: string }[];
 }
 
 export interface Section {
@@ -38,9 +38,10 @@ export interface Section {
 }
 
 // ============================================
-// SECTION 1: THE BASICS
+// SECTION 1: THE BASICS - 10 COMPLETE LESSONS
 // ============================================
 const basicsLessons: Lesson[] = [
+  // LESSON 1: THE CHESSBOARD
   {
     id: 'basics-1',
     sectionId: 'basics',
@@ -72,6 +73,7 @@ const basicsLessons: Lesson[] = [
 - The **c-file** and **f-file** are "bishop files"
 
 Opening the central files (d and e) often leads to exciting attacking chess!`,
+        fen: '8/8/8/8/8/8/8/8 w - - 0 1',
         highlights: ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8'],
       },
       {
@@ -84,6 +86,7 @@ Opening the central files (d and e) often leads to exciting attacking chess!`,
 - **3rd rank** and **6th rank**: Development squares for minor pieces
 
 Most tactical battles happen on ranks 4, 5, 6, and 7.`,
+        fen: '8/8/8/8/8/8/8/8 w - - 0 1',
         highlights: ['a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4', 'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5'],
       },
       {
@@ -94,6 +97,7 @@ Most tactical battles happen on ranks 4, 5, 6, and 7.`,
 - The **a8-h1 diagonal** is the longest dark-square diagonal
 
 Each diagonal contains only one color of squares. This is why we have "light-squared bishops" and "dark-squared bishops"—they can never switch!`,
+        fen: '8/8/8/8/8/8/8/8 w - - 0 1',
         arrows: [['a1', 'h8'], ['a8', 'h1']],
       },
       {
@@ -106,10 +110,8 @@ Each diagonal contains only one color of squares. This is why we have "light-squ
 - **g1**: Where White's knight starts
 - **f7**: A weak point in Black's opening position
 
-To name a square: find the file (letter) first, then the rank (number). The square where they meet is the name.
-
-**Practice:** Where is the white king at the start? Answer: e1`,
-        fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+To name a square: find the file (letter) first, then the rank (number).`,
+        fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
         highlights: ['e4', 'd4', 'g1', 'f7', 'e1'],
       },
       {
@@ -135,6 +137,8 @@ The battle for central control is the foundation of all chess strategy.`,
       'White on right when setting up the board',
     ],
   },
+
+  // LESSON 2: THE KING
   {
     id: 'basics-2',
     sectionId: 'basics',
@@ -156,8 +160,9 @@ The battle for central control is the foundation of all chess strategy.`,
 Despite being the most important piece, the king is one of the weakest in terms of mobility. He can only move to the 8 squares immediately surrounding him.
 
 **However:** The king becomes a powerful piece in the endgame when there are fewer attackers on the board!`,
-        fen: '8/8/8/3K4/8/8/8/8 w - - 0 1',
-        highlights: ['c6', 'd6', 'e6', 'c5', 'e5', 'c4', 'd4', 'e4'],
+        fen: '8/8/8/4K3/8/8/8/8 w - - 0 1',
+        highlights: ['d6', 'e6', 'f6', 'd5', 'f5', 'd4', 'e4', 'f4'],
+        arrows: [['e5', 'd6'], ['e5', 'e6'], ['e5', 'f6'], ['e5', 'd4'], ['e5', 'f4']],
       },
       {
         title: 'The Goal of Chess',
@@ -169,6 +174,7 @@ You never actually capture the king. Instead, when the king is:
 - **Not attacked but no legal moves**: This is "stalemate" (draw)
 
 The entire game revolves around king safety and threatening the enemy king.`,
+        fen: '6k1/5ppp/8/8/8/8/5PPP/6K1 w - - 0 1',
       },
       {
         title: 'What is Check?',
@@ -180,34 +186,38 @@ When in check, you MUST respond immediately. You have exactly three options:
 3. **Capture** the attacking piece
 
 If none of these are possible, it's checkmate!`,
-        fen: '8/8/8/8/4r3/8/8/4K3 w - - 0 1',
-        arrows: [['e4', 'e1']],
+        fen: '4k3/8/8/8/8/8/4R3/4K3 w - - 0 1',
+        arrows: [['e2', 'e8']],
+        highlights: ['e8'],
       },
       {
-        title: 'Illegal Moves',
+        title: 'Escaping Check',
+        content: `Here White's king is in check from the black rook. White has three ways to escape:
+
+1. **Move**: King can go to d1, f1, d2, or f2
+2. **Block**: A piece could block on e2, e3, e4, e5, e6, or e7
+3. **Capture**: If White had a piece attacking the rook
+
+In this position, the simplest solution is to move the king.`,
+        fen: '4r3/8/8/8/8/8/8/4K3 w - - 0 1',
+        arrows: [['e8', 'e1']],
+        highlights: ['d1', 'f1', 'd2', 'f2'],
+      },
+      {
+        title: 'Illegal King Moves',
         content: `The king has strict rules about where he **cannot** go:
 
-1. **Cannot move into check**: You can't place your own king under attack
-2. **Cannot stay in check**: If checked, you must get out of it
-3. **Cannot castle through check**: (We'll learn castling later)
-4. **Cannot capture a protected piece**: (This would put you in check)
+1. **Cannot move into check**: You can't walk into an attack
+2. **Cannot stay in check**: If checked, you must escape
+3. **Cannot capture a protected piece**: This would put you in check
 
-These rules are absolute—violating them means the move is illegal.`,
+In this position, the white king cannot move to c3, c4, or c5 because the black rook attacks those squares.`,
         fen: '8/8/8/2r5/8/8/2K5/8 w - - 0 1',
-        highlights: ['c3', 'c4', 'c5'], // Squares the king cannot move to
+        highlights: ['c3', 'c4', 'c5'],
+        arrows: [['c5', 'c3']],
       },
       {
-        title: 'King Opposition',
-        content: `When two kings face each other with one square between them, this is called **opposition**.
-
-The player NOT to move has the opposition—an advantage because they can force the other king to retreat.
-
-Opposition is crucial in king and pawn endgames. We'll explore this deeply in the endgame section!`,
-        fen: '8/8/3k4/8/3K4/8/8/8 w - - 0 1',
-        arrows: [['d4', 'd5']],
-      },
-      {
-        title: 'Keeping Your King Safe',
+        title: 'King Safety',
         content: `**King safety** is one of the most important strategic concepts.
 
 **Early/Middle game rules:**
@@ -216,8 +226,9 @@ Opposition is crucial in king and pawn endgames. We'll explore this deeply in th
 - Don't advance the pawns in front of your king
 - Keep pieces defending your king
 
-**A exposed king is a losing king!** Even if you have extra material, a vulnerable king can lead to checkmate.`,
+**An exposed king is a losing king!** Even with extra material, a vulnerable king can lead to checkmate.`,
         fen: 'r4rk1/ppp2ppp/8/8/8/8/PPP2PPP/R4RK1 w - - 0 1',
+        highlights: ['g1', 'f2', 'g2', 'h2'],
       },
     ],
     keyPoints: [
@@ -228,6 +239,8 @@ Opposition is crucial in king and pawn endgames. We'll explore this deeply in th
       'Keep your king safe—castle early!',
     ],
   },
+
+  // LESSON 3: THE QUEEN
   {
     id: 'basics-3',
     sectionId: 'basics',
@@ -268,36 +281,38 @@ This makes her the most powerful piece on the board, controlling up to 27 square
 - King = Infinite (can't be captured)
 
 Losing your queen early usually means losing the game. Protect her!`,
-      },
-      {
-        title: 'Queen Development',
-        content: `**Don't bring your queen out too early!**
-
-This is one of the most common beginner mistakes. Why?
-
-1. The queen is a big target—pieces will attack her
-2. Moving the queen early wastes time (tempo)
-3. Minor pieces can develop while chasing your queen
-4. Your queen might get trapped
-
-**Best practice:** Develop knights and bishops first, then castle, THEN bring out the queen.`,
-        fen: 'rnb1kbnr/pppp1ppp/8/4p1q1/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1',
+        fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+        highlights: ['d1', 'd8'],
       },
       {
         title: 'Queen Attacks',
         content: `The queen is devastating in attacks because she combines long-range power in all directions.
 
+In this position, the white queen attacks SEVEN different pieces and squares simultaneously! The queen can attack the king, rook, bishop, and multiple pawns.
+
 **Common queen attack patterns:**
 - Queen + Bishop battery on diagonals
 - Queen + Rook on files/ranks
-- Queen raids on weak pawns
-- Back rank threats with queen and rook
-
-However, the queen alone rarely delivers checkmate. She needs help from other pieces!`,
-        fen: 'r1b2rk1/pp3ppp/2n2q2/3p4/3P4/2N2Q2/PP3PPP/R1B2RK1 w - - 0 1',
+- Queen raids on weak pawns`,
+        fen: 'r1bqk2r/ppp2ppp/2n1pn2/3p4/2PP4/2N1PQ2/PP3PPP/R1B1KB1R w KQkq - 0 1',
+        arrows: [['f3', 'f6'], ['f3', 'a8'], ['f3', 'f7'], ['f3', 'b3']],
       },
       {
-        title: 'Queen Endgames',
+        title: 'Don\'t Develop Queen Early',
+        content: `**Don't bring your queen out too early!**
+
+This is one of the most common beginner mistakes. In this position, Black's queen on h4 will be chased by White's pieces, wasting Black's time.
+
+**Why early queen development is bad:**
+1. The queen is a big target—pieces will attack her
+2. Moving the queen early wastes time (tempo)
+3. Minor pieces develop while chasing your queen`,
+        fen: 'rnb1kbnr/pppp1ppp/8/4p3/4P2q/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1',
+        arrows: [['g2', 'g3'], ['f1', 'e2']],
+        highlights: ['h4'],
+      },
+      {
+        title: 'Queen in the Endgame',
         content: `Queen vs King is a forced checkmate, but technique matters!
 
 **The Box Method:**
@@ -308,6 +323,7 @@ However, the queen alone rarely delivers checkmate. She needs help from other pi
 
 A queen alone cannot checkmate—you always need your king's help!`,
         fen: '8/8/8/8/3k4/8/8/4QK2 w - - 0 1',
+        arrows: [['e1', 'e4'], ['f1', 'd3']],
       },
     ],
     keyPoints: [
@@ -318,6 +334,8 @@ A queen alone cannot checkmate—you always need your king's help!`,
       'Queen is great but can\'t win alone',
     ],
   },
+
+  // LESSON 4: THE ROOK
   {
     id: 'basics-4',
     sectionId: 'basics',
@@ -346,15 +364,12 @@ Rooks are worth **5 points**, making them "major pieces" along with the queen.`,
         title: 'Open Files',
         content: `An **open file** is a vertical column with no pawns. Rooks LOVE open files!
 
-**Why open files matter:**
-- Rooks can penetrate into enemy territory
-- They support pawn advances
-- They control key entry points
-- Connected rooks on an open file are powerful
+In this position, the d-file is completely open. White's rook can penetrate to d7 or d8, creating havoc in Black's position.
 
 **Goal:** Place your rooks on open files before your opponent does!`,
-        fen: 'r4rk1/ppp2ppp/8/4p3/4P3/8/PPP2PPP/R4RK1 w - - 0 1',
+        fen: 'r4rk1/ppp2ppp/8/4p3/4P3/8/PPP2PPP/3R1RK1 w - - 0 1',
         highlights: ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8'],
+        arrows: [['d1', 'd7']],
       },
       {
         title: 'The Seventh Rank',
@@ -367,8 +382,9 @@ On the 7th rank, your rook:
 - Cuts off the enemy king
 
 **"A rook on the 7th is worth a pawn!"** - Classic chess wisdom`,
-        fen: '6k1/1R6/8/8/8/8/8/4K3 w - - 0 1',
-        arrows: [['b7', 'g7'], ['b7', 'b8']],
+        fen: '6k1/1R3ppp/8/8/8/8/5PPP/6K1 w - - 0 1',
+        arrows: [['b7', 'g7'], ['b7', 'f7']],
+        highlights: ['b7'],
       },
       {
         title: 'Connected Rooks',
@@ -378,11 +394,11 @@ Connected rooks are incredibly powerful because:
 - They defend each other
 - They can double on files or ranks
 - Two rooks = 10 points (more than a queen!)
-- They dominate open positions
 
 **Strategy:** Connect your rooks by moving them to the same rank or file.`,
         fen: '8/8/8/8/8/8/8/R3R2K w - - 0 1',
         arrows: [['a1', 'e1']],
+        highlights: ['a1', 'e1'],
       },
       {
         title: 'Rook Activation',
@@ -393,10 +409,10 @@ Connected rooks are incredibly powerful because:
 2. Clear pawns to create open files
 3. Move rooks to central or open files
 4. Connect your rooks on the back rank
-5. Double them on key files
 
 **Passive rooks lose games.** Always look for ways to improve their positions!`,
         fen: 'r4rk1/ppp2ppp/2n5/3pp3/3PP3/2N5/PPP2PPP/R4RK1 w - - 0 1',
+        arrows: [['a1', 'd1'], ['f1', 'e1']],
       },
     ],
     keyPoints: [
@@ -407,6 +423,8 @@ Connected rooks are incredibly powerful because:
       'Connect your rooks for maximum power',
     ],
   },
+
+  // LESSON 5: THE BISHOP
   {
     id: 'basics-5',
     sectionId: 'basics',
@@ -439,21 +457,23 @@ Each player starts with two bishops—one light, one dark.`,
         title: 'Long Diagonals',
         content: `The longest diagonals are a1-h8 and a8-h1, each with 8 squares.
 
-A bishop on a long diagonal is called a **fianchettoed bishop** when placed on b2/g2 (for White) or b7/g7 (for Black).
+A bishop on a long diagonal can be extremely powerful, especially when aimed at the enemy king. This position shows a **fianchettoed bishop** on g2, controlling the long diagonal.
 
-**Fianchetto** (pronounced "fee-an-KET-oh") is an Italian word meaning "little flank." It's a common opening strategy!`,
-        fen: 'r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
-        arrows: [['a8', 'h1']],
+**Fianchetto** (pronounced "fee-an-KET-oh") is Italian for "little flank."`,
+        fen: 'rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 1',
+        arrows: [['b4', 'f8'], ['b4', 'e1']],
+        highlights: ['b4'],
       },
       {
         title: 'Good vs Bad Bishops',
         content: `A **good bishop** is one whose path isn't blocked by its own pawns.
 A **bad bishop** is trapped behind its own pawns.
 
-**Example:** If your pawns are on light squares, your light-squared bishop is "bad" because its diagonals are blocked.
+In this position, White's bishop on c1 is "bad" because White's pawns on d4 and e3 block its diagonals. The bishop has no scope!
 
 **Strategy:** Put pawns on opposite color squares to your remaining bishop!`,
-        fen: '8/pp3ppp/4p3/3pP3/3P4/8/PP3PPP/2B5 w - - 0 1',
+        fen: '8/pp3ppp/4p3/3pP3/3P4/4P3/PP3PPP/2B5 w - - 0 1',
+        highlights: ['c1', 'd4', 'e3'],
       },
       {
         title: 'The Bishop Pair',
@@ -466,8 +486,9 @@ A **bad bishop** is trapped behind its own pawns.
 - They become stronger as pawns disappear
 
 **Rule:** If you have the bishop pair, trade pawns, not pieces!`,
-        fen: '8/8/8/8/3B4/8/2B5/8 w - - 0 1',
-        highlights: ['a1', 'b2', 'd4', 'e5', 'f6', 'g7', 'h8', 'a4', 'b3', 'd1', 'e2', 'f3', 'g4', 'h5'],
+        fen: '8/8/8/4B3/8/2B5/8/8 w - - 0 1',
+        highlights: ['c3', 'e5'],
+        arrows: [['c3', 'h8'], ['c3', 'a1'], ['e5', 'a1'], ['e5', 'h8']],
       },
       {
         title: 'Bishop vs Knight',
@@ -484,7 +505,8 @@ A **bad bishop** is trapped behind its own pawns.
 - All action is on one side
 
 Generally, bishops are slightly better in open positions.`,
-        fen: '8/8/4n3/8/3B4/8/8/8 w - - 0 1',
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        highlights: ['c4', 'f6'],
       },
     ],
     keyPoints: [
@@ -495,6 +517,8 @@ Generally, bishops are slightly better in open positions.`,
       'Bishops prefer open positions',
     ],
   },
+
+  // LESSON 6: THE KNIGHT
   {
     id: 'basics-6',
     sectionId: 'basics',
@@ -520,8 +544,8 @@ Generally, bishops are slightly better in open positions.`,
 - Worth approximately **3 points**
 
 Knights are tricky—even experienced players miscalculate their moves!`,
-        fen: '8/8/8/3N4/8/8/8/8 w - - 0 1',
-        highlights: ['b6', 'c7', 'e7', 'f6', 'f4', 'e3', 'c3', 'b4'],
+        fen: '8/8/8/4N3/8/8/8/8 w - - 0 1',
+        highlights: ['d7', 'f7', 'g6', 'g4', 'f3', 'd3', 'c4', 'c6'],
       },
       {
         title: 'Knights on the Rim',
@@ -532,36 +556,38 @@ A knight on the edge controls only 3-4 squares.
 A knight in the center controls 8 squares!
 
 **Lesson:** Keep knights centralized! e4, d4, e5, d5 are ideal squares.`,
-        fen: 'N7/8/8/8/8/8/8/8 w - - 0 1',
+        fen: 'N7/8/8/8/3N4/8/8/8 w - - 0 1',
         highlights: ['b3', 'c2'],
+        arrows: [['a8', 'b6'], ['a8', 'c7'], ['d4', 'b3'], ['d4', 'c2'], ['d4', 'e2'], ['d4', 'f3'], ['d4', 'f5'], ['d4', 'e6'], ['d4', 'c6'], ['d4', 'b5']],
       },
       {
         title: 'Knight Outposts',
         content: `An **outpost** is a square where your knight cannot be attacked by enemy pawns.
 
-**The perfect outpost:**
-- Protected by your own pawn
-- Cannot be attacked by enemy pawns
-- Deep in enemy territory (ranks 4-6)
+In this position, the knight on e5 is a perfect outpost:
+- Protected by the d4 pawn
+- Cannot be attacked by Black's pawns
+- Deep in enemy territory
 - Controls important squares
 
 An outpost knight can be worth more than a bishop!`,
-        fen: '8/pp3ppp/4p3/3pN3/2P5/8/PP3PPP/8 w - - 0 1',
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4N3/3P4/8/PPP1PPPP/RNBQKB1R w KQkq - 0 1',
         highlights: ['e5'],
+        arrows: [['d4', 'e5']],
       },
       {
         title: 'Knight Forks',
         content: `Because the knight moves uniquely, it's the best piece for **forks**—attacking two pieces at once!
 
-**Common fork targets:**
-- King + Queen (the "royal fork")
-- King + Rook
-- Queen + Rook
-- Two minor pieces
+In this position, the knight on c7 attacks BOTH the king and the rook! This is called a "royal fork" and wins the rook.
 
-Knights fork from angles that other pieces can't defend. Watch for them!`,
-        fen: '8/8/8/3N4/8/8/8/r3K2r w - - 0 1',
-        arrows: [['d5', 'c3'], ['c3', 'a1'], ['c3', 'e1']],
+**Common fork targets:**
+- King + Queen (devastating!)
+- King + Rook
+- Queen + Rook`,
+        fen: 'r3k3/2N5/8/8/8/8/8/4K3 w - - 0 1',
+        arrows: [['c7', 'e8'], ['c7', 'a8']],
+        highlights: ['c7', 'e8', 'a8'],
       },
       {
         title: 'Knights in Closed Positions',
@@ -573,8 +599,9 @@ Knights fork from angles that other pieces can't defend. Watch for them!`,
 - They can find outposts behind enemy pawns
 - Short-range maneuvering is valuable
 
-**Rule:** In closed positions, knight > bishop. In open positions, bishop > knight.`,
-        fen: 'r1bqkbnr/ppp2ppp/2np4/4p3/2PPP3/2N2N2/PP3PPP/R1BQKB1R w KQkq - 0 1',
+In this blocked position, the knight is clearly superior to the bishop.`,
+        fen: 'r1bqk2r/pp1nbppp/2p1pn2/3p4/2PP4/2NBPN2/PP3PPP/R1BQK2R w KQkq - 0 1',
+        highlights: ['d3', 'f3', 'f6', 'd7'],
       },
     ],
     keyPoints: [
@@ -585,6 +612,8 @@ Knights fork from angles that other pieces can't defend. Watch for them!`,
       'Knights prefer closed positions',
     ],
   },
+
+  // LESSON 7: THE PAWN
   {
     id: 'basics-7',
     sectionId: 'basics',
@@ -610,22 +639,20 @@ Knights fork from angles that other pieces can't defend. Watch for them!`,
 - Cannot capture pieces directly in front
 
 Pawns are worth only **1 point** but they're essential for controlling space.`,
-        fen: '8/8/8/8/8/3P4/8/8 w - - 0 1',
-        highlights: ['d4', 'd5'],
+        fen: '8/8/8/8/8/8/4P3/8 w - - 0 1',
+        highlights: ['e3', 'e4'],
+        arrows: [['e2', 'e3'], ['e2', 'e4']],
       },
       {
         title: 'Pawn Captures',
         content: `Pawns capture **diagonally forward**, not straight ahead.
 
-This means:
-- A pawn can be blocked by ANY piece directly in front
-- Pawns control the diagonal squares in front of them
-- Two pawns side by side protect each other
-- Pawns can create "passed pawn" situations
+In this position, the white pawn on d4 can capture the black knight on e5 or the black bishop on c5. It cannot move forward because there's a pawn blocking on d5.
 
 The diagonal capture is why pawns control different squares than they can move to!`,
-        fen: '8/8/4n3/3P4/8/8/8/8 w - - 0 1',
-        arrows: [['d5', 'e6']],
+        fen: '8/8/8/2bPn3/3P4/8/8/8 w - - 0 1',
+        arrows: [['d4', 'e5'], ['d4', 'c5']],
+        highlights: ['c5', 'e5'],
       },
       {
         title: 'En Passant',
@@ -637,7 +664,7 @@ The diagonal capture is why pawns control different squares than they can move t
 3. You can capture it as if it had moved only one square
 4. You MUST capture immediately or lose the right
 
-This rule exists to prevent pawns from "sneaking by" using the two-square move!`,
+This rule prevents pawns from "sneaking by" using the two-square move!`,
         fen: '8/8/8/3Pp3/8/8/8/8 w - e6 0 1',
         arrows: [['d5', 'e6']],
         highlights: ['e5', 'e6'],
@@ -649,12 +676,13 @@ This rule exists to prevent pawns from "sneaking by" using the two-square move!`
 **Promotion rules:**
 - You MUST promote (can't stay a pawn)
 - Usually promote to Queen (most powerful)
-- Sometimes promote to Knight (unique move)
+- Sometimes promote to Knight (for checkmate)
 - Rarely promote to Rook/Bishop (to avoid stalemate)
 
-**Underpromotion:** Choosing a piece other than queen. Rare but sometimes necessary!`,
-        fen: '8/3P4/8/8/8/8/8/8 w - - 0 1',
+In this position, the pawn will promote to a queen next move!`,
+        fen: '8/3P4/8/8/8/8/8/4K2k w - - 0 1',
         arrows: [['d7', 'd8']],
+        highlights: ['d7', 'd8'],
       },
       {
         title: 'Passed Pawns',
@@ -665,23 +693,25 @@ This rule exists to prevent pawns from "sneaking by" using the two-square move!`
 - They tie down enemy pieces
 - Two connected passed pawns can win games
 
-**"Passed pawns must be pushed!"** - Every coach ever
-
-Creating and pushing passed pawns is a key endgame skill.`,
-        fen: '8/3P4/8/8/8/8/2p5/8 w - - 0 1',
-        highlights: ['d7', 'd8'],
+In this position, White's d-pawn is passed and very dangerous!`,
+        fen: '8/8/3P4/8/8/5p2/8/4K2k w - - 0 1',
+        highlights: ['d6', 'd7', 'd8'],
+        arrows: [['d6', 'd8']],
       },
       {
-        title: 'Philidor\'s Quote',
-        content: `**"Pawns are the soul of chess."** - François-André Philidor (1726-1795)
+        title: 'Pawn Structure',
+        content: `**"Pawns are the soul of chess."** - François-André Philidor
 
-This famous quote means:
-- Pawn structure determines the character of the game
-- Piece placement depends on pawn structure
-- Pawn weaknesses often decide games
-- Understanding pawns = understanding chess
+Pawn structure determines the character of the game. Common structures include:
 
-We'll study pawn structures deeply in the strategy section!`,
+- **Doubled pawns**: Two pawns on the same file (usually weak)
+- **Isolated pawn**: No friendly pawns on adjacent files
+- **Pawn chain**: Diagonal line of pawns supporting each other
+- **Passed pawn**: No enemy pawns can stop it
+
+Understanding pawn structure is key to strategic chess!`,
+        fen: 'rnbqkbnr/ppp2ppp/4p3/3pP3/3P4/8/PPP2PPP/RNBQKBNR w KQkq - 0 1',
+        highlights: ['d4', 'd5', 'e5', 'e6'],
       },
     ],
     keyPoints: [
@@ -692,6 +722,8 @@ We'll study pawn structures deeply in the strategy section!`,
       'Passed pawns are very valuable',
     ],
   },
+
+  // LESSON 8: CASTLING
   {
     id: 'basics-8',
     sectionId: 'basics',
@@ -719,6 +751,7 @@ We'll study pawn structures deeply in the strategy section!`,
 - O-O = Kingside castling (short castle)
 - O-O-O = Queenside castling (long castle)`,
         fen: 'r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1',
+        arrows: [['e1', 'g1'], ['h1', 'f1']],
       },
       {
         title: 'Kingside Castling',
@@ -731,7 +764,7 @@ This is the most common form of castling because:
 
 After castling kingside, your king is usually safe behind the f, g, and h pawns.`,
         fen: '5rk1/ppppp1pp/8/8/8/8/PPPPP1PP/5RK1 w - - 0 1',
-        arrows: [['e1', 'g1'], ['h1', 'f1']],
+        highlights: ['g1', 'f1', 'g8', 'f8'],
       },
       {
         title: 'Queenside Castling',
@@ -740,24 +773,25 @@ After castling kingside, your king is usually safe behind the f, g, and h pawns.
 Queenside castling:
 - Requires 3 pieces to move (queen, bishop, knight)
 - Places the rook on an often-open file (d-file)
-- King is slightly less protected (c-pawn is weaker)
+- King is slightly less protected (a-pawn is farther)
 - Can lead to opposite-side castling attacks!`,
         fen: '2kr4/pppppppp/8/8/8/8/PPPPPPPP/2KR4 w - - 0 1',
-        arrows: [['e8', 'c8'], ['a8', 'd8']],
+        highlights: ['c1', 'd1', 'c8', 'd8'],
       },
       {
         title: 'Castling Requirements',
         content: `You can only castle if ALL these conditions are met:
 
-1. ❌ King has never moved
-2. ❌ Rook (that side) has never moved  
-3. ❌ No pieces between king and rook
-4. ❌ King is NOT currently in check
-5. ❌ King does NOT pass through check
-6. ❌ King does NOT land in check
+1. King has never moved
+2. Rook (that side) has never moved  
+3. No pieces between king and rook
+4. King is NOT currently in check
+5. King does NOT pass through check
+6. King does NOT land in check
 
-**Remember:** You can castle if the ROOK passes through an attacked square—just not the king!`,
-        fen: 'r3k2r/pppp1ppp/4p3/8/1b6/4P3/PPPP1PPP/R3K2R w KQkq - 0 1',
+**Note:** The ROOK can pass through an attacked square—just not the king!`,
+        fen: 'r3k2r/pppp1ppp/4p3/8/1b6/4PN2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        highlights: ['e1', 'f1', 'g1'],
       },
       {
         title: 'When to Castle',
@@ -771,21 +805,10 @@ Queenside castling:
 
 **When to delay castling:**
 - If castled side is under immediate attack
-- To keep opponent guessing which side you'll castle
+- To keep opponent guessing which side
 - In some sharp opening lines (rare)`,
-      },
-      {
-        title: 'Opposite Side Castling',
-        content: `When players castle on **opposite sides**, the game becomes a race!
-
-**Opposite castling leads to:**
-- Pawn storms (pawns attacking enemy king position)
-- Open files toward enemy king
-- Aggressive, sharp play
-- "Whoever attacks first wins"
-
-This is some of the most exciting chess you can play!`,
-        fen: 'r3k2r/ppp2ppp/8/8/8/8/PPP2PPP/R3K2R w KQkq - 0 1',
+        fen: 'r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['e1', 'g1']],
       },
     ],
     keyPoints: [
@@ -796,6 +819,8 @@ This is some of the most exciting chess you can play!`,
       'Castle early for king safety!',
     ],
   },
+
+  // LESSON 9: CHECK & CHECKMATE
   {
     id: 'basics-9',
     sectionId: 'basics',
@@ -814,66 +839,61 @@ This is some of the most exciting chess you can play!`,
         title: 'Check',
         content: `**Check** occurs when a piece attacks the enemy king.
 
+In this position, the white queen checks the black king. Black MUST respond to the check.
+
 **Three ways to escape check:**
 1. **Move** the king to a safe square
 2. **Block** the check with another piece
-3. **Capture** the attacking piece
-
-You MUST respond to check—no other move is legal!`,
+3. **Capture** the attacking piece`,
         fen: 'rnbqkbnr/ppppp2p/5p2/6pQ/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 0 1',
         arrows: [['h5', 'e8']],
+        highlights: ['e8'],
       },
       {
         title: 'Checkmate',
         content: `**Checkmate** = Check with no escape. The game is over!
 
-For checkmate, all three escape methods must fail:
-- ❌ King cannot move (all squares attacked or blocked)
-- ❌ Cannot block (or no blocking piece available)
-- ❌ Cannot capture attacker (or capture is protected)
+This is the "Fool's Mate" - the fastest possible checkmate (just 2 moves). The queen delivers checkmate because:
+- The king cannot move (h5 and f3 attacked)
+- Nothing can block
+- Nothing can capture the queen
 
-**Goal of chess:** Deliver checkmate, not just capture pieces!`,
+**Goal of chess:** Deliver checkmate!`,
         fen: 'rnb1kbnr/pppp1ppp/4p3/8/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 1',
-        highlights: ['h4'],
+        highlights: ['h4', 'e1'],
+        arrows: [['h4', 'e1']],
       },
       {
         title: 'Stalemate',
         content: `**Stalemate** = No legal moves, but NOT in check. It's a DRAW!
 
-Stalemate happens when:
-- It's your turn
-- Your king is NOT in check
-- You have NO legal moves (none at all!)
+In this position, Black's king is not in check, but has no legal moves! This is stalemate - the game is drawn.
 
 **Warning:** Don't accidentally stalemate when you're winning! Many games are thrown away this way.`,
-        fen: '5k2/5P2/4K3/8/8/8/8/8 b - - 0 1',
+        fen: '7k/5Q2/6K1/8/8/8/8/8 b - - 0 1',
+        highlights: ['h8', 'g8', 'h7'],
       },
       {
-        title: 'Double Check',
-        content: `**Double check** = Two pieces attack the king simultaneously.
+        title: 'Back Rank Mate',
+        content: `The **back rank mate** is one of the most common checkmate patterns.
 
-This is extremely dangerous because:
-- You can't block two attacks
-- You can't capture two pieces
-- The king MUST move!
+The king is trapped on the back rank by its own pawns, and a rook or queen delivers checkmate. Always watch for this pattern!
 
-Double check often leads to checkmate because the king's options are severely limited.`,
-        fen: '8/8/8/5N2/8/2k5/4B3/4K3 w - - 0 1',
-        arrows: [['f5', 'd4'], ['e2', 'a6']],
-      },
-      {
-        title: 'Checkmate Patterns',
-        content: `Recognizing checkmate patterns helps you spot opportunities.
-
-**Common patterns:**
-- **Back rank mate**: Queen/Rook on last rank, king trapped by own pawns
-- **Smothered mate**: Knight checkmates king blocked by own pieces
-- **Scholar's mate**: Queen + Bishop coordinate on f7/f2
-- **Anastasia's mate**: Knight + Rook coordination
-
-We'll practice all these patterns in the tactics section!`,
+**Prevention:** Create "luft" (breathing room) by moving a pawn like h3.`,
         fen: '6k1/5ppp/8/8/8/8/8/4R1K1 w - - 0 1',
         arrows: [['e1', 'e8']],
+        highlights: ['g8', 'f7', 'g7', 'h7'],
+      },
+      {
+        title: 'Smothered Mate',
+        content: `The **smothered mate** is a beautiful pattern where a knight checkmates a king trapped by its own pieces.
+
+In this position, the knight on f7 delivers checkmate! The king cannot escape because its own pieces (rook on g8, pawns on g7/h7) block all escape squares.
+
+This is one of chess's most elegant patterns.`,
+        fen: '5Nk1/5ppp/8/8/8/8/8/4K3 w - - 0 1',
+        arrows: [['f8', 'g8'], ['f8', 'h7']],
+        highlights: ['g8', 'f8'],
       },
     ],
     keyPoints: [
@@ -884,6 +904,8 @@ We'll practice all these patterns in the tactics section!`,
       'Learn checkmate patterns to win more games',
     ],
   },
+
+  // LESSON 10: BASIC CHECKMATES
   {
     id: 'basics-10',
     sectionId: 'basics',
@@ -909,79 +931,82 @@ We'll practice all these patterns in the tactics section!`,
 4. King + Bishop + Knight vs King (hardest)
 
 Today we'll master the first two—they happen constantly!`,
+        fen: '8/8/8/4k3/8/8/8/4QK2 w - - 0 1',
       },
       {
-        title: 'Queen vs King: The Box Method',
+        title: 'Queen + King: The Box Method',
         content: `**Step 1:** Create a "box" that traps the enemy king.
 
-Use your queen to limit the king's movement, pushing it toward the edge.
+Use your queen to limit the king's movement, pushing it toward the edge. In this position, the queen on d5 creates a box - the black king cannot escape past the 5th rank or d-file.
 
-**Key principle:** Don't let the king escape toward the center! Keep cutting off squares with your queen.`,
-        fen: '8/8/3Q4/8/3k4/8/8/4K3 w - - 0 1',
-        highlights: ['d5', 'd6', 'd7', 'd8', 'e5', 'e6', 'e7', 'e8', 'f5', 'f6', 'f7', 'f8', 'g5', 'g6', 'g7', 'g8', 'h5', 'h6', 'h7', 'h8'],
+**Key principle:** Don't let the king escape toward the center!`,
+        fen: '8/8/8/3Qk3/8/8/8/4K3 w - - 0 1',
+        highlights: ['d5', 'd6', 'd7', 'd8', 'e5', 'f5', 'g5', 'h5'],
       },
       {
-        title: 'Queen vs King: Bring the King',
-        content: `**Step 2:** Bring YOUR king to help.
+        title: 'Queen + King: Shrink the Box',
+        content: `**Step 2:** Gradually shrink the box while bringing your king closer.
 
-The queen alone can't checkmate. Your king must approach to:
-- Support the queen
-- Take away escape squares
-- Deliver the final blow
+Now the queen moves to e6, making the box smaller. The black king is pushed to the edge. Keep restricting the king's movement while your king approaches.
 
-**Be careful:** Don't get too close and allow stalemate!`,
-        fen: '8/8/8/3Q4/3k4/4K3/8/8 w - - 0 1',
+**Never give stalemate!** Always leave the enemy king at least one square.`,
+        fen: '4k3/8/4Q3/8/8/8/8/4K3 w - - 0 1',
+        arrows: [['e1', 'e2'], ['e6', 'e7']],
       },
       {
-        title: 'Queen vs King: Checkmate Pattern',
-        content: `**Step 3:** Force the king to the edge and deliver checkmate.
+        title: 'Queen + King: Deliver Checkmate',
+        content: `**Step 3:** With the king on the edge, deliver checkmate.
 
-Classic checkmate position: King on the edge, your queen supported by your king, delivering mate.
+This is the classic queen + king checkmate position. The queen covers all escape squares while the king supports from a distance.
 
-**Warning:** Watch for stalemate! If the enemy king has no moves and isn't in check, it's a draw!`,
-        fen: 'Q2k4/8/3K4/8/8/8/8/8 w - - 0 1',
-        arrows: [['a8', 'd8']],
+**Pattern to memorize:** Enemy king on edge, your king nearby, queen delivers mate.`,
+        fen: '4k3/4Q3/4K3/8/8/8/8/8 w - - 0 1',
+        arrows: [['e7', 'e8']],
+        highlights: ['e8', 'd8', 'f8', 'd7', 'f7'],
       },
       {
-        title: 'Rook vs King: Cut Off',
+        title: 'Rook + King: Cut Off',
         content: `King + Rook vs King is slower but follows similar principles.
 
 **Step 1:** Use the rook to cut off the king.
 
-Think of the rook as creating a wall. The enemy king cannot cross the rook's rank or file.`,
-        fen: '8/8/8/4R3/3k4/8/8/4K3 w - - 0 1',
+In this position, the rook on e4 creates a wall - the enemy king cannot cross to the other side of the board. Think of the rook as creating a barrier.`,
+        fen: '3k4/8/8/8/4R3/8/8/4K3 w - - 0 1',
         highlights: ['e4', 'e5', 'e6', 'e7', 'e8'],
       },
       {
-        title: 'Rook vs King: Opposition',
+        title: 'Rook + King: Opposition',
         content: `**Step 2:** Use your king to take opposition.
 
-When your king faces the enemy king with one square between, you have "opposition." The king who moves must retreat.
+"Opposition" means the two kings face each other with one square between them. Whoever moves first must retreat! 
 
-The rook + king work together: king pushes, rook cuts off.`,
-        fen: '8/3k4/8/3K4/8/8/8/4R3 w - - 0 1',
-        arrows: [['d5', 'd7']],
+Here, White plays Ke6, gaining opposition. If Black moves, he must retreat to the edge.`,
+        fen: '8/3k4/8/8/4R3/3K4/8/8 w - - 0 1',
+        arrows: [['d3', 'd4'], ['d4', 'd5'], ['d5', 'd6']],
       },
       {
-        title: 'Rook vs King: Checkmate',
-        content: `**Step 3:** Force the king to the edge and checkmate.
+        title: 'Rook + King: Checkmate',
+        content: `**Step 3:** Force the king to the edge and deliver checkmate.
 
-The pattern: King on the edge, your king providing opposition, rook delivers mate along the edge.
+This is the classic rook + king checkmate. The rook delivers mate on the 8th rank while the king controls the escape squares.
 
-**Key technique:** Don't rush! Take your time, improve your position, then strike.`,
-        fen: '3kR3/8/3K4/8/8/8/8/8 w - - 0 1',
+**Key technique:** Don't rush! Improve your position systematically.`,
+        fen: '3Rk3/8/4K3/8/8/8/8/8 w - - 0 1',
+        arrows: [['d8', 'e8']],
+        highlights: ['e8', 'd7', 'f7'],
       },
       {
-        title: 'Practice These!',
-        content: `These basic checkmates should be automatic—you should be able to do them without thinking!
+        title: 'Practice Makes Perfect',
+        content: `These basic checkmates should become automatic—you should execute them without thinking!
 
 **Practice tips:**
-1. Set up K+Q vs K positions and practice until perfect
-2. Then practice K+R vs K (it's trickier!)
+1. Set up K+Q vs K positions and practice
+2. Then practice K+R vs K (trickier!)
 3. Aim for checkmate in minimal moves
-4. Review if you accidentally stalemate
+4. If you stalemate, review what went wrong
 
-**Pro tip:** These positions appear in your games all the time. Master them!`,
+**These positions appear constantly.** Master them!`,
+        fen: '8/8/8/8/3k4/8/8/4RK2 w - - 0 1',
       },
     ],
     keyPoints: [
@@ -995,7 +1020,7 @@ The pattern: King on the edge, your king providing opposition, rook delivers mat
 ];
 
 // ============================================
-// SECTION 2: TACTICS I
+// SECTION 2: TACTICS I - 10 COMPLETE LESSONS
 // ============================================
 const tactics1Lessons: Lesson[] = [
   {
@@ -1006,23 +1031,21 @@ const tactics1Lessons: Lesson[] = [
     icon: '⚔️',
     duration: '5 min',
     difficulty: 1,
-    objectives: [
-      'Understand the difference between tactics and strategy',
-      'Learn what makes a move "forcing"',
-      'Recognize tactical patterns',
-    ],
+    objectives: ['Understand tactics vs strategy', 'Learn what makes moves forcing', 'Recognize tactical opportunities'],
     steps: [
       {
         title: 'Tactics vs Strategy',
-        content: `**Tactics** are short-term, concrete sequences of moves—usually involving threats, checks, or captures.
+        content: `**Tactics** are short-term, concrete sequences involving threats, checks, or captures.
 
-**Strategy** is long-term planning—piece placement, pawn structure, and overall coordination.
+**Strategy** is long-term planning—piece placement, pawn structure, coordination.
 
 **Key difference:** 
 - Tactics = "I attack your queen, you must respond"
-- Strategy = "I'll control the open file, then invade on the 7th rank"
+- Strategy = "I'll control the open file over many moves"
 
-"Tactics flow from a superior position." - Bobby Fischer`,
+Most amateur games are decided by tactics, not strategy!`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 0 1',
+        arrows: [['h5', 'f7']],
       },
       {
         title: 'Forcing Moves',
@@ -1033,42 +1056,37 @@ const tactics1Lessons: Lesson[] = [
 2. **Captures** - Often must recapture
 3. **Threats** - Must defend or lose material
 
-Calculating forcing moves is easier because your opponent has fewer choices!`,
-        fen: 'r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+Always look for forcing moves first! They're easier to calculate.`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['f3', 'g5'], ['c4', 'f7']],
       },
       {
-        title: 'Why Tactics Win Games',
-        content: `Most amateur games are decided by tactics, not strategy!
+        title: 'Checks First',
+        content: `**"Checks, captures, threats"** - Calculate in this order!
 
-**Statistics:** 
-- 70%+ of amateur games are won/lost on tactical errors
-- Even grandmasters blunder when tired or in time trouble
-- One tactical shot can overturn a losing position
+Checks are the most forcing because the opponent MUST respond. In this position, Qxf7+ is check AND captures material.
 
-**Lesson:** Improve your tactics = win more games!`,
+Always ask: "Do I have any checks?" before anything else.`,
+        fen: 'r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 1',
+        highlights: ['f7'],
+        arrows: [['f7', 'e8'], ['f7', 'f8']],
       },
       {
         title: 'Pattern Recognition',
         content: `Chess masters don't calculate everything—they recognize patterns instantly.
 
 **Building pattern recognition:**
-1. Study classic tactical motifs
+1. Study classic tactical motifs (forks, pins, skewers)
 2. Solve puzzles daily
 3. Review your tactical errors
 4. Play regularly and analyze
 
-The patterns we'll learn in this section are the building blocks of ALL chess tactics.`,
+The patterns we'll learn are the building blocks of ALL chess tactics.`,
+        fen: 'r2qkb1r/ppp2ppp/2n1bn2/3pp3/4P3/2N2N2/PPPPBPPP/R1BQK2R w KQkq - 0 1',
       },
     ],
-    keyPoints: [
-      'Tactics are short-term forcing sequences',
-      'Checks, captures, and threats are forcing',
-      'Most amateur games are decided by tactics',
-      'Pattern recognition comes from practice',
-    ],
+    keyPoints: ['Tactics are concrete forcing sequences', 'Calculate checks, captures, threats in order', 'Pattern recognition beats calculation', 'Most amateur games are won/lost on tactics'],
   },
-  // ... More tactics lessons would continue here
-  // I'll add placeholder structure for the remaining lessons
   {
     id: 'tactics1-2',
     sectionId: 'tactics1',
@@ -1077,14 +1095,75 @@ The patterns we'll learn in this section are the building blocks of ALL chess ta
     icon: '🍴',
     duration: '8 min',
     difficulty: 2,
-    objectives: ['Master fork patterns', 'Identify fork opportunities', 'Set up forks'],
+    objectives: ['Master fork patterns', 'Identify fork opportunities', 'Execute knight forks'],
     steps: [
-      { title: 'What is a Fork?', content: 'A fork is an attack on two or more pieces simultaneously. The attacker will win material because the defender can only save one piece.' },
-      { title: 'Knight Forks', content: 'Knights are the best forking pieces because they attack on a unique path that cannot be blocked.' },
-      { title: 'Pawn Forks', content: 'Pawns can fork too! A pawn fork on major pieces is devastating.' },
-      { title: 'Queen Forks', content: 'Queens can fork from long range, combining checks with attacks on loose pieces.' },
+      {
+        title: 'What is a Fork?',
+        content: `A **fork** is an attack on two or more pieces simultaneously with a single piece.
+
+The attacker wins material because the defender can only save one piece!
+
+**Any piece can fork**, but knights are the best at it because of their unique jumping ability.`,
+        fen: '4k3/8/8/3N4/8/8/8/4K3 w - - 0 1',
+        arrows: [['d5', 'e7'], ['d5', 'c7'], ['d5', 'b6'], ['d5', 'f6']],
+      },
+      {
+        title: 'Knight Forks',
+        content: `Knights are the forking champions! Their L-shaped move means pieces can't simply retreat to escape.
+
+In this position, if White plays Nc7+, the knight attacks BOTH the king and the rook! This is called a **royal fork**.
+
+After the king moves, White captures the rook for free.`,
+        fen: 'r3k3/8/8/2N5/8/8/8/4K3 w - - 0 1',
+        arrows: [['c5', 'c7']],
+        highlights: ['c7'],
+      },
+      {
+        title: 'The Royal Fork',
+        content: `The **royal fork** attacks the king and queen simultaneously—the most devastating fork!
+
+Here Nd6+ is check, attacking both king and queen. Black must move the king, and White wins the queen!
+
+**Always check for knight forks.** Look for squares where your knight attacks multiple valuable pieces.`,
+        fen: 'r1b1k3/1pppqppp/8/8/3N4/8/PPPPPPPP/R1BQKB1R w KQq - 0 1',
+        arrows: [['d4', 'd6']],
+        highlights: ['d6', 'e8', 'e7'],
+      },
+      {
+        title: 'Pawn Forks',
+        content: `Pawns can fork too! A pawn fork is especially powerful because:
+- Pawns are worth only 1 point
+- They attack pieces worth 3+ points
+- Pieces can't safely capture the pawn (usually)
+
+In this position, e5! forks the bishop and knight, winning material.`,
+        fen: 'r1bqkbnr/pppp1ppp/8/4n3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 0 1',
+        arrows: [['e4', 'e5']],
+        highlights: ['e5', 'c4'],
+      },
+      {
+        title: 'Queen Forks',
+        content: `The queen is excellent at forking because she controls so many squares.
+
+In this position, Qa4+ is check AND attacks the loose bishop on b4. Black must deal with the check, losing the bishop.
+
+**Tip:** Look for queen forks that include check—they're the most forcing!`,
+        fen: 'rnbqk2r/pppp1ppp/5n2/4p3/1b2P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1',
+        arrows: [['d1', 'a4']],
+        highlights: ['a4', 'e8', 'b4'],
+      },
+      {
+        title: 'Setting Up Forks',
+        content: `Sometimes you need to set up a fork with a preparatory move.
+
+In this position, the knight can't fork immediately. But after Bxf7+ Kxf7, the knight can play Ne5+ forking king and queen!
+
+**Think ahead:** "If I make this exchange, can I then fork?"`,
+        fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['c4', 'f7'], ['f3', 'e5']],
+      },
     ],
-    keyPoints: ['Forks attack two+ pieces at once', 'Knights are forking champions', 'Look for loose pieces to fork'],
+    keyPoints: ['Forks attack two+ pieces at once', 'Knights are the best forking pieces', 'Royal fork = king + queen', 'Pawns can fork effectively too', 'Look for forks with check'],
   },
   {
     id: 'tactics1-3',
@@ -1096,12 +1175,471 @@ The patterns we'll learn in this section are the building blocks of ALL chess ta
     difficulty: 2,
     objectives: ['Understand absolute vs relative pins', 'Exploit pinned pieces', 'Create pins'],
     steps: [
-      { title: 'What is a Pin?', content: 'A pin occurs when a piece cannot move because doing so would expose a more valuable piece behind it.' },
-      { title: 'Absolute Pins', content: 'When the piece behind is the king, it is ILLEGAL to move the pinned piece. This is an absolute pin.' },
-      { title: 'Relative Pins', content: 'When the piece behind is valuable but not the king, the pinned piece CAN move (but usually should not).' },
-      { title: 'Exploiting Pins', content: 'Attack pinned pieces with pawns! They cannot run away.' },
+      {
+        title: 'What is a Pin?',
+        content: `A **pin** occurs when a piece cannot move (or should not move) because a more valuable piece is behind it.
+
+The pinned piece is stuck! It can't leave because the piece behind would be captured.
+
+**Pins are created by:** Bishops, Rooks, and Queens (long-range pieces).`,
+        fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1',
+        arrows: [['c4', 'f7']],
+      },
+      {
+        title: 'Absolute Pin',
+        content: `An **absolute pin** pins a piece to the king. The pinned piece CANNOT legally move!
+
+In this position, the knight on f6 is absolutely pinned by the bishop on g5. The knight cannot move because the king would be in check.
+
+Absolute pins are the most powerful because the piece literally cannot move.`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p1B1/4P3/5N2/PPPP1PPP/RN1QKB1R b KQkq - 0 1',
+        arrows: [['g5', 'd8']],
+        highlights: ['f6', 'g5'],
+      },
+      {
+        title: 'Relative Pin',
+        content: `A **relative pin** pins a piece to something other than the king. The piece CAN move, but should it?
+
+Here the knight on c6 is pinned to the queen on d8. The knight can legally move, but doing so loses the queen!
+
+**Relative pins:** The piece can move, but usually shouldn't.`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1',
+        arrows: [['b5', 'd8']],
+        highlights: ['c6', 'b5', 'd8'],
+      },
+      {
+        title: 'Exploiting Pins',
+        content: `The key to exploiting pins is to **pile up on the pinned piece**!
+
+In this position, White can play g4! attacking the pinned knight with a pawn. The knight cannot escape because it's pinned to the queen.
+
+**Strategy:** Attack pinned pieces with less valuable pieces, especially pawns.`,
+        fen: 'r1bq1rk1/pppp1ppp/2n2n2/1B2p1B1/4P3/5N2/PPPP1PPP/RN1QK2R w KQ - 0 1',
+        arrows: [['g2', 'g4']],
+        highlights: ['f6'],
+      },
+      {
+        title: 'The Pin and Win',
+        content: `Sometimes pins lead to immediate material gain.
+
+Here, Bb5! pins the knight to the king. If the knight moves, the king is in check. If it doesn't move, White plays Bxc6, winning the knight!
+
+**"Pin and win"** is a common tactical theme.`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['c4', 'b5']],
+        highlights: ['c6'],
+      },
     ],
-    keyPoints: ['Pins restrict piece movement', 'Absolute pins involve the king', 'Attack pinned pieces with pawns'],
+    keyPoints: ['Pins immobilize pieces', 'Absolute pin = to the king (illegal to move)', 'Relative pin = to a valuable piece', 'Attack pinned pieces with pawns', 'Pin and win is a key pattern'],
+  },
+  {
+    id: 'tactics1-4',
+    sectionId: 'tactics1',
+    title: 'The Skewer',
+    subtitle: 'Attack through a piece',
+    icon: '🎯',
+    duration: '6 min',
+    difficulty: 2,
+    objectives: ['Understand skewers', 'Differentiate from pins', 'Execute skewer tactics'],
+    steps: [
+      {
+        title: 'What is a Skewer?',
+        content: `A **skewer** is like a reverse pin. A valuable piece is attacked, and when it moves, a piece behind it is captured.
+
+**Pin:** Less valuable piece in front
+**Skewer:** More valuable piece in front
+
+In this position, Rb8+ is a skewer. The king must move, and White captures the queen!`,
+        fen: '1k6/1q6/8/8/8/8/8/1R4K1 w - - 0 1',
+        arrows: [['b1', 'b8']],
+        highlights: ['b8', 'b7'],
+      },
+      {
+        title: 'King and Queen Skewer',
+        content: `The most common skewer targets king + queen.
+
+Here, after Bb5+ the king must move, and the bishop captures the queen on d7.
+
+**Always look for skewers** when the opponent's king and queen are on the same line!`,
+        fen: 'r3kq1r/pppbpppp/2n5/1B6/8/8/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['b5', 'e8']],
+        highlights: ['e8', 'd7'],
+      },
+      {
+        title: 'Rook Skewers',
+        content: `Rooks are excellent at skewering pieces on files and ranks.
+
+In this position, Re1+ skewers the king and the bishop on e7. The king moves, and White wins the bishop.
+
+**Look for open lines** between the enemy king and other pieces.`,
+        fen: '4k3/4b3/8/8/8/8/8/4RK2 w - - 0 1',
+        arrows: [['e1', 'e8']],
+        highlights: ['e8', 'e7'],
+      },
+      {
+        title: 'Setting Up Skewers',
+        content: `Sometimes you need to set up a skewer with a preparatory move.
+
+Here, Qxg4+! forces Kxg4, and then Bxd1 wins the queen through the skewer line.
+
+**Think creatively:** Sacrifices often set up devastating skewers.`,
+        fen: 'r1b2rk1/ppppqppp/2n5/8/6Q1/2N5/PPPP1PPP/R1B2RK1 w - - 0 1',
+        arrows: [['g4', 'g8']],
+      },
+    ],
+    keyPoints: ['Skewer = reverse pin', 'More valuable piece in front', 'Most common: King + Queen skewer', 'Look for pieces on same line', 'Rooks skewer on ranks and files'],
+  },
+  {
+    id: 'tactics1-5',
+    sectionId: 'tactics1',
+    title: 'Discovered Attack',
+    subtitle: 'Unleash hidden threats',
+    icon: '💥',
+    duration: '8 min',
+    difficulty: 2,
+    objectives: ['Understand discovered attacks', 'Learn discovered checks', 'Recognize double attacks'],
+    steps: [
+      {
+        title: 'What is a Discovered Attack?',
+        content: `A **discovered attack** occurs when one piece moves, revealing an attack from a piece behind it.
+
+The moving piece can attack something, while the revealed piece attacks something else—two threats at once!
+
+This is one of the most powerful tactical weapons.`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+      },
+      {
+        title: 'Discovered Attack Example',
+        content: `In this position, if White moves the knight, the bishop on c4 will attack the queen on d8!
+
+Any knight move creates a discovered attack on the queen. The best is Nxe5, which also captures a pawn.
+
+**Two threats are better than one!**`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['f3', 'e5'], ['c4', 'd5']],
+      },
+      {
+        title: 'Discovered Check',
+        content: `A **discovered check** is even more powerful—the revealed attack is a check!
+
+Here, moving the bishop with Bxf7+ reveals check from the queen, but also captures a pawn with the bishop. The king must deal with the check, and White keeps the extra pawn.
+
+Discovered check = king must respond, other piece wins material.`,
+        fen: 'r1bqk2r/pppp1ppp/2n2n2/2b1p3/2BPP3/5N2/PPP2PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['c4', 'f7'], ['d1', 'b3']],
+      },
+      {
+        title: 'Double Check',
+        content: `**Double check** is the deadliest—BOTH pieces give check!
+
+The only way to escape double check is to move the king. You can't block or capture two attackers at once!
+
+Double check often leads to checkmate because the king's options are so limited.`,
+        fen: 'r1bqk2r/pppp1Bpp/2n2n2/2b1N3/4P3/8/PPP2PPP/RNBQK2R b KQkq - 0 1',
+        arrows: [['f7', 'e8'], ['e5', 'g6']],
+        highlights: ['e8'],
+      },
+      {
+        title: 'Setting Up Discoveries',
+        content: `Position your pieces to create discovery potential.
+
+In this position, if the knight moves, the bishop will attack the queen. But where should the knight go?
+
+Nf6+! is perfect—it's check AND discovers an attack on the queen. Black loses the queen!`,
+        fen: 'r1bqk2r/ppppbppp/2n5/4N3/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['e5', 'f6'], ['c4', 'd5']],
+      },
+    ],
+    keyPoints: ['Discovered attack reveals hidden threats', 'Moving piece + revealed piece = two threats', 'Discovered check is very powerful', 'Double check forces king to move', 'Position pieces to create discoveries'],
+  },
+  {
+    id: 'tactics1-6',
+    sectionId: 'tactics1',
+    title: 'Double Attack',
+    subtitle: 'Two threats at once',
+    icon: '⚡',
+    duration: '6 min',
+    difficulty: 2,
+    objectives: ['Recognize double attacks', 'Execute double attack tactics', 'Understand threat priority'],
+    steps: [
+      {
+        title: 'What is a Double Attack?',
+        content: `A **double attack** is any move that creates two threats simultaneously.
+
+Forks, discoveries, and other tactics are all types of double attacks. The opponent can only stop one threat!
+
+**Key insight:** One move, two problems for your opponent.`,
+        fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+      },
+      {
+        title: 'Queen Double Attacks',
+        content: `The queen excels at double attacks because she controls so many squares.
+
+Here, Qa4+ attacks the king AND the rook on a8. Black must save the king, and White wins the rook!
+
+**The queen's range makes her perfect for double attacks.**`,
+        fen: 'r3kb1r/ppp2ppp/2n1bn2/3qp3/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 1',
+        arrows: [['d1', 'a4']],
+        highlights: ['a4', 'e8', 'a8'],
+      },
+      {
+        title: 'Rook Double Attacks',
+        content: `Rooks can create double attacks along ranks and files.
+
+In this position, Re1+ is check and attacks the loose bishop on e7. After the king moves, White takes the bishop.
+
+**Look for rook moves that check AND attack a piece.**`,
+        fen: '4k3/4b3/8/8/8/8/8/R3K3 w - - 0 1',
+        arrows: [['a1', 'e1']],
+        highlights: ['e1', 'e8', 'e7'],
+      },
+      {
+        title: 'Minor Piece Double Attacks',
+        content: `Bishops and knights can also create double attacks.
+
+Here, Bg5 attacks the queen AND threatens Bxf6, damaging Black's pawn structure. Black can only deal with one problem!
+
+**Think about what secondary threats your moves create.**`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1',
+        arrows: [['c1', 'g5']],
+        highlights: ['d8', 'f6'],
+      },
+    ],
+    keyPoints: ['Double attack = one move, two threats', 'Queens are double attack masters', 'Check + attack is very forcing', 'Opponent can only stop one threat', 'Always look for secondary threats'],
+  },
+  {
+    id: 'tactics1-7',
+    sectionId: 'tactics1',
+    title: 'Removing the Defender',
+    subtitle: 'Eliminate protection',
+    icon: '🗡️',
+    duration: '7 min',
+    difficulty: 2,
+    objectives: ['Identify key defenders', 'Execute removal tactics', 'Understand piece relationships'],
+    steps: [
+      {
+        title: 'The Concept',
+        content: `**Removing the defender** means capturing or distracting the piece that protects a target.
+
+Once the defender is gone, the target becomes vulnerable!
+
+**Steps:**
+1. Identify what you want to attack
+2. Find what's protecting it
+3. Remove that defender`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+      },
+      {
+        title: 'Capture the Defender',
+        content: `The most direct method—simply capture the defending piece!
+
+In this position, the knight on f6 protects the queen on d8. Bxf6! removes the defender, and Qxd8 follows.
+
+**Ask yourself:** "What is protecting the piece I want to take?"`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p1B1/4P3/5N2/PPPP1PPP/RN1QKB1R w KQkq - 0 1',
+        arrows: [['g5', 'f6'], ['d1', 'd8']],
+        highlights: ['f6', 'd8'],
+      },
+      {
+        title: 'Distract the Defender',
+        content: `Sometimes you can't capture the defender, but you can distract it!
+
+Here, the rook on f8 protects the back rank. Rxf8+! forces Rxf8, and now White's other rook can invade with Re8#!
+
+**Deflection** is a key removal tactic.`,
+        fen: '5rk1/pp3ppp/8/8/8/8/PP3PPP/3RRK2 w - - 0 1',
+        arrows: [['d1', 'd8'], ['e1', 'e8']],
+      },
+      {
+        title: 'Overloaded Defender',
+        content: `An **overloaded piece** has too many jobs. It can't defend everything!
+
+In this position, the queen protects both the rook on a8 AND the knight on f6. Bxf6! exploits this—if Qxf6, Qxa8+ wins the rook.
+
+**Look for pieces defending multiple things.**`,
+        fen: 'r4rk1/1ppqbppp/2n2n2/p2pp1B1/4P3/2NP1N2/PPP1QPPP/R4RK1 w - - 0 1',
+        arrows: [['g5', 'f6']],
+        highlights: ['d7', 'f6', 'a8'],
+      },
+    ],
+    keyPoints: ['Remove what protects your target', 'Capture, distract, or overload defenders', 'Ask: what is protecting this piece?', 'Overloaded pieces can\'t do everything', 'Deflection removes defenders too'],
+  },
+  {
+    id: 'tactics1-8',
+    sectionId: 'tactics1',
+    title: 'Trapped Pieces',
+    subtitle: 'Nowhere to run',
+    icon: '🪤',
+    duration: '6 min',
+    difficulty: 2,
+    objectives: ['Recognize trapped pieces', 'Create piece traps', 'Avoid getting trapped'],
+    steps: [
+      {
+        title: 'What is a Trapped Piece?',
+        content: `A **trapped piece** has no safe squares to escape to and can be captured.
+
+Trapping pieces is one of the most satisfying tactics—the opponent watches helplessly as their piece is lost!
+
+**Common victims:** Bishops on the rim, knights in the corner, adventurous queens.`,
+        fen: '8/8/8/1p6/8/8/8/B7 w - - 0 1',
+        highlights: ['a1', 'b5'],
+      },
+      {
+        title: 'The Classic Bishop Trap',
+        content: `In the opening, bishops can easily become trapped.
+
+Here, Black's bishop on g4 has wandered too far. After h3, the bishop has no retreat! If Bh5, then g4 traps it.
+
+**Lesson:** Don't send your bishops to enemy territory without an escape plan!`,
+        fen: 'rn1qkbnr/ppp1pppp/8/3p4/4P1b1/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1',
+        arrows: [['h2', 'h3'], ['g2', 'g4']],
+        highlights: ['g4'],
+      },
+      {
+        title: 'Knight Trap',
+        content: `Knights in the corner or on the rim are especially vulnerable.
+
+In this position, the knight on a4 is running out of squares. After b3!, the knight is trapped and will be captured.
+
+**"A knight on the rim is dim"** applies to trapping too!`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/n1B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['b2', 'b3']],
+        highlights: ['a4'],
+      },
+      {
+        title: 'The Noah\'s Ark Trap',
+        content: `The famous "Noah's Ark Trap" from the Ruy Lopez traps the bishop.
+
+After a6, b5, and c4, White's bishop on b3 is completely trapped! It has nowhere to go.
+
+This trap has caught countless players, even strong ones!`,
+        fen: 'r1bqkbnr/1pp2ppp/p1p5/4p3/1B2P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1',
+        arrows: [['c6', 'c5'], ['a6', 'b5']],
+        highlights: ['b4'],
+      },
+    ],
+    keyPoints: ['Trapped pieces have no escape', 'Bishops and knights on edges are vulnerable', 'Create escape routes for your pieces', 'Noah\'s Ark Trap is a classic', 'Don\'t venture too deep without an exit'],
+  },
+  {
+    id: 'tactics1-9',
+    sectionId: 'tactics1',
+    title: 'Back Rank Tactics',
+    subtitle: 'Exploit weak back ranks',
+    icon: '💀',
+    duration: '8 min',
+    difficulty: 2,
+    objectives: ['Recognize back rank weaknesses', 'Execute back rank mates', 'Prevent back rank disasters'],
+    steps: [
+      {
+        title: 'The Weak Back Rank',
+        content: `A **weak back rank** occurs when the king is trapped by its own pawns and a rook or queen can deliver checkmate.
+
+In this position, White plays Re8#! The king cannot escape because its own pawns block g8, f8, and h8.
+
+**Always watch for back rank weaknesses!**`,
+        fen: '4r1k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1',
+        arrows: [['a1', 'e1'], ['e1', 'e8']],
+        highlights: ['e8', 'g8', 'f7', 'g7', 'h7'],
+      },
+      {
+        title: 'Creating Luft',
+        content: `**Luft** (German for "air") means giving your king an escape square.
+
+Simply moving h3 (or g3) gives the king a flight square and prevents back rank mate.
+
+**Good habit:** Create luft early, especially when queens and rooks are on the board.`,
+        fen: '4r1k1/5ppp/8/8/8/7P/5PP1/R5K1 w - - 0 1',
+        arrows: [['h2', 'h3']],
+        highlights: ['h2', 'h3'],
+      },
+      {
+        title: 'Back Rank Deflection',
+        content: `Sometimes you need to deflect a defender to execute the back rank mate.
+
+Here, Qxd8! removes the defender. If Rxd8, then Re8+ Rxe8, and Rxe8#!
+
+**Sacrifices often set up back rank mates.**`,
+        fen: 'r2qr1k1/5ppp/8/8/8/8/5PPP/R2QR1K1 w - - 0 1',
+        arrows: [['d1', 'd8'], ['e1', 'e8']],
+      },
+      {
+        title: 'Double Rook Mate',
+        content: `Two rooks are deadly on the back rank.
+
+In this position, Rxa8+! sacrifices a rook, but after Rxa8, Re8+ forces Rxe8, and Rxe8#!
+
+The rooks support each other to deliver checkmate.`,
+        fen: 'r3r1k1/5ppp/8/8/8/8/5PPP/RR4K1 w - - 0 1',
+        arrows: [['a1', 'a8'], ['b1', 'e1']],
+      },
+    ],
+    keyPoints: ['Back rank mate traps king behind pawns', 'Create luft (h3 or g3) for safety', 'Rooks and queens deliver back rank mates', 'Sacrifices often set up the mate', 'Always check for back rank threats'],
+  },
+  {
+    id: 'tactics1-10',
+    sectionId: 'tactics1',
+    title: 'Tactical Review',
+    subtitle: 'Putting it all together',
+    icon: '🧩',
+    duration: '10 min',
+    difficulty: 2,
+    objectives: ['Review all tactical patterns', 'Practice pattern recognition', 'Combine multiple tactics'],
+    steps: [
+      {
+        title: 'Summary of Patterns',
+        content: `Let's review the tactical patterns we've learned:
+
+1. **Fork** - Attack two pieces at once
+2. **Pin** - Immobilize a piece (absolute or relative)
+3. **Skewer** - Attack through a piece
+4. **Discovered Attack** - Reveal a hidden threat
+5. **Double Attack** - Two threats with one move
+6. **Removing Defender** - Eliminate protection
+7. **Trapped Pieces** - No escape
+8. **Back Rank** - Mate on the last rank`,
+        fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+      },
+      {
+        title: 'Pattern Recognition',
+        content: `The key to tactics is **seeing patterns instantly**.
+
+When you look at any position, ask:
+- Are there any pieces lined up? (Pin/Skewer/Discovery)
+- Is any piece undefended? (Fork/Double Attack)
+- Is the back rank weak? (Mate threats)
+- Can I remove a defender?
+
+**Practice:** Solve puzzles daily!`,
+        fen: 'r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+      },
+      {
+        title: 'Combining Tactics',
+        content: `Strong tactics often combine multiple patterns.
+
+In this position, Nxe5! combines several ideas:
+- If Nxe5, Bxf7+ is check (fork king/rook after Kf8)
+- If dxe5, Qxd8 wins the queen
+- If Bxd1, Bxf7+ is check, then Nxd8
+
+Multiple threats = tactical power!`,
+        fen: 'r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+        arrows: [['f3', 'e5'], ['c4', 'f7']],
+      },
+      {
+        title: 'Daily Practice',
+        content: `To improve at tactics:
+
+1. **Solve puzzles every day** - Even 10-15 minutes helps
+2. **Review your mistakes** - Learn from errors
+3. **Play and analyze** - Find the tactics you missed
+4. **Study master games** - See how pros use tactics
+5. **Be patient** - Pattern recognition takes time
+
+Tactics win games. Master them!`,
+        fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+      },
+    ],
+    keyPoints: ['Review all 8 tactical patterns', 'Ask the right questions each position', 'Combine tactics for powerful attacks', 'Practice puzzles daily', 'Pattern recognition improves with time'],
   },
 ];
 
@@ -1139,8 +1677,8 @@ export const CURRICULUM: Section[] = [
     color: 'from-blue-400 to-indigo-500',
     bgColor: '#3730a3',
     icon: '📚',
-    requiredXP: 60,
-    lessons: [], // Would be populated
+    requiredXP: 80,
+    lessons: [], // Coming soon
   },
   {
     id: 'tactics2',
@@ -1150,8 +1688,8 @@ export const CURRICULUM: Section[] = [
     color: 'from-orange-400 to-amber-500',
     bgColor: '#b45309',
     icon: '⚡',
-    requiredXP: 100,
-    lessons: [],
+    requiredXP: 130,
+    lessons: [], // Coming soon
   },
   {
     id: 'positional',
@@ -1161,8 +1699,8 @@ export const CURRICULUM: Section[] = [
     color: 'from-purple-400 to-violet-500',
     bgColor: '#6b21a8',
     icon: '🏔️',
-    requiredXP: 150,
-    lessons: [],
+    requiredXP: 180,
+    lessons: [], // Coming soon
   },
   {
     id: 'endgames',
@@ -1172,8 +1710,8 @@ export const CURRICULUM: Section[] = [
     color: 'from-rose-400 to-pink-500',
     bgColor: '#9f1239',
     icon: '🏆',
-    requiredXP: 200,
-    lessons: [],
+    requiredXP: 240,
+    lessons: [], // Coming soon
   },
   {
     id: 'strategy',
@@ -1183,8 +1721,8 @@ export const CURRICULUM: Section[] = [
     color: 'from-red-400 to-rose-600',
     bgColor: '#991b1b',
     icon: '🧠',
-    requiredXP: 280,
-    lessons: [],
+    requiredXP: 300,
+    lessons: [], // Coming soon
   },
   {
     id: 'mastery',
@@ -1195,9 +1733,8 @@ export const CURRICULUM: Section[] = [
     bgColor: '#854d0e',
     icon: '☯️',
     requiredXP: 365,
-    lessons: [],
+    lessons: [], // Coming soon
   },
 ];
 
 export default CURRICULUM;
-

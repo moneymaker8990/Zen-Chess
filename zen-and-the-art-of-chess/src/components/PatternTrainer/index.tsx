@@ -1,6 +1,7 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { ChessBoardPanel } from '@/components/ChessBoardPanel';
 import { useProgressStore } from '@/state/useStore';
+import { useCoachStore } from '@/state/coachStore';
 import type { ChessPuzzle, PatternType } from '@/lib/types';
 
 // Import puzzles
@@ -55,14 +56,24 @@ export function PatternTrainer({
   const [solved, setSolved] = useState(0);
   const [failed, setFailed] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
+  
+  // Track timing for coach
+  const puzzleStartTime = useRef<number>(Date.now());
 
   const { recordPuzzle } = useProgressStore();
+  const { recordEvent, recordPuzzle: recordCoachPuzzle } = useCoachStore();
 
   // Reset puzzle index when filters change from parent
   useEffect(() => {
     setCurrentPuzzleIndex(0);
     setShowSolution(false);
-  }, [patternType, difficulty]);
+    puzzleStartTime.current = Date.now();
+    
+    // Track pattern training start
+    if (patternType) {
+      recordEvent('PATTERN_PRACTICE_START', { patternType, difficulty });
+    }
+  }, [patternType, difficulty, recordEvent]);
 
   // Filter puzzles based on props from parent
   const filteredPuzzles = useMemo(() => {
@@ -76,23 +87,52 @@ export function PatternTrainer({
   const currentPuzzle: ChessPuzzle | undefined = filteredPuzzles[currentPuzzleIndex];
 
   const handlePuzzleSolved = useCallback(() => {
+    const timeToSolve = Date.now() - puzzleStartTime.current;
+    const timeSeconds = Math.round(timeToSolve / 1000);
     setSolved((prev) => prev + 1);
     recordPuzzle(true);
     onComplete?.(true);
+    
+    // Record to coach (solved, timeSeconds, hintsUsed)
+    recordCoachPuzzle(true, timeSeconds, showSolution ? 1 : 0);
+    
+    if (currentPuzzle) {
+      recordEvent('PATTERN_COMPLETE', { 
+        solved: true, 
+        timeSeconds,
+        themes: currentPuzzle.themes,
+        isPatternTraining: true,
+      });
+    }
     
     // Move to next puzzle after delay
     setTimeout(() => {
       setCurrentPuzzleIndex((prev) => (prev + 1) % filteredPuzzles.length);
       setShowSolution(false);
+      puzzleStartTime.current = Date.now();
     }, 1500);
-  }, [filteredPuzzles.length, recordPuzzle, onComplete]);
+  }, [filteredPuzzles.length, recordPuzzle, onComplete, currentPuzzle, showSolution, recordCoachPuzzle, recordEvent]);
 
   const handlePuzzleFailed = useCallback(() => {
+    const timeToFail = Date.now() - puzzleStartTime.current;
+    const timeSeconds = Math.round(timeToFail / 1000);
     setFailed((prev) => prev + 1);
     recordPuzzle(false);
     onComplete?.(false);
     setShowSolution(true);
-  }, [recordPuzzle, onComplete]);
+    
+    // Record to coach (solved, timeSeconds, hintsUsed)
+    recordCoachPuzzle(false, timeSeconds, 0);
+    
+    if (currentPuzzle) {
+      recordEvent('PATTERN_COMPLETE', { 
+        solved: false, 
+        timeSeconds,
+        themes: currentPuzzle.themes,
+        isPatternTraining: true,
+      });
+    }
+  }, [recordPuzzle, onComplete, currentPuzzle, recordCoachPuzzle, recordEvent]);
 
   const skipPuzzle = useCallback(() => {
     setCurrentPuzzleIndex((prev) => (prev + 1) % filteredPuzzles.length);

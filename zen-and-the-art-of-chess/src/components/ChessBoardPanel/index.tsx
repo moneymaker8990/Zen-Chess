@@ -3,6 +3,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useGameStore } from '@/state/useStore';
 import { useStudyStore } from '@/state/notesStore';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import { stockfish } from '@/engine/stockfish';
 import type { MoveInfo, EngineEvaluation } from '@/lib/types';
 
@@ -373,8 +374,10 @@ export function ChessBoardPanel({
     }),
   };
 
-  const customDarkSquareStyle = { backgroundColor: '#4a6670' };
-  const customLightSquareStyle = { backgroundColor: '#8ba4a8' };
+  // Use centralized board settings
+  const boardStyles = useBoardStyles();
+  const customDarkSquareStyle = boardStyles.customDarkSquareStyle;
+  const customLightSquareStyle = boardStyles.customLightSquareStyle;
   const boardOrientation = vsEngine ? playerColor : gameState.orientation;
 
   return (

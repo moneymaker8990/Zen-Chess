@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Chessboard } from 'react-chessboard';
+import { useBoardStyles } from '@/state/boardSettingsStore';
+import { BackButton } from '@/components/BackButton';
 import { CURRICULUM } from '@/data/curriculum';
 import type { Lesson, LessonStep } from '@/data/curriculum';
 
@@ -11,6 +13,7 @@ import type { Lesson, LessonStep } from '@/data/curriculum';
 export function LearnPage() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
+  const boardStyles = useBoardStyles();
   
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
@@ -142,18 +145,9 @@ export function LearnPage() {
           borderColor: 'var(--border-subtle)' 
         }}
       >
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-3">
-            <button
-              onClick={() => navigate('/journey')}
-              className="flex items-center gap-2 text-sm"
-              style={{ color: 'var(--text-tertiary)' }}
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back
-            </button>
+            <BackButton fallback="/journey" label="Back" />
             <div className="text-sm" style={{ color: 'var(--text-muted)' }}>
               {currentStepIndex + 1} / {lesson.steps.length}
             </div>
@@ -173,10 +167,10 @@ export function LearnPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="max-w-5xl mx-auto px-6 py-8">
+        <div className="flex flex-col-reverse md:flex-row gap-8">
           {/* Left: Text Content */}
-          <div>
+          <div className="flex-1">
             {/* Section badge */}
             <div 
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm mb-4"
@@ -222,16 +216,16 @@ export function LearnPage() {
           </div>
 
           {/* Right: Chessboard */}
-          <div className="lg:sticky lg:top-24 self-start">
+          <div className="md:sticky md:top-24 self-start flex-shrink-0 w-full md:w-[360px]">
             {currentStep?.fen ? (
               <div className="animate-fade-in">
                 <div className="rounded-xl overflow-hidden shadow-2xl">
                   <Chessboard
                     position={currentStep.fen}
-                    boardWidth={400}
+                    boardWidth={360}
                     arePiecesDraggable={false}
-                    customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                    customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                    customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                    customLightSquareStyle={boardStyles.customLightSquareStyle}
                     customSquareStyles={
                       currentStep.highlights?.reduce((acc, sq) => ({
                         ...acc,
@@ -272,7 +266,7 @@ export function LearnPage() {
           borderColor: 'var(--border-subtle)' 
         }}
       >
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
           <button
             onClick={goPrev}
             disabled={currentStepIndex === 0}

@@ -96,8 +96,8 @@ export function GamesPage() {
       {/* Header */}
       <PageHeader
         tutorialId="games"
-        title="Instructive Games"
-        subtitle={`365 masterpieces from chess history • ${gamesWithAnnotations} annotated`}
+        title="365 Instructive Games"
+        subtitle={`One masterpiece for each day • ${gamesWithAnnotations} fully annotated • ${allInstructiveGames.length - gamesWithAnnotations} from legend databases`}
       />
 
       {/* Search and Filters */}
@@ -198,12 +198,16 @@ export function GamesPage() {
             </div>
 
             {/* Has annotations indicator */}
-            {game.moves.length > 0 && (
-              <div className="mt-3 pt-2 border-t border-zen-700/20 flex items-center gap-2">
-                <span className="text-emerald-400 text-xs">✓ Fully annotated</span>
-                <span className="text-zen-600 text-xs">{game.moves.length} moves</span>
-              </div>
-            )}
+            <div className="mt-3 pt-2 border-t border-zen-700/20 flex items-center gap-2">
+              {game.moves.length > 0 ? (
+                <>
+                  <span className="text-emerald-400 text-xs">✓ Fully annotated</span>
+                  <span className="text-zen-600 text-xs">{game.moves.length} moves</span>
+                </>
+              ) : (
+                <span className="text-cyan-400 text-xs">📚 View from legend database</span>
+              )}
+            </div>
 
             {/* Difficulty */}
             <div className="mt-2 text-gold-400/50 text-xs">

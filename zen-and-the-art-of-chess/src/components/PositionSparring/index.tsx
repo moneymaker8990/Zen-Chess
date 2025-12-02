@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import { usePositionSparringStore } from '@/state/trainingStore';
 import { stockfish } from '@/engine/stockfish';
 import { PageHeader } from '@/components/Tutorial';
@@ -8,6 +9,7 @@ import type { SparringPosition } from '@/lib/trainingTypes';
 
 export function PositionSparring() {
   const { positions, addPosition, recordResult, getRecommendedPositions, deletePosition } = usePositionSparringStore();
+  const boardStyles = useBoardStyles();
   
   const [selectedPosition, setSelectedPosition] = useState<SparringPosition | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -275,8 +277,8 @@ export function PositionSparring() {
               onPieceDrop={onDrop}
               boardOrientation={selectedPosition?.playerColor || 'white'}
               customSquareStyles={customSquareStyles}
-              customDarkSquareStyle={{ backgroundColor: '#4a6670' }}
-              customLightSquareStyle={{ backgroundColor: '#8ba4a8' }}
+              customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+              customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={200}
               arePiecesDraggable={isPlaying && !isThinking && !gameResult}
               boardWidth={480}

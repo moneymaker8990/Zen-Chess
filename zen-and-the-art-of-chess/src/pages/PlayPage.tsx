@@ -7,6 +7,9 @@ import { TiltTracker } from '@/components/TiltTracker';
 import { TiltIntervention } from '@/components/TiltIntervention';
 import { useProgressStore } from '@/state/useStore';
 import { useTiltDetection } from '@/hooks/useTiltDetection';
+import { useCoachStore } from '@/state/coachStore';
+import { useBoardStyles } from '@/state/boardSettingsStore';
+import { createSimpleGameMetrics } from '@/lib/coachTypes';
 import { stockfish } from '@/engine/stockfish';
 import type { GameMode, EngineEvaluation } from '@/lib/types';
 import type { Square } from 'chess.js';
@@ -33,7 +36,13 @@ export function PlayPage() {
   
   const engineInitialized = useRef(false);
   const moveStartTime = useRef<number>(Date.now());
+  const gameStartTime = useRef<number>(Date.now());
+  const moveTimes = useRef<number[]>([]);
+  const blunderCount = useRef<number>(0);
+  const mistakeCount = useRef<number>(0);
   const { progress } = useProgressStore();
+  const { recordEvent, recordGame } = useCoachStore();
+  const boardStyles = useBoardStyles();
 
   // Tilt detection system (gentle awareness)
   const {
@@ -109,10 +118,59 @@ export function PlayPage() {
       if (evalChange < -BLUNDER_THRESHOLD && moveHistory.length > 0) {
         const moveTime = Date.now() - moveStartTime.current;
         recordMove(moveTime, true); // Record as blunder
+        blunderCount.current += 1;
+      } else if (evalChange < -50 && moveHistory.length > 0) {
+        // Track mistakes (less severe than blunders)
+        mistakeCount.current += 1;
       }
     }
     setPrevEvaluation(evaluation?.score ?? null);
   }, [evaluation, prevEvaluation, orientation, moveHistory.length, recordMove]);
+
+  // Detect game end and record to coach
+  useEffect(() => {
+    if (selectedMode !== 'VS_ENGINE') return;
+    
+    if (game.isGameOver()) {
+      const duration = Date.now() - gameStartTime.current;
+      const playerColor = orientation === 'white' ? 'w' : 'b';
+      
+      let result: 'win' | 'loss' | 'draw' = 'draw';
+      if (game.isCheckmate()) {
+        // If it's checkmate and it's the player's turn, they lost
+        result = game.turn() === playerColor ? 'loss' : 'win';
+      }
+      
+      // Calculate accuracy (simplified - based on blunders/mistakes per move)
+      const totalMoves = Math.floor(moveHistory.length / 2); // Player's moves
+      const accuracy = totalMoves > 0 
+        ? Math.max(0, 100 - (blunderCount.current * 15) - (mistakeCount.current * 5))
+        : 0;
+      
+      // Calculate average move time
+      const avgMoveTime = moveTimes.current.length > 0
+        ? moveTimes.current.reduce((a, b) => a + b, 0) / moveTimes.current.length
+        : 0;
+      
+      // Record the game with full metrics
+      const metrics = createSimpleGameMetrics({
+        result,
+        duration,
+        moveCount: moveHistory.length,
+        accuracy,
+        blunders: blunderCount.current,
+        mistakes: mistakeCount.current,
+        averageMoveTime: avgMoveTime,
+        timeScramble: false, // No time control in this mode
+        openingName: 'Unknown',
+        wasResigned: false,
+        wasFlagged: false,
+      });
+      
+      recordGame(metrics);
+      recordEvent('GAME_END', { result, mode: 'vs_engine' });
+    }
+  }, [game, selectedMode, orientation, moveHistory.length, recordGame, recordEvent]);
 
   // Get possible moves for a square
   const getMoveOptions = useCallback((square: Square) => {
@@ -190,6 +248,9 @@ export function PlayPage() {
         // Record move for tilt detection (blunder detection happens via evaluation)
         recordMove(moveTime, false);
         
+        // Track move time for coach
+        moveTimes.current.push(moveTime);
+        
         // In vs engine mode, make engine move
         if (selectedMode === 'VS_ENGINE' && !game.isGameOver()) {
           makeEngineMove();
@@ -242,6 +303,9 @@ export function PlayPage() {
         
         // Record move for tilt detection
         recordMove(moveTime, false);
+        
+        // Track move time for coach
+        moveTimes.current.push(moveTime);
         
         // In vs engine mode, make engine move
         if (selectedMode === 'VS_ENGINE' && !game.isGameOver()) {
@@ -297,9 +361,32 @@ export function PlayPage() {
     resetGame();
     setEvaluation(null);
     stockfish.stop();
-  }, []);
+    
+    // Record game start for coach
+    if (mode === 'VS_ENGINE') {
+      gameStartTime.current = Date.now();
+      moveTimes.current = [];
+      blunderCount.current = 0;
+      mistakeCount.current = 0;
+      recordEvent('GAME_START', { mode: 'vs_engine' });
+    }
+  }, [recordEvent]);
 
   const resetGame = useCallback(() => {
+    // If there was an ongoing game, record it as abandoned
+    if (selectedMode === 'VS_ENGINE' && moveHistory.length > 4 && !game.isGameOver()) {
+      const duration = Date.now() - gameStartTime.current;
+      const metrics = createSimpleGameMetrics({
+        result: 'abandoned',
+        duration,
+        moveCount: moveHistory.length,
+        accuracy: 0,
+        wasResigned: true,
+      });
+      recordGame(metrics);
+      recordEvent('GAME_END', { result: 'abandoned', mode: 'vs_engine' });
+    }
+    
     setGame(new Chess());
     setMoveHistory([]);
     setLastMove(null);
@@ -310,7 +397,13 @@ export function PlayPage() {
     setIsThinking(false);
     stockfish.reset();
     resetSession(); // Reset tilt detection
-  }, [resetSession]);
+    
+    // Reset game tracking
+    gameStartTime.current = Date.now();
+    moveTimes.current = [];
+    blunderCount.current = 0;
+    mistakeCount.current = 0;
+  }, [resetSession, selectedMode, moveHistory.length, game, recordGame, recordEvent]);
 
   const handleLoadFen = useCallback(() => {
     if (customFen.trim()) {
@@ -468,9 +561,9 @@ export function PlayPage() {
               onPieceDrop={onDrop}
               boardOrientation={orientation}
               customSquareStyles={customSquareStyles}
-              customDarkSquareStyle={{ backgroundColor: '#7c6b9e' }}
-              customLightSquareStyle={{ backgroundColor: '#e8e4f0' }}
-              animationDuration={200}
+              customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+              customLightSquareStyle={boardStyles.customLightSquareStyle}
+              animationDuration={boardStyles.animationDuration}
               arePiecesDraggable={!isThinking}
               boardWidth={480}
             />

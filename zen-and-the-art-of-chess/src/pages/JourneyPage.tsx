@@ -291,7 +291,7 @@ export function JourneyPage() {
               for (const section of CURRICULUM) {
                 const { completed, unlocked } = getSectionProgress(section, CURRICULUM.indexOf(section));
                 if (unlocked && completed < section.lessons.length) {
-                  navigate(section.lessons[completed].path);
+                  navigate(`/learn/${section.lessons[completed].id}`);
                   return;
                 }
               }

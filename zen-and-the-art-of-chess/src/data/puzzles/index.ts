@@ -17,6 +17,9 @@ export const puzzles: ChessPuzzle[] = [
     difficulty: 1,
     title: 'Scholar\'s Mate',
     explanation: 'The queen delivers checkmate on f7. Always watch for this in the opening!',
+    // Black just played ...Nf6?? missing the threat
+    beforeFen: 'r1bqkb1r/pppp1ppp/2n5/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 3 3',
+    setupMove: { from: 'g8', to: 'f6' },
   },
   {
     id: 'pin-001',
@@ -35,6 +38,9 @@ export const puzzles: ChessPuzzle[] = [
     difficulty: 1,
     title: 'Back Rank Mate',
     explanation: 'The rook delivers checkmate on the back rank. The pawns trap their own king!',
+    // Black just played ...Kf8-g8, walking into the back rank trap
+    beforeFen: '5k2/5ppp/8/8/8/8/5PPP/4R1K1 b - - 0 1',
+    setupMove: { from: 'f8', to: 'g8' },
   },
   {
     id: 'mate-001',
@@ -44,6 +50,9 @@ export const puzzles: ChessPuzzle[] = [
     difficulty: 1,
     title: 'Queen Mate on f7',
     explanation: 'The queen captures on f7 with checkmate. The bishop on c4 covers the escape.',
+    // Black just developed the bishop to c5, missing the threat
+    beforeFen: 'r1bqk2r/pppp1Qpp/2n2n2/4p3/2B1P3/5b2/PPPP1PPP/RNB1K1NR b KQkq - 0 1',
+    setupMove: { from: 'f3', to: 'c5' },
   },
   {
     id: 'fork-simple-001',
@@ -53,6 +62,9 @@ export const puzzles: ChessPuzzle[] = [
     difficulty: 1,
     title: 'Queen Fork',
     explanation: 'The queen attacks both the knight on e5 and the pawn on g2.',
+    // White just played Nxe5, capturing the pawn but leaving g2 weak
+    beforeFen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3',
+    setupMove: { from: 'f3', to: 'e5' },
   },
   {
     id: 'opening-001',
@@ -75,6 +87,9 @@ export const puzzles: ChessPuzzle[] = [
     difficulty: 2,
     title: 'Knight Fork on f7',
     explanation: 'The knight lands on f7, forking the queen and rook. A classic pattern!',
+    // Black just played ...Nc6, developing but ignoring the f7 weakness
+    beforeFen: 'r1bqkbnr/pppp1ppp/8/4p3/2B1Pn2/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
+    setupMove: { from: 'b8', to: 'c6' },
   },
   {
     id: 'pin-002',
@@ -160,6 +175,9 @@ export const puzzles: ChessPuzzle[] = [
     difficulty: 3,
     title: 'Deflecting the Defender',
     explanation: 'The check deflects the rook from defending the queen.',
+    // Black just moved the queen to d5, thinking it was safe
+    beforeFen: 'r4rk1/ppp2ppp/2nq4/8/8/2N5/PPP2PPP/R2QR1K1 b - - 0 1',
+    setupMove: { from: 'd6', to: 'd5' },
   },
   {
     id: 'sacrifice-001',
@@ -276,6 +294,9 @@ export const puzzles: ChessPuzzle[] = [
     difficulty: 5,
     title: 'Fried Liver Attack',
     explanation: 'The famous knight sacrifice leads to a devastating attack on the exposed king.',
+    // Black just played ...Bc5, developing but allowing the Fried Liver
+    beforeFen: 'r1bqk2r/pppp1ppp/2n2n2/4p1N1/2B1P2b/8/PPPP1PPP/RNBQK2R b KQkq - 3 4',
+    setupMove: { from: 'h4', to: 'c5' },
   },
   {
     id: 'master-002',

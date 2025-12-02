@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { BreathingPattern } from '@/lib/types';
+import { useCoachStore } from '@/state/coachStore';
 
 interface MeditationPanelProps {
   title: string;
@@ -18,6 +19,7 @@ export function MeditationPanel({
   breathingPattern,
   onComplete,
 }: MeditationPanelProps) {
+  const { recordMindfulness } = useCoachStore();
   const [isActive, setIsActive] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(duration * 60);
   const [breathPhase, setBreathPhase] = useState<'inhale' | 'hold' | 'exhale' | 'holdEmpty'>('inhale');
@@ -30,6 +32,8 @@ export function MeditationPanel({
       setTimeRemaining((prev) => {
         if (prev <= 1) {
           setIsActive(false);
+          // Record meditation completion
+          recordMindfulness('meditation', duration);
           onComplete?.();
           return 0;
         }
@@ -38,7 +42,7 @@ export function MeditationPanel({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isActive, timeRemaining, onComplete]);
+  }, [isActive, timeRemaining, onComplete, duration, recordMindfulness]);
 
   // Breathing cycle effect
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import allOpenings, { type OpeningLine } from '@/data/openings';
 
 // ============================================
@@ -367,15 +368,31 @@ export function OpeningsPage() {
   const [showHint, setShowHint] = useState(false);
   const [practiceMode, setPracticeMode] = useState<'learn' | 'test'>('learn');
   const [streak, setStreak] = useState(0);
+  const [showIncorrectShake, setShowIncorrectShake] = useState(false);
   
   const autoPlayTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const [showDatabaseLines, setShowDatabaseLines] = useState(false);
+  
+  // Board settings
+  const boardStyles = useBoardStyles();
 
-  // Calculate lines count for each course
+  // Calculate lines count for each course - separate learning vs database
   const coursesWithCounts = useMemo(() => {
-    return OPENING_COURSES.map(course => ({
-      ...course,
-      linesCount: allOpenings.filter(course.filter).length,
-    }));
+    return OPENING_COURSES.map(course => {
+      const allLines = allOpenings.filter(course.filter);
+      const learningLines = allLines.filter(l => l.priority === 'essential' || l.priority === 'recommended');
+      const advancedLines = allLines.filter(l => l.priority === 'advanced');
+      const databaseLines = allLines.filter(l => !l.priority || l.priority === 'reference');
+      
+      return {
+        ...course,
+        linesCount: learningLines.length > 0 ? learningLines.length : Math.min(allLines.length, 50), // Show learning count or cap at 50 "best" lines
+        learningCount: learningLines.length,
+        advancedCount: advancedLines.length,
+        databaseCount: databaseLines.length,
+        totalCount: allLines.length,
+      };
+    });
   }, []);
 
   // Filter courses
@@ -399,11 +416,30 @@ export function OpeningsPage() {
     return courses;
   }, [coursesWithCounts, filterSide, searchQuery]);
 
-  // Get lines for selected course
+  // Get lines for selected course - separate learning from database
   const courseLines = useMemo(() => {
-    if (!selectedCourse) return [];
-    return allOpenings.filter(selectedCourse.filter);
+    if (!selectedCourse) return { learning: [], database: [], all: [] };
+    const all = allOpenings.filter(selectedCourse.filter);
+    const learning = all.filter(l => l.priority === 'essential' || l.priority === 'recommended');
+    const advanced = all.filter(l => l.priority === 'advanced');
+    const database = all.filter(l => !l.priority || l.priority === 'reference');
+    
+    // If no curated learning lines, use top 50 from database as "learning" lines
+    const effectiveLearning = learning.length > 0 
+      ? [...learning, ...advanced]
+      : all.slice(0, 50);
+    
+    return { 
+      learning: effectiveLearning,
+      database: database,
+      all: all,
+    };
   }, [selectedCourse]);
+
+  // Lines to display based on toggle
+  const displayedLines = useMemo(() => {
+    return showDatabaseLines ? courseLines.all : courseLines.learning;
+  }, [courseLines, showDatabaseLines]);
 
   // Start practicing an opening
   const startOpening = useCallback((opening: OpeningLine, color: 'white' | 'black') => {
@@ -503,9 +539,10 @@ export function OpeningsPage() {
         }
         return true;
       } else {
-        setFeedback('incorrect');
+        // Gentle shake feedback
+        setShowIncorrectShake(true);
+        setTimeout(() => setShowIncorrectShake(false), 500);
         setStreak(0);
-        setTimeout(() => setFeedback(null), 800);
         return false;
       }
     } catch {
@@ -599,8 +636,9 @@ export function OpeningsPage() {
     ...(feedback === 'correct' && lastMove && {
       [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
     }),
-    ...(feedback === 'incorrect' && {
-      ...(moveFrom && { [moveFrom]: { backgroundColor: 'rgba(239, 68, 68, 0.5)' } }),
+    // Subtle red highlight during shake
+    ...(showIncorrectShake && moveFrom && {
+      [moveFrom]: { backgroundColor: 'rgba(239, 68, 68, 0.3)' },
     }),
     ...getHintSquares(),
   };
@@ -617,7 +655,10 @@ export function OpeningsPage() {
             Opening Repertoire
           </h1>
           <p className="text-xl text-zen-400 font-serif italic max-w-2xl mx-auto">
-            Master {allOpenings.length} essential lines across {OPENING_COURSES.length} opening systems
+            Curated learning paths across {OPENING_COURSES.length} opening systems
+          </p>
+          <p className="text-sm text-zen-600 mt-2">
+            Focus on essential lines • {allOpenings.length.toLocaleString()}+ positions available for deep study
           </p>
         </section>
 
@@ -690,9 +731,14 @@ export function OpeningsPage() {
               {/* Footer */}
               <div className="mt-4 pt-4 border-t border-zen-700/30 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-zen-500 text-sm">
-                    {course.linesCount} lines
+                  <span className="text-zen-300 text-sm font-medium">
+                    {course.learningCount > 0 ? course.learningCount : Math.min(50, course.totalCount)} to learn
                   </span>
+                  {course.databaseCount > 50 && (
+                    <span className="text-zen-600 text-xs" title="Full database for exploration">
+                      +{course.databaseCount.toLocaleString()} in DB
+                    </span>
+                  )}
                   <span className="text-gold-400/60 text-xs">
                     {'★'.repeat(course.difficulty)}{'☆'.repeat(5 - course.difficulty)}
                   </span>
@@ -718,10 +764,16 @@ export function OpeningsPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <div className="glass-card p-6 text-center">
-            <div className="text-3xl font-serif text-gold-400">{allOpenings.length}</div>
-            <div className="text-zen-500 text-sm">Total Lines</div>
+            <div className="text-3xl font-serif text-gold-400">
+              {coursesWithCounts.reduce((sum, c) => sum + (c.learningCount > 0 ? c.learningCount : Math.min(50, c.totalCount)), 0)}
+            </div>
+            <div className="text-zen-500 text-sm">Learning Lines</div>
+          </div>
+          <div className="glass-card p-6 text-center">
+            <div className="text-3xl font-serif text-zen-400">{allOpenings.length.toLocaleString()}</div>
+            <div className="text-zen-600 text-sm">Full Database</div>
           </div>
           <div className="glass-card p-6 text-center">
             <div className="text-3xl font-serif text-gold-400">{OPENING_COURSES.length}</div>
@@ -777,9 +829,46 @@ export function OpeningsPage() {
           </div>
         </div>
 
+        {/* Lines Mode Toggle */}
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowDatabaseLines(false)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                !showDatabaseLines
+                  ? 'bg-gold-500/20 text-gold-400 border border-gold-500/50'
+                  : 'bg-zen-800/40 text-zen-400 border border-zen-700/30 hover:border-zen-600/50'
+              }`}
+            >
+              📚 Learning ({courseLines.learning.length})
+            </button>
+            <button
+              onClick={() => setShowDatabaseLines(true)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                showDatabaseLines
+                  ? 'bg-gold-500/20 text-gold-400 border border-gold-500/50'
+                  : 'bg-zen-800/40 text-zen-400 border border-zen-700/30 hover:border-zen-600/50'
+              }`}
+            >
+              🔍 Full Database ({courseLines.all.length.toLocaleString()})
+            </button>
+          </div>
+          
+          {!showDatabaseLines && courseLines.database.length > 0 && (
+            <p className="text-zen-600 text-sm">
+              Focus on these curated lines first
+            </p>
+          )}
+          {showDatabaseLines && (
+            <p className="text-zen-600 text-sm">
+              Explore all master game positions
+            </p>
+          )}
+        </div>
+
         {/* Lines Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {courseLines.map((opening, index) => (
+          {displayedLines.slice(0, showDatabaseLines ? 100 : undefined).map((opening, index) => (
             <div key={opening.id} className="glass-card p-5 hover:border-gold-500/30 transition-all group">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -823,9 +912,24 @@ export function OpeningsPage() {
           ))}
         </div>
 
+        {/* Load More / Info */}
+        {showDatabaseLines && displayedLines.length > 100 && (
+          <div className="text-center py-4">
+            <p className="text-zen-500 text-sm mb-2">
+              Showing 100 of {displayedLines.length.toLocaleString()} positions
+            </p>
+            <p className="text-zen-600 text-xs">
+              Use the search feature or filters to find specific lines
+            </p>
+          </div>
+        )}
+
         {/* Back button */}
         <button
-          onClick={() => setViewMode('courses')}
+          onClick={() => {
+            setViewMode('courses');
+            setShowDatabaseLines(false);
+          }}
           className="zen-button-ghost"
         >
           ← Back to Openings
@@ -900,18 +1004,31 @@ export function OpeningsPage() {
             </div>
 
             {/* Chessboard */}
-            <div className="relative">
+            <div className={`relative ${showIncorrectShake ? 'animate-shake' : ''}`}>
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}
                 onPieceDrop={onDrop}
                 boardOrientation={userColor}
                 customSquareStyles={customSquareStyles}
-                customDarkSquareStyle={{ backgroundColor: '#4a6670' }}
-                customLightSquareStyle={{ backgroundColor: '#8ba4a8' }}
-                animationDuration={150}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
+                animationDuration={boardStyles.animationDuration}
                 arePiecesDraggable={isUserTurn && feedback !== 'complete'}
               />
+              
+              {/* Correct Move Feedback */}
+              {feedback === 'correct' && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full animate-bounce-in" 
+                     style={{ background: 'rgba(34, 197, 94, 0.9)', boxShadow: '0 4px 20px rgba(34, 197, 94, 0.5)' }}>
+                  <span className="text-white font-bold flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Correct!
+                  </span>
+                </div>
+              )}
               
               {/* Feedback Overlay */}
               {feedback === 'complete' && (

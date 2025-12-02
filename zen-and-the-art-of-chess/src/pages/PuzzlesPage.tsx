@@ -2,6 +2,10 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { puzzles } from '@/data/puzzles';
+import { useCoachStore } from '@/state/coachStore';
+import { useBoardSettingsStore, useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
+import { MOVE_HINT_STYLES } from '@/lib/constants';
+import type { MoveHintStyle } from '@/lib/constants';
 import type { ChessPuzzle, PatternType } from '@/lib/types';
 
 // ============================================
@@ -109,6 +113,10 @@ function getDailyPuzzle(): ChessPuzzle {
 // ============================================
 
 export function PuzzlesPage() {
+  // Coach integration
+  const { recordEvent, recordPuzzle } = useCoachStore();
+  const puzzleStartTime = useRef<number>(Date.now());
+  
   // Navigation State
   const [mode, setMode] = useState<PuzzleMode>('menu');
   
@@ -137,6 +145,20 @@ export function PuzzlesPage() {
   // Custom Mode State
   const [selectedTheme, setSelectedTheme] = useState<PatternType | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<number | null>(null);
+  
+  // Centralized board settings
+  const boardStyles = useBoardStyles();
+  const { settings: boardSettings, setMoveHintStyle } = useBoardSettingsStore();
+  const { getMoveOptionsStyle, showMoveHints } = useMoveOptions();
+  
+  // Gentle error feedback state
+  const [showIncorrectShake, setShowIncorrectShake] = useState(false);
+  
+  // Setup move animation state - shows opponent's last move when puzzle loads
+  const [isAnimatingSetup, setIsAnimatingSetup] = useState(false);
+  
+  // Track seen puzzles in this session to avoid repetition
+  const seenPuzzleIds = useRef<Set<string>>(new Set());
   
   // Stats State (persisted)
   const [stats, setStats] = useState<PuzzleStats>(() => {
@@ -175,7 +197,7 @@ export function PuzzlesPage() {
     });
   }, [selectedTheme, selectedDifficulty]);
 
-  // Select puzzle based on rating (for rated mode)
+  // Select puzzle based on rating (for rated mode) - avoids recently seen puzzles
   const selectRatedPuzzle = useCallback(() => {
     const targetRating = stats.rating;
     const range = 200;
@@ -183,28 +205,103 @@ export function PuzzlesPage() {
       const pr = getPuzzleRating(p);
       return pr >= targetRating - range && pr <= targetRating + range;
     });
-    const puzzle = eligible.length > 0 
-      ? eligible[Math.floor(Math.random() * eligible.length)]
-      : puzzles[Math.floor(Math.random() * puzzles.length)];
+    
+    // Filter out recently seen puzzles
+    const unseenEligible = eligible.filter(p => !seenPuzzleIds.current.has(p.id));
+    const unseenAll = puzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+    
+    // Reset seen puzzles if we've seen too many
+    if (unseenAll.length < 5) {
+      seenPuzzleIds.current.clear();
+    }
+    
+    const pool = unseenEligible.length > 0 
+      ? unseenEligible 
+      : unseenAll.length > 0 
+        ? unseenAll 
+        : eligible.length > 0 
+          ? eligible 
+          : puzzles;
+    
+    const puzzle = pool[Math.floor(Math.random() * pool.length)];
     return puzzle;
   }, [stats.rating]);
 
-  // Start a puzzle
+  // Track if we've already recorded a failure for this puzzle attempt
+  const hasRecordedFailure = useRef(false);
+  
+  // Start a puzzle - with setup move animation if available
   const startPuzzle = useCallback((puzzle: ChessPuzzle) => {
+    // Mark puzzle as seen to avoid repetition
+    seenPuzzleIds.current.add(puzzle.id);
+    
+    // Reset failure tracking for new puzzle
+    hasRecordedFailure.current = false;
+    
     setCurrentPuzzle(puzzle);
-    const newGame = new Chess(puzzle.fen);
-    setGame(newGame);
     setMoveIndex(0);
     setMoveFrom(null);
     setOptionSquares({});
-    setLastMove(null);
     setFeedback(null);
     setShowHint(false);
+    
+    // If puzzle has setup move data, animate the opponent's last move
+    if (puzzle.beforeFen && puzzle.setupMove) {
+      setIsAnimatingSetup(true);
+      // Start with the position BEFORE opponent's move
+      const beforeGame = new Chess(puzzle.beforeFen);
+      setGame(beforeGame);
+      setLastMove(null);
+      
+      // After a brief moment, show the opponent making their move
+      setTimeout(() => {
+        const newGame = new Chess(puzzle.fen);
+        setGame(newGame);
+        // Highlight the opponent's last move so user sees what just happened
+        setLastMove({ 
+          from: puzzle.setupMove!.from as Square, 
+          to: puzzle.setupMove!.to as Square 
+        });
+        setIsAnimatingSetup(false);
+        
+        // Track puzzle start for coach
+        puzzleStartTime.current = Date.now();
+        recordEvent('PUZZLE_START', { 
+          themes: puzzle.themes, 
+          difficulty: puzzle.difficulty 
+        });
+      }, 600); // Give time for the animation
+    } else {
+      // No setup move - just show the puzzle position directly
+      const newGame = new Chess(puzzle.fen);
+      setGame(newGame);
+      setLastMove(null);
+      setIsAnimatingSetup(false);
+      
+      // Track puzzle start for coach
+      puzzleStartTime.current = Date.now();
+      recordEvent('PUZZLE_START', { 
+        themes: puzzle.themes, 
+        difficulty: puzzle.difficulty 
+      });
+    }
+  }, [recordEvent]);
+
+  // Helper to get random unseen puzzle from a pool
+  const getRandomUnseenPuzzle = useCallback((pool: ChessPuzzle[]): ChessPuzzle => {
+    const unseen = pool.filter(p => !seenPuzzleIds.current.has(p.id));
+    const finalPool = unseen.length > 0 ? unseen : pool;
+    return finalPool[Math.floor(Math.random() * finalPool.length)];
   }, []);
 
   // Start a mode
   const startMode = useCallback((newMode: PuzzleMode) => {
     setMode(newMode);
+    
+    // Clear seen puzzles when starting a new mode (except for rush/streak continuation)
+    if (newMode !== 'rush' && newMode !== 'streak') {
+      seenPuzzleIds.current.clear();
+    }
     
     if (newMode === 'rated') {
       startPuzzle(selectRatedPuzzle());
@@ -213,22 +310,24 @@ export function PuzzlesPage() {
       setRushStrikes(0);
       setRushScore(0);
       setRushActive(true);
-      startPuzzle(puzzles[Math.floor(Math.random() * puzzles.length)]);
+      seenPuzzleIds.current.clear(); // Fresh start for rush
+      startPuzzle(getRandomUnseenPuzzle(puzzles));
     } else if (newMode === 'streak') {
       setStreakCount(0);
       setStreakDifficulty(1);
       setStreakActive(true);
+      seenPuzzleIds.current.clear(); // Fresh start for streak
       // Start with easy puzzles
       const easyPuzzles = puzzles.filter(p => p.difficulty === 1);
-      startPuzzle(easyPuzzles[Math.floor(Math.random() * easyPuzzles.length)] || puzzles[0]);
+      startPuzzle(getRandomUnseenPuzzle(easyPuzzles.length > 0 ? easyPuzzles : puzzles));
     } else if (newMode === 'daily') {
       startPuzzle(getDailyPuzzle());
     } else if (newMode === 'custom') {
       if (filteredPuzzles.length > 0) {
-        startPuzzle(filteredPuzzles[Math.floor(Math.random() * filteredPuzzles.length)]);
+        startPuzzle(getRandomUnseenPuzzle(filteredPuzzles));
       }
     }
-  }, [selectRatedPuzzle, startPuzzle, filteredPuzzles]);
+  }, [selectRatedPuzzle, startPuzzle, filteredPuzzles, getRandomUnseenPuzzle]);
 
   // Handle puzzle completion
   const handlePuzzleSolved = useCallback(() => {
@@ -237,6 +336,16 @@ export function PuzzlesPage() {
     const puzzleRating = getPuzzleRating(currentPuzzle);
     const ratingChange = calculateRatingChange(stats.rating, puzzleRating, true);
     const points = 10 + currentPuzzle.difficulty * 5 + (mode === 'rush' ? 5 : 0);
+    const timeToSolve = Date.now() - puzzleStartTime.current;
+    
+    // Record puzzle success to coach (solved, timeSeconds, hintsUsed)
+    const timeSeconds = Math.round(timeToSolve / 1000);
+    recordPuzzle(true, timeSeconds, showHint ? 1 : 0);
+    recordEvent('PUZZLE_COMPLETE', { 
+      solved: true, 
+      timeSeconds, 
+      themes: currentPuzzle.themes 
+    });
     
     setStats(prev => {
       const newStreak = prev.currentStreak + 1;
@@ -266,7 +375,9 @@ export function PuzzlesPage() {
     if (mode === 'rush') {
       setRushScore(prev => prev + 1);
       setTimeout(() => {
-        startPuzzle(puzzles[Math.floor(Math.random() * puzzles.length)]);
+        const unseen = puzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+        const pool = unseen.length > 0 ? unseen : puzzles;
+        startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
       }, 500);
     } else if (mode === 'streak') {
       setStreakCount(prev => prev + 1);
@@ -275,41 +386,70 @@ export function PuzzlesPage() {
       setStreakDifficulty(newDifficulty);
       setTimeout(() => {
         const difficultyPuzzles = puzzles.filter(p => p.difficulty === newDifficulty);
-        const nextPuzzle = difficultyPuzzles.length > 0 
-          ? difficultyPuzzles[Math.floor(Math.random() * difficultyPuzzles.length)]
-          : puzzles[Math.floor(Math.random() * puzzles.length)];
-        startPuzzle(nextPuzzle);
+        const unseenDifficulty = difficultyPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+        const pool = unseenDifficulty.length > 0 
+          ? unseenDifficulty 
+          : difficultyPuzzles.length > 0 
+            ? difficultyPuzzles 
+            : puzzles;
+        startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
         setFeedback(null);
       }, 800);
     } else {
       setFeedback('complete');
     }
-  }, [currentPuzzle, stats.rating, mode, startPuzzle]);
+  }, [currentPuzzle, stats.rating, mode, startPuzzle, showHint, recordPuzzle, recordEvent, streakCount]);
 
-  // Handle puzzle failure
-  const handlePuzzleFailed = useCallback(() => {
+  // Handle puzzle failure - gentle feedback, allow retry without repeated penalties
+  const handlePuzzleFailed = useCallback((allowRetry: boolean = true) => {
     if (!currentPuzzle) return;
     
-    const puzzleRating = getPuzzleRating(currentPuzzle);
-    const ratingChange = calculateRatingChange(stats.rating, puzzleRating, false);
+    // Show gentle shake animation
+    setShowIncorrectShake(true);
+    setTimeout(() => setShowIncorrectShake(false), 600);
     
-    setStats(prev => ({
-      ...prev,
-      rating: Math.max(100, prev.rating + ratingChange),
-      puzzlesFailed: prev.puzzlesFailed + 1,
-      currentStreak: 0,
-      tier: getTierFromRating(Math.max(100, prev.rating + ratingChange)),
-      themeStats: {
-        ...prev.themeStats,
-        ...currentPuzzle.themes.reduce((acc, theme) => ({
-          ...acc,
-          [theme]: {
-            solved: prev.themeStats[theme]?.solved || 0,
-            failed: (prev.themeStats[theme]?.failed || 0) + 1,
-          }
-        }), {}),
-      },
-    }));
+    // Only record failure and update stats ONCE per puzzle attempt
+    // This allows retries without repeated penalties
+    const shouldRecordFailure = !hasRecordedFailure.current;
+    
+    if (shouldRecordFailure) {
+      hasRecordedFailure.current = true;
+      
+      const puzzleRating = getPuzzleRating(currentPuzzle);
+      const ratingChange = calculateRatingChange(stats.rating, puzzleRating, false);
+      const timeToFail = Date.now() - puzzleStartTime.current;
+      
+      // Record puzzle failure to coach (solved, timeSeconds, hintsUsed)
+      const timeSeconds = Math.round(timeToFail / 1000);
+      recordPuzzle(false, timeSeconds, showHint ? 1 : 0);
+      recordEvent('PUZZLE_COMPLETE', { 
+        solved: false, 
+        timeSeconds, 
+        themes: currentPuzzle.themes 
+      });
+      
+      // Only penalize stats in competitive modes (rush/streak)
+      // For rated/daily/custom, just track for analytics but don't penalize retries
+      if (mode === 'rush' || mode === 'streak') {
+        setStats(prev => ({
+          ...prev,
+          rating: Math.max(100, prev.rating + ratingChange),
+          puzzlesFailed: prev.puzzlesFailed + 1,
+          currentStreak: 0,
+          tier: getTierFromRating(Math.max(100, prev.rating + ratingChange)),
+          themeStats: {
+            ...prev.themeStats,
+            ...currentPuzzle.themes.reduce((acc, theme) => ({
+              ...acc,
+              [theme]: {
+                solved: prev.themeStats[theme]?.solved || 0,
+                failed: (prev.themeStats[theme]?.failed || 0) + 1,
+              }
+            }), {}),
+          },
+        }));
+      }
+    }
 
     if (mode === 'rush') {
       setRushStrikes(prev => {
@@ -325,8 +465,10 @@ export function PuzzlesPage() {
       });
       if (rushStrikes < 2) {
         setTimeout(() => {
-          startPuzzle(puzzles[Math.floor(Math.random() * puzzles.length)]);
-        }, 1000);
+          const unseen = puzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+          const pool = unseen.length > 0 ? unseen : puzzles;
+          startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
+        }, 800);
       }
     } else if (mode === 'streak') {
       // Streak ends on first mistake
@@ -336,31 +478,53 @@ export function PuzzlesPage() {
         bestStreak: Math.max(s.bestStreak, streakCount),
       }));
       setFeedback('incorrect');
-    } else {
-      setFeedback('incorrect');
+    } else if (allowRetry) {
+      // For rated/daily/custom modes - allow retry without blocking
+      // Reset to puzzle start position after a brief pause, keeping the setup move highlight
+      setTimeout(() => {
+        if (currentPuzzle) {
+          const newGame = new Chess(currentPuzzle.fen);
+          setGame(newGame);
+          setMoveIndex(0);
+          setMoveFrom(null);
+          setOptionSquares({});
+          // Keep the setup move highlighted if it exists, otherwise clear
+          if (currentPuzzle.setupMove) {
+            setLastMove({ 
+              from: currentPuzzle.setupMove.from as Square, 
+              to: currentPuzzle.setupMove.to as Square 
+            });
+          } else {
+            setLastMove(null);
+          }
+          setFeedback(null);
+        }
+      }, 400);
     }
-  }, [currentPuzzle, stats.rating, mode, rushScore, rushStrikes, startPuzzle]);
+  }, [currentPuzzle, stats.rating, mode, rushScore, rushStrikes, startPuzzle, showHint, recordPuzzle, recordEvent, streakCount]);
 
-  // Get move options
+  // Get move options - uses centralized board settings
   const getMoveOptions = useCallback((square: Square) => {
+    if (!showMoveHints) {
+      setOptionSquares({});
+      return game.moves({ square, verbose: true }).length > 0;
+    }
+    
     const moves = game.moves({ square, verbose: true });
     if (moves.length === 0) {
       setOptionSquares({});
       return false;
     }
 
-    const newSquares: Record<string, { backgroundColor: string }> = {};
+    const newSquares: Record<string, React.CSSProperties> = {};
     moves.forEach((move) => {
-      newSquares[move.to] = {
-        backgroundColor: game.get(move.to as Square) 
-          ? 'rgba(239, 68, 68, 0.4)' 
-          : 'rgba(129, 182, 76, 0.3)',
-      };
+      const isCapture = !!game.get(move.to as Square);
+      newSquares[move.to] = getMoveOptionsStyle(isCapture);
     });
     newSquares[square] = { backgroundColor: 'rgba(129, 182, 76, 0.4)' };
     setOptionSquares(newSquares);
     return true;
-  }, [game]);
+  }, [game, showMoveHints, getMoveOptionsStyle]);
 
   // Handle move
   const handleMove = useCallback((from: Square, to: Square) => {
@@ -402,8 +566,9 @@ export function PuzzlesPage() {
         }
         return true;
       } else {
-        setFeedback('incorrect');
-        handlePuzzleFailed();
+        // Gentle feedback - show the wrong move briefly, then reset
+        setLastMove({ from, to });
+        handlePuzzleFailed(true);
         return false;
       }
     } catch {
@@ -411,9 +576,13 @@ export function PuzzlesPage() {
     }
   }, [currentPuzzle, game, moveIndex, feedback, handlePuzzleSolved, handlePuzzleFailed]);
 
-  // Square click handler
+  // Square click handler - allows interaction even after errors (for retry)
   const onSquareClick = useCallback((square: Square) => {
-    if (feedback === 'complete' || feedback === 'incorrect') return;
+    if (feedback === 'complete') return;
+    // Clear incorrect feedback when user starts new interaction
+    if (feedback === 'incorrect' && mode !== 'streak') {
+      setFeedback(null);
+    }
 
     if (!moveFrom) {
       const piece = game.get(square);
@@ -433,13 +602,16 @@ export function PuzzlesPage() {
     handleMove(moveFrom, square);
     setMoveFrom(null);
     setOptionSquares({});
-  }, [game, moveFrom, feedback, getMoveOptions, handleMove]);
+  }, [game, moveFrom, feedback, mode, getMoveOptions, handleMove]);
 
-  // Drag and drop
+  // Drag and drop - allows interaction even after errors (for retry)
   const onDrop = useCallback((sourceSquare: Square, targetSquare: Square) => {
-    if (feedback === 'complete' || feedback === 'incorrect') return false;
+    if (feedback === 'complete') return false;
+    if (feedback === 'incorrect' && mode === 'streak') return false;
+    // Clear feedback and allow retry
+    if (feedback === 'incorrect') setFeedback(null);
     return handleMove(sourceSquare, targetSquare);
-  }, [feedback, handleMove]);
+  }, [feedback, mode, handleMove]);
 
   // Next puzzle
   const nextPuzzle = useCallback(() => {
@@ -460,10 +632,11 @@ export function PuzzlesPage() {
     ...(feedback === 'correct' && lastMove && {
       [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
     }),
-    ...(feedback === 'incorrect' && lastMove && {
-      [lastMove.to]: { backgroundColor: 'rgba(239, 68, 68, 0.5)' },
+    // Gentle red indicator for incorrect - not blocking
+    ...(showIncorrectShake && lastMove && {
+      [lastMove.to]: { backgroundColor: 'rgba(239, 68, 68, 0.4)' },
     }),
-  }), [optionSquares, lastMove, feedback]);
+  }), [optionSquares, lastMove, feedback, showIncorrectShake]);
 
   const boardOrientation = currentPuzzle 
     ? (currentPuzzle.fen.includes(' w ') ? 'white' : 'black')
@@ -989,14 +1162,14 @@ export function PuzzlesPage() {
               <div className="chessboard-container relative max-w-[520px]">
                 <Chessboard
                   position={game.fen()}
-                  onSquareClick={onSquareClick}
-                  onPieceDrop={onDrop}
+                  onSquareClick={isAnimatingSetup ? undefined : onSquareClick}
+                  onPieceDrop={isAnimatingSetup ? () => false : onDrop}
                   boardOrientation={boardOrientation}
                   customSquareStyles={customSquareStyles}
-                  customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                  customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
-                  animationDuration={150}
-                  arePiecesDraggable={feedback !== 'complete' && feedback !== 'incorrect'}
+                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                  customLightSquareStyle={boardStyles.customLightSquareStyle}
+                  animationDuration={boardStyles.animationDuration}
+                  arePiecesDraggable={!isAnimatingSetup && feedback !== 'complete' && !(feedback === 'incorrect' && mode === 'streak')}
                   boardWidth={480}
                 />
 
@@ -1016,20 +1189,21 @@ export function PuzzlesPage() {
                   </div>
                 )}
 
-                {feedback === 'incorrect' && mode !== 'rush' && (
+                {/* Only show blocking overlay for streak mode where game ends */}
+                {feedback === 'incorrect' && mode === 'streak' && !streakActive && (
                   <div className="absolute inset-0 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.75)' }}>
                     <div className="text-center p-8">
-                      <div className="text-6xl mb-4">❌</div>
-                      <h3 className="text-2xl font-display mb-2" style={{ color: '#ef4444' }}>Incorrect</h3>
+                      <div className="text-5xl mb-4">⚡</div>
+                      <h3 className="text-xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>Streak Ended</h3>
                       <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
-                        The correct move was: <span className="font-mono" style={{ color: 'var(--accent-gold)' }}>{currentPuzzle.solution[moveIndex]}</span>
+                        You reached <span className="font-bold" style={{ color: '#ec4899' }}>{streakCount}</span> in a row!
                       </p>
                       <div className="flex gap-3 justify-center">
-                        <button onClick={() => startPuzzle(currentPuzzle)} className="btn-secondary">
+                        <button onClick={() => startMode('streak')} className="btn-primary">
                           Try Again
                         </button>
-                        <button onClick={nextPuzzle} className="btn-primary">
-                          Next Puzzle →
+                        <button onClick={() => { setMode('menu'); setCurrentPuzzle(null); setStreakCount(0); }} className="btn-ghost">
+                          Back to Menu
                         </button>
                       </div>
                     </div>
@@ -1037,6 +1211,20 @@ export function PuzzlesPage() {
                 )}
               </div>
 
+              {/* Subtle feedback message - gentle and encouraging */}
+              {showIncorrectShake && (
+                <div className="text-center py-2 text-sm animate-fade-in" style={{ color: 'var(--text-muted)' }}>
+                  <span style={{ opacity: 0.8 }}>Not quite — have another go</span>
+                </div>
+              )}
+              
+              {/* Setup animation indicator */}
+              {isAnimatingSetup && (
+                <div className="text-center py-2 text-sm animate-pulse" style={{ color: 'var(--text-muted)' }}>
+                  Opponent plays...
+                </div>
+              )}
+              
               {/* Controls */}
               <div className="flex gap-3">
                 <button
@@ -1052,6 +1240,23 @@ export function PuzzlesPage() {
                 >
                   🔄 Reset
                 </button>
+              </div>
+              
+              {/* Move Hint Style Selector */}
+              <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
+                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Move hints</span>
+                <div className="flex gap-1">
+                  {(Object.entries(MOVE_HINT_STYLES) as [MoveHintStyle, typeof MOVE_HINT_STYLES[MoveHintStyle]][]).map(([key, style]) => (
+                    <button
+                      key={key}
+                      onClick={() => setMoveHintStyle(key)}
+                      className={`px-3 py-1 text-xs rounded transition-all ${boardSettings.moveHintStyle === key ? 'bg-white/20' : 'hover:bg-white/10'}`}
+                      style={{ color: boardSettings.moveHintStyle === key ? 'var(--text-primary)' : 'var(--text-muted)' }}
+                    >
+                      {style.name}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 

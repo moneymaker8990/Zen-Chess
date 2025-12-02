@@ -1,12 +1,14 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import { openingLines, type OpeningLine } from '@/data/openings';
 import { PageHeader } from '@/components/Tutorial';
 
 type Category = 'all' | 'e4' | 'd4' | 'c4' | 'nf3';
 
 export function OpeningTrainer() {
+  const boardStyles = useBoardStyles();
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [selectedOpening, setSelectedOpening] = useState<OpeningLine | null>(null);
   const [game, setGame] = useState(new Chess());
@@ -289,7 +291,7 @@ export function OpeningTrainer() {
         /* Practice view */
         <div className="grid lg:grid-cols-[1fr_350px] gap-6">
           {/* Board */}
-          <div>
+          <div className="relative">
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}
@@ -297,12 +299,25 @@ export function OpeningTrainer() {
               boardOrientation={userColor}
               customSquareStyles={customSquareStyles}
               customArrows={customArrows}
-              customDarkSquareStyle={{ backgroundColor: '#4a6670' }}
-              customLightSquareStyle={{ backgroundColor: '#8ba4a8' }}
+              customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+              customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={200}
               arePiecesDraggable={isUserTurn && feedback !== 'complete'}
               boardWidth={480}
             />
+            
+            {/* Correct Move Feedback */}
+            {feedback === 'correct' && (
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full animate-bounce-in" 
+                   style={{ background: 'rgba(34, 197, 94, 0.9)', boxShadow: '0 4px 20px rgba(34, 197, 94, 0.5)' }}>
+                <span className="text-white font-bold flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Correct!
+                </span>
+              </div>
+            )}
 
             {/* Feedback */}
             {feedback === 'complete' && (

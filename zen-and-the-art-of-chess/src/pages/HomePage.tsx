@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { useProgressStore } from '@/state/useStore';
 import { phaseInfo, getDayByNumber } from '@/data/days';
 import { useState, useMemo } from 'react';
+import { TodaysFocusWidget } from '@/components/CoachDashboard';
+import type { ActionType } from '@/lib/coachTypes';
 
 // ============================================
 // ENHANCED HOME PAGE - Chess.com Style Dashboard
@@ -37,21 +39,6 @@ export function HomePage() {
     if (!saved) return { rating: 1000, currentStreak: 0, bestStreak: 0, puzzlesSolved: 0, rushHighScore: 0 };
     return JSON.parse(saved);
   }, []);
-
-  const getPhaseProgress = () => {
-    const phaseRanges: Record<string, [number, number]> = {
-      CALM_MIND: [1, 60],
-      PATTERN_RECOGNITION: [61, 120],
-      STRATEGY_PLANNING: [121, 200],
-      FLOW_INTUITION: [201, 260],
-      EGO_TRANSCENDENCE: [261, 300],
-      EFFORTLESS_ACTION: [301, 365],
-    };
-    const [start, end] = phaseRanges[currentPhase] || [1, 60];
-    const progressInPhase = progress.currentDay - start;
-    const phaseLength = end - start + 1;
-    return Math.round((progressInPhase / phaseLength) * 100);
-  };
 
   // Calculate overall accuracy from game history
   const overallAccuracy = useMemo(() => {
@@ -94,52 +81,208 @@ export function HomePage() {
 
       {/* Main Grid */}
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Left Column - Quick Actions */}
+        {/* Left Column - Learning First */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Primary Actions Row */}
+          
+          {/* 🔥 DAILY CHALLENGE - Hero Spot */}
+          <button
+            onClick={() => navigate('/daily-challenges')}
+            className="w-full card-interactive p-6 text-left group relative overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(234, 88, 12, 0.15) 100%)', border: '1px solid rgba(245, 158, 11, 0.4)' }}
+          >
+            <div className="absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-bold" style={{ background: '#f59e0b', color: 'black' }}>
+              NEW TODAY
+            </div>
+            <div className="flex items-center gap-5">
+              <div 
+                className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl"
+                style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)' }}
+              >
+                📅
+              </div>
+              <div className="flex-1">
+                <h2 className="text-2xl font-display font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                  Today's Challenge
+                </h2>
+                <p className="text-base mb-2" style={{ color: '#fbbf24' }}>
+                  {new Date().toLocaleDateString('en-US', { weekday: 'long' })}'s Theme: {
+                    ['Endgame', 'Tactics', 'Visualization', 'GM Analysis', 'Speed Rush', 'Legends Study', 'Legends Study'][new Date().getDay()]
+                  }
+                </p>
+                <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                  <span>🔥 New puzzles every day</span>
+                  <span>•</span>
+                  <span>Compete on leaderboard</span>
+                </div>
+              </div>
+              <svg className="w-8 h-8 opacity-50 group-hover:opacity-100 group-hover:translate-x-2 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#f59e0b' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </button>
+
+          {/* 🎓 ACADEMY SECTION - The Competitive Content */}
+          <div className="card p-6" style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%)', border: '1px solid rgba(139, 92, 246, 0.2)' }}>
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🎓</span>
+                <h2 className="text-xl font-display font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  Zen Chess Academy
+                </h2>
+              </div>
+              <span className="badge" style={{ background: 'rgba(139, 92, 246, 0.2)', color: '#a855f7' }}>
+                2,400+ Lessons
+              </span>
+            </div>
+            
+            {/* Core Learning Features */}
+            <div className="grid sm:grid-cols-2 gap-4 mb-4">
+              {/* Courses */}
+              <button
+                onClick={() => navigate('/courses')}
+                className="p-4 rounded-xl text-left transition-all hover:scale-[1.02] group"
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-subtle)' }}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                    style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' }}>
+                    📖
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Courses</h3>
+                    <p className="text-xs" style={{ color: '#a855f7' }}>Chessable-style learning</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--text-tertiary)' }}>Tactics</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--text-tertiary)' }}>Positional</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--text-tertiary)' }}>Endgames</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--text-tertiary)' }}>Strategy</span>
+                </div>
+              </button>
+
+              {/* Thinking System */}
+              <button
+                onClick={() => navigate('/thinking-system')}
+                className="p-4 rounded-xl text-left transition-all hover:scale-[1.02] group"
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-subtle)' }}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                    style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' }}>
+                    🧠
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Thinking System</h3>
+                    <p className="text-xs" style={{ color: '#22d3ee' }}>5-step decision framework</p>
+                  </div>
+                </div>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  Learn the systematic approach used by masters to evaluate any position
+                </p>
+              </button>
+
+              {/* Flash Training */}
+              <button
+                onClick={() => navigate('/flash-training')}
+                className="p-4 rounded-xl text-left transition-all hover:scale-[1.02] group"
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-subtle)' }}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                    style={{ background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' }}>
+                    ⚡
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Flash Training</h3>
+                    <p className="text-xs" style={{ color: '#f87171' }}>Rapid pattern recognition</p>
+                  </div>
+                </div>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  See position for 3 seconds, then answer. Builds GM-level intuition.
+                </p>
+              </button>
+
+              {/* Spaced Repetition */}
+              <button
+                onClick={() => navigate('/spaced-repetition')}
+                className="p-4 rounded-xl text-left transition-all hover:scale-[1.02] group"
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-subtle)' }}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                    style={{ background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)' }}>
+                    🔄
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Spaced Review</h3>
+                    <p className="text-xs" style={{ color: '#4ade80' }}>Smart puzzle scheduling</p>
+                  </div>
+                </div>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  Never forget what you learn. Science-backed retention system.
+                </p>
+              </button>
+            </div>
+
+            {/* Quick links */}
+            <div className="flex flex-wrap gap-2">
+              <button onClick={() => navigate('/openings')} className="px-3 py-1.5 rounded-lg text-sm transition-all hover:bg-[var(--bg-hover)]" style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
+                📚 Openings
+              </button>
+              <button onClick={() => navigate('/patterns')} className="px-3 py-1.5 rounded-lg text-sm transition-all hover:bg-[var(--bg-hover)]" style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
+                🏛️ Patterns
+              </button>
+              <button onClick={() => navigate('/greats')} className="px-3 py-1.5 rounded-lg text-sm transition-all hover:bg-[var(--bg-hover)]" style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
+                👑 Legends
+              </button>
+              <button onClick={() => navigate('/study-plan')} className="px-3 py-1.5 rounded-lg text-sm transition-all hover:bg-[var(--bg-hover)]" style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
+                📋 Study Plan
+              </button>
+            </div>
+          </div>
+
+          {/* Play & Train Row */}
           <div className="grid sm:grid-cols-2 gap-4">
             {/* Play Chess Card */}
             <button
               onClick={() => navigate('/play')}
-              className="card-interactive p-6 text-left group"
+              className="card-interactive p-5 text-left group"
               style={{ background: 'linear-gradient(135deg, rgba(129, 182, 76, 0.1) 0%, rgba(129, 182, 76, 0.05) 100%)' }}
             >
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-4">
                 <div 
-                  className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl"
+                  className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
                   style={{ background: 'rgba(129, 182, 76, 0.2)' }}
                 >
                   ♟️
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-display mb-1" style={{ color: 'var(--text-primary)' }}>
+                  <h3 className="text-lg font-display mb-1" style={{ color: 'var(--text-primary)' }}>
                     Play Chess
                   </h3>
                   <p className="text-sm" style={{ color: '#81b64c' }}>
                     vs Engine or Analyze
                   </p>
                 </div>
-                <svg className="w-6 h-6 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#81b64c' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
               </div>
             </button>
 
             {/* Puzzles Card */}
             <button
               onClick={() => navigate('/train')}
-              className="card-interactive p-6 text-left group"
+              className="card-interactive p-5 text-left group"
               style={{ background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%)' }}
             >
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-4">
                 <div 
-                  className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl"
+                  className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
                   style={{ background: 'rgba(245, 158, 11, 0.2)' }}
                 >
                   ⚡
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-display mb-1" style={{ color: 'var(--text-primary)' }}>
+                  <h3 className="text-lg font-display mb-1" style={{ color: 'var(--text-primary)' }}>
                     Solve Puzzles
                   </h3>
                   <div className="flex items-center gap-2">
@@ -154,20 +297,17 @@ export function HomePage() {
                     )}
                   </div>
                 </div>
-                <svg className="w-6 h-6 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#f59e0b' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
               </div>
             </button>
           </div>
 
-          {/* Today's Lesson Card */}
+          {/* Today's Lesson Card - Daily Journey */}
           {currentDayData && (
-            <div className="card p-6">
+            <div className="card p-5">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div 
-                    className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
+                    className="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
                     style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)' }}
                   >
                     📖
@@ -175,110 +315,87 @@ export function HomePage() {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="badge badge-purple">Day {progress.currentDay}</span>
-                      <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{phaseData.name}</span>
+                      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{phaseData.name}</span>
                     </div>
-                    <h2 className="text-lg font-display font-medium" style={{ color: 'var(--text-primary)' }}>
+                    <h2 className="font-display font-medium" style={{ color: 'var(--text-primary)' }}>
                       {currentDayData.title}
                     </h2>
-                    <p className="text-sm italic" style={{ color: 'var(--text-secondary)' }}>
-                      "{currentDayData.theme}"
-                    </p>
                   </div>
                 </div>
                 <button
                   onClick={() => navigate('/day')}
-                  className="btn-primary"
+                  className="btn-secondary text-sm"
                 >
-                  Begin Lesson →
+                  Continue Journey
                 </button>
-              </div>
-              <div className="mt-4">
-                <div className="flex justify-between text-xs mb-1">
-                  <span style={{ color: 'var(--text-muted)' }}>Phase Progress</span>
-                  <span style={{ color: 'var(--accent-primary)' }}>{getPhaseProgress()}%</span>
-                </div>
-                <div className="progress-bar h-1.5">
-                  <div className="progress-bar-fill purple" style={{ width: `${getPhaseProgress()}%` }} />
-                </div>
               </div>
             </div>
           )}
 
-          {/* Secondary Actions */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <button
-              onClick={() => navigate('/journey')}
-              className="card p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all group"
-            >
-              <div className="text-2xl mb-2">🗺️</div>
-              <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Journey</span>
-            </button>
-            <button
-              onClick={() => navigate('/openings')}
-              className="card p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all group"
-            >
-              <div className="text-2xl mb-2">📚</div>
-              <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Openings</span>
-            </button>
-            <button
-              onClick={() => navigate('/patterns')}
-              className="card p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all group"
-            >
-              <div className="text-2xl mb-2">🏛️</div>
-              <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Patterns</span>
-            </button>
-            <button
-              onClick={() => navigate('/greats')}
-              className="card p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all group"
-            >
-              <div className="text-2xl mb-2">👑</div>
-              <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Legends</span>
-            </button>
-          </div>
-
-          {/* Mental Game Quick Access */}
-          <div className="grid sm:grid-cols-2 gap-4">
+          {/* Mental Game & Tools */}
+          <div className="grid sm:grid-cols-3 gap-3">
             <button
               onClick={() => navigate('/mind')}
-              className="card-interactive p-5 text-left"
+              className="card p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all"
             >
-              <div className="flex items-center gap-3">
-                <div 
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
-                  style={{ background: 'rgba(6, 182, 212, 0.12)' }}
-                >
-                  🧘
-                </div>
-                <div>
-                  <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>Mind Training</h3>
-                  <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                    {progress.meditationMinutes} min meditated
-                  </p>
-                </div>
-              </div>
+              <div className="text-2xl mb-2">🧘</div>
+              <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Mind Training</span>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>{progress.meditationMinutes}m</p>
             </button>
             <button
               onClick={() => navigate('/calm-play')}
-              className="card-interactive p-5 text-left"
+              className="card p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all"
             >
-              <div className="flex items-center gap-3">
-                <div 
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
-                  style={{ background: 'rgba(236, 72, 153, 0.12)' }}
-                >
-                  ❤️
-                </div>
-                <div>
-                  <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>Calm Play Mode</h3>
-                  <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Anti-tilt with breathing</p>
-                </div>
-              </div>
+              <div className="text-2xl mb-2">❤️</div>
+              <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Calm Play</span>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Anti-tilt</p>
+            </button>
+            <button
+              onClick={() => navigate('/coach')}
+              className="card p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all"
+            >
+              <div className="text-2xl mb-2">✨</div>
+              <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>AI Coach</span>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Personal guidance</p>
             </button>
           </div>
         </div>
 
         {/* Right Column - Stats & Activity */}
         <div className="space-y-6">
+          {/* AI Coach - Today's Focus */}
+          <TodaysFocusWidget 
+            onAction={(actionType: ActionType) => {
+              // Navigate based on action type
+              const actionRoutes: Partial<Record<ActionType, string>> = {
+                START_TRAINING: '/train',
+                START_PUZZLE: '/train',
+                START_PUZZLES: '/train',
+                START_MEDITATION: '/mind',
+                START_BREATHING: '/mind',
+                START_CALM_PLAY: '/calm-play',
+                START_GAME: '/play',
+                START_PATTERN_REVIEW: '/patterns',
+                START_SPARRING: '/sparring',
+                REVIEW_MISTAKES: '/mistakes',
+                REVIEW_PATTERNS: '/patterns',
+                VIEW_MISTAKES: '/mistakes',
+                VIEW_OPENINGS: '/openings',
+                VIEW_PROGRESS: '/journey',
+                VIEW_NOTES: '/notes',
+                VIEW_STUDY_PLAN: '/study-plan',
+                PLAY_GAME: '/play',
+                VIEW_STATS: '/hub',
+                SET_INTENTION: '/calm-play',
+                VIEW_INSIGHT: '/coach',
+              };
+              const route = actionRoutes[actionType];
+              if (route) {
+                navigate(route);
+              }
+            }}
+          />
+
           {/* Stats Card */}
           <div className="card p-6">
             <h3 className="text-sm uppercase tracking-wider mb-4" style={{ color: 'var(--text-muted)' }}>

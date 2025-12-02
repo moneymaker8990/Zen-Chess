@@ -155,6 +155,9 @@ export interface ChessPuzzle {
   title?: string;
   explanation?: string;
   source?: string; // Origin game reference
+  // Setup move - opponent's move that leads to the puzzle position (for animation)
+  beforeFen?: string; // Position before opponent's move
+  setupMove?: { from: string; to: string }; // Opponent's last move
 }
 
 // ============================================

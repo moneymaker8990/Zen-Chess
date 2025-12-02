@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chessboard } from 'react-chessboard';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import { 
   useStudyStore, 
   useNotesStore, 
@@ -21,6 +22,7 @@ import { useProgressStore } from '@/state/useStore';
 
 export function CommandCenterPage() {
   const navigate = useNavigate();
+  const boardStyles = useBoardStyles();
   
   // All stores
   const { currentSession, startSession, endSession, sessions } = useStudyStore();
@@ -475,8 +477,8 @@ export function CommandCenterPage() {
                   boardOrientation={sparringPositions[0].playerColor}
                   arePiecesDraggable={false}
                   boardWidth={180}
-                  customDarkSquareStyle={{ backgroundColor: '#4a6670' }}
-                  customLightSquareStyle={{ backgroundColor: '#8ba4a8' }}
+                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                  customLightSquareStyle={boardStyles.customLightSquareStyle}
                 />
               </div>
               <p className="text-zen-300 text-sm text-center mb-2">
