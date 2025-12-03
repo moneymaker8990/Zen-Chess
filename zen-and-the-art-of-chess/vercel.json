@@ -1,7 +1,4 @@
 {
-  "rewrites": [
-    { "source": "/:path((?!assets|api|.*\\..*).*)", "destination": "/index.html" }
-  ],
   "headers": [
     {
       "source": "/sw.js",
@@ -17,7 +14,3 @@
     }
   ]
 }
-
-
-
-
