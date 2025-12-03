@@ -53,6 +53,8 @@ import { WeaknessDetectorPage } from '@/pages/WeaknessDetectorPage';
 import { PricingPage } from '@/pages/PricingPage';
 import { AuthPage } from '@/pages/AuthPage';
 import { AICoachDashboard } from '@/pages/AICoachDashboard';
+import { PlayFriendPage } from '@/pages/PlayFriendPage';
+import { LiveGamePage } from '@/pages/LiveGamePage';
 import { useProgressStore } from '@/state/useStore';
 import { useAuthStore } from '@/state/useAuthStore';
 import { initializeCoach } from '@/state/coachStore';
@@ -112,6 +114,11 @@ function AnimatedRoutes() {
         
         {/* AI Coach Hub */}
         <Route path="/ai-coach" element={<PageTransition><AICoachDashboard /></PageTransition>} />
+        
+        {/* Multiplayer - Play with Friends */}
+        <Route path="/play/friend" element={<PageTransition><PlayFriendPage /></PageTransition>} />
+        <Route path="/play/friend/:inviteCode" element={<PageTransition><PlayFriendPage /></PageTransition>} />
+        <Route path="/play/live/:gameId" element={<PageTransition><LiveGamePage /></PageTransition>} />
       </Routes>
     </AnimatePresence>
   );

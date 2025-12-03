@@ -2,6 +2,7 @@ import { ReactNode, useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useProgressStore } from '@/state/useStore';
 import { useAuthStore } from '@/state/useAuthStore';
+import { useMultiplayerStore } from '@/state/multiplayerStore';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { AgentNotificationCenter } from '@/components/AgentPanel';
 import { useAgentStore } from '@/lib/agents/agentOrchestrator';
@@ -157,6 +158,7 @@ const navSections = [
     title: 'Play & Train',
     items: [
       { path: '/play', label: 'Play', icon: Icons.play },
+      { path: '/play/friend', label: 'Play a Friend', icon: Icons.social, isMultiplayer: true },
       { path: '/train', label: 'Puzzles', icon: Icons.lightning },
       { path: '/greats', label: 'Legends', icon: Icons.crown },
       { path: '/games', label: '365 Games', icon: Icons.chess, badge: '365' },
@@ -189,8 +191,11 @@ export function Layout({ children }: LayoutProps) {
   const navigate = useNavigate();
   const { progress } = useProgressStore();
   const { user, subscriptionTier } = useAuthStore();
+  const { receivedInvites } = useMultiplayerStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const setCurrentPage = useAgentStore((s) => s.setCurrentPage);
+  
+  const inviteCount = receivedInvites.length;
 
   // Track page changes for agents
   useEffect(() => {
@@ -250,6 +255,12 @@ export function Layout({ children }: LayoutProps) {
                       <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
                         style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' }}>
                         {item.badge}
+                      </span>
+                    )}
+                    {'isMultiplayer' in item && item.isMultiplayer && inviteCount > 0 && (
+                      <span className="w-5 h-5 flex items-center justify-center text-[10px] rounded-full font-bold animate-pulse"
+                        style={{ background: '#ef4444', color: 'white' }}>
+                        {inviteCount}
                       </span>
                     )}
                   </NavLink>

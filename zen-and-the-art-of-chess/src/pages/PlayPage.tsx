@@ -571,13 +571,22 @@ export function PlayPage() {
             {engineLoading ? 'Loading...' : engineReady ? '✓ Ready' : '✗ Error'}
           </p>
         </div>
-        <button
-          onClick={() => navigate('/calm-play')}
-          className="btn-secondary text-xs sm:text-sm px-2 sm:px-4"
-        >
-          <span>☯</span>
-          <span className="hidden sm:inline">Calm Play</span>
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => navigate('/play/friend')}
+            className="btn-primary text-xs sm:text-sm px-2 sm:px-4"
+          >
+            <span>👥</span>
+            <span className="hidden sm:inline">Play Friend</span>
+          </button>
+          <button
+            onClick={() => navigate('/calm-play')}
+            className="btn-secondary text-xs sm:text-sm px-2 sm:px-4"
+          >
+            <span>☯</span>
+            <span className="hidden sm:inline">Calm Play</span>
+          </button>
+        </div>
       </div>
 
       {/* Contextual Agent Tip - hidden on mobile */}
