@@ -1,9 +1,10 @@
 // ============================================
 // ZEN CHESS COACH DASHBOARD
 // Display personalized recommendations, insights, and daily plan
+// NOW WITH AI INTELLIGENCE INTEGRATION
 // ============================================
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   useCoachStore, 
   useCoachRecommendations,
@@ -14,6 +15,12 @@ import {
   useProfileConfidence,
   useRefreshRecommendations,
 } from '@/state/coachStore';
+import { 
+  useAIIntelligence, 
+  useSessionMomentum, 
+  useFlowState as useAIFlowState,
+  useOptimalActivity,
+} from '@/lib/aiIntelligence';
 import type { 
   CoachRecommendation, 
   ActionType,
@@ -384,6 +391,7 @@ export function CoachDashboard({ onAction, compact = false }: CoachDashboardProp
 
 // ============================================
 // TODAY'S FOCUS WIDGET (for HomePage)
+// NOW WITH AI INTELLIGENCE FOR SMARTER SUGGESTIONS
 // ============================================
 
 interface TodaysFocusWidgetProps {
@@ -397,6 +405,12 @@ export function TodaysFocusWidget({ onAction }: TodaysFocusWidgetProps) {
   const tiltRisk = useTiltRisk();
   const mood = useCurrentMood();
   
+  // === AI INTELLIGENCE INTEGRATION ===
+  const momentum = useSessionMomentum();
+  const isInFlow = useAIFlowState();
+  const optimalActivity = useOptimalActivity();
+  const { session, patterns, confidenceLevel } = useAIIntelligence();
+  
   const plan = getDailyPlan();
   const topRec = recommendations[0];
   
@@ -405,18 +419,70 @@ export function TodaysFocusWidget({ onAction }: TodaysFocusWidgetProps) {
     refreshRecommendations();
   }, [refreshRecommendations]);
   
+  // AI-enhanced greeting based on session state
+  const smartGreeting = useMemo(() => {
+    if (isInFlow) return "You're in the zone. Keep that momentum going! 🔥";
+    if (momentum === 'peak') return "Excellent focus today. You're playing at your best.";
+    if (momentum === 'building') return "Warming up nicely. Building toward great things.";
+    if (session.accuracyTrend === 'declining' && session.puzzlesAttempted > 5) {
+      return "Consider mixing things up or taking a short break.";
+    }
+    if (patterns.puzzleWeaknesses.length > 0 && confidenceLevel === 'confident') {
+      return `Ready to work on your ${patterns.puzzleWeaknesses[0].toLowerCase()} patterns?`;
+    }
+    return plan.greeting;
+  }, [isInFlow, momentum, session, patterns, confidenceLevel, plan.greeting]);
+  
+  // AI-enhanced activity suggestion
+  const smartActivitySuggestion = useMemo(() => {
+    const activityLabels: Record<string, { label: string; icon: string }> = {
+      puzzle: { label: 'Puzzles', icon: '⚡' },
+      game: { label: 'Play a game', icon: '♟️' },
+      study: { label: 'Study material', icon: '📖' },
+      opening: { label: 'Opening practice', icon: '📚' },
+      review: { label: 'Review session', icon: '🔄' },
+      break: { label: 'Take a break', icon: '☕' },
+    };
+    return activityLabels[optimalActivity] || activityLabels.puzzle;
+  }, [optimalActivity]);
+  
   return (
-    <div className="glass-card p-5">
-      {/* Greeting */}
-      <p className="text-zen-300 font-serif italic mb-4">
-        {plan.greeting}
+    <div className="card p-4 sm:p-5">
+      {/* AI-enhanced greeting */}
+      <p className="text-sm sm:text-base mb-3 sm:mb-4" style={{ color: 'var(--text-secondary)' }}>
+        {smartGreeting}
       </p>
+      
+      {/* Flow state indicator - subtle but present */}
+      {isInFlow && (
+        <div 
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg mb-3 text-xs sm:text-sm"
+          style={{ background: 'rgba(74, 222, 128, 0.1)', color: '#4ade80' }}
+        >
+          <span className="animate-pulse">●</span>
+          <span>In flow state</span>
+        </div>
+      )}
+      
+      {/* Momentum indicator - very subtle */}
+      {momentum === 'peak' && !isInFlow && (
+        <div 
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg mb-3 text-xs sm:text-sm"
+          style={{ background: 'rgba(251, 191, 36, 0.1)', color: '#fbbf24' }}
+        >
+          <span>🔥</span>
+          <span>Peak performance</span>
+        </div>
+      )}
       
       {/* Tilt warning takes priority */}
       {tiltRisk ? (
-        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 mb-4">
-          <p className="text-red-300 text-sm">
-            ⚠️ Consider taking a break to avoid tilt.
+        <div 
+          className="p-3 rounded-lg mb-3 sm:mb-4"
+          style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)' }}
+        >
+          <p className="text-sm" style={{ color: '#fca5a5' }}>
+            ⚠️ Consider taking a break to reset.
           </p>
         </div>
       ) : topRec && topRec.priority !== 'LOW' ? (
@@ -427,18 +493,37 @@ export function TodaysFocusWidget({ onAction }: TodaysFocusWidgetProps) {
       ) : (
         <div className="space-y-3">
           <div>
-            <h4 className="text-xs uppercase tracking-wider text-zen-500 mb-1">
-              Today's Focus
+            <h4 className="text-[10px] sm:text-xs uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>
+              AI Suggests
             </h4>
-            <p className="text-zen-200 font-medium">{plan.primaryFocus.area}</p>
+            <div className="flex items-center gap-2">
+              <span className="text-lg sm:text-xl">{smartActivitySuggestion.icon}</span>
+              <p className="font-medium text-sm sm:text-base" style={{ color: 'var(--text-primary)' }}>
+                {smartActivitySuggestion.label}
+              </p>
+            </div>
           </div>
           
+          {/* Weakness targeting suggestion - only when AI is confident */}
+          {confidenceLevel === 'confident' && patterns.puzzleWeaknesses.length > 0 && (
+            <div 
+              className="px-3 py-2 rounded-lg text-xs sm:text-sm"
+              style={{ background: 'var(--bg-elevated)' }}
+            >
+              <span style={{ color: 'var(--text-muted)' }}>Focus area: </span>
+              <span style={{ color: 'var(--text-secondary)' }}>
+                {patterns.puzzleWeaknesses.slice(0, 2).join(', ').toLowerCase()}
+              </span>
+            </div>
+          )}
+          
           {plan.suggestedActivities.length > 0 && (
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-1.5 sm:gap-2 flex-wrap">
               {plan.suggestedActivities.slice(0, 3).map((activity, i) => (
                 <span 
                   key={i}
-                  className="px-2 py-1 rounded-lg bg-zen-800/50 text-zen-400 text-xs"
+                  className="px-2 py-1 rounded-lg text-[10px] sm:text-xs"
+                  style={{ background: 'var(--bg-tertiary)', color: 'var(--text-muted)' }}
                 >
                   {activity.duration}m {activity.activity.replace('START_', '').toLowerCase()}
                 </span>
@@ -448,9 +533,14 @@ export function TodaysFocusWidget({ onAction }: TodaysFocusWidgetProps) {
         </div>
       )}
       
-      {/* Mood indicator */}
-      <div className="mt-4 pt-3 border-t border-zen-700/30">
+      {/* Mood indicator - simplified */}
+      <div className="mt-3 sm:mt-4 pt-3 border-t flex items-center justify-between" style={{ borderColor: 'var(--border-subtle)' }}>
         <MoodIndicator mood={mood} flow="NONE" />
+        {session.puzzlesAttempted > 0 && (
+          <div className="text-[10px] sm:text-xs" style={{ color: 'var(--text-muted)' }}>
+            {session.puzzlesSolved}/{session.puzzlesAttempted} today
+          </div>
+        )}
       </div>
     </div>
   );

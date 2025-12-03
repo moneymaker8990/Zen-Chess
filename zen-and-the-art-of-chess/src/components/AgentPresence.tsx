@@ -31,43 +31,36 @@ export function AgentStatusBar() {
     return Math.round((messagesActedOn / totalMessages) * 100);
   }, [state.recentMessages]);
 
+  // Hide completely on mobile to not interfere with gameplay
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none"
+      className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none hidden lg:block"
       style={{ paddingLeft: 'var(--sidebar-width, 0px)' }}
     >
       <div className="max-w-6xl mx-auto px-4 pb-4 flex justify-end">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 0.6, y: 0 }}
+          whileHover={{ opacity: 1 }}
           className="pointer-events-auto"
         >
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="flex items-center gap-3 px-4 py-2 rounded-full text-xs backdrop-blur-sm transition-all hover:scale-105"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] backdrop-blur-sm transition-all hover:scale-105"
             style={{ 
-              background: 'rgba(15, 23, 42, 0.8)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+              background: 'rgba(15, 23, 42, 0.6)',
+              border: '1px solid rgba(255,255,255,0.05)',
             }}
           >
             {/* Pulsing indicator */}
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-50"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
             </span>
             
             <span style={{ color: 'var(--text-muted)' }}>
-              {activeAgents.length} Agents Active
+              🧠 {sessionMinutes}m
             </span>
-            
-            <span style={{ color: 'var(--text-muted)' }}>•</span>
-            
-            <span style={{ color: 'var(--text-muted)' }}>
-              {sessionMinutes}m
-            </span>
-            
-            <span className="text-sm">{showDetails ? '▼' : '▲'}</span>
           </button>
           
           {/* Expanded details */}
@@ -77,26 +70,26 @@ export function AgentStatusBar() {
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute bottom-full right-0 mb-2 w-72 rounded-xl overflow-hidden"
+                className="absolute bottom-full right-0 mb-2 w-64 rounded-xl overflow-hidden"
                 style={{ 
                   background: 'rgba(15, 23, 42, 0.95)',
                   border: '1px solid rgba(255,255,255,0.1)',
                   boxShadow: '0 4px 30px rgba(0,0,0,0.4)',
                 }}
               >
-                <div className="p-4 space-y-4">
+                <div className="p-3 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                      AI Coaching System
+                    <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>
+                      AI Coaching
                     </span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400">
-                      Active
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-400">
+                      {activeAgents.length} Active
                     </span>
                   </div>
                   
-                  {/* Agent grid */}
-                  <div className="grid grid-cols-6 gap-2">
-                    {activeAgents.slice(0, 12).map((agentId) => {
+                  {/* Agent grid - smaller */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {activeAgents.slice(0, 8).map((agentId) => {
                       const personality = AGENT_PERSONALITIES[agentId as AgentId] || {
                         icon: '🤖',
                         color: '#888',
@@ -105,34 +98,25 @@ export function AgentStatusBar() {
                       return (
                         <div
                           key={agentId}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-sm relative group"
+                          className="w-6 h-6 rounded flex items-center justify-center text-xs"
                           style={{ background: `${personality.color}20` }}
                           title={personality.name}
                         >
                           {personality.icon}
-                          
-                          {/* Tooltip */}
-                          <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-black text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                            {personality.name}
-                          </div>
                         </div>
                       );
                     })}
                   </div>
                   
-                  {/* Stats */}
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                      <div style={{ color: 'var(--text-muted)' }}>Session</div>
-                      <div className="font-medium" style={{ color: 'var(--text-primary)' }}>
-                        {sessionMinutes} min
-                      </div>
+                  {/* Stats - compact */}
+                  <div className="flex gap-3 text-[10px]">
+                    <div>
+                      <span style={{ color: 'var(--text-muted)' }}>Session: </span>
+                      <span style={{ color: 'var(--text-primary)' }}>{sessionMinutes}m</span>
                     </div>
-                    <div className="p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                      <div style={{ color: 'var(--text-muted)' }}>Insights</div>
-                      <div className="font-medium" style={{ color: 'var(--text-primary)' }}>
-                        {state.memory.totalMessages}
-                      </div>
+                    <div>
+                      <span style={{ color: 'var(--text-muted)' }}>Insights: </span>
+                      <span style={{ color: 'var(--text-primary)' }}>{state.memory.totalMessages}</span>
                     </div>
                   </div>
                 </div>
@@ -159,7 +143,7 @@ const PAGE_TIPS: PageTip[] = [
   {
     page: '/play',
     tips: [
-      { agent: 'tilt-guardian', message: 'Remember to breathe between moves', icon: '🛡️' },
+      { agent: 'inner-compass', message: 'Remember to breathe between moves', icon: '🧭' },
       { agent: 'coach', message: 'Think before you move. Blitz mind, classical time.', icon: '♔' },
       { agent: 'mindfulness', message: 'Stay present. Each position is new.', icon: '☯' },
     ],
@@ -169,7 +153,7 @@ const PAGE_TIPS: PageTip[] = [
     tips: [
       { agent: 'training', message: 'Accuracy over speed. Find the pattern.', icon: '🎯' },
       { agent: 'pattern', message: 'Patterns learned today become instinct tomorrow.', icon: '🧠' },
-      { agent: 'focus-guardian', message: 'Stay focused. Quality reps build skill.', icon: '🎯' },
+      { agent: 'flow-keeper', message: 'Stay in the flow. Quality reps build skill.', icon: '🌊' },
     ],
   },
   {
@@ -190,7 +174,7 @@ const PAGE_TIPS: PageTip[] = [
     page: '/calm-play',
     tips: [
       { agent: 'mindfulness', message: 'Breathe. The board will wait.', icon: '☯' },
-      { agent: 'tilt-guardian', message: 'This is where emotional mastery is forged.', icon: '🛡️' },
+      { agent: 'inner-compass', message: 'This is where emotional mastery is forged.', icon: '🧭' },
     ],
   },
   {
@@ -456,7 +440,7 @@ export function AgentBriefing({
 // Shows that agents are monitoring (very subtle)
 // ============================================
 
-export function AgentWatching({ agents = ['coach', 'tilt-guardian'] }: { agents?: AgentId[] }) {
+export function AgentWatching({ agents = ['coach', 'inner-compass'] }: { agents?: AgentId[] }) {
   return (
     <div className="flex items-center gap-1 text-xs" style={{ color: 'var(--text-muted)' }}>
       <span className="relative flex h-1.5 w-1.5">

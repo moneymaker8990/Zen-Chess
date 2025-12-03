@@ -9,10 +9,13 @@ import { useProgressStore } from '@/state/useStore';
 import { useTiltDetection } from '@/hooks/useTiltDetection';
 import { useCoachStore } from '@/state/coachStore';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import { createSimpleGameMetrics } from '@/lib/coachTypes';
 import { stockfish } from '@/engine/stockfish';
 import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
 import { AgentWatching, ContextualAgentTip } from '@/components/AgentPresence';
+import { ChessSounds, playSmartMoveSound } from '@/lib/soundSystem';
+import { parseUciMove } from '@/lib/moveValidation';
 import type { GameMode, EngineEvaluation } from '@/lib/types';
 import type { Square } from 'chess.js';
 
@@ -21,6 +24,7 @@ const BLUNDER_THRESHOLD = 150;
 
 export function PlayPage() {
   const navigate = useNavigate();
+  const boardSize = useBoardSize(480, 32);
   const [engineReady, setEngineReady] = useState(false);
   const [engineLoading, setEngineLoading] = useState(true);
   const [selectedMode, setSelectedMode] = useState<GameMode>('FREE_PLAY');
@@ -267,6 +271,7 @@ export function PlayPage() {
     // Try to make a move
     try {
       const moveTime = Date.now() - moveStartTime.current;
+      const isCapture = !!game.get(square);
       const move = game.move({
         from: moveFrom,
         to: square,
@@ -274,11 +279,22 @@ export function PlayPage() {
       });
 
       if (move) {
+        // Preserve scroll position to prevent jump after state updates
+        const scrollY = window.scrollY;
+        
+        // Play the appropriate sound
+        playSmartMoveSound(game, move, { isCapture });
+        
         setGame(new Chess(game.fen()));
         setLastMove({ from: moveFrom, to: square });
         setMoveHistory([...moveHistory, move.san]);
         setMoveFrom(null);
         setOptionSquares({});
+        
+        // Restore scroll position after React re-renders
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY);
+        });
         
         // Record move for tilt detection (blunder detection happens via evaluation)
         recordMove(moveTime, false);
@@ -323,6 +339,7 @@ export function PlayPage() {
 
     try {
       const moveTime = Date.now() - moveStartTime.current;
+      const isCapture = !!game.get(targetSquare);
       const move = game.move({
         from: sourceSquare,
         to: targetSquare,
@@ -330,11 +347,22 @@ export function PlayPage() {
       });
 
       if (move) {
+        // Preserve scroll position to prevent jump after state updates
+        const scrollY = window.scrollY;
+        
+        // Play the appropriate sound
+        playSmartMoveSound(game, move, { isCapture });
+        
         setGame(new Chess(game.fen()));
         setLastMove({ from: sourceSquare, to: targetSquare });
         setMoveHistory([...moveHistory, move.san]);
         setMoveFrom(null);
         setOptionSquares({});
+        
+        // Restore scroll position after React re-renders
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY);
+        });
         
         // Record move for tilt detection
         recordMove(moveTime, false);
@@ -355,7 +383,7 @@ export function PlayPage() {
     return false;
   }, [game, isThinking, selectedMode, orientation, moveHistory, recordMove, recordImpulseClick]);
 
-  // Make engine move
+  // Make engine move with proper validation
   const makeEngineMove = useCallback(async () => {
     if (!engineReady || game.isGameOver()) return;
     
@@ -363,18 +391,39 @@ export function PlayPage() {
     
     stockfish.playMove(game.fen(), (bestMove) => {
       try {
-        // Parse UCI move (e.g., "e2e4" or "e7e8q")
-        const from = bestMove.slice(0, 2) as Square;
-        const to = bestMove.slice(2, 4) as Square;
-        const promotion = bestMove.length > 4 ? bestMove[4] : undefined;
+        // Validate UCI move format
+        const parsed = parseUciMove(bestMove);
+        if (!parsed) {
+          console.error('Invalid move format from engine:', bestMove);
+          setIsThinking(false);
+          return;
+        }
         
-        const move = game.move({ from, to, promotion });
+        const isCapture = !!game.get(parsed.to);
+        const move = game.move({ 
+          from: parsed.from, 
+          to: parsed.to, 
+          promotion: parsed.promotion 
+        });
         
         if (move) {
+          // Preserve scroll position to prevent jump after state updates
+          const scrollY = window.scrollY;
+          
+          // Play sound for engine's move
+          playSmartMoveSound(game, move, { isCapture });
+          
           setGame(new Chess(game.fen()));
-          setLastMove({ from, to });
+          setLastMove({ from: parsed.from, to: parsed.to });
           setMoveHistory(prev => [...prev, move.san]);
           moveStartTime.current = Date.now(); // Reset timer for player's move
+          
+          // Restore scroll position after React re-renders
+          requestAnimationFrame(() => {
+            window.scrollTo(0, scrollY);
+          });
+        } else {
+          console.error('Engine move was not legal:', bestMove, 'in position', game.fen());
         }
       } catch (e) {
         console.error('Engine move error:', e);
@@ -498,7 +547,7 @@ export function PlayPage() {
   const status = getGameStatus();
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0">
       {/* Tilt Intervention Overlay */}
       {showIntervention && tiltState.interventionType !== 'NONE' && (
         <TiltIntervention
@@ -512,35 +561,37 @@ export function PlayPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-display font-medium" style={{ color: 'var(--text-primary)' }}>Play</h1>
-            <AgentWatching agents={['coach', 'tilt-guardian']} />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <h1 className="text-xl sm:text-2xl font-display font-medium" style={{ color: 'var(--text-primary)' }}>Play</h1>
+            <span className="hidden sm:inline"><AgentWatching agents={['coach', 'inner-compass']} /></span>
           </div>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            {engineLoading ? 'Loading engine...' : engineReady ? '✓ Engine ready' : '✗ Engine unavailable'}
+          <p className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
+            {engineLoading ? 'Loading...' : engineReady ? '✓ Ready' : '✗ Error'}
           </p>
         </div>
         <button
           onClick={() => navigate('/calm-play')}
-          className="btn-secondary"
+          className="btn-secondary text-xs sm:text-sm px-2 sm:px-4"
         >
           <span>☯</span>
-          <span>Calm Play Mode</span>
+          <span className="hidden sm:inline">Calm Play</span>
         </button>
       </div>
 
-      {/* Contextual Agent Tip */}
-      <ContextualAgentTip currentPage="/play" />
+      {/* Contextual Agent Tip - hidden on mobile */}
+      <div className="hidden sm:block">
+        <ContextualAgentTip currentPage="/play" />
+      </div>
 
       {/* Mode selector */}
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex gap-2 sm:gap-3 flex-wrap">
         {modes.map(({ mode, label, icon, description }) => (
           <button
             key={mode}
             onClick={() => handleModeChange(mode)}
-            className={`card p-4 text-left transition-all flex items-center gap-4 ${
+            className={`card p-2 sm:p-4 text-left transition-all flex items-center gap-2 sm:gap-4 ${
               selectedMode === mode ? 'ring-2' : ''
             }`}
             style={{ 
@@ -549,23 +600,23 @@ export function PlayPage() {
             }}
           >
             <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center text-xl"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-lg sm:text-xl shrink-0"
               style={{ background: selectedMode === mode ? 'rgba(168, 85, 247, 0.2)' : 'var(--bg-elevated)' }}
             >
               {icon}
             </div>
             <div>
-              <div className="font-medium" style={{ color: selectedMode === mode ? 'var(--accent-primary)' : 'var(--text-primary)' }}>
+              <div className="font-medium text-xs sm:text-sm" style={{ color: selectedMode === mode ? 'var(--accent-primary)' : 'var(--text-primary)' }}>
                 {label}
               </div>
-              <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{description}</div>
+              <div className="text-[10px] sm:text-xs hidden sm:block" style={{ color: 'var(--text-muted)' }}>{description}</div>
             </div>
           </button>
         ))}
       </div>
 
       {/* Main content */}
-      <div className="grid lg:grid-cols-[auto_1fr_320px] gap-6">
+      <div className="flex flex-col lg:grid lg:grid-cols-[auto_1fr_320px] gap-4 sm:gap-6">
         {/* Evaluation bar (analysis mode only) */}
         {selectedMode === 'ANALYSIS' && (
           <div className="hidden lg:block">
@@ -595,7 +646,7 @@ export function PlayPage() {
             {status.text}
           </div>
 
-          <div className="chessboard-container">
+          <div className="flex justify-center">
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}
@@ -606,7 +657,7 @@ export function PlayPage() {
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={boardStyles.animationDuration}
               arePiecesDraggable={!isThinking}
-              boardWidth={480}
+              boardWidth={boardSize}
             />
           </div>
         </div>

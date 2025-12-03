@@ -1,8 +1,8 @@
 # 🚀 Zen Chess Marketing Playbook
 
-## Your Secret Weapon: The Tilt Guardian
+## Your Secret Weapon: The Inner Compass
 
-The Tilt Guardian is your **viral marketing hook**. No other chess app has anything like it.
+The Inner Compass is your **viral marketing hook**. No other chess app has anything like it.
 
 ### Video Content Ideas (TikTok / YouTube Shorts / Instagram Reels)
 
@@ -10,13 +10,13 @@ The Tilt Guardian is your **viral marketing hook**. No other chess app has anyth
 ```
 Scene: Screen recording of losing streak
 Text overlay: "3 losses in a row..."
-Tilt Guardian pops up: "Stop. Breathe. The next game you play in this state will likely be your worst."
-Caption: "This chess app has an AI that protects you from yourself 🛡️"
+Inner Compass appears: "The compass is spinning. Time to find center before the next move."
+Caption: "This chess app has an AI that guides you back to yourself 🧭"
 ```
 
 #### 2. "POV: Your Chess App Actually Cares About You" (Hook: Emotional)
 ```
-Show the meditation prompts, breathing exercises, Tilt Guardian intervention
+Show the meditation prompts, breathing exercises, Inner Compass guidance
 Emotional background music
 End with: "Chess apps that help you win. Zen Chess helps you grow."
 ```
@@ -28,10 +28,10 @@ Explain: The mindfulness system, forced pauses, tilt prevention
 Caption: "Quality > Quantity. The Zen Chess difference."
 ```
 
-#### 4. "This AI Noticed I Was Tilting Before I Did" (Hook: Technology)
+#### 4. "This AI Noticed I Was Off Center Before I Did" (Hook: Technology)
 ```
 Show losing streak detection
-Tilt Guardian intervention
+Inner Compass guidance
 User testimonial about avoided losses
 ```
 
@@ -51,7 +51,7 @@ Day 365: "Best chess decision I ever made"
    - "Why grandmasters meditate"
 
 2. **Unique Features**
-   - Tilt Guardian demonstrations
+   - Inner Compass demonstrations
    - AI coaching agent interactions
    - Play the Legends mode
 
@@ -95,7 +95,7 @@ Day 365: "Best chess decision I ever made"
 ```
 Chess fact: You lose more games from emotion than from calculation.
 
-Zen Chess fact: Our Tilt Guardian has prevented over [X] rage-quit games.
+Zen Chess fact: Our Inner Compass has guided [X] players back to center before they threw away rating.
 
 The future of chess training isn't just tactics.
 It's tactics + psychology + mindfulness.

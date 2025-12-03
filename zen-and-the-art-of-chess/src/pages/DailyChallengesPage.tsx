@@ -9,6 +9,8 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
+import { useBoardSize } from '@/hooks/useBoardSize';
+import { playSmartMoveSound } from '@/lib/soundSystem';
 
 // ============================================
 // TYPES
@@ -1726,6 +1728,7 @@ export function DailyChallengesPage() {
   const today = getDayOfWeek();
   const todayTheme = DAY_THEMES[today];
   const dateString = getDateString();
+  const boardSize = useBoardSize(480, 32);
   
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
@@ -1744,7 +1747,6 @@ export function DailyChallengesPage() {
   const [moveIndex, setMoveIndex] = useState(0);
   const [lastMove, setLastMove] = useState<{ from: Square; to: Square } | null>(null);
   const [showCorrectFeedback, setShowCorrectFeedback] = useState(false);
-  const [showIncorrectShake, setShowIncorrectShake] = useState(false);
   
   // Visualization state
   const [visIndex, setVisIndex] = useState(0);
@@ -1883,6 +1885,7 @@ export function DailyChallengesPage() {
     
     const gameCopy = new Chess(game.fen());
     try {
+      const isCapture = !!gameCopy.get(to);
       const result = gameCopy.move({ from, to, promotion: 'q' });
       if (!result) return false;
       
@@ -1892,10 +1895,17 @@ export function DailyChallengesPage() {
         result.san.replace(/[+#]/g, '') === expectedMove?.replace(/[+#]/g, '');
       
       if (isCorrect) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
+        playSmartMoveSound(gameCopy, result, { isCapture });
         setGame(gameCopy);
         setLastMove({ from, to });
         setShowCorrectFeedback(true);
         setTimeout(() => setShowCorrectFeedback(false), 800);
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
         
         if (moveIndex + 1 >= currentChallenge.solution.length) {
           // Puzzle solved
@@ -1934,11 +1944,19 @@ export function DailyChallengesPage() {
               if (opponentMove) {
                 const responseGame = new Chess(gameCopy.fen());
                 try {
+                  const opponentCapture = !!responseGame.get(opponentMove.slice(2, 4) as Square);
                   const response = responseGame.move(opponentMove);
                   if (response) {
+                    // Preserve scroll position
+                    const scrollY = window.scrollY;
+                    
+                    playSmartMoveSound(responseGame, response, { isCapture: opponentCapture });
                     setGame(responseGame);
                     setLastMove({ from: response.from as Square, to: response.to as Square });
                     setMoveIndex(prev => prev + 1);
+                    
+                    // Restore scroll position
+                    requestAnimationFrame(() => window.scrollTo(0, scrollY));
                   }
                 } catch {
                   // Invalid move
@@ -1949,9 +1967,7 @@ export function DailyChallengesPage() {
         }
         return true;
       } else {
-        // Incorrect move - show shake feedback
-        setShowIncorrectShake(true);
-        setTimeout(() => setShowIncorrectShake(false), 500);
+        // Incorrect move - gentle feedback, no shake
         return false;
       }
     } catch {
@@ -2028,74 +2044,74 @@ export function DailyChallengesPage() {
   // ============================================
   if (viewMode === 'overview') {
     return (
-      <div className="space-y-8 animate-fade-in">
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <header>
-          <div className="flex items-center gap-2 text-sm mb-4">
+          <div className="flex items-center gap-2 text-xs sm:text-sm mb-2 sm:mb-4">
             <button onClick={() => navigate('/')} className="hover:text-white transition-colors" style={{ color: 'var(--text-muted)' }}>
               Home
             </button>
             <span style={{ color: 'var(--text-muted)' }}>/</span>
-            <span style={{ color: 'var(--text-secondary)' }}>Daily Challenges</span>
+            <span style={{ color: 'var(--text-secondary)' }}>Daily</span>
           </div>
-          <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
             📅 Daily Challenges
           </h1>
-          <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
-            A new themed challenge every day of the week
+          <p className="text-sm sm:text-lg" style={{ color: 'var(--text-tertiary)' }}>
+            New themed challenge every day
           </p>
         </header>
         
         {/* Today's Challenge Hero */}
         <div 
-          className="card p-8 text-center"
+          className="card p-4 sm:p-8 text-center"
           style={{ background: `linear-gradient(135deg, ${todayTheme.color}20, transparent)` }}
         >
-          <div className="text-6xl mb-4">{todayTheme.icon}</div>
-          <h2 className="text-2xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>
+          <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">{todayTheme.icon}</div>
+          <h2 className="text-xl sm:text-2xl font-display mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
             {todayTheme.name}
           </h2>
-          <p className="text-lg mb-6" style={{ color: todayTheme.color }}>
+          <p className="text-sm sm:text-lg mb-4 sm:mb-6" style={{ color: todayTheme.color }}>
             {todayTheme.tagline}
           </p>
           
           {todayCompleted ? (
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full" style={{ background: '#4ade8030' }}>
-                <span className="text-xl">✅</span>
-                <span style={{ color: '#4ade80' }}>Completed Today!</span>
+            <div className="space-y-2 sm:space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm" style={{ background: '#4ade8030' }}>
+                <span className="text-lg sm:text-xl">✅</span>
+                <span style={{ color: '#4ade80' }}>Done!</span>
               </div>
-              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                Come back tomorrow for a new challenge
+              <p className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
+                Come back tomorrow
               </p>
             </div>
           ) : (
-            <button onClick={startChallenge} className="btn-primary text-lg px-8 py-3">
-              Start Today's Challenge
+            <button onClick={startChallenge} className="btn-primary text-sm sm:text-lg px-6 sm:px-8 py-2 sm:py-3">
+              Start Challenge
             </button>
           )}
         </div>
         
         {/* Week Progress */}
-        <div className="card p-6">
-          <h3 className="text-sm uppercase tracking-wider mb-4" style={{ color: 'var(--text-muted)' }}>
-            This Week's Progress
+        <div className="card p-3 sm:p-6">
+          <h3 className="text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4" style={{ color: 'var(--text-muted)' }}>
+            This Week
           </h3>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-7 gap-1 sm:gap-2">
             {weekProgress.map(({ day, completed, isFuture, isToday }) => {
               const dayTheme = DAY_THEMES[day];
               return (
                 <div
                   key={day}
-                  className={`p-3 rounded-xl text-center transition-all ${isToday ? 'ring-2 ring-purple-500' : ''}`}
+                  className={`p-1.5 sm:p-3 rounded-lg sm:rounded-xl text-center transition-all ${isToday ? 'ring-2 ring-purple-500' : ''}`}
                   style={{ 
                     background: completed ? dayTheme.color + '30' : 'var(--bg-tertiary)',
                     opacity: isFuture ? 0.5 : 1,
                   }}
                 >
-                  <div className="text-2xl mb-1">{completed ? '✅' : dayTheme.icon}</div>
-                  <div className="text-xs font-medium capitalize" style={{ color: completed ? dayTheme.color : 'var(--text-muted)' }}>
-                    {day.slice(0, 3)}
+                  <div className="text-lg sm:text-2xl mb-0.5 sm:mb-1">{completed ? '✅' : dayTheme.icon}</div>
+                  <div className="text-[9px] sm:text-xs font-medium capitalize" style={{ color: completed ? dayTheme.color : 'var(--text-muted)' }}>
+                    {day.slice(0, 2)}
                   </div>
                 </div>
               );
@@ -2104,7 +2120,7 @@ export function DailyChallengesPage() {
         </div>
         
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <div className="stat-card">
             <div className="stat-value" style={{ color: '#f59e0b' }}>🔥 {stats.currentStreak}</div>
             <div className="stat-label">Current Streak</div>
@@ -2198,9 +2214,9 @@ export function DailyChallengesPage() {
         </div>
         
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className={`chessboard-container relative ${showIncorrectShake ? 'animate-shake' : ''}`}>
+          <div className="relative flex justify-center">
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}
@@ -2219,7 +2235,7 @@ export function DailyChallengesPage() {
               }}
               arePiecesDraggable={!solved}
               onPieceDrop={(from, to) => handleMove(from as Square, to as Square)}
-              boardWidth={480}
+              boardWidth={boardSize}
             />
             
             {/* Correct Move Feedback Overlay */}
@@ -2478,8 +2494,8 @@ export function DailyChallengesPage() {
         </div>
         
         {/* Board */}
-        <div className="flex justify-center">
-          <div className={`chessboard-container relative ${showIncorrectShake ? 'animate-shake' : ''}`}>
+        <div className="flex justify-center px-2 sm:px-0">
+          <div className="relative">
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}
@@ -2495,7 +2511,7 @@ export function DailyChallengesPage() {
               }}
               arePiecesDraggable={rushActive}
               onPieceDrop={(from, to) => handleMove(from as Square, to as Square)}
-              boardWidth={480}
+              boardWidth={boardSize}
             />
             
             {/* Correct Move Feedback */}

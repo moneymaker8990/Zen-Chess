@@ -121,6 +121,107 @@ export function useMoveOptions() {
   };
 }
 
+// ============================================
+// AI-INTELLIGENT BOARD SETTINGS
+// Adapts board experience based on user patterns
+// ============================================
+
+import { useAIIntelligence } from '@/lib/aiIntelligence';
+import { useMemo } from 'react';
+
+/** 
+ * Hook that provides AI-adapted board settings
+ * Silently adjusts hints, highlights, and assistance based on skill level
+ */
+export function useSmartBoardSettings() {
+  const { settings, getMoveHintStyle } = useBoardSettingsStore();
+  const { defaults, patterns, session, confidenceLevel } = useAIIntelligence();
+  
+  return useMemo(() => {
+    // Determine if we should show extra assistance
+    const isStruggling = session.accuracyTrend === 'declining';
+    const isNewUser = confidenceLevel === 'learning';
+    const needsHelp = isStruggling || isNewUser;
+    
+    // Smart hint style - more helpful when struggling
+    let effectiveMoveHintStyle = settings.moveHintStyle;
+    if (needsHelp && effectiveMoveHintStyle === 'none') {
+      effectiveMoveHintStyle = 'dots'; // Enable hints if user is struggling
+    }
+    
+    // Smart animation - slower when learning, faster when confident
+    let effectiveAnimationDuration = settings.animationDuration;
+    if (isNewUser) {
+      effectiveAnimationDuration = Math.max(300, settings.animationDuration);
+    } else if (confidenceLevel === 'confident' && session.flowState) {
+      effectiveAnimationDuration = Math.min(150, settings.animationDuration);
+    }
+    
+    // Whether to show last move highlight more prominently
+    const emphasizeLastMove = needsHelp || patterns.hintUsageRate > 0.5;
+    
+    // Whether to show check indicators more prominently
+    const emphasizeChecks = needsHelp || patterns.puzzleWeaknesses.includes('CHECK');
+    
+    return {
+      // Base settings
+      ...settings,
+      
+      // AI-adapted settings
+      effectiveMoveHintStyle,
+      effectiveAnimationDuration,
+      emphasizeLastMove,
+      emphasizeChecks,
+      
+      // Computed helpers
+      getMoveHintStyle: (isCapture: boolean) => {
+        if (effectiveMoveHintStyle === 'none') return {};
+        return MOVE_HINT_STYLES[effectiveMoveHintStyle]?.getStyle(isCapture) || {};
+      },
+      
+      // Context flags
+      aiAdaptedHints: effectiveMoveHintStyle !== settings.moveHintStyle,
+      isAssistanceMode: needsHelp,
+    };
+  }, [settings, defaults, patterns, session, confidenceLevel, getMoveHintStyle]);
+}
+
+/**
+ * Hook that provides smart square highlighting based on context
+ * Can highlight pieces that should be considered, danger squares, etc.
+ */
+export function useSmartHighlighting() {
+  const { patterns, session } = useAIIntelligence();
+  
+  return useMemo(() => {
+    // Determine highlighting strategy based on user's patterns
+    const highlightDangerSquares = patterns.puzzleWeaknesses.some(
+      w => ['PIN', 'FORK', 'SKEWER'].includes(w)
+    );
+    
+    const highlightHangingPieces = session.accuracyTrend === 'declining';
+    
+    const highlightChecks = patterns.puzzleWeaknesses.includes('CHECK') || 
+                           patterns.puzzleWeaknesses.includes('BACK_RANK');
+    
+    return {
+      highlightDangerSquares,
+      highlightHangingPieces,
+      highlightChecks,
+      
+      // Get danger highlight style
+      getDangerStyle: () => ({
+        background: 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)',
+      }),
+      
+      // Get attention highlight style
+      getAttentionStyle: () => ({
+        background: 'radial-gradient(circle, rgba(251, 191, 36, 0.25) 0%, transparent 70%)',
+      }),
+    };
+  }, [patterns, session]);
+}
+
 export default useBoardSettingsStore;
 
 

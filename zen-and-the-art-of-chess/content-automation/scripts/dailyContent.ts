@@ -9,7 +9,7 @@ import 'dotenv/config';
 // Rotate through content types based on day of week
 const CONTENT_ROTATION: ContentType[] = [
   'chess_tip',       // Sunday
-  'tilt_guardian',   // Monday
+  'inner_compass',   // Monday
   'mindfulness',     // Tuesday
   'puzzle_challenge', // Wednesday
   'legend_feature',  // Thursday

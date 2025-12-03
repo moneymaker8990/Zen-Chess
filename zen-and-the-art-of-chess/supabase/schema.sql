@@ -7,11 +7,20 @@
 create extension if not exists "uuid-ossp";
 
 -- ============================================
--- ENUMS
+-- ENUMS (with IF NOT EXISTS handling)
 -- ============================================
 
-create type subscription_tier as enum ('free', 'premium', 'lifetime');
-create type subscription_status as enum ('active', 'canceled', 'past_due', 'trialing', 'incomplete');
+DO $$ BEGIN
+  CREATE TYPE subscription_tier AS ENUM ('free', 'premium', 'lifetime');
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+  CREATE TYPE subscription_status AS ENUM ('active', 'canceled', 'past_due', 'trialing', 'incomplete');
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
 
 -- ============================================
 -- PROFILES TABLE
@@ -47,15 +56,18 @@ create table if not exists public.profiles (
 -- Enable RLS
 alter table public.profiles enable row level security;
 
--- Policies
+-- Policies (drop first if exists)
+drop policy if exists "Users can view their own profile" on public.profiles;
 create policy "Users can view their own profile"
   on public.profiles for select
   using (auth.uid() = id);
 
+drop policy if exists "Users can update their own profile" on public.profiles;
 create policy "Users can update their own profile"
   on public.profiles for update
   using (auth.uid() = id);
 
+drop policy if exists "Profiles are created on signup" on public.profiles;
 create policy "Profiles are created on signup"
   on public.profiles for insert
   with check (auth.uid() = id);
@@ -86,15 +98,18 @@ create table if not exists public.user_progress (
 -- Enable RLS
 alter table public.user_progress enable row level security;
 
--- Policies
+-- Policies (drop first if exists)
+drop policy if exists "Users can view their own progress" on public.user_progress;
 create policy "Users can view their own progress"
   on public.user_progress for select
   using (auth.uid() = user_id);
 
+drop policy if exists "Users can update their own progress" on public.user_progress;
 create policy "Users can update their own progress"
   on public.user_progress for update
   using (auth.uid() = user_id);
 
+drop policy if exists "Users can insert their own progress" on public.user_progress;
 create policy "Users can insert their own progress"
   on public.user_progress for insert
   with check (auth.uid() = user_id);
@@ -123,12 +138,14 @@ create table if not exists public.subscriptions (
 -- Enable RLS
 alter table public.subscriptions enable row level security;
 
--- Policies
+-- Policies (drop first if exists)
+drop policy if exists "Users can view their own subscriptions" on public.subscriptions;
 create policy "Users can view their own subscriptions"
   on public.subscriptions for select
   using (auth.uid() = user_id);
 
 -- Only service role can modify subscriptions (via webhooks)
+drop policy if exists "Service role can manage subscriptions" on public.subscriptions;
 create policy "Service role can manage subscriptions"
   on public.subscriptions for all
   using (auth.jwt()->>'role' = 'service_role');
@@ -167,14 +184,17 @@ end;
 $$ language plpgsql;
 
 -- Update timestamp triggers
+drop trigger if exists update_profiles_updated_at on public.profiles;
 create trigger update_profiles_updated_at
   before update on public.profiles
   for each row execute procedure public.update_updated_at();
 
+drop trigger if exists update_user_progress_updated_at on public.user_progress;
 create trigger update_user_progress_updated_at
   before update on public.user_progress
   for each row execute procedure public.update_updated_at();
 
+drop trigger if exists update_subscriptions_updated_at on public.subscriptions;
 create trigger update_subscriptions_updated_at
   before update on public.subscriptions
   for each row execute procedure public.update_updated_at();

@@ -15,6 +15,9 @@ import {
 import { LEGEND_STYLES, type GuessMoveResult, type LegendId } from '@/lib/legendTypes';
 import { useNotesStore, useStudyStore, useLegendGameReviewStore } from '@/state/notesStore';
 import type { BotLevel } from '@/engine/humanizedStockfish';
+import { useBoardSize } from '@/hooks/useBoardSize';
+import { parseUciMove, isValidFen } from '@/lib/moveValidation';
+import { playSmartMoveSound } from '@/lib/soundSystem';
 
 type Tab = 'play' | 'guess';
 
@@ -25,6 +28,7 @@ export function LegendDetailPage() {
   const { addNote } = useNotesStore();
   const { recordGamePlayed, recordPuzzleSolved } = useStudyStore();
   const { markGameReviewed, isGameReviewed, getGameReview, getLegendStats } = useLegendGameReviewStore();
+  const boardSize = useBoardSize(520, 32);
   
   const legend = legendId as LegendId;
   const legendData = legend ? LEGEND_STYLES[legend] : null;
@@ -49,6 +53,7 @@ export function LegendDetailPage() {
   const [guessSession, setGuessSession] = useState<{
     game: any;
     positions: Array<{ fen: string; move: string; moveNumber: number }>;
+    legendColor: 'white' | 'black';
   } | null>(null);
   const [currentPositionIndex, setCurrentPositionIndex] = useState(0);
   const [guessResults, setGuessResults] = useState<GuessMoveResult[]>([]);
@@ -57,11 +62,26 @@ export function LegendDetailPage() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState<GuessMoveResult | null>(null);
 
-  // Initialize engine
+  // Initialize engine with proper cleanup
   useEffect(() => {
+    let mounted = true;
+    
     stockfish.init().then((ready) => {
-      setEngineReady(ready);
+      if (mounted) {
+        setEngineReady(ready);
+        if (ready) {
+          // Ensure engine is at maximum strength for legends
+          stockfish.setStrength(20);
+        }
+      }
     });
+    
+    return () => {
+      mounted = false;
+      // Don't destroy engine on unmount - it's a singleton
+      // But do stop any ongoing operations
+      stockfish.stop();
+    };
   }, []);
 
   // Track game completion for Play vs Legend mode
@@ -114,13 +134,14 @@ export function LegendDetailPage() {
   // Use ref to track botLevel to avoid issues (even though it's now constant)
   const botLevelRef = useRef<BotLevel>(botLevel);
 
-  const makeLegendMove = useCallback(async (currentGame?: Chess) => {
+  const makeLegendMove = useCallback(async (currentGame?: Chess, playerColorOverride?: 'white' | 'black') => {
     const gameToUse = currentGame || game;
+    const effectivePlayerColor = playerColorOverride ?? playerColor;
     
     if (!engineReady || !legend || gameToUse.isGameOver() || isThinking) return;
 
     // Check if it's the legend's turn
-    const legendColor = playerColor === 'white' ? 'b' : 'w';
+    const legendColor = effectivePlayerColor === 'white' ? 'b' : 'w';
     if (gameToUse.turn() !== legendColor) {
       return; // Not the legend's turn
     }
@@ -136,16 +157,36 @@ export function LegendDetailPage() {
         level: botLevelRef.current,
       });
 
-      const from = move.slice(0, 2) as Square;
-      const to = move.slice(2, 4) as Square;
-      const promotion = move.length > 4 ? move[4] : undefined;
+      // Validate the UCI move format
+      const parsed = parseUciMove(move);
+      if (!parsed) {
+        console.error('Invalid move format from legend engine:', move);
+        setIsThinking(false);
+        return;
+      }
 
       const gameCopy = new Chess(gameToUse.fen());
-      const moveResult = gameCopy.move({ from, to, promotion });
+      const isCapture = !!gameCopy.get(parsed.to);
+      const moveResult = gameCopy.move({ 
+        from: parsed.from, 
+        to: parsed.to, 
+        promotion: parsed.promotion 
+      });
 
       if (moveResult) {
+        // Preserve scroll position to prevent jump after state updates
+        const scrollY = window.scrollY;
+        
+        playSmartMoveSound(gameCopy, moveResult, { isCapture });
         setGame(gameCopy);
-        setLastMove({ from, to });
+        setLastMove({ from: parsed.from, to: parsed.to });
+        
+        // Restore scroll position after React re-renders
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY);
+        });
+      } else {
+        console.error('Legend move was not legal:', move, 'in position', gameToUse.fen());
       }
     } catch (err) {
       console.error('Error making legend move:', err);
@@ -208,6 +249,7 @@ export function LegendDetailPage() {
       // Try to make a move
       const gameCopy = new Chess(game.fen());
       try {
+        const isCapture = !!gameCopy.get(square);
         const move = gameCopy.move({
           from: moveFrom,
           to: square,
@@ -215,10 +257,19 @@ export function LegendDetailPage() {
         });
 
         if (move) {
+          // Preserve scroll position to prevent jump after state updates
+          const scrollY = window.scrollY;
+          
+          playSmartMoveSound(gameCopy, move, { isCapture });
           setGame(gameCopy);
           setLastMove({ from: moveFrom, to: square });
           setMoveFrom(null);
           setOptionSquares({});
+          
+          // Restore scroll position after React re-renders
+          requestAnimationFrame(() => {
+            window.scrollTo(0, scrollY);
+          });
 
           // Check if it's the legend's turn after the player's move
           setTimeout(() => {
@@ -255,6 +306,7 @@ export function LegendDetailPage() {
       }
 
       const gameCopy = new Chess(game.fen());
+      const isCapture = !!gameCopy.get(targetSquare);
       const move = gameCopy.move({
         from: sourceSquare,
         to: targetSquare,
@@ -262,10 +314,19 @@ export function LegendDetailPage() {
       });
 
       if (move) {
+        // Preserve scroll position to prevent jump after state updates
+        const scrollY = window.scrollY;
+        
+        playSmartMoveSound(gameCopy, move, { isCapture });
         setGame(gameCopy);
         setLastMove({ from: sourceSquare, to: targetSquare });
         setMoveFrom(null);
         setOptionSquares({});
+        
+        // Restore scroll position after React re-renders
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY);
+        });
 
         // Check if it's the legend's turn after the player's move
         setTimeout(() => {
@@ -281,13 +342,17 @@ export function LegendDetailPage() {
     [game, isThinking, makeLegendMove, playerColor]
   );
 
-  // Start new game
-  const resetGame = useCallback(() => {
+  // Start new game - accepts optional color to handle immediate color switch
+  const resetGame = useCallback((colorOverride?: 'white' | 'black') => {
+    const color = colorOverride ?? playerColor;
     const newGame = new Chess();
     setGame(newGame);
     setLastMove(null);
-    if (playerColor === 'black') {
-      setTimeout(() => makeLegendMove(newGame), 500);
+    setMoveFrom(null);
+    setOptionSquares({});
+    // If player is black, legend (white) moves first
+    if (color === 'black') {
+      setTimeout(() => makeLegendMove(newGame, 'black'), 500);
     }
   }, [playerColor, makeLegendMove]);
 
@@ -301,6 +366,18 @@ export function LegendDetailPage() {
 
       const userMove = `${sourceSquare}${targetSquare}`;
       const legendMove = currentPos.move;
+
+      // Play move sound for the guess
+      const guessGame = new Chess(currentPos.fen);
+      try {
+        const isCapture = !!guessGame.get(targetSquare);
+        const move = guessGame.move({ from: sourceSquare, to: targetSquare, promotion: 'q' });
+        if (move) {
+          playSmartMoveSound(guessGame, move, { isCapture });
+        }
+      } catch {
+        // Invalid move - still score it
+      }
 
       // Score the guess
       const result = await scoreGuessMove({
@@ -386,55 +463,56 @@ export function LegendDetailPage() {
   const guessChess = currentPosition ? new Chess(currentPosition.fen) : null;
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <div className="mb-4">
-            <BackButton fallback="/greats" label="Back to Greats" className="text-zen-400 hover:text-zen-200" />
+          <div className="mb-2 sm:mb-4">
+            <BackButton fallback="/greats" label="Back" className="text-zen-400 hover:text-zen-200 text-sm" />
           </div>
-          <h1 className="text-3xl font-serif text-zen-100">{legendData.name}</h1>
-          <p className="text-gold-400 font-serif italic mt-1">{legendData.tagline}</p>
+          <h1 className="text-xl sm:text-3xl font-serif text-zen-100">{legendData.name}</h1>
+          <p className="text-gold-400 font-serif italic mt-0.5 sm:mt-1 text-sm sm:text-base">{legendData.tagline}</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-zen-800/50">
+      <div className="flex gap-1 sm:gap-2 border-b border-zen-800/50">
         <button
           onClick={() => setActiveTab('play')}
-          className={`px-6 py-3 font-medium transition-colors ${
+          className={`px-3 sm:px-6 py-2 sm:py-3 font-medium transition-colors text-xs sm:text-base ${
             activeTab === 'play'
               ? 'text-gold-400 border-b-2 border-gold-400'
               : 'text-zen-400 hover:text-zen-200'
           }`}
         >
-          Play vs {legendData.name}
+          Play vs Legend
         </button>
         <button
           onClick={() => setActiveTab('guess')}
-          className={`px-6 py-3 font-medium transition-colors ${
+          className={`px-3 sm:px-6 py-2 sm:py-3 font-medium transition-colors text-xs sm:text-base ${
             activeTab === 'guess'
               ? 'text-gold-400 border-b-2 border-gold-400'
               : 'text-zen-400 hover:text-zen-200'
           }`}
         >
-          Guess the Move
+          Guess Move
         </button>
       </div>
 
       {/* Play vs Legend Tab */}
       {activeTab === 'play' && (
-        <div className="space-y-8">
+        <div className="space-y-6 px-2 sm:px-0">
           {/* Game Area - Board and Controls */}
-          <div className="grid lg:grid-cols-[1fr,360px] gap-8 items-start">
+          <div className="flex flex-col lg:grid lg:grid-cols-[1fr,320px] gap-4 lg:gap-6 items-start">
             {/* Chessboard */}
-            <div className="glass-card p-6">
-              <div className="w-full max-w-[520px] mx-auto">
+            <div className="glass-card p-3 sm:p-4 lg:p-6 w-full">
+              <div className="w-full flex justify-center">
                 <Chessboard
                   position={game.fen()}
                   onSquareClick={onSquareClick}
                   onPieceDrop={onDrop}
                   boardOrientation={playerColor}
+                  boardWidth={boardSize}
                   customSquareStyles={{
                     ...optionSquares,
                     ...(lastMove && {
@@ -483,7 +561,7 @@ export function LegendDetailPage() {
                       <button
                         onClick={() => {
                           setPlayerColor('white');
-                          resetGame();
+                          resetGame('white');
                         }}
                         className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all ${
                           playerColor === 'white'
@@ -496,7 +574,7 @@ export function LegendDetailPage() {
                       <button
                         onClick={() => {
                           setPlayerColor('black');
-                          resetGame();
+                          resetGame('black');
                         }}
                         className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all ${
                           playerColor === 'black'
@@ -533,10 +611,10 @@ export function LegendDetailPage() {
           </div>
 
           {/* Expanded Legend Biography Section */}
-          <div className="glass-card p-8 overflow-hidden">
-            <div className="flex items-start gap-8">
+          <div className="glass-card p-4 sm:p-6 lg:p-8 overflow-hidden">
+            <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8">
               {/* Left column - key info */}
-              <div className="w-72 flex-shrink-0 space-y-6">
+              <div className="w-full lg:w-72 flex-shrink-0 space-y-4 lg:space-y-6">
                 <div>
                   <h2 className="text-2xl font-serif text-zen-100 mb-1">{legendData.bio.fullName}</h2>
                   <p className="text-gold-400 italic">{legendData.bio.nationality}</p>
@@ -701,9 +779,9 @@ export function LegendDetailPage() {
               )}
             </div>
           ) : (
-            <div className="grid lg:grid-cols-2 gap-6">
-              <div className="glass-card p-6">
-                <div className="mb-4">
+            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-6 px-2 sm:px-0">
+              <div className="glass-card p-3 sm:p-4 lg:p-6">
+                <div className="mb-4 flex justify-center">
                   {guessChess && (
                     <Chessboard
                       position={guessChess.fen()}
@@ -711,7 +789,10 @@ export function LegendDetailPage() {
                         handleGuessMove(source, target);
                         return true;
                       }}
-                      boardOrientation="white"
+                      boardOrientation={guessSession?.legendColor || 'white'}
+                      boardWidth={boardSize}
+                      customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                      customLightSquareStyle={boardStyles.customLightSquareStyle}
                     />
                   )}
                 </div>

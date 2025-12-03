@@ -10,6 +10,7 @@ import type { GuessMoveResult, GuessSessionSummary, LegendId } from '@/lib/legen
 
 /**
  * Score a user's guess against the legend's actual move
+ * Uses robust engine evaluation with proper timeout handling
  */
 export async function scoreGuessMove(args: {
   fen: string;
@@ -42,36 +43,52 @@ export async function scoreGuessMove(args: {
     };
   }
 
-  // Get evaluations for both positions
+  // Get evaluations for both positions with robust error handling
   const evalPromise = (fenPos: string): Promise<number> => {
     return new Promise((resolve) => {
       let resolved = false;
+      let lastEval = 0;
+      
+      // Use the engine's analyzePosition with proper callback
       stockfish.analyzePosition(fenPos, (eval_) => {
         if (!resolved) {
-          resolved = true;
           // Convert mate scores to centipawns
           if (eval_.mate) {
-            resolve(eval_.mate > 0 ? 10000 - eval_.mate * 10 : -10000 - Math.abs(eval_.mate) * 10);
+            lastEval = eval_.mate > 0 ? 10000 - eval_.mate * 10 : -10000 - Math.abs(eval_.mate) * 10;
           } else {
-            resolve(eval_.score);
+            lastEval = eval_.score;
+          }
+          
+          // Only resolve once we have good depth (at least 10)
+          if (eval_.depth >= 10) {
+            resolved = true;
+            resolve(lastEval);
           }
         }
       }, 12);
 
-      // Timeout after 2 seconds
+      // Timeout after 3 seconds - use whatever eval we have
       setTimeout(() => {
         if (!resolved) {
           resolved = true;
-          resolve(0);
+          resolve(lastEval);
         }
-      }, 2000);
+      }, 3000);
     });
   };
 
-  const [evalUser, evalLegend] = await Promise.all([
-    evalPromise(chessUser.fen()),
-    evalPromise(chessLegend.fen()),
-  ]);
+  // Evaluate positions sequentially to avoid engine queue issues
+  let evalUser: number;
+  let evalLegend: number;
+  
+  try {
+    evalUser = await evalPromise(chessUser.fen());
+    evalLegend = await evalPromise(chessLegend.fen());
+  } catch {
+    // If evaluation fails, give partial credit for trying
+    evalUser = 0;
+    evalLegend = 0;
+  }
 
   // Determine if we're evaluating from white or black's perspective
   const chess = new Chess(fen);
@@ -167,6 +184,60 @@ export async function scoreGuessMove(args: {
 }
 
 /**
+ * Determine which color the legend played in a game
+ * Uses robust matching to handle various name formats
+ */
+function detectLegendColor(legend: LegendId, whiteName: string, blackName: string): 'w' | 'b' {
+  const legendLower = legend.toLowerCase();
+  const whiteLower = whiteName.toLowerCase();
+  const blackLower = blackName.toLowerCase();
+  
+  // Map of legend IDs to their possible name variations
+  const legendNameVariations: Record<string, string[]> = {
+    fischer: ['fischer', 'bobby', 'robert'],
+    capablanca: ['capablanca', 'jose', 'josé', 'capa'],
+    steinitz: ['steinitz', 'wilhelm'],
+    morphy: ['morphy', 'paul'],
+    alekhine: ['alekhine', 'alekhin', 'alexander', 'alexandre'],
+    tal: ['tal', 'mikhail', 'misha'],
+    kasparov: ['kasparov', 'garry', 'gary', 'kasparoff'],
+    karpov: ['karpov', 'anatoly', 'anatoli'],
+    carlsen: ['carlsen', 'magnus'],
+    lasker: ['lasker', 'emanuel', 'emmanuel'],
+    botvinnik: ['botvinnik', 'mikhail'],
+    spassky: ['spassky', 'boris'],
+  };
+  
+  // Get variations for this legend (fallback to just the legend name)
+  const variations = legendNameVariations[legendLower] || [legendLower];
+  
+  // Check if any variation matches in white name
+  const whiteMatch = variations.some(v => whiteLower.includes(v));
+  const blackMatch = variations.some(v => blackLower.includes(v));
+  
+  // If white matches and black doesn't, legend is white
+  if (whiteMatch && !blackMatch) return 'w';
+  // If black matches and white doesn't, legend is black
+  if (blackMatch && !whiteMatch) return 'b';
+  
+  // If both or neither match, use more specific matching
+  // Count how many variations match each side
+  const whiteMatchCount = variations.filter(v => whiteLower.includes(v)).length;
+  const blackMatchCount = variations.filter(v => blackLower.includes(v)).length;
+  
+  if (whiteMatchCount > blackMatchCount) return 'w';
+  if (blackMatchCount > whiteMatchCount) return 'b';
+  
+  // Last resort: check exact substring match on the main legend name
+  if (whiteLower.includes(legendLower)) return 'w';
+  if (blackLower.includes(legendLower)) return 'b';
+  
+  // Default to white if we can't determine (shouldn't happen with proper data)
+  console.warn(`Could not determine legend color for ${legend}. White: "${whiteName}", Black: "${blackName}"`);
+  return 'w';
+}
+
+/**
  * Create a guess session from a game
  */
 export async function createGuessSessionFromGame(
@@ -175,6 +246,7 @@ export async function createGuessSessionFromGame(
 ): Promise<{
   game: any;
   positions: Array<{ fen: string; move: string; moveNumber: number }>;
+  legendColor: 'white' | 'black';
 } | null> {
   const game = await getLegendGame(legend, gameId);
   if (!game) return null;
@@ -198,15 +270,12 @@ export async function createGuessSessionFromGame(
     
     const positions: Array<{ fen: string; move: string; moveNumber: number }> = [];
 
-    // Determine legend's color using the same pattern matching as the parser
-    const legendLower = legend.toLowerCase();
-    const whiteLower = game.white.toLowerCase();
+    // Determine legend's color using robust detection
+    const legendColor = detectLegendColor(legend, game.white, game.black);
+    const isLegendWhite = legendColor === 'w';
     
-    const isLegendWhite = 
-      whiteLower.includes(legendLower) ||
-      (legendLower === 'fischer' && (whiteLower.includes('fischer') || whiteLower.includes('bobby'))) ||
-      (legendLower === 'capablanca' && (whiteLower.includes('capablanca') || whiteLower.includes('jose') || whiteLower.includes('josé'))) ||
-      (legendLower === 'steinitz' && whiteLower.includes('steinitz'));
+    console.log(`[GuessTheMove] Legend ${legend} plays ${isLegendWhite ? 'White' : 'Black'} in game ${gameId}`);
+    console.log(`[GuessTheMove] White: "${game.white}", Black: "${game.black}"`);
 
     // Reset and replay moves
     const board = new Chess();
@@ -234,8 +303,10 @@ export async function createGuessSessionFromGame(
       console.warn(`No legend positions found in game ${gameId} - legend may not be in this game`);
       return null;
     }
+    
+    console.log(`[GuessTheMove] Found ${positions.length} positions for legend to guess`);
 
-    return { game, positions };
+    return { game, positions, legendColor: isLegendWhite ? 'white' : 'black' };
   } catch (error) {
     console.warn(`Failed to load PGN for game ${gameId}, trying move-by-move parsing:`, error);
     // Try parsing move by move, skipping invalid moves
@@ -393,10 +464,12 @@ export async function createGuessSessionFromGame(
       
       // Now build positions from valid moves
       const positions: Array<{ fen: string; move: string; moveNumber: number }> = [];
-      const isLegendWhite = game.white.toLowerCase().includes(legend.toLowerCase()) ||
-                            game.white.toLowerCase().includes('fischer') ||
-                            game.white.toLowerCase().includes('capablanca') ||
-                            game.white.toLowerCase().includes('steinitz');
+      
+      // Use the same robust detection for fallback parsing
+      const legendColor = detectLegendColor(legend, game.white, game.black);
+      const isLegendWhite = legendColor === 'w';
+      
+      console.log(`[GuessTheMove Fallback] Legend ${legend} plays ${isLegendWhite ? 'White' : 'Black'} in game ${gameId}`);
 
       const board2 = new Chess();
       for (const move of validMoves) {
@@ -422,8 +495,10 @@ export async function createGuessSessionFromGame(
         console.warn(`No legend positions found in game ${gameId} after move-by-move parsing`);
         return null;
       }
+      
+      console.log(`[GuessTheMove Fallback] Found ${positions.length} positions for legend to guess`);
 
-      return { game, positions };
+      return { game, positions, legendColor: isLegendWhite ? 'white' : 'black' };
     } catch (parseError) {
       console.error(`Failed to parse PGN for game ${gameId} with move-by-move parsing:`, parseError);
       return null;

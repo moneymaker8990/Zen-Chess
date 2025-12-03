@@ -4,13 +4,18 @@ import { Chess, Square } from 'chess.js';
 import { useGameStore } from '@/state/useStore';
 import { useStudyStore } from '@/state/notesStore';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import { stockfish } from '@/engine/stockfish';
+import { playSmartMoveSound, UISounds } from '@/lib/soundSystem';
 import type { MoveInfo, EngineEvaluation } from '@/lib/types';
 
 interface ChessBoardPanelProps {
   initialFen?: string;
   puzzleMode?: boolean;
   puzzleSolution?: string[];
+  // Setup move data - shows opponent's last move when puzzle loads
+  beforeFen?: string;
+  setupMove?: { from: string; to: string };
   onPuzzleSolved?: () => void;
   onPuzzleFailed?: () => void;
   showHints?: boolean;
@@ -25,6 +30,8 @@ export function ChessBoardPanel({
   initialFen,
   puzzleMode = false,
   puzzleSolution = [],
+  beforeFen,
+  setupMove,
   onPuzzleSolved,
   onPuzzleFailed,
   showHints = false,
@@ -45,6 +52,8 @@ export function ChessBoardPanel({
   const [engineReady, setEngineReady] = useState(false);
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
   const [moveCount, setMoveCount] = useState(0);
+  const [isAnimatingSetup, setIsAnimatingSetup] = useState(false);
+  const boardSize = useBoardSize(480, 32);
 
   const { gameState, setEvaluation, makeMove } = useGameStore();
   const { recordGamePlayed, recordPuzzleSolved, recordPuzzleFailed } = useStudyStore();
@@ -72,19 +81,40 @@ export function ChessBoardPanel({
     }
   }, [engineStrength, vsEngine, engineReady]);
 
-  // Reset game when FEN changes
+  // Reset game when FEN changes - with setup move animation for puzzles
   useEffect(() => {
     if (initialFen) {
-      const newGame = new Chess(initialFen);
-      setGame(newGame);
       setPuzzleMoveIndex(0);
-      setLastMove(null);
       setMoveResult(null);
       setIsThinking(false);
       setWaitingForOpponent(false);
       setMoveCount(0);
+      
+      // If puzzle has setup move data, animate the opponent's last move
+      if (puzzleMode && beforeFen && setupMove) {
+        setIsAnimatingSetup(true);
+        // Start with position before opponent's move
+        setGame(new Chess(beforeFen));
+        setLastMove(null);
+        
+        // After a brief delay, show the opponent's move
+        setTimeout(() => {
+          setGame(new Chess(initialFen));
+          // Highlight the opponent's last move so user sees what just happened
+          setLastMove({
+            from: setupMove.from as Square,
+            to: setupMove.to as Square
+          });
+          setIsAnimatingSetup(false);
+        }, 600);
+      } else {
+        // No setup move - just show the puzzle position
+        setGame(new Chess(initialFen));
+        setLastMove(null);
+        setIsAnimatingSetup(false);
+      }
     }
-  }, [initialFen]);
+  }, [initialFen, puzzleMode, beforeFen, setupMove]);
 
   // If playing as black, make engine's first move
   useEffect(() => {
@@ -117,11 +147,21 @@ export function ChessBoardPanel({
         const promotion = bestMove.length > 4 ? bestMove[4] : undefined;
         
         const gameCopy = new Chess(currentGame.fen());
+        const isCapture = !!gameCopy.get(to);
         const move = gameCopy.move({ from, to, promotion });
         
         if (move) {
+          // Preserve scroll position
+          const scrollY = window.scrollY;
+          
+          // Play engine's move sound
+          playSmartMoveSound(gameCopy, move, { isCapture });
+          
           setGame(gameCopy);
           setLastMove({ from, to });
+          
+          // Restore scroll position
+          requestAnimationFrame(() => window.scrollTo(0, scrollY));
           
           if (gameCopy.isGameOver()) {
             const result = gameCopy.isCheckmate() 
@@ -170,7 +210,7 @@ export function ChessBoardPanel({
   // Handle square click (chess.com style - improved)
   const onSquareClick = useCallback((square: Square) => {
     if (!allowMoves) return;
-    if (isThinking || waitingForOpponent) return;
+    if (isAnimatingSetup || isThinking || waitingForOpponent) return;
     if (moveResult === 'solved') return;
     if (vsEngine && !isPlayerTurn()) return;
 
@@ -215,15 +255,19 @@ export function ChessBoardPanel({
         setOptionSquares({});
       }
     }
-  }, [game, moveFrom, allowMoves, isThinking, waitingForOpponent, moveResult, vsEngine, isPlayerTurn, getMoveOptions]);
+  }, [game, moveFrom, allowMoves, isAnimatingSetup, isThinking, waitingForOpponent, moveResult, vsEngine, isPlayerTurn, getMoveOptions]);
 
   // Execute a move
   const executeMove = useCallback((
     newGame: Chess, 
-    move: { san: string; from: string; to: string }, 
+    move: { san: string; from: string; to: string; captured?: string }, 
     from: Square, 
     to: Square
   ) => {
+    // Play move sound
+    const isCapture = !!move.captured || !!game.get(to);
+    playSmartMoveSound(newGame, { from, to, san: move.san, captured: move.captured }, { isCapture });
+    
     // Check if puzzle mode
     if (puzzleMode && puzzleSolution.length > 0) {
       const expectedMove = puzzleSolution[puzzleMoveIndex];
@@ -238,8 +282,14 @@ export function ChessBoardPanel({
                         expectedMove?.toLowerCase() === playerMove.toLowerCase();
       
       if (isCorrect) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
         setGame(newGame);
         setLastMove({ from, to });
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
         
         const isLastPlayerMove = puzzleMoveIndex >= puzzleSolution.length - 1 || 
                                   puzzleMoveIndex + 2 > puzzleSolution.length - 1;
@@ -247,6 +297,7 @@ export function ChessBoardPanel({
         if (isLastPlayerMove) {
           setMoveResult('solved');
           recordPuzzleSolved(); // Auto-track
+          UISounds.puzzleCorrect();
           onPuzzleSolved?.();
         } else {
           setMoveResult('correct');
@@ -257,8 +308,15 @@ export function ChessBoardPanel({
             setTimeout(() => {
               const opponentMove = puzzleSolution[opponentMoveIndex];
               try {
+                const opponentCapture = !!newGame.get(opponentMove.slice(2, 4) as Square);
                 const response = newGame.move(opponentMove);
                 if (response) {
+                  // Preserve scroll position
+                  const scrollY = window.scrollY;
+                  
+                  // Play opponent's move sound
+                  playSmartMoveSound(newGame, response, { isCapture: opponentCapture });
+                  
                   setGame(new Chess(newGame.fen()));
                   setLastMove({ 
                     from: response.from as Square, 
@@ -266,6 +324,9 @@ export function ChessBoardPanel({
                   });
                   setPuzzleMoveIndex(puzzleMoveIndex + 2);
                   setMoveResult(null);
+                  
+                  // Restore scroll position
+                  requestAnimationFrame(() => window.scrollTo(0, scrollY));
                 }
               } catch (e) {
                 console.error('Invalid opponent move in solution:', opponentMove, e);
@@ -280,14 +341,21 @@ export function ChessBoardPanel({
       } else {
         setMoveResult('incorrect');
         recordPuzzleFailed(); // Auto-track
+        UISounds.puzzleWrong();
         onPuzzleFailed?.();
         setTimeout(() => setMoveResult(null), 1500);
       }
     } else {
       // Normal move or vs engine
+      // Preserve scroll position
+      const scrollY = window.scrollY;
+      
       setGame(newGame);
       setLastMove({ from, to });
       setMoveCount(prev => prev + 1);
+      
+      // Restore scroll position
+      requestAnimationFrame(() => window.scrollTo(0, scrollY));
       
       const moveInfo: MoveInfo = {
         san: move.san,
@@ -324,7 +392,7 @@ export function ChessBoardPanel({
   // Handle drag and drop
   const onDrop = useCallback((sourceSquare: Square, targetSquare: Square) => {
     if (!allowMoves) return false;
-    if (isThinking || waitingForOpponent) return false;
+    if (isAnimatingSetup || isThinking || waitingForOpponent) return false;
     if (moveResult === 'solved') return false;
     if (vsEngine && !isPlayerTurn()) return false;
 
@@ -344,7 +412,7 @@ export function ChessBoardPanel({
       return false;
     }
     return false;
-  }, [game, allowMoves, isThinking, waitingForOpponent, moveResult, vsEngine, isPlayerTurn, executeMove]);
+  }, [game, allowMoves, isAnimatingSetup, isThinking, waitingForOpponent, moveResult, vsEngine, isPlayerTurn, executeMove]);
 
   // Right click for arrows
   const onSquareRightClick = useCallback((square: Square) => {
@@ -425,8 +493,8 @@ export function ChessBoardPanel({
         customDarkSquareStyle={customDarkSquareStyle}
         customLightSquareStyle={customLightSquareStyle}
         animationDuration={200}
-        arePiecesDraggable={allowMoves && !isThinking && !waitingForOpponent && moveResult !== 'solved'}
-        boardWidth={480}
+        arePiecesDraggable={allowMoves && !isAnimatingSetup && !isThinking && !waitingForOpponent && moveResult !== 'solved'}
+        boardWidth={boardSize}
       />
 
       {/* Puzzle solved message */}

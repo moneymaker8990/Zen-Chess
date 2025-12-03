@@ -8,6 +8,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
+import { useBoardSize } from '@/hooks/useBoardSize';
 
 // ============================================
 // TYPES & INTERFACES
@@ -490,6 +491,7 @@ type ViewMode = 'overview' | 'lesson' | 'practice' | 'reference';
 
 export function ThinkingSystemPage() {
   const navigate = useNavigate();
+  const boardSize = useBoardSize(480, 32);
   
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
@@ -597,7 +599,7 @@ export function ThinkingSystemPage() {
   // ============================================
   if (viewMode === 'overview') {
     return (
-      <div className="space-y-8 animate-fade-in">
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <header>
           <div className="flex items-center gap-2 text-sm mb-4">
@@ -607,7 +609,7 @@ export function ThinkingSystemPage() {
             <span style={{ color: 'var(--text-muted)' }}>/</span>
             <span style={{ color: 'var(--text-secondary)' }}>Thinking System</span>
           </div>
-          <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
             🧠 The 5-Step Thinking System
           </h1>
           <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
@@ -932,16 +934,16 @@ export function ThinkingSystemPage() {
         </div>
         
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="chessboard-container">
+          <div className="flex justify-center">
             <Chessboard
               position={question.fen}
               boardOrientation={new Chess(question.fen).turn() === 'w' ? 'white' : 'black'}
               customDarkSquareStyle={{ backgroundColor: '#779556' }}
               customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
               arePiecesDraggable={false}
-              boardWidth={480}
+              boardWidth={boardSize}
               customSquareStyles={
                 question.highlightSquares?.reduce((acc, sq) => ({
                   ...acc,

@@ -1,6 +1,8 @@
 import { ReactNode, useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useProgressStore } from '@/state/useStore';
+import { useAuthStore } from '@/state/useAuthStore';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import { AgentNotificationCenter } from '@/components/AgentPanel';
 import { useAgentStore } from '@/lib/agents/agentOrchestrator';
 
@@ -104,6 +106,11 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
   ),
+  user: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+    </svg>
+  ),
   menu: (
     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -179,7 +186,9 @@ const navItems = navSections.flatMap(s => s.items);
 
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { progress } = useProgressStore();
+  const { user, subscriptionTier } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const setCurrentPage = useAgentStore((s) => s.setCurrentPage);
 
@@ -269,6 +278,42 @@ export function Layout({ children }: LayoutProps) {
             </div>
           </div>
 
+          {/* User Account Button */}
+          {user ? (
+            <NavLink
+              to="/settings"
+              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            >
+              <div 
+                className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
+                style={{ 
+                  background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+                  color: 'white',
+                }}
+              >
+                {user.email?.[0]?.toUpperCase() || '?'}
+              </div>
+              <span className="flex-1 truncate">{user.email}</span>
+              {subscriptionTier !== 'free' && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' }}>
+                  PRO
+                </span>
+              )}
+            </NavLink>
+          ) : (
+            <button
+              onClick={() => navigate('/auth')}
+              className="nav-item w-full text-left"
+              style={{ color: '#a855f7' }}
+            >
+              {Icons.user}
+              <span>Sign In</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' }}>
+                FREE
+              </span>
+            </button>
+          )}
+
           {/* Settings link */}
           <NavLink
             to="/settings"
@@ -327,6 +372,43 @@ export function Layout({ children }: LayoutProps) {
             </NavLink>
           ))}
           <div className="divider" />
+          
+          {/* User Account - Mobile Nav */}
+          {user ? (
+            <div 
+              className="flex items-center gap-3 px-3 py-2 rounded-lg"
+              style={{ background: 'var(--bg-tertiary)' }}
+            >
+              <div 
+                className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+                style={{ 
+                  background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+                  color: 'white',
+                }}
+              >
+                {user.email?.[0]?.toUpperCase() || '?'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+                  {user.email}
+                </div>
+                <div className="text-xs" style={{ color: subscriptionTier !== 'free' ? '#a855f7' : 'var(--text-muted)' }}>
+                  {subscriptionTier === 'free' ? 'Free' : subscriptionTier === 'premium' ? 'Premium' : 'Lifetime'}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <NavLink
+              to="/auth"
+              onClick={() => setSidebarOpen(false)}
+              className="nav-item"
+              style={{ color: '#a855f7' }}
+            >
+              {Icons.user}
+              <span>Sign In / Sign Up</span>
+            </NavLink>
+          )}
+          
           <NavLink
             to="/settings"
             onClick={() => setSidebarOpen(false)}
@@ -365,7 +447,7 @@ export function Layout({ children }: LayoutProps) {
             </span>
           </NavLink>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {/* Agent Notification Center */}
             <AgentNotificationCenter />
             
@@ -377,6 +459,31 @@ export function Layout({ children }: LayoutProps) {
                 {progress.streakDays}
               </span>
             </div>
+            
+            {/* User Button - Mobile */}
+            {user ? (
+              <button
+                onClick={() => navigate('/settings')}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                style={{ 
+                  background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+                  color: 'white',
+                }}
+              >
+                {user.email?.[0]?.toUpperCase() || '?'}
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/auth')}
+                className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+                style={{ 
+                  background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+                  color: 'white',
+                }}
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </header>
 

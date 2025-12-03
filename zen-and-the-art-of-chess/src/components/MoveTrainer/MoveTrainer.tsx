@@ -8,6 +8,7 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import type { EnhancedPattern, AnnotatedMove } from '@/data/positional/enhancedPatterns';
 
 // ============================================
@@ -45,6 +46,8 @@ interface SRSState {
 // ============================================
 
 export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerProps) {
+  const boardSize = useBoardSize(480, 32);
+  
   // Game State
   const [game, setGame] = useState(() => new Chess(pattern.fen));
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
@@ -56,7 +59,7 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
   const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [showAlternatives, setShowAlternatives] = useState(false);
-  const [showIncorrectShake, setShowIncorrectShake] = useState(false);
+  const [showIncorrectFeedback, setShowIncorrectFeedback] = useState(false);
   
   // Training Stats
   const [stats, setStats] = useState<TrainingStats>({
@@ -140,12 +143,10 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
     // Feedback coloring
     if (feedback === 'correct') {
       styles[moveFrom || ''] = { backgroundColor: 'rgba(34, 197, 94, 0.5)' };
-    } else if (showIncorrectShake && moveFrom) {
-      styles[moveFrom] = { backgroundColor: 'rgba(239, 68, 68, 0.3)' };
     }
     
     return styles;
-  }, [optionSquares, currentMove, mode, showHint, phase, feedback, moveFrom, showIncorrectShake]);
+  }, [optionSquares, currentMove, mode, showHint, phase, feedback, moveFrom]);
 
   // ============================================
   // MOVE HANDLING
@@ -201,11 +202,17 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
         `${from}${to}` === expectedMove;
       
       if (isCorrect) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
         setGame(gameCopy);
         setFeedback('correct');
         setStats(prev => ({ ...prev, correctMoves: prev.correctMoves + 1 }));
         setPhase('move_explanation');
         setShowHint(false);
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
         
         setTimeout(() => {
           setFeedback(null);
@@ -213,13 +220,13 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
         
         return true;
       } else {
-        // Gentle shake feedback
-        setShowIncorrectShake(true);
+        // Gentle feedback - no shake
+        setShowIncorrectFeedback(true);
         setStats(prev => ({ ...prev, incorrectMoves: prev.incorrectMoves + 1 }));
         
         setTimeout(() => {
-          setShowIncorrectShake(false);
-        }, 500);
+          setShowIncorrectFeedback(false);
+        }, 1500);
         
         return false;
       }
@@ -539,12 +546,12 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-[minmax(400px,520px)_1fr] gap-6 items-start">
+      <div className="flex flex-col lg:grid lg:grid-cols-[minmax(300px,520px)_1fr] gap-4 lg:gap-6 items-start px-2 sm:px-0">
         {/* Board Section */}
-        <div className="space-y-4">
+        <div className="space-y-4 w-full flex flex-col items-center lg:items-start">
           {/* Chessboard */}
-          <div className={`relative ${showIncorrectShake ? 'animate-shake' : ''}`}>
-            <div className="chessboard-container rounded-xl overflow-hidden shadow-2xl">
+          <div className="relative">
+            <div className="rounded-xl overflow-hidden shadow-2xl">
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}
@@ -556,7 +563,7 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
                 animationDuration={boardStyles.animationDuration}
                 arePiecesDraggable={phase === 'playing' && isUserMove}
-                boardWidth={480}
+                boardWidth={boardSize}
               />
             </div>
             
@@ -570,6 +577,14 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
                   </svg>
                   Correct!
                 </span>
+              </div>
+            )}
+            
+            {/* Gentle incorrect feedback - no shake */}
+            {showIncorrectFeedback && (
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full animate-fade-in" 
+                   style={{ background: 'rgba(239, 68, 68, 0.8)', boxShadow: '0 4px 20px rgba(239, 68, 68, 0.3)' }}>
+                <span className="text-white text-sm">Not quite — try again</span>
               </div>
             )}
             

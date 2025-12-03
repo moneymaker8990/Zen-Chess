@@ -3,6 +3,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import allOpenings, { type OpeningLine } from '@/data/openings';
+import { playSmartMoveSound } from '@/lib/soundSystem';
 
 // ============================================
 // OPENING COURSES - ORGANIZED BY FAMILY
@@ -368,7 +369,6 @@ export function OpeningsPage() {
   const [showHint, setShowHint] = useState(false);
   const [practiceMode, setPracticeMode] = useState<'learn' | 'test'>('learn');
   const [streak, setStreak] = useState(0);
-  const [showIncorrectShake, setShowIncorrectShake] = useState(false);
   
   const autoPlayTimeout = useRef<ReturnType<typeof setTimeout>>();
   const [showDatabaseLines, setShowDatabaseLines] = useState(false);
@@ -470,12 +470,20 @@ export function OpeningsPage() {
       const gameCopy = new Chess(game.fen());
       
       try {
+        const isCapture = move.includes('x');
         const result = gameCopy.move(move);
         if (result) {
+          // Preserve scroll position
+          const scrollY = window.scrollY;
+          
+          playSmartMoveSound(gameCopy, result, { isCapture });
           setGame(gameCopy);
           setLastMove({ from: result.from as Square, to: result.to as Square });
           setCurrentMoveIndex(prev => prev + 1);
           setIsUserTurn(true);
+          
+          // Restore scroll position
+          requestAnimationFrame(() => window.scrollTo(0, scrollY));
         }
       } catch (e) {
         console.error('Auto-play error:', move, e);
@@ -515,6 +523,7 @@ export function OpeningsPage() {
 
     const gameCopy = new Chess(game.fen());
     try {
+      const isCapture = !!gameCopy.get(to);
       const result = gameCopy.move({ from, to, promotion: 'q' });
       if (!result) return false;
 
@@ -524,12 +533,19 @@ export function OpeningsPage() {
                         result.san.replace(/[+#]/g, '') === expectedMove.replace(/[+#]/g, '');
 
       if (isCorrect) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
+        playSmartMoveSound(gameCopy, result, { isCapture });
         setGame(gameCopy);
         setLastMove({ from, to });
         setCurrentMoveIndex(prev => prev + 1);
         setFeedback('correct');
         setShowHint(false);
         setStreak(prev => prev + 1);
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
         
         if (currentMoveIndex + 1 >= selectedOpening.moves.length) {
           setFeedback('complete');
@@ -539,9 +555,7 @@ export function OpeningsPage() {
         }
         return true;
       } else {
-        // Gentle shake feedback
-        setShowIncorrectShake(true);
-        setTimeout(() => setShowIncorrectShake(false), 500);
+        // Gentle feedback - just reset streak, no shake
         setStreak(0);
         return false;
       }
@@ -636,10 +650,6 @@ export function OpeningsPage() {
     ...(feedback === 'correct' && lastMove && {
       [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
     }),
-    // Subtle red highlight during shake
-    ...(showIncorrectShake && moveFrom && {
-      [moveFrom]: { backgroundColor: 'rgba(239, 68, 68, 0.3)' },
-    }),
     ...getHintSquares(),
   };
 
@@ -648,7 +658,7 @@ export function OpeningsPage() {
   // ============================================
   if (viewMode === 'courses') {
     return (
-      <div className="space-y-8 animate-fade-in">
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Hero Header */}
         <section className="text-center py-8">
           <h1 className="text-4xl md:text-5xl font-serif text-zen-100 mb-4">
@@ -1004,7 +1014,7 @@ export function OpeningsPage() {
             </div>
 
             {/* Chessboard */}
-            <div className={`relative ${showIncorrectShake ? 'animate-shake' : ''}`}>
+            <div className="relative">
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}

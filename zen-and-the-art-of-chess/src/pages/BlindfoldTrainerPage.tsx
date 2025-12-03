@@ -8,6 +8,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
+import { useBoardSize } from '@/hooks/useBoardSize';
 
 // ============================================
 // TYPES
@@ -183,6 +184,7 @@ function getRandomPieceFromPosition(chess: Chess): PiecePosition | null {
 
 export function BlindfoldTrainerPage() {
   const navigate = useNavigate();
+  const boardSize = useBoardSize(480, 32);
   
   // State
   const [mode, setMode] = useState<TrainingMode>('menu');
@@ -483,35 +485,35 @@ export function BlindfoldTrainerPage() {
   // ============================================
   if (mode === 'menu') {
     return (
-      <div className="space-y-8 animate-fade-in">
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <header>
-          <div className="flex items-center gap-2 text-sm mb-4">
+          <div className="flex items-center gap-2 text-xs sm:text-sm mb-2 sm:mb-4">
             <button onClick={() => navigate('/')} className="hover:text-white transition-colors" style={{ color: 'var(--text-muted)' }}>
               Home
             </button>
             <span style={{ color: 'var(--text-muted)' }}>/</span>
-            <span style={{ color: 'var(--text-secondary)' }}>Blindfold Trainer</span>
+            <span style={{ color: 'var(--text-secondary)' }}>Blindfold</span>
           </div>
-          <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
             👁️ Blindfold Trainer
           </h1>
-          <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
-            Build master-level visualization. Train your inner chessboard.
+          <p className="text-sm sm:text-lg" style={{ color: 'var(--text-tertiary)' }}>
+            Train your inner chessboard
           </p>
         </header>
         
         {/* Stats Overview */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="stat-card">
-            <div className="stat-value text-gradient">{stats.totalSessions}</div>
-            <div className="stat-label">Sessions</div>
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-4">
+          <div className="stat-card p-2 sm:p-4">
+            <div className="stat-value text-gradient text-sm sm:text-xl">{stats.totalSessions}</div>
+            <div className="stat-label text-[9px] sm:text-xs">Sessions</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-value" style={{ color: '#4ade80' }}>{accuracy}%</div>
-            <div className="stat-label">Accuracy</div>
+          <div className="stat-card p-2 sm:p-4">
+            <div className="stat-value text-sm sm:text-xl" style={{ color: '#4ade80' }}>{accuracy}%</div>
+            <div className="stat-label text-[9px] sm:text-xs">Accuracy</div>
           </div>
-          <div className="stat-card">
+          <div className="stat-card p-2 sm:p-4">
             <div className="stat-value" style={{ color: '#f59e0b' }}>{stats.bestStreak}</div>
             <div className="stat-label">Best Streak</div>
           </div>
@@ -729,18 +731,18 @@ export function BlindfoldTrainerPage() {
         )}
         
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board Area */}
-          <div className="relative">
+          <div className="relative flex justify-center">
             {showBoard ? (
-              <div className="chessboard-container">
+              <div>
                 <Chessboard
                   position={currentFen}
                   boardOrientation="white"
                   customDarkSquareStyle={{ backgroundColor: '#779556' }}
                   customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
                   arePiecesDraggable={false}
-                  boardWidth={480}
+                  boardWidth={boardSize}
                 />
                 {mode === 'move-sequence' && moveSequence.length > 0 && (
                   <div className="mt-4 p-4 rounded-xl" style={{ background: 'var(--bg-tertiary)' }}>

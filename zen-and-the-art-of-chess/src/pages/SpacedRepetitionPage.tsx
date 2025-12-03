@@ -8,7 +8,9 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
 import { puzzles } from '@/data/puzzles';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import type { ChessPuzzle } from '@/lib/types';
+import { playSmartMoveSound } from '@/lib/soundSystem';
 import {
   SRSCard,
   SRSStats,
@@ -64,6 +66,7 @@ const THEME_LABELS: Record<string, string> = {
 
 export function SpacedRepetitionPage() {
   const navigate = useNavigate();
+  const boardSize = useBoardSize(480, 32);
   
   // Load state from localStorage
   const [srsState, setSrsState] = useState<SRSState>(() => {
@@ -110,7 +113,7 @@ export function SpacedRepetitionPage() {
   const [sessionStats, setSessionStats] = useState({ correct: 0, incorrect: 0, total: 0 });
   const [lastMove, setLastMove] = useState<{ from: Square; to: Square } | null>(null);
   const [showCorrectFeedback, setShowCorrectFeedback] = useState(false);
-  const [showIncorrectShake, setShowIncorrectShake] = useState(false);
+  const [isAnimatingSetup, setIsAnimatingSetup] = useState(false);
   
   // Add cards state
   const [selectedPuzzles, setSelectedPuzzles] = useState<Set<string>>(new Set());
@@ -163,25 +166,53 @@ export function SpacedRepetitionPage() {
     return available;
   }, [srsState.cards, filterTheme, filterDifficulty]);
   
+  // Load a card with setup animation (shows opponent's last move)
+  const loadCardWithSetup = useCallback((card: SRSCard) => {
+    setCurrentCard(card);
+    setMoveIndex(0);
+    setSolved(false);
+    setFailed(false);
+    setShowAnswer(false);
+    setHintsUsed(0);
+    setMoveFrom(null);
+    setOptionSquares({});
+    setShowCorrectFeedback(false);
+    
+    // If the card has setup move data, animate the opponent's last move
+    if (card.beforeFen && card.setupMove) {
+      setIsAnimatingSetup(true);
+      // Start with position before opponent's move
+      setGame(new Chess(card.beforeFen));
+      setLastMove(null);
+      
+      // After a brief moment, show the opponent making their move
+      setTimeout(() => {
+        setGame(new Chess(card.fen));
+        // Highlight the opponent's last move
+        setLastMove({
+          from: card.setupMove!.from as Square,
+          to: card.setupMove!.to as Square
+        });
+        setIsAnimatingSetup(false);
+        setStartTime(Date.now());
+      }, 600);
+    } else {
+      // No setup move - just show the puzzle position
+      setGame(new Chess(card.fen));
+      setLastMove(null);
+      setIsAnimatingSetup(false);
+      setStartTime(Date.now());
+    }
+  }, []);
+
   // Start study session
   const startStudy = useCallback(() => {
     const nextCard = getNextCardToReview(srsState.cards, srsState.settings);
     if (nextCard) {
-      setCurrentCard(nextCard);
-      setGame(new Chess(nextCard.fen));
-      setMoveIndex(0);
-      setSolved(false);
-      setFailed(false);
-      setShowAnswer(false);
-      setHintsUsed(0);
-      setStartTime(Date.now());
-      setMoveFrom(null);
-      setOptionSquares({});
-      setLastMove(null);
-      setShowCorrectFeedback(false);
+      loadCardWithSetup(nextCard);
       setViewMode('study');
     }
-  }, [srsState.cards, srsState.settings]);
+  }, [srsState.cards, srsState.settings, loadCardWithSetup]);
   
   // Handle move
   const handleMove = useCallback((from: Square, to: Square): boolean => {
@@ -189,6 +220,7 @@ export function SpacedRepetitionPage() {
     
     const gameCopy = new Chess(game.fen());
     try {
+      const isCapture = !!gameCopy.get(to);
       const result = gameCopy.move({ from, to, promotion: 'q' });
       if (!result) return false;
       
@@ -198,10 +230,17 @@ export function SpacedRepetitionPage() {
         result.san.replace(/[+#]/g, '') === expectedMove?.replace(/[+#]/g, '');
       
       if (isCorrect) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
+        playSmartMoveSound(gameCopy, result, { isCapture });
         setGame(gameCopy);
         setLastMove({ from, to });
         setShowCorrectFeedback(true);
         setTimeout(() => setShowCorrectFeedback(false), 800);
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
         
         if (moveIndex + 1 >= currentCard.solution.length) {
           // Puzzle complete!
@@ -217,10 +256,18 @@ export function SpacedRepetitionPage() {
               const opponentMove = currentCard.solution[moveIndex + 1];
               if (opponentMove) {
                 const responseGame = new Chess(gameCopy.fen());
+                const opponentCapture = !!responseGame.get(opponentMove.slice(2, 4) as Square);
                 const response = responseGame.move(opponentMove);
                 if (response) {
+                  // Preserve scroll position
+                  const scrollY = window.scrollY;
+                  
+                  playSmartMoveSound(responseGame, response, { isCapture: opponentCapture });
                   setGame(responseGame);
                   setLastMove({ from: response.from as Square, to: response.to as Square });
+                  
+                  // Restore scroll position
+                  requestAnimationFrame(() => window.scrollTo(0, scrollY));
                 }
                 setMoveIndex(prev => prev + 1);
               }
@@ -229,9 +276,7 @@ export function SpacedRepetitionPage() {
         }
         return true;
       } else {
-        // Wrong move - show shake feedback
-        setShowIncorrectShake(true);
-        setTimeout(() => setShowIncorrectShake(false), 500);
+        // Wrong move - gentle feedback, no shake
         setFailed(true);
         setSessionStats(prev => ({ ...prev, incorrect: prev.incorrect + 1, total: prev.total + 1 }));
         return false;
@@ -265,28 +310,17 @@ export function SpacedRepetitionPage() {
       );
       
       if (nextCard && nextCard.id !== currentCard.id) {
-        setCurrentCard(nextCard);
-        setGame(new Chess(nextCard.fen));
-        setMoveIndex(0);
-        setSolved(false);
-        setFailed(false);
-        setShowAnswer(false);
-        setHintsUsed(0);
-        setStartTime(Date.now());
-        setMoveFrom(null);
-        setOptionSquares({});
-        setLastMove(null);
-        setShowCorrectFeedback(false);
+        loadCardWithSetup(nextCard);
       } else {
         // No more cards
         setViewMode('overview');
       }
     }, 500);
-  }, [currentCard, startTime, hintsUsed, srsState.settings, srsState.cards]);
+  }, [currentCard, startTime, hintsUsed, srsState.settings, srsState.cards, loadCardWithSetup]);
   
   // Square click handler
   const onSquareClick = useCallback((square: Square) => {
-    if (solved || failed) return;
+    if (isAnimatingSetup || solved || failed) return;
     
     if (!moveFrom) {
       const piece = game.get(square);
@@ -306,7 +340,7 @@ export function SpacedRepetitionPage() {
     handleMove(moveFrom, square);
     setMoveFrom(null);
     setOptionSquares({});
-  }, [game, moveFrom, solved, failed, handleMove]);
+  }, [game, moveFrom, isAnimatingSetup, solved, failed, handleMove]);
   
   // Add puzzles to deck
   const addPuzzlesToDeck = useCallback(() => {
@@ -320,7 +354,9 @@ export function SpacedRepetitionPage() {
           puzzle.fen,
           puzzle.solution,
           puzzle.themes,
-          puzzle.difficulty
+          puzzle.difficulty,
+          puzzle.beforeFen,
+          puzzle.setupMove
         ));
       }
     });
@@ -341,7 +377,7 @@ export function SpacedRepetitionPage() {
     const totalDue = todayCards.newCards.length + todayCards.reviewCards.length + todayCards.learningCards.length;
     
     return (
-      <div className="space-y-8 animate-fade-in">
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <header>
           <div className="flex items-center gap-2 text-sm mb-4">
@@ -351,7 +387,7 @@ export function SpacedRepetitionPage() {
             <span style={{ color: 'var(--text-muted)' }}>/</span>
             <span style={{ color: 'var(--text-secondary)' }}>Spaced Repetition</span>
           </div>
-          <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
             🧠 Spaced Repetition
           </h1>
           <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
@@ -595,9 +631,9 @@ export function SpacedRepetitionPage() {
         </div>
         
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className={`chessboard-container relative ${showIncorrectShake ? 'animate-shake' : ''}`}>
+          <div className="relative flex justify-center">
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}
@@ -614,9 +650,9 @@ export function SpacedRepetitionPage() {
                   [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
                 })
               }}
-              arePiecesDraggable={!solved && !failed}
+              arePiecesDraggable={!isAnimatingSetup && !solved && !failed}
               onPieceDrop={(from, to) => handleMove(from as Square, to as Square)}
-              boardWidth={480}
+              boardWidth={boardSize}
             />
             
             {/* Correct Move Feedback */}

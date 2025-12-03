@@ -6,8 +6,8 @@
       "bestPostTime": ["9:00", "19:00"]
     },
     "monday": {
-      "contentType": "tilt_guardian",
-      "theme": "Combat Monday tilt",
+      "contentType": "inner_compass",
+      "theme": "Find your center Monday",
       "bestPostTime": ["12:00", "20:00"]
     },
     "tuesday": {

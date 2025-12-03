@@ -504,7 +504,7 @@ function ReadyStep({
 }) {
   const agentIntro = [
     { name: 'Your Coach', icon: '♔', desc: 'Personalized guidance' },
-    { name: 'Tilt Guardian', icon: '🛡️', desc: 'Emotional protection' },
+    { name: 'Inner Compass', icon: '🧭', desc: 'Emotional centering' },
     { name: 'Training Architect', icon: '🎯', desc: 'Custom training plans' },
   ];
 

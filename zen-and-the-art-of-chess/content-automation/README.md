@@ -113,7 +113,7 @@ After generating content:
 | Type | Description |
 |------|-------------|
 | `chess_tip` | Actionable chess improvement tips |
-| `tilt_guardian` | Showcase the tilt prevention feature |
+| `inner_compass` | Showcase the emotional centering feature |
 | `legend_feature` | Highlight Play the Legends mode |
 | `mindfulness` | Chess + meditation connection |
 | `puzzle_challenge` | Engaging puzzle content |
@@ -123,7 +123,7 @@ After generating content:
 
 Generate specific type:
 ```bash
-npm run generate:script tilt_guardian
+npm run generate:script inner_compass
 npm run daily mindfulness
 ```
 

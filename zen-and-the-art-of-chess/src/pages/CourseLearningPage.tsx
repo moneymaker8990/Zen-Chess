@@ -10,7 +10,9 @@ import { Chessboard } from 'react-chessboard';
 import type { Square } from 'chess.js';
 import { Chess } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import { useBackNavigation } from '@/components/BackButton';
+import { playSmartMoveSound } from '@/lib/soundSystem';
 import { 
   getCourseById, 
   type Course, 
@@ -269,6 +271,7 @@ export default function CourseLearningPage() {
   const navigate = useNavigate();
   const goBack = useBackNavigation(`/courses/${courseId}`);
   const boardStyles = useBoardStyles();
+  const boardSize = useBoardSize(480, 32);
 
   // Course data
   const [course, setCourse] = useState<Course | null>(null);
@@ -354,11 +357,21 @@ export default function CourseLearningPage() {
       const move = currentVariation.moves[currentMoveIndex];
       const newGame = new Chess(game.fen());
       try {
-        newGame.move(move.move);
-        setGame(newGame);
-        setCurrentMoveIndex(prev => prev + 1);
-        setShowHint(false);
-        setFeedback(null);
+        const isCapture = move.move.includes('x');
+        const result = newGame.move(move.move);
+        if (result) {
+          // Preserve scroll position
+          const scrollY = window.scrollY;
+          
+          playSmartMoveSound(newGame, result, { isCapture });
+          setGame(newGame);
+          setCurrentMoveIndex(prev => prev + 1);
+          setShowHint(false);
+          setFeedback(null);
+          
+          // Restore scroll position
+          requestAnimationFrame(() => window.scrollTo(0, scrollY));
+        }
       } catch {
         console.error('Invalid move:', move.move);
       }
@@ -375,6 +388,7 @@ export default function CourseLearningPage() {
 
     const newGame = new Chess(game.fen());
     try {
+      const isCapture = !!newGame.get(targetSquare as Square);
       const move = newGame.move({
         from: sourceSquare,
         to: targetSquare,
@@ -389,8 +403,15 @@ export default function CourseLearningPage() {
                           move.san.replace(/[+#]/, '') === expectedMove.replace(/[+#]/, '');
 
       if (moveMatches) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
+        playSmartMoveSound(newGame, move, { isCapture });
         setGame(newGame);
         setFeedback({ type: 'correct', message: currentMove.explanation });
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
         
         // Auto-advance after delay
         setTimeout(() => {
@@ -596,19 +617,20 @@ export default function CourseLearningPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
-        <div className="grid lg:grid-cols-[1fr,340px] gap-6">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3 sm:py-6">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr,340px] gap-4 lg:gap-6">
           {/* Board + Controls */}
           <div>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="aspect-square max-w-lg mx-auto lg:max-w-none rounded-xl overflow-hidden shadow-2xl"
+              className="flex justify-center rounded-xl overflow-hidden shadow-2xl"
             >
               <Chessboard
                 position={game.fen()}
                 onPieceDrop={handleMove}
                 boardOrientation={currentVariation.toMove === 'white' ? 'white' : 'black'}
+                boardWidth={boardSize}
                 customArrows={customArrows}
                 customSquareStyles={customSquareStyles}
                 customBoardStyle={{
@@ -620,48 +642,48 @@ export default function CourseLearningPage() {
             </motion.div>
 
             {/* Move Controls */}
-            <div className="flex justify-center gap-2 mt-4">
+            <div className="flex justify-center gap-1.5 sm:gap-2 mt-3 sm:mt-4">
               <button
                 onClick={() => {
                   setGame(new Chess(currentVariation.fen));
                   setCurrentMoveIndex(0);
                   setFeedback(null);
                 }}
-                className="p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
                 title="Reset"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
               </button>
               <button
                 onClick={() => setShowHint(!showHint)}
-                className={`p-3 rounded-lg transition-colors ${
+                className={`p-2 sm:p-3 rounded-lg transition-colors ${
                   showHint 
                     ? 'bg-amber-600 text-white' 
                     : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
                 }`}
                 title="Show Hint (H)"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </button>
               <button
                 onClick={advanceMove}
-                className="p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
                 title="Next Move (→)"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
               <button
                 onClick={nextVariation}
-                className="p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors"
+                className="p-2 sm:p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors"
                 title="Next Variation (N)"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
                 </svg>
               </button>

@@ -15,6 +15,10 @@ export interface SRSCard {
   themes: string[];
   difficulty: number;
   
+  // Setup move - opponent's last move that leads to the puzzle position
+  beforeFen?: string;
+  setupMove?: { from: string; to: string };
+  
   // SRS Data
   easeFactor: number;     // 1.3 - 2.5, affects interval growth
   interval: number;       // Days until next review
@@ -224,7 +228,9 @@ export function createSRSCard(
   fen: string,
   solution: string[],
   themes: string[],
-  difficulty: number
+  difficulty: number,
+  beforeFen?: string,
+  setupMove?: { from: string; to: string }
 ): SRSCard {
   const now = new Date().toISOString();
   
@@ -234,6 +240,8 @@ export function createSRSCard(
     solution,
     themes,
     difficulty,
+    beforeFen,
+    setupMove,
     easeFactor: DEFAULT_EASE_FACTOR,
     interval: 0,
     repetitions: 0,

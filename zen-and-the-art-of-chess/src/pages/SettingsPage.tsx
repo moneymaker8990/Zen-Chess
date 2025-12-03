@@ -1,11 +1,248 @@
+import { useState } from 'react';
 import { Chessboard } from 'react-chessboard';
+import { useNavigate } from 'react-router-dom';
 import { useProgressStore } from '@/state/useStore';
 import { useStudyStore, useNotesStore, useWeaknessStore } from '@/state/notesStore';
 import { useMistakeLibraryStore, usePositionSparringStore } from '@/state/trainingStore';
 import { useBoardSettingsStore, useBoardStyles } from '@/state/boardSettingsStore';
 import { useAIPreferencesStore, type AIIntrusiveness, type WhisperFrequency, type InsightDetail } from '@/state/aiPreferencesStore';
+import { useAuthStore } from '@/state/useAuthStore';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import { BOARD_THEMES, PIECE_STYLES, MOVE_HINT_STYLES } from '@/lib/constants';
 import type { BoardTheme, PieceStyle, MoveHintStyle } from '@/lib/constants';
+
+// ============================================
+// ACCOUNT SECTION COMPONENT
+// ============================================
+
+function AccountSection() {
+  const navigate = useNavigate();
+  const { user, profile, signOut, subscriptionTier, isLoading } = useAuthStore();
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    await signOut();
+    setIsSigningOut(false);
+  };
+
+  // If Supabase isn't configured yet
+  if (!isSupabaseConfigured) {
+    return (
+      <section className="glass-card p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-2xl">👤</span>
+          <div>
+            <h2 className="text-lg font-serif text-zen-200">Account</h2>
+            <p className="text-zen-600 text-sm">Sign in to sync your progress</p>
+          </div>
+        </div>
+        
+        <div className="p-6 rounded-xl text-center" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-subtle)' }}>
+          <div className="text-4xl mb-3">🔧</div>
+          <h3 className="font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+            Cloud Sync Coming Soon
+          </h3>
+          <p className="text-sm mb-4" style={{ color: 'var(--text-tertiary)' }}>
+            Your progress is saved locally on this device. Cloud sync and user accounts are being set up.
+          </p>
+          <div className="flex items-center justify-center gap-2 text-xs" style={{ color: 'var(--text-muted)' }}>
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            Data safely stored in browser
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // If not logged in
+  if (!user) {
+    return (
+      <section className="glass-card p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-2xl">👤</span>
+          <div>
+            <h2 className="text-lg font-serif text-zen-200">Account</h2>
+            <p className="text-zen-600 text-sm">Sign in to sync your progress across devices</p>
+          </div>
+        </div>
+        
+        <div className="p-6 rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)', border: '1px solid rgba(168, 85, 247, 0.2)' }}>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+                Join Zen Chess
+              </h3>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                Create an account to save your progress, unlock premium features, and sync across all your devices.
+              </p>
+            </div>
+            <div className="flex gap-3 shrink-0">
+              <button
+                onClick={() => navigate('/auth?mode=signin')}
+                className="px-5 py-2.5 rounded-xl font-medium transition-all hover:scale-105"
+                style={{ 
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-subtle)',
+                  color: 'var(--text-primary)',
+                }}
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => navigate('/auth?mode=signup')}
+                className="px-5 py-2.5 rounded-xl font-semibold transition-all hover:scale-105"
+                style={{ 
+                  background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)',
+                  color: 'white',
+                }}
+              >
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Benefits preview */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+          {[
+            { icon: '☁️', label: 'Cloud Sync' },
+            { icon: '📊', label: 'Progress Tracking' },
+            { icon: '🏆', label: 'Leaderboards' },
+            { icon: '👑', label: 'Premium Access' },
+          ].map((benefit, i) => (
+            <div key={i} className="text-center p-3 rounded-lg" style={{ background: 'var(--bg-tertiary)' }}>
+              <div className="text-xl mb-1">{benefit.icon}</div>
+              <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{benefit.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  // Logged in - show user info
+  const tierColors: Record<string, string> = {
+    free: '#6b7280',
+    premium: '#a855f7',
+    lifetime: '#f59e0b',
+  };
+
+  const tierLabels: Record<string, string> = {
+    free: 'Free',
+    premium: 'Premium',
+    lifetime: 'Lifetime',
+  };
+
+  return (
+    <section className="glass-card p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <span className="text-2xl">👤</span>
+        <div>
+          <h2 className="text-lg font-serif text-zen-200">Account</h2>
+          <p className="text-zen-600 text-sm">Manage your account and subscription</p>
+        </div>
+      </div>
+      
+      {/* User Info Card */}
+      <div className="p-5 rounded-xl mb-4" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-subtle)' }}>
+        <div className="flex items-center gap-4">
+          {/* Avatar */}
+          <div 
+            className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold shrink-0"
+            style={{ 
+              background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+              color: 'white',
+            }}
+          >
+            {user.email?.[0]?.toUpperCase() || '?'}
+          </div>
+          
+          <div className="flex-1 min-w-0">
+            <div className="font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+              {profile?.display_name || user.email}
+            </div>
+            {profile?.display_name && (
+              <div className="text-sm truncate" style={{ color: 'var(--text-muted)' }}>
+                {user.email}
+              </div>
+            )}
+            <div className="flex items-center gap-2 mt-1">
+              <span 
+                className="px-2 py-0.5 rounded-full text-xs font-medium"
+                style={{ 
+                  background: `${tierColors[subscriptionTier]}20`,
+                  color: tierColors[subscriptionTier],
+                }}
+              >
+                {tierLabels[subscriptionTier]}
+              </span>
+              {subscriptionTier === 'free' && (
+                <button
+                  onClick={() => navigate('/pricing')}
+                  className="text-xs font-medium"
+                  style={{ color: '#a855f7' }}
+                >
+                  Upgrade →
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Quick Stats if logged in */}
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="text-center p-3 rounded-lg" style={{ background: 'var(--bg-tertiary)' }}>
+          <div className="text-lg font-bold" style={{ color: '#4ade80' }}>☁️</div>
+          <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Synced</div>
+        </div>
+        <div className="text-center p-3 rounded-lg" style={{ background: 'var(--bg-tertiary)' }}>
+          <div className="text-lg font-bold" style={{ color: '#f59e0b' }}>
+            {subscriptionTier === 'free' ? '∞' : '∞'}
+          </div>
+          <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            {subscriptionTier === 'free' ? 'Daily Puzzles' : 'Unlimited'}
+          </div>
+        </div>
+        <div className="text-center p-3 rounded-lg" style={{ background: 'var(--bg-tertiary)' }}>
+          <div className="text-lg font-bold" style={{ color: '#a855f7' }}>
+            {subscriptionTier !== 'free' ? '✓' : '—'}
+          </div>
+          <div className="text-xs" style={{ color: 'var(--text-muted)' }}>AI Coach</div>
+        </div>
+      </div>
+      
+      {/* Actions */}
+      <div className="flex flex-wrap gap-3">
+        {subscriptionTier === 'free' && (
+          <button
+            onClick={() => navigate('/pricing')}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:scale-105"
+            style={{ 
+              background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)',
+              color: 'white',
+            }}
+          >
+            ⭐ Upgrade to Premium
+          </button>
+        )}
+        <button
+          onClick={handleSignOut}
+          disabled={isSigningOut || isLoading}
+          className="px-4 py-2 rounded-lg text-sm transition-all hover:bg-[var(--bg-hover)] disabled:opacity-50"
+          style={{ 
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-subtle)',
+            color: 'var(--text-secondary)',
+          }}
+        >
+          {isSigningOut ? 'Signing out...' : 'Sign Out'}
+        </button>
+      </div>
+    </section>
+  );
+}
 
 // ============================================
 // AI PREFERENCES SECTION COMPONENT
@@ -317,13 +554,16 @@ export function SettingsPage() {
   const boardStyles = useBoardStyles();
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
       <div>
         <h1 className="text-2xl font-serif text-zen-100">Settings</h1>
         <p className="text-zen-500 text-sm">
           Customize your experience
         </p>
       </div>
+
+      {/* Account section - FIRST for visibility */}
+      <AccountSection />
 
       {/* Game settings */}
       <section className="glass-card p-6">

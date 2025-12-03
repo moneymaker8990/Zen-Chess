@@ -10,7 +10,7 @@
 export type AgentId = 
   | 'coach'           // Main personality, overall guidance
   | 'training'        // What to practice, training plans
-  | 'tilt-guardian'   // Emotional monitoring and intervention
+  | 'inner-compass'   // Emotional centering and tilt prevention
   | 'opening'         // Opening repertoire management
   | 'pattern'         // Pattern memory & spaced repetition
   | 'journey'         // 365-day curriculum guide
@@ -19,7 +19,7 @@ export type AgentId =
   // Background agents
   | 'insight-engine'  // Deep pattern analysis
   | 'motivator'       // Celebrations and encouragement
-  | 'focus-guardian'  // Distraction monitoring
+  | 'flow-keeper'     // Focus and flow state protection
   | 'session-manager';// Session quality tracking
 
 export interface AgentPersonality {
@@ -48,13 +48,13 @@ export const AGENT_PERSONALITIES: Record<AgentId, AgentPersonality> = {
     voiceTone: 'analytical',
     description: 'Designs optimal training plans based on your weaknesses',
   },
-  'tilt-guardian': {
-    id: 'tilt-guardian',
-    name: 'Tilt Guardian',
-    icon: '🛡️',
-    color: '#ef4444',
-    voiceTone: 'protective',
-    description: 'Watches your emotional state and protects you from yourself',
+  'inner-compass': {
+    id: 'inner-compass',
+    name: 'Inner Compass',
+    icon: '🧭',
+    color: '#6366f1',
+    voiceTone: 'zen',
+    description: 'Guides you back to center when emotions run high',
   },
   'opening': {
     id: 'opening',
@@ -113,13 +113,13 @@ export const AGENT_PERSONALITIES: Record<AgentId, AgentPersonality> = {
     voiceTone: 'encouraging',
     description: 'Celebrates wins and lifts you through losses',
   },
-  'focus-guardian': {
-    id: 'focus-guardian',
-    name: 'Focus Guardian',
-    icon: '🎯',
+  'flow-keeper': {
+    id: 'flow-keeper',
+    name: 'Flow Keeper',
+    icon: '🌊',
     color: '#06b6d4',
-    voiceTone: 'analytical',
-    description: 'Protects your deep work and monitors focus',
+    voiceTone: 'zen',
+    description: 'Protects your flow state and deep work',
   },
   'session-manager': {
     id: 'session-manager',
@@ -365,7 +365,7 @@ export function getAgentPersonality(agentId: AgentId): AgentPersonality {
 export const AGENT_COOLDOWNS: Record<AgentId, number> = {
   'coach': 15,
   'training': 45,
-  'tilt-guardian': 20,       // Give space between interventions
+  'inner-compass': 20,       // Give space between interventions
   'opening': 90,
   'pattern': 180,            // Once every 3 hours
   'journey': 1440,           // Once per day
@@ -374,7 +374,7 @@ export const AGENT_COOLDOWNS: Record<AgentId, number> = {
   // Background agents
   'insight-engine': 240,     // Less frequent, deeper analysis
   'motivator': 15,           // Not too frequent
-  'focus-guardian': 30,      // Not too intrusive
+  'flow-keeper': 30,         // Not too intrusive
   'session-manager': 45,     // Session optimization
 };
 

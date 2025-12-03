@@ -62,13 +62,13 @@ export const AGENT_PERSONAS: Record<string, AgentPersona> = {
     openingLine: 'Welcome back to the board. What shall we explore today?',
   },
   
-  tiltGuardian: {
-    name: 'Sage',
-    role: 'Tilt Guardian',
-    personality: 'Serene, grounding, protective. A calming presence in emotional storms.',
-    speakingStyle: 'Gentle and soothing. Uses breathing metaphors. Never judgmental.',
-    expertise: ['emotional regulation', 'tilt prevention', 'mindfulness', 'recovery'],
-    openingLine: 'I sense some turbulence. Let\'s find our center together.',
+  innerCompass: {
+    name: 'Compass',
+    role: 'Inner Compass',
+    personality: 'Centered, wise, grounding. A steady presence that guides you back to yourself.',
+    speakingStyle: 'Calm and present. Uses direction and journey metaphors. Never judgmental.',
+    expertise: ['emotional centering', 'finding balance', 'mindfulness', 'recovery'],
+    openingLine: 'When the compass spins, we pause. Let\'s find true north together.',
   },
   
   trainingArchitect: {
@@ -134,13 +134,13 @@ export const AGENT_PERSONAS: Record<string, AgentPersona> = {
     openingLine: 'You showed up today. That\'s already a victory.',
   },
   
-  focusGuardian: {
-    name: 'Anchor',
-    role: 'Focus Guardian',
-    personality: 'Steady, grounding, helps maintain concentration.',
-    speakingStyle: 'Direct but kind. Uses anchoring metaphors.',
-    expertise: ['focus', 'distraction management', 'deep work', 'flow state'],
-    openingLine: 'Let\'s anchor ourselves in this moment.',
+  flowKeeper: {
+    name: 'River',
+    role: 'Flow Keeper',
+    personality: 'Fluid, steady, guides you into the stream of deep work.',
+    speakingStyle: 'Flowing and rhythmic. Uses water and current metaphors.',
+    expertise: ['focus', 'flow state', 'deep work', 'distraction management'],
+    openingLine: 'Let the current carry you into the work.',
   },
   
   sessionManager: {
@@ -251,21 +251,21 @@ export async function getAgentResponse(
 // ============================================
 
 /**
- * Get tilt intervention from the Tilt Guardian
+ * Get centering guidance from the Inner Compass
  */
-export async function getTiltIntervention(
-  tiltLevel: number,
+export async function getCenteringGuidance(
+  emotionalIntensity: number,
   recentEvents: string[],
   context?: CoachingContext
 ): Promise<string> {
-  const prompt = `The player's tilt level is ${tiltLevel}/100. 
+  const prompt = `The player's emotional intensity is ${emotionalIntensity}/100. 
 Recent events: ${recentEvents.join(', ')}.
-Provide a brief, calming intervention appropriate to this tilt level.
-${tiltLevel > 70 ? 'This is high tilt - strongly suggest a break.' : ''}
-${tiltLevel > 40 && tiltLevel <= 70 ? 'This is moderate tilt - help them center.' : ''}
-${tiltLevel <= 40 ? 'This is low/early tilt - gentle awareness.' : ''}`;
+Provide brief centering guidance appropriate to this intensity level.
+${emotionalIntensity > 70 ? 'They are far off center - gently suggest stepping back.' : ''}
+${emotionalIntensity > 40 && emotionalIntensity <= 70 ? 'They are wavering - help them find their center.' : ''}
+${emotionalIntensity <= 40 ? 'They are slightly off balance - gentle awareness.' : ''}`;
 
-  return getAgentResponse('tiltGuardian', prompt, [], context);
+  return getAgentResponse('innerCompass', prompt, [], context);
 }
 
 /**
@@ -339,6 +339,25 @@ export async function getMindfulnessExercise(
 Keep it simple and practical. Include breathing if appropriate.`;
 
   return getAgentResponse('mindfulness', prompt, [], context);
+}
+
+/**
+ * Get tilt intervention guidance
+ */
+export async function getTiltIntervention(
+  tiltLevel: 'low' | 'medium' | 'high',
+  recentEvents: string[],
+  context?: CoachingContext
+): Promise<string> {
+  const eventList = recentEvents.length > 0 
+    ? `Recent events: ${recentEvents.join(', ')}` 
+    : 'No specific recent events.';
+  
+  const prompt = `A chess player is experiencing ${tiltLevel} tilt. ${eventList}
+Provide a brief, calming intervention. Be supportive but direct.
+Focus on immediate practical steps to regain composure.`;
+
+  return getAgentResponse('tiltGuardian', prompt, [], context);
 }
 
 // ============================================

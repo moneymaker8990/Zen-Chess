@@ -23,14 +23,14 @@ import {
 // Import individual agents
 import { 
   createCoachAgent,
-  createTiltGuardianAgent,
+  createInnerCompassAgent,
   createTrainingAgent,
   createPatternAgent,
   createJourneyAgent,
   createMindfulnessAgent,
   createInsightEngineAgent,
   createMotivatorAgent,
-  createFocusGuardianAgent,
+  createFlowKeeperAgent,
   createOpeningSageAgent,
   createLegendCuratorAgent,
   createSessionManagerAgent,
@@ -71,11 +71,11 @@ function createInitialState(): AgentOrchestratorState {
     agentVerbosity: 'normal',
     enabledAgents: [
       // Core agents
-      'coach', 'tilt-guardian', 'training', 'pattern', 'journey', 'mindfulness',
+      'coach', 'inner-compass', 'training', 'pattern', 'journey', 'mindfulness',
       // Specialized agents  
       'opening', 'legend',
       // Background agents (run silently)
-      'insight-engine', 'motivator', 'focus-guardian', 'session-manager',
+      'insight-engine', 'motivator', 'flow-keeper', 'session-manager',
     ],
   };
 }
@@ -87,7 +87,7 @@ function createInitialState(): AgentOrchestratorState {
 const agents = {
   // Core visible agents
   'coach': createCoachAgent(),
-  'tilt-guardian': createTiltGuardianAgent(),
+  'inner-compass': createInnerCompassAgent(),
   'training': createTrainingAgent(),
   'pattern': createPatternAgent(),
   'journey': createJourneyAgent(),
@@ -100,7 +100,7 @@ const agents = {
   // Background/invisible agents (work silently, surface insights)
   'insight-engine': createInsightEngineAgent(),
   'motivator': createMotivatorAgent(),
-  'focus-guardian': createFocusGuardianAgent(),
+  'flow-keeper': createFlowKeeperAgent(),
   'session-manager': createSessionManagerAgent(),
 };
 

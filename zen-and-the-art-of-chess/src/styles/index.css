@@ -390,11 +390,49 @@
     background: #4a4744;
   }
 
-  /* Chessboard customization */
+  /* Chessboard customization - RESPONSIVE */
   .chessboard-container {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Responsive chessboard wrapper - ensures board fits screen */
+  .chessboard-responsive {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Override react-chessboard inline styles for mobile */
+  .chessboard-responsive > div {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Mobile-specific board sizing */
+  @media (max-width: 640px) {
+    .chessboard-responsive {
+      max-width: calc(100vw - 32px); /* Account for page padding */
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .chessboard-responsive {
+      max-width: min(480px, calc(100vw - 48px));
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .chessboard-responsive {
+      max-width: 520px;
+    }
   }
 
   /* Breathing animation for calm mode */
@@ -745,16 +783,7 @@
     50% { opacity: 0.5; }
   }
 
-  /* Shake animation for incorrect moves */
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-    20%, 40%, 60%, 80% { transform: translateX(4px); }
-  }
-
-  .animate-shake {
-    animation: shake 0.5s ease-in-out;
-  }
+  /* Shake animation removed - using gentle feedback instead */
 
   /* Bounce-in animation for correct feedback */
   @keyframes bounce-in {

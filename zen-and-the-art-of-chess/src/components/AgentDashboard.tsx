@@ -34,8 +34,8 @@ export function AgentsOverviewCard() {
   }, [messages]);
 
   const enabledAgents = state.enabledAgents;
-  const primaryAgents: AgentId[] = ['coach', 'tilt-guardian', 'training', 'mindfulness'];
-  const backgroundAgents: AgentId[] = ['insight-engine', 'motivator', 'focus-guardian', 'session-manager'];
+  const primaryAgents: AgentId[] = ['coach', 'inner-compass', 'training', 'mindfulness'];
+  const backgroundAgents: AgentId[] = ['insight-engine', 'motivator', 'flow-keeper', 'session-manager'];
   const specializedAgents: AgentId[] = ['opening', 'legend', 'pattern', 'journey'];
 
   return (
@@ -352,8 +352,8 @@ export function AgentInsightsSummary() {
     // Gather insights from agent memories
     try {
       const coachMemory = localStorage.getItem('zenChessCoachMemory');
-      const tiltMemory = localStorage.getItem('zenChessTiltGuardianMemory');
-      const focusMemory = localStorage.getItem('zenChessFocusMemory');
+      const compassMemory = localStorage.getItem('zenChessInnerCompassMemory');
+      const flowMemory = localStorage.getItem('zenChessFlowKeeperMemory');
       const insightMemory = localStorage.getItem('zenChessInsightMemory');
       
       let bestTime = null;
@@ -367,15 +367,15 @@ export function AgentInsightsSummary() {
         daysTracked = coach.daysKnown || 0;
       }
       
-      if (tiltMemory) {
-        const tilt = JSON.parse(tiltMemory);
-        if (tilt.consecutiveLosses >= 3) tiltRisk = 'high';
-        else if (tilt.consecutiveLosses >= 2) tiltRisk = 'medium';
+      if (compassMemory) {
+        const compass = JSON.parse(compassMemory);
+        if (compass.consecutiveLosses >= 3) tiltRisk = 'high';
+        else if (compass.consecutiveLosses >= 2) tiltRisk = 'medium';
       }
       
-      if (focusMemory) {
-        const focus = JSON.parse(focusMemory);
-        focusScore = focus.focusScore || 100;
+      if (flowMemory) {
+        const flow = JSON.parse(flowMemory);
+        focusScore = flow.flowScore || 100;
       }
       
       if (insightMemory) {
@@ -410,14 +410,14 @@ export function AgentInsightsSummary() {
         color="#3b82f6"
       />
       <InsightCard
-        icon="🛡️"
-        label="Tilt Risk"
-        value={insights.tiltRisk.charAt(0).toUpperCase() + insights.tiltRisk.slice(1)}
+        icon="🧭"
+        label="Emotional Balance"
+        value={insights.tiltRisk === 'high' ? 'Off Center' : insights.tiltRisk === 'medium' ? 'Wavering' : 'Centered'}
         color={insights.tiltRisk === 'high' ? '#ef4444' : insights.tiltRisk === 'medium' ? '#f59e0b' : '#4ade80'}
       />
       <InsightCard
-        icon="🎯"
-        label="Focus"
+        icon="🌊"
+        label="Flow State"
         value={`${insights.focusScore}%`}
         color="#06b6d4"
       />

@@ -39,9 +39,18 @@ type LegendPositionIndex = Record<string, LegendPosition[]>;
 const MAX_OPENING_FULLMOVE = 16;
 
 const LEGEND_NAME_PATTERNS: Record<LegendId, string[]> = {
-  fischer: ['Fischer', 'Robert James Fischer', 'Bobby Fischer'],
-  capablanca: ['Capablanca', 'Jose Raul Capablanca', 'José Raúl Capablanca', 'Jose Raul Capablanca'],
-  steinitz: ['Steinitz', 'Wilhelm Steinitz'],
+  fischer: ['Fischer', 'Robert James Fischer', 'Bobby Fischer', 'Robert J. Fischer'],
+  capablanca: ['Capablanca', 'Jose Raul Capablanca', 'José Raúl Capablanca', 'Jose Raul Capablanca', 'Capablanca, J.'],
+  steinitz: ['Steinitz', 'Wilhelm Steinitz', 'Steinitz, W.'],
+  morphy: ['Morphy', 'Paul Morphy', 'Morphy, Paul'],
+  lasker: ['Lasker', 'Emanuel Lasker', 'Lasker, Emanuel', 'Lasker, Em.'],
+  alekhine: ['Alekhine', 'Alexander Alekhine', 'Alekhine, A.', 'Aliochin', 'Alekhin'],
+  botvinnik: ['Botvinnik', 'Mikhail Botvinnik', 'Botvinnik, M.'],
+  tal: ['Tal', 'Mikhail Tal', 'Tal, M.', 'Tal, Mikhail'],
+  spassky: ['Spassky', 'Boris Spassky', 'Spassky, B.', 'Spassky, Boris'],
+  karpov: ['Karpov', 'Anatoly Karpov', 'Karpov, A.', 'Karpov, Anatoly'],
+  kasparov: ['Kasparov', 'Garry Kasparov', 'Gary Kasparov', 'Kasparov, G.'],
+  carlsen: ['Carlsen', 'Magnus Carlsen', 'Carlsen, M.', 'Carlsen, Magnus'],
 };
 
 function legendMatchesName(legend: LegendId, name: string | undefined): boolean {
@@ -72,12 +81,8 @@ function buildStructuresFromGames(
     const chess = new Chess();
 
     try {
-      const pgnLoaded = chess.loadPgn(game.pgn, { sloppy: true });
-
-      if (!pgnLoaded) {
-        console.warn(`Failed to load PGN for game ${game.id}`);
-        return;
-      }
+      // chess.js v1.x: loadPgn throws on error, returns void on success
+      chess.loadPgn(game.pgn, { sloppy: true });
 
       const isLegendWhite = legendMatchesName(legend, game.white);
       const isLegendBlack = legendMatchesName(legend, game.black);
@@ -96,7 +101,7 @@ function buildStructuresFromGames(
 
       for (const move of moveHistory) {
         const fenBefore = board.fen();
-        const fullmove = board.fullMoveNumber;
+        const fullmove = board.moveNumber();
 
         if (fullmove <= MAX_OPENING_FULLMOVE) {
           const uci = uciFromMove(move);
@@ -153,8 +158,9 @@ async function main() {
   }
 
   const legend = legendArg as LegendId;
-  if (!['fischer', 'capablanca', 'steinitz'].includes(legend)) {
-    console.error('Invalid legendId. Use: fischer, capablanca, steinitz');
+  const validLegends = ['fischer', 'capablanca', 'steinitz', 'morphy', 'lasker', 'alekhine', 'botvinnik', 'tal', 'spassky', 'karpov', 'kasparov', 'carlsen'];
+  if (!validLegends.includes(legend)) {
+    console.error(`Invalid legendId. Use one of: ${validLegends.join(', ')}`);
     process.exit(1);
   }
 

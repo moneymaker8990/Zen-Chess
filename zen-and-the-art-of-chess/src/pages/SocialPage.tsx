@@ -167,10 +167,10 @@ export function SocialPage() {
   const completedToday = challenges.filter(c => c.completed).length;
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
       {/* Header */}
       <section className="text-center lg:text-left">
-        <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
           Social Hub
         </h1>
         <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>

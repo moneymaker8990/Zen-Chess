@@ -32,7 +32,7 @@ Join thousands of players on a transformative 365-day journey combining chess ma
 Unlike other chess apps that focus only on tactics, Zen Chess understands that chess is a mental game. Our unique approach combines:
 
 • AI-powered coaching that adapts to your style
-• Tilt prevention technology (no more rage-quit losses!)
+• Inner Compass technology (guides you back to center)
 • Meditation and breathing exercises for focus
 • Psychology-based training methods
 
@@ -42,10 +42,11 @@ Unlike other chess apps that focus only on tactics, Zen Chess understands that c
 
 Your personal team of AI coaches, each specialized in different aspects:
 • Coach - Overall guidance and motivation
-• Tilt Guardian - Protects you from emotional mistakes
+• Inner Compass - Guides you back to emotional center
+• Flow Keeper - Protects your deep work and focus
 • Pattern Memory - Spaced repetition for pattern retention
 • Opening Sage - Builds your opening repertoire
-• And 8 more specialized agents...
+• And 7 more specialized agents...
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -119,7 +120,7 @@ Version 1.0 - Launch Edition
 
 • 365-day mindful chess curriculum
 • 12 AI coaching agents
-• Tilt prevention technology
+• Inner Compass emotional guidance
 • Play the Legends mode
 • Daily challenges
 • Spaced repetition system
@@ -139,7 +140,7 @@ Version 1.0 - Launch Edition
 **iPhone:**
 1. Home screen showing today's focus
 2. Puzzle solving with AI coaching
-3. Tilt Guardian intervention
+3. Inner Compass guidance moment
 4. 365-day journey progress
 5. Play the Legends mode
 6. Meditation/breathing exercise
@@ -150,7 +151,7 @@ Same as iPhone, landscape where applicable
 ### App Preview Video (Optional but Recommended)
 15-30 second video showing:
 1. Quick gameplay
-2. Tilt Guardian feature
+2. Inner Compass feature
 3. AI coaching interaction
 4. "Transform your chess" message
 
@@ -165,7 +166,7 @@ Same as iPhone, landscape where applicable
 
 ### Short Description
 ```
-Master chess & your mind with AI coaching, tilt prevention, and 365-day journey.
+Master chess & your mind with AI coaching, Inner Compass guidance, and 365-day journey.
 ```
 (80 character limit)
 

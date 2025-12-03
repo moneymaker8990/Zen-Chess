@@ -145,7 +145,7 @@ export function createMotivatorAgent(): Agent {
         }
 
         case 'LOSING_STREAK': {
-          // Don't push motivational messages - tiltGuardian handles this if needed
+          // Don't push motivational messages - Inner Compass handles this if needed
           return null;
         }
 

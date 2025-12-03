@@ -511,7 +511,7 @@ Should the AI coach intervene? Respond in JSON:
   "message": "The actual message to show the player (2-3 sentences, warm and helpful)",
   "priority": "low|medium|high|urgent",
   "suggestedAction": "Optional: specific action to suggest",
-  "agent": "Which agent persona should deliver this (coach/tiltGuardian/motivator/etc)"
+  "agent": "Which agent persona should deliver this (coach/innerCompass/motivator/etc)"
 }
 
 Only intervene when truly helpful. Don't interrupt unnecessarily.`;

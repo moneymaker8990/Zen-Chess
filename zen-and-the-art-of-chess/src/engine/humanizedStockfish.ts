@@ -41,6 +41,7 @@ export async function getHumanizedMove(params: {
 /**
  * Get multiple candidate moves with evaluations
  * Uses Stockfish at maximum strength to find the best moves
+ * For legends, we always use maximum depth for best quality
  */
 export async function getEngineCandidatesWithFeatures(params: {
   fen: string;
@@ -62,11 +63,23 @@ export async function getEngineCandidatesWithFeatures(params: {
   
   const chess = new Chess(fen);
   
-  // ALWAYS use maximum strength for legends
+  // ALWAYS use maximum strength for consistency and quality
   stockfish.setStrength(20);
+  stockfish.setDepth(14); // Ensure good depth for quality moves
   
   // Get the BEST move from Stockfish at maximum depth
-  const bestMove = await stockfish.getBestMove(fen);
+  let bestMove: string;
+  try {
+    bestMove = await stockfish.getBestMove(fen, 10000); // 10 second timeout
+  } catch (err) {
+    console.error('Engine failed to get best move:', err);
+    // Fallback: return first legal move
+    const fallbackMoves = chess.moves({ verbose: true });
+    if (fallbackMoves.length === 0) {
+      return [];
+    }
+    bestMove = `${fallbackMoves[0].from}${fallbackMoves[0].to}${fallbackMoves[0].promotion || ''}`;
+  }
   
   // Build candidates starting with the best move
   const candidates: Array<{
@@ -83,36 +96,40 @@ export async function getEngineCandidatesWithFeatures(params: {
   
   // Helper to extract features from a move
   const extractFeatures = (moveUci: string) => {
-    const testChess = new Chess(fen);
-    const from = moveUci.slice(0, 2);
-    const to = moveUci.slice(2, 4);
-    const promotion = moveUci.length > 4 ? moveUci[4] : undefined;
-    
-    const moveResult = testChess.move({ from, to, promotion });
-    if (!moveResult) return null;
-    
-    const isCapture = !!moveResult.captured;
-    const isCheck = testChess.inCheck();
-    
-    // Material change
-    let changesMaterial = 0;
-    if (isCapture) {
-      const pieceValues: Record<string, number> = {
-        'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9, 'k': 0
+    try {
+      const testChess = new Chess(fen);
+      const from = moveUci.slice(0, 2);
+      const to = moveUci.slice(2, 4);
+      const promotion = moveUci.length > 4 ? moveUci[4] : undefined;
+      
+      const moveResult = testChess.move({ from, to, promotion });
+      if (!moveResult) return null;
+      
+      const isCapture = !!moveResult.captured;
+      const isCheck = testChess.inCheck();
+      
+      // Material change
+      let changesMaterial = 0;
+      if (isCapture) {
+        const pieceValues: Record<string, number> = {
+          'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9, 'k': 0
+        };
+        changesMaterial = pieceValues[moveResult.captured || 'p'] || 0;
+      }
+      
+      const kingExposureChange = isCheck ? 10 : 0;
+      const simplifies = isCapture && ['q', 'r', 'b', 'n'].includes(moveResult.piece);
+      
+      return {
+        isCapture,
+        isCheck,
+        changesMaterial,
+        kingExposureChange,
+        simplifies,
       };
-      changesMaterial = pieceValues[moveResult.captured || 'p'] || 0;
+    } catch {
+      return null;
     }
-    
-    const kingExposureChange = isCheck ? 10 : 0;
-    const simplifies = isCapture && ['q', 'r', 'b', 'n'].includes(moveResult.piece);
-    
-    return {
-      isCapture,
-      isCheck,
-      changesMaterial,
-      kingExposureChange,
-      simplifies,
-    };
   };
   
   // Add the best move with high score
@@ -137,6 +154,7 @@ export async function getEngineCandidatesWithFeatures(params: {
     if (!features) continue;
     
     // Give lower scores to non-best moves
+    // Captures and checks are more valuable alternatives
     const isGoodMove = features.isCheck || features.isCapture;
     const scoreCp = isGoodMove ? 50 : 10;
     

@@ -19,7 +19,7 @@ export interface VideoScript {
 
 export const CONTENT_TYPES = [
   'chess_tip',
-  'tilt_guardian',
+  'inner_compass',
   'legend_feature',
   'mindfulness',
   'puzzle_challenge',
@@ -33,7 +33,7 @@ export type ContentType = typeof CONTENT_TYPES[number];
 const SYSTEM_PROMPT = `You are a viral content creator for "Zen Chess" - a revolutionary chess app that combines chess training with mindfulness meditation. 
 
 Key unique features to highlight:
-1. TILT GUARDIAN - An AI that detects when you're tilting (playing emotionally after losses) and intervenes to prevent rage-quitting and rating loss
+1. INNER COMPASS - An AI that senses when you're emotionally off-center after losses and gently guides you back to balance before you spiral
 2. 365-DAY JOURNEY - A structured path combining chess lessons with meditation practices
 3. PLAY THE LEGENDS - Play against AI versions of chess legends like Fischer, Kasparov, Morphy
 4. MINDFULNESS INTEGRATION - Breathing exercises, meditation, psychological training
@@ -49,7 +49,7 @@ Target audience: Chess players rated 800-1800 who want to improve and struggle w
 const CONTENT_PROMPTS: Record<ContentType, string> = {
   chess_tip: `Create a chess tip video that feels like insider knowledge. Something most players don't think about. Tie it back to the mental game when possible.`,
   
-  tilt_guardian: `Create a video showcasing the Tilt Guardian feature. Make it relatable - talk about losing streaks, rage quitting, playing "just one more game" at 2am. The Tilt Guardian is like having a coach who stops you before you throw away 200 rating points.`,
+  inner_compass: `Create a video showcasing the Inner Compass feature. Make it relatable - talk about losing streaks, that feeling of spinning out, playing "just one more game" at 2am. The Inner Compass is like having a wise guide who helps you find center before you throw away 200 rating points.`,
   
   legend_feature: `Create a video about the "Play the Legends" mode. Pick a specific legend (Fischer, Kasparov, Morphy, Tal, Capablanca) and talk about what makes their style unique and how playing against their AI helps you learn.`,
   

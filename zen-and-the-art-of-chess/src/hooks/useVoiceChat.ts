@@ -41,9 +41,10 @@ interface UseVoiceChatReturn {
 
 const VOICE_SETTINGS = {
   coach: { pitch: 1.0, rate: 0.9, voiceName: 'English' }, // Calm, measured
-  tiltGuardian: { pitch: 0.9, rate: 0.85, voiceName: 'English' }, // Very calm
+  innerCompass: { pitch: 0.9, rate: 0.85, voiceName: 'English' }, // Centering, grounded
   motivator: { pitch: 1.1, rate: 1.0, voiceName: 'English' }, // Energetic
   mindfulness: { pitch: 0.95, rate: 0.8, voiceName: 'English' }, // Peaceful
+  flowKeeper: { pitch: 0.95, rate: 0.9, voiceName: 'English' }, // Steady, flowing
   default: { pitch: 1.0, rate: 0.95, voiceName: 'English' },
 };
 

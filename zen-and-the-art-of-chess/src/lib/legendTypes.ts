@@ -50,10 +50,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "Razor-sharp initiative, universal strength.",
     description: "Dynamic, principled, attacks built on sound prep.",
     styleTags: ["attacking", "dynamic", "opening prep", "king hunts"],
-    aggressiveness: 0.8,
-    simplifyBias: 0.3,
-    kingSafetyBias: 0.7,
-    materialism: 0.6,
+    aggressiveness: 0.75,
+    simplifyBias: 0.35,
+    kingSafetyBias: 0.75,
+    materialism: 0.70,  // Fischer valued material but would sacrifice for initiative
     bio: {
       fullName: "Robert James Fischer",
       born: "March 9, 1943 – Chicago, Illinois",
@@ -89,10 +89,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "Endgame machine, crystal-clear simplicity.",
     description: "Simplicity, clarity, and endgame dominance.",
     styleTags: ["endgames", "clarity", "simplicity", "small advantages"],
-    aggressiveness: 0.4,
-    simplifyBias: 0.9,
-    kingSafetyBias: 0.8,
-    materialism: 0.9,
+    aggressiveness: 0.25,   // Very restrained, rarely attacked speculatively
+    simplifyBias: 0.95,     // The Chess Machine loved simplification
+    kingSafetyBias: 0.90,   // Very safe, careful player
+    materialism: 0.95,      // Almost never sacrificed material
     bio: {
       fullName: "José Raúl Capablanca y Graupera",
       born: "November 19, 1888 – Havana, Cuba",
@@ -127,10 +127,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "Positional foundations, defense then counterattack.",
     description: "Accumulate advantages, defend then counter.",
     styleTags: ["positional", "accumulating advantage", "defensive ideas"],
-    aggressiveness: 0.5,
-    simplifyBias: 0.7,
-    kingSafetyBias: 0.9,
-    materialism: 0.8,
+    aggressiveness: 0.35,   // Patient, didn't rush attacks
+    simplifyBias: 0.65,     // Would simplify when advantageous
+    kingSafetyBias: 0.70,   // Famous for keeping king in center sometimes!
+    materialism: 0.80,      // Valued material but understood compensation
     bio: {
       fullName: "Wilhelm Steinitz",
       born: "May 17, 1836 – Prague, Austrian Empire",
@@ -165,10 +165,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "Tactical brilliance, dynamic attacking genius.",
     description: "Creative, aggressive, master of complex positions and combinations.",
     styleTags: ["attacking", "tactical", "complex positions", "brilliant combinations"],
-    aggressiveness: 0.9,
-    simplifyBias: 0.3,
-    kingSafetyBias: 0.5,
-    materialism: 0.5,
+    aggressiveness: 0.90,   // Extremely aggressive, loved attacks
+    simplifyBias: 0.20,     // Avoided simplification, wanted complexity
+    kingSafetyBias: 0.45,   // Would risk his king for the attack
+    materialism: 0.45,      // Willing to sacrifice for the attack
     bio: {
       fullName: "Alexander Alexandrovich Alekhine",
       born: "October 31, 1892 – Moscow, Russian Empire",
@@ -203,10 +203,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "Universal style, positional and tactical mastery.",
     description: "Versatile, adaptable, strong in all phases of the game.",
     styleTags: ["universal", "versatile", "positional", "tactical"],
-    aggressiveness: 0.6,
-    simplifyBias: 0.6,
-    kingSafetyBias: 0.7,
-    materialism: 0.7,
+    aggressiveness: 0.60,   // Balanced - could attack or defend
+    simplifyBias: 0.55,     // No strong preference
+    kingSafetyBias: 0.65,   // Reasonably careful
+    materialism: 0.65,      // Balanced approach
     bio: {
       fullName: "Boris Vasilyevich Spassky",
       born: "January 30, 1937 – Leningrad, USSR",
@@ -241,10 +241,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "Ferocious preparation, relentless pressure.",
     description: "Dominating attacks backed by legendary opening preparation and iron will.",
     styleTags: ["attacking", "preparation", "dynamic", "psychological pressure"],
-    aggressiveness: 0.9,
-    simplifyBias: 0.2,
-    kingSafetyBias: 0.6,
-    materialism: 0.5,
+    aggressiveness: 0.88,   // Extremely aggressive, relentless
+    simplifyBias: 0.25,     // Avoided simplification, wanted initiative
+    kingSafetyBias: 0.55,   // Would take risks for the initiative
+    materialism: 0.50,      // Would sacrifice for the attack
     bio: {
       fullName: "Garry Kimovich Kasparov",
       born: "April 13, 1963 – Baku, Azerbaijan SSR",
@@ -279,10 +279,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "Boa constrictor, prophylaxis personified.",
     description: "Subtle positional pressure, slowly squeezing opponents into zugzwang.",
     styleTags: ["positional", "prophylaxis", "endgames", "technique"],
-    aggressiveness: 0.3,
-    simplifyBias: 0.7,
-    kingSafetyBias: 0.9,
-    materialism: 0.9,
+    aggressiveness: 0.20,   // Almost never aggressive, restricting style
+    simplifyBias: 0.75,     // Loved favorable exchanges
+    kingSafetyBias: 0.95,   // Extremely careful about king safety
+    materialism: 0.95,      // Almost never sacrificed material
     bio: {
       fullName: "Anatoly Yevgenyevich Karpov",
       born: "May 23, 1951 – Zlatoust, USSR",
@@ -317,10 +317,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "The Magician from Riga, sacrificial wizard.",
     description: "Dazzling sacrifices and complications that confuse even engines.",
     styleTags: ["tactical", "sacrifices", "complications", "attacking"],
-    aggressiveness: 1.0,
-    simplifyBias: 0.1,
-    kingSafetyBias: 0.3,
-    materialism: 0.2,
+    aggressiveness: 1.0,    // Maximum aggression - pure attack
+    simplifyBias: 0.05,     // HATED simplification, wanted chaos
+    kingSafetyBias: 0.20,   // Would ignore king safety for attack
+    materialism: 0.10,      // Loved to sacrifice, material was secondary
     bio: {
       fullName: "Mikhail Nekhemyevich Tal",
       born: "November 9, 1936 – Riga, Latvia",
@@ -355,10 +355,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "The Patriarch, scientific chess mastery.",
     description: "Deep preparation, systematic analysis, and iron discipline.",
     styleTags: ["scientific", "preparation", "strategic", "disciplined"],
-    aggressiveness: 0.5,
-    simplifyBias: 0.5,
-    kingSafetyBias: 0.8,
-    materialism: 0.7,
+    aggressiveness: 0.45,   // Methodical, not reckless
+    simplifyBias: 0.55,     // Would simplify when correct
+    kingSafetyBias: 0.80,   // Scientific, careful approach
+    materialism: 0.75,      // Valued material, calculated sacrifices
     bio: {
       fullName: "Mikhail Moiseyevich Botvinnik",
       born: "August 17, 1911 – Kuokkala, Russian Empire",
@@ -393,10 +393,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "Pride and sorrow of chess, romantic genius.",
     description: "Lightning development, open lines, and breathtaking attacks.",
     styleTags: ["romantic", "development", "open games", "attacking"],
-    aggressiveness: 0.85,
-    simplifyBias: 0.3,
-    kingSafetyBias: 0.5,
-    materialism: 0.4,
+    aggressiveness: 0.85,   // Romantic attacker, loved the initiative
+    simplifyBias: 0.25,     // Wanted open attacking positions
+    kingSafetyBias: 0.40,   // Would sacrifice for the attack
+    materialism: 0.35,      // Would sacrifice for development/attack
     bio: {
       fullName: "Paul Charles Morphy",
       born: "June 22, 1837 – New Orleans, Louisiana",
@@ -431,10 +431,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "Universal perfection, endgame sorcerer.",
     description: "Unmatched versatility, grinding down any advantage to victory.",
     styleTags: ["universal", "endgames", "technique", "grinding"],
-    aggressiveness: 0.5,
-    simplifyBias: 0.6,
-    kingSafetyBias: 0.8,
-    materialism: 0.7,
+    aggressiveness: 0.50,   // Balanced, can attack when needed
+    simplifyBias: 0.70,     // Loves simplifying to better endgames
+    kingSafetyBias: 0.80,   // Careful but not paranoid
+    materialism: 0.75,      // Values material, precise technique
     bio: {
       fullName: "Sven Magnus Øen Carlsen",
       born: "November 30, 1990 – Tønsberg, Norway",
@@ -469,10 +469,10 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
     tagline: "27-year reign, psychological warrior.",
     description: "Pragmatic fighter who played the opponent, not just the board.",
     styleTags: ["psychological", "practical", "fighting", "endgames"],
-    aggressiveness: 0.6,
-    simplifyBias: 0.5,
-    kingSafetyBias: 0.7,
-    materialism: 0.6,
+    aggressiveness: 0.55,   // Practical, would attack when right
+    simplifyBias: 0.45,     // Liked complex positions for psychology
+    kingSafetyBias: 0.65,   // Careful but practical
+    materialism: 0.60,      // Practical about material
     bio: {
       fullName: "Emanuel Lasker",
       born: "December 24, 1868 – Berlinchen, Germany",

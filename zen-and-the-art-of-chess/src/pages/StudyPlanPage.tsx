@@ -304,10 +304,10 @@ export function StudyPlanPage() {
   // ==================== CREATE VIEW ====================
   if (viewMode === 'create' || !plan) {
     return (
-      <div className="space-y-8 animate-fade-in">
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <section className="text-center">
-          <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
             Create Your Study Plan
           </h1>
           <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
@@ -420,11 +420,11 @@ export function StudyPlanPage() {
 
   // ==================== OVERVIEW VIEW ====================
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
       {/* Header */}
       <section className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
             {plan.name}
           </h1>
           <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>

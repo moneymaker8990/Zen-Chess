@@ -3,6 +3,7 @@ import { Chess, Square } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { stockfish } from '@/engine/stockfish';
+import { parseUciMove } from '@/lib/moveValidation';
 import type { Tradition } from '@/lib/types';
 import { useCoachStore } from '@/state/coachStore';
 
@@ -202,7 +203,7 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
     }
   };
 
-  // Make engine move
+  // Make engine move with proper validation
   const makeEngineMove = useCallback((currentGame: Chess) => {
     if (!engineReady || currentGame.isGameOver()) return;
 
@@ -212,22 +213,38 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
     setTimeout(() => {
       stockfish.playMove(currentGame.fen(), (bestMove) => {
         try {
-          const from = bestMove.slice(0, 2) as Square;
-          const to = bestMove.slice(2, 4) as Square;
-          const promotion = bestMove.length > 4 ? bestMove[4] : undefined;
+          // Validate UCI move format
+          const parsed = parseUciMove(bestMove);
+          if (!parsed) {
+            console.error('Invalid move format from engine:', bestMove);
+            setIsThinking(false);
+            return;
+          }
           
           const gameCopy = new Chess(currentGame.fen());
-          const move = gameCopy.move({ from, to, promotion });
+          const move = gameCopy.move({ 
+            from: parsed.from, 
+            to: parsed.to, 
+            promotion: parsed.promotion 
+          });
           
-          if (move) {
-            setGame(gameCopy);
-            setLastMove({ from, to });
-          }
-        } catch (e) {
-          console.error('Engine move error:', e);
-        } finally {
-          setIsThinking(false);
+        if (move) {
+          // Preserve scroll position
+          const scrollY = window.scrollY;
+          
+          setGame(gameCopy);
+          setLastMove({ from: parsed.from, to: parsed.to });
+          
+          // Restore scroll position
+          requestAnimationFrame(() => window.scrollTo(0, scrollY));
+        } else {
+          console.error('Engine move was not legal:', bestMove, 'in position', currentGame.fen());
         }
+      } catch (e) {
+        console.error('Engine move error:', e);
+      } finally {
+        setIsThinking(false);
+      }
       });
     }, 800); // Gentle delay
   }, [engineReady]);
@@ -289,6 +306,9 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
       });
 
       if (move) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
         setGame(gameCopy);
         setLastMove({ from: moveFrom, to: square });
         setMoveCount(prev => prev + 1);
@@ -299,6 +319,9 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
           }
           return newStreak;
         });
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
         setMoveFrom(null);
         setOptionSquares({});
         
@@ -332,6 +355,9 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
       });
 
       if (move) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
         setGame(gameCopy);
         setLastMove({ from: sourceSquare, to: targetSquare });
         setMoveCount(prev => prev + 1);
@@ -344,6 +370,9 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
         });
         setMoveFrom(null);
         setOptionSquares({});
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
         
         if (!gameCopy.isGameOver()) {
           makeEngineMove(gameCopy);

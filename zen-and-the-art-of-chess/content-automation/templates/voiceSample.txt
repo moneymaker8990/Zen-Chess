@@ -16,9 +16,9 @@ When I first started playing chess seriously, I thought improvement was all abou
 
 Think about your last losing streak. Were you making calculation errors, or were you tilting? Most players lose more games from emotion than from lack of skill.
 
-That's why I built Zen Chess - to train not just your chess, but your mind. The Tilt Guardian watches your games and steps in before you spiral. It's like having a coach who knows exactly when you need to take a break.
+That's why I built Zen Chess - to train not just your chess, but your mind. The Inner Compass watches your games and gently guides you back to center before you spiral. It's like having a wise guide who knows exactly when you need to pause and find yourself again.
 
-Picture this: You've just lost three games in a row. The old you would play another, and another, chasing that rating back. But the Tilt Guardian appears: "Stop. Breathe. The next game you play in this state will likely be your worst."
+Picture this: You've just lost three games in a row. The old you would play another, and another, chasing that rating back. But the Inner Compass appears: "The compass is spinning. Let's find true north before the next move."
 
 It's not about playing more games. It's about playing better games. Quality over quantity. That's the Zen Chess philosophy.
 

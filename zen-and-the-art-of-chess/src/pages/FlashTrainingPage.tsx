@@ -13,6 +13,7 @@ import {
   type FlashPosition,
   type FlashQuestion 
 } from '@/data/flashPositions';
+import { useBoardSize } from '@/hooks/useBoardSize';
 
 // ============================================
 // TYPES
@@ -90,6 +91,7 @@ const FLASH_POSITIONS = ALL_FLASH_POSITIONS;
 
 export function FlashTrainingPage() {
   const navigate = useNavigate();
+  const boardSize = useBoardSize(480, 32);
   
   // State
   const [mode, setMode] = useState<FlashMode>('menu');
@@ -368,35 +370,35 @@ export function FlashTrainingPage() {
   // ============================================
   if (mode === 'menu') {
     return (
-      <div className="space-y-8 animate-fade-in">
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <header>
-          <div className="flex items-center gap-2 text-sm mb-4">
+          <div className="flex items-center gap-2 text-xs sm:text-sm mb-2 sm:mb-4">
             <button onClick={() => navigate('/')} className="hover:text-white transition-colors" style={{ color: 'var(--text-muted)' }}>
               Home
             </button>
             <span style={{ color: 'var(--text-muted)' }}>/</span>
-            <span style={{ color: 'var(--text-secondary)' }}>Flash Training</span>
+            <span style={{ color: 'var(--text-secondary)' }}>Flash</span>
           </div>
-          <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
-            ⚡ Position Flash Training
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
+            ⚡ Flash Training
           </h1>
-          <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
-            Study a position, then answer questions from memory. Build master-level pattern recognition at your own pace.
+          <p className="text-sm sm:text-lg" style={{ color: 'var(--text-tertiary)' }}>
+            Study a position, answer from memory
           </p>
         </header>
         
         {/* Stats Overview */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="stat-card">
-            <div className="stat-value text-gradient">{stats.totalSessions}</div>
-            <div className="stat-label">Sessions</div>
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-4">
+          <div className="stat-card p-2 sm:p-4">
+            <div className="stat-value text-gradient text-sm sm:text-xl">{stats.totalSessions}</div>
+            <div className="stat-label text-[9px] sm:text-xs">Sessions</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-value" style={{ color: '#4ade80' }}>{accuracy}%</div>
-            <div className="stat-label">Accuracy</div>
+          <div className="stat-card p-2 sm:p-4">
+            <div className="stat-value text-sm sm:text-xl" style={{ color: '#4ade80' }}>{accuracy}%</div>
+            <div className="stat-label text-[9px] sm:text-xs">Accuracy</div>
           </div>
-          <div className="stat-card">
+          <div className="stat-card p-2 sm:p-4">
             <div className="stat-value" style={{ color: '#f59e0b' }}>{stats.bestStreak}</div>
             <div className="stat-label">Best Streak</div>
           </div>
@@ -407,25 +409,25 @@ export function FlashTrainingPage() {
         </div>
         
         {/* Difficulty Selection */}
-        <div className="card p-6">
-          <h3 className="text-sm uppercase tracking-wider mb-4" style={{ color: 'var(--text-muted)' }}>
-            Difficulty Level
+        <div className="card p-3 sm:p-6">
+          <h3 className="text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4" style={{ color: 'var(--text-muted)' }}>
+            Difficulty
           </h3>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-4 gap-1.5 sm:gap-3">
             {(Object.keys(DIFFICULTY_SETTINGS) as Difficulty[]).map(d => (
               <button
                 key={d}
                 onClick={() => setDifficulty(d)}
-                className={`p-4 rounded-xl text-left transition-all ${
+                className={`p-2 sm:p-4 rounded-lg sm:rounded-xl text-left transition-all ${
                   difficulty === d ? 'ring-2 ring-[var(--accent-primary)]' : ''
                 }`}
                 style={{ background: difficulty === d ? 'var(--accent-primary)' + '20' : 'var(--bg-tertiary)' }}
               >
-                <div className="font-medium capitalize mb-1" style={{ color: 'var(--text-primary)' }}>
-                  {d}
+                <div className="font-medium capitalize text-xs sm:text-base mb-0.5 sm:mb-1" style={{ color: 'var(--text-primary)' }}>
+                  {d.slice(0, 3)}
                 </div>
-                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                  {DIFFICULTY_SETTINGS[d].flashTime / 1000}s flash time
+                <div className="text-[9px] sm:text-xs" style={{ color: 'var(--text-muted)' }}>
+                  {DIFFICULTY_SETTINGS[d].flashTime / 1000}s
                 </div>
               </button>
             ))}
@@ -433,11 +435,11 @@ export function FlashTrainingPage() {
         </div>
         
         {/* Training Modes */}
-        <div className="space-y-4">
-          <h3 className="text-sm uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+        <div className="space-y-3 sm:space-y-4">
+          <h3 className="text-xs sm:text-sm uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
             Training Modes
           </h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
             {(Object.entries(MODE_INFO) as [FlashMode, typeof MODE_INFO[FlashMode]][])
               .filter(([key]) => key !== 'menu')
               .map(([key, info]) => {
@@ -596,11 +598,11 @@ export function FlashTrainingPage() {
         )}
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="relative">
+          <div className="relative flex justify-center">
             <div 
-              className={`chessboard-container transition-all duration-500 ease-out ${
+              className={`transition-all duration-500 ease-out ${
                 transitionPhase === 'fading-out' ? 'opacity-50 scale-[0.98]' : 
                 transitionPhase === 'fading-in' ? 'opacity-100 scale-100' :
                 showingPosition ? 'opacity-100' : 'opacity-0'
@@ -612,7 +614,7 @@ export function FlashTrainingPage() {
                 customDarkSquareStyle={{ backgroundColor: '#779556' }}
                 customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
                 arePiecesDraggable={false}
-                boardWidth={480}
+                boardWidth={boardSize}
               />
               
               {/* Countdown warning overlay */}
@@ -648,7 +650,7 @@ export function FlashTrainingPage() {
 
             {/* Show position again in result - with smooth fade */}
             {showResult && (
-              <div className={`chessboard-container transition-opacity duration-300 ${
+              <div className={`transition-opacity duration-300 ${
                 transitionPhase === 'fading-out' ? 'opacity-50' : 'opacity-100'
               }`}>
                 <Chessboard
@@ -657,7 +659,7 @@ export function FlashTrainingPage() {
                   customDarkSquareStyle={{ backgroundColor: '#779556' }}
                   customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
                   arePiecesDraggable={false}
-                  boardWidth={480}
+                  boardWidth={boardSize}
                 />
               </div>
             )}

@@ -415,7 +415,7 @@ export function WeaknessDetectorPage() {
   // RENDER: MAIN
   // ============================================
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
       {/* Header */}
       <header>
         <div className="flex items-center gap-2 text-sm mb-4">
@@ -425,7 +425,7 @@ export function WeaknessDetectorPage() {
           <span style={{ color: 'var(--text-muted)' }}>/</span>
           <span style={{ color: 'var(--text-secondary)' }}>Weakness Detector</span>
         </div>
-        <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
           📊 Weakness Detector
         </h1>
         <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>

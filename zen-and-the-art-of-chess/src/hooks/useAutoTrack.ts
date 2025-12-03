@@ -1,21 +1,25 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useStudyStore, useNotesStore, useWeaknessStore } from '@/state/notesStore';
 import { useMistakeLibraryStore, usePatternRecognitionStore } from '@/state/trainingStore';
+import { useAIIntelligence } from '@/lib/aiIntelligence';
 import type { RootCause, MistakeType, TacticalPattern } from '@/lib/trainingTypes';
 
 // ============================================
 // AUTO-TRACKING HOOKS
 // Automatically capture chess activities without manual input
+// NOW INTEGRATED WITH AI INTELLIGENCE FOR SEAMLESS ADAPTATION
 // ============================================
 
 /**
  * Hook to auto-track game completion
  * Call this when a game ends
+ * Now integrated with AI Intelligence for seamless adaptation
  */
 export function useAutoTrackGame() {
   const { currentSession, recordGamePlayed } = useStudyStore();
   const { addWeakness, recordOccurrence, weaknesses } = useWeaknessStore();
   const { addMistake } = useMistakeLibraryStore();
+  const { recordGameResult, recordActivity, learnFromBehavior } = useAIIntelligence();
 
   const trackGameEnd = useCallback((gameData: {
     result: 'win' | 'loss' | 'draw';
@@ -93,17 +97,33 @@ export function useAutoTrackGame() {
         }
       });
     }
-  }, [currentSession, recordGamePlayed, addMistake, weaknesses, addWeakness, recordOccurrence]);
+
+    // === AI INTELLIGENCE INTEGRATION ===
+    // Record to AI for intelligent adaptation
+    recordGameResult(gameData.result, 0); // Accuracy would come from game data
+    recordActivity('game');
+    
+    // Learn from this behavior
+    learnFromBehavior({
+      type: 'game_complete',
+      result: gameData.result,
+      duration: gameData.moves.length, // Approximate from moves
+      accuracy: 0, // Would be calculated
+    });
+  }, [currentSession, recordGamePlayed, addMistake, weaknesses, addWeakness, recordOccurrence,
+      recordGameResult, recordActivity, learnFromBehavior]);
 
   return { trackGameEnd };
 }
 
 /**
  * Hook to auto-track puzzle completion
+ * Now integrated with AI Intelligence for seamless adaptation
  */
 export function useAutoTrackPuzzle() {
   const { currentSession, recordPuzzleSolved, recordPuzzleFailed } = useStudyStore();
   const { recordAttempt } = usePatternRecognitionStore();
+  const { recordPuzzleAttempt, learnFromBehavior, recordActivity } = useAIIntelligence();
 
   const trackPuzzleComplete = useCallback((puzzleData: {
     solved: boolean;
@@ -111,6 +131,7 @@ export function useAutoTrackPuzzle() {
     timeMs: number;
     wasInstinctive?: boolean;
     difficulty?: number;
+    usedHint?: boolean;
   }) => {
     // Record in session
     if (currentSession) {
@@ -133,7 +154,30 @@ export function useAutoTrackPuzzle() {
         difficulty: (puzzleData.difficulty || 3) as 1 | 2 | 3 | 4 | 5,
       });
     }
-  }, [currentSession, recordPuzzleSolved, recordPuzzleFailed, recordAttempt]);
+
+    // === AI INTELLIGENCE INTEGRATION ===
+    // Record to AI for intelligent adaptation
+    recordPuzzleAttempt(
+      puzzleData.solved, 
+      Math.floor(puzzleData.timeMs / 1000),
+      puzzleData.usedHint || false
+    );
+    
+    // Record activity type
+    recordActivity('puzzle');
+    
+    // Learn from this behavior for future adaptation
+    if (puzzleData.pattern) {
+      learnFromBehavior({
+        type: 'puzzle_complete',
+        solved: puzzleData.solved,
+        time: Math.floor(puzzleData.timeMs / 1000),
+        theme: puzzleData.pattern,
+        usedHint: puzzleData.usedHint || false,
+      });
+    }
+  }, [currentSession, recordPuzzleSolved, recordPuzzleFailed, recordAttempt, 
+      recordPuzzleAttempt, learnFromBehavior, recordActivity]);
 
   return { trackPuzzleComplete };
 }
@@ -254,11 +298,30 @@ export function useAutoDetectWeakness() {
 
 /**
  * Master hook that combines all auto-tracking
+ * Includes AI Intelligence for seamless adaptation
  */
 export function useAutoTracking() {
   const gameTracker = useAutoTrackGame();
   const puzzleTracker = useAutoTrackPuzzle();
   const noteCreator = useAutoNote();
+  
+  // AI Intelligence session tracking
+  const { 
+    startSession, 
+    session, 
+    detectFlowState,
+    shouldSuggestBreak,
+    getOptimalNextActivity,
+  } = useAIIntelligence();
+  
+  // Start AI session tracking on mount
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (!initialized.current) {
+      startSession();
+      initialized.current = true;
+    }
+  }, [startSession]);
   
   // Run weakness detection
   useAutoDetectWeakness();
@@ -267,6 +330,11 @@ export function useAutoTracking() {
     ...gameTracker,
     ...puzzleTracker,
     ...noteCreator,
+    // AI Intelligence exports
+    aiSession: session,
+    isInFlow: detectFlowState(),
+    shouldTakeBreak: shouldSuggestBreak(),
+    suggestedNextActivity: getOptimalNextActivity(),
   };
 }
 

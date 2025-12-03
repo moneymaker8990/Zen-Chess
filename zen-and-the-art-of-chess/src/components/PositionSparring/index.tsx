@@ -2,14 +2,17 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import { usePositionSparringStore } from '@/state/trainingStore';
 import { stockfish } from '@/engine/stockfish';
 import { PageHeader } from '@/components/Tutorial';
+import { parseUciMove } from '@/lib/moveValidation';
 import type { SparringPosition } from '@/lib/trainingTypes';
 
 export function PositionSparring() {
   const { positions, addPosition, recordResult, getRecommendedPositions, deletePosition } = usePositionSparringStore();
   const boardStyles = useBoardStyles();
+  const boardSize = useBoardSize(480, 32);
   
   const [selectedPosition, setSelectedPosition] = useState<SparringPosition | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -52,7 +55,7 @@ export function PositionSparring() {
     }
   }, []);
 
-  // Engine move
+  // Engine move with proper validation
   const makeEngineMove = useCallback((currentGame: Chess) => {
     if (!engineReady || currentGame.isGameOver()) {
       if (currentGame.isGameOver()) {
@@ -65,20 +68,36 @@ export function PositionSparring() {
     
     stockfish.playMove(currentGame.fen(), (bestMove) => {
       try {
-        const from = bestMove.slice(0, 2) as Square;
-        const to = bestMove.slice(2, 4) as Square;
-        const promotion = bestMove.length > 4 ? bestMove[4] : undefined;
+        // Validate UCI move format
+        const parsed = parseUciMove(bestMove);
+        if (!parsed) {
+          console.error('Invalid move format from engine:', bestMove);
+          setIsThinking(false);
+          return;
+        }
         
         const gameCopy = new Chess(currentGame.fen());
-        const move = gameCopy.move({ from, to, promotion });
+        const move = gameCopy.move({ 
+          from: parsed.from, 
+          to: parsed.to, 
+          promotion: parsed.promotion 
+        });
         
         if (move) {
+          // Preserve scroll position
+          const scrollY = window.scrollY;
+          
           setGame(gameCopy);
-          setLastMove({ from, to });
+          setLastMove({ from: parsed.from, to: parsed.to });
+          
+          // Restore scroll position
+          requestAnimationFrame(() => window.scrollTo(0, scrollY));
           
           if (gameCopy.isGameOver()) {
             handleGameOver(gameCopy);
           }
+        } else {
+          console.error('Engine move was not legal:', bestMove, 'in position', currentGame.fen());
         }
       } catch (e) {
         console.error('Engine move error:', e);
@@ -129,8 +148,14 @@ export function PositionSparring() {
       });
 
       if (move) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
         setGame(gameCopy);
         setLastMove({ from: sourceSquare, to: targetSquare });
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
 
         if (gameCopy.isGameOver()) {
           handleGameOver(gameCopy);
@@ -231,9 +256,9 @@ export function PositionSparring() {
         </div>
       ) : (
         /* Active sparring session */
-        <div className="grid lg:grid-cols-[1fr_350px] gap-6">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_350px] gap-4 lg:gap-6 px-2 sm:px-0">
           {/* Board */}
-          <div className="relative">
+          <div className="relative flex justify-center">
             {isThinking && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-zen-900/60 backdrop-blur-sm rounded-lg">
                 <div className="text-center">
@@ -281,7 +306,7 @@ export function PositionSparring() {
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={200}
               arePiecesDraggable={isPlaying && !isThinking && !gameResult}
-              boardWidth={480}
+              boardWidth={boardSize}
             />
           </div>
 

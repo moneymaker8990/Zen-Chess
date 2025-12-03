@@ -7,7 +7,7 @@ import { useState, useCallback, useRef } from 'react';
 import {
   getAgentResponse,
   streamAgentResponse,
-  getTiltIntervention,
+  getCenteringGuidance,
   getGameInsight,
   getSessionRecommendation,
   getMotivation,
@@ -49,7 +49,7 @@ interface UseAICoachReturn {
   agentRole: string;
   
   // Specialized functions
-  requestTiltIntervention: (tiltLevel: number, recentEvents: string[]) => Promise<string>;
+  requestCenteringGuidance: (tiltLevel: number, recentEvents: string[]) => Promise<string>;
   requestGameInsight: (pgn: string, mistakes: string[], result: 'win' | 'loss' | 'draw') => Promise<string>;
   requestSessionPlan: (timeAvailable: number, energy: 'high' | 'medium' | 'low') => Promise<string>;
   requestMotivation: (situation: string) => Promise<string>;
@@ -190,7 +190,7 @@ export function useAICoach(options: UseAICoachOptions = {}): UseAICoachReturn {
   // SPECIALIZED FUNCTIONS
   // ============================================
   
-  const requestTiltIntervention = useCallback(async (
+  const requestCenteringGuidance = useCallback(async (
     tiltLevel: number,
     recentEvents: string[]
   ): Promise<string> => {
@@ -198,9 +198,9 @@ export function useAICoach(options: UseAICoachOptions = {}): UseAICoachReturn {
     setError(null);
     
     try {
-      return await getTiltIntervention(tiltLevel, recentEvents, context);
+      return await getCenteringGuidance(tiltLevel, recentEvents, context);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to get tilt intervention';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to get centering guidance';
       setError(errorMessage);
       throw err;
     } finally {
@@ -302,7 +302,7 @@ export function useAICoach(options: UseAICoachOptions = {}): UseAICoachReturn {
     agentRole: agent.role,
     
     // Specialized functions
-    requestTiltIntervention,
+    requestCenteringGuidance,
     requestGameInsight,
     requestSessionPlan,
     requestMotivation,

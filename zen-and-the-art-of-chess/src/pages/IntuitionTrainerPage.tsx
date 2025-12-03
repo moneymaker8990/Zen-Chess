@@ -8,6 +8,7 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
+import { useBoardSize } from '@/hooks/useBoardSize';
 
 // ============================================
 // TYPES
@@ -240,6 +241,7 @@ const POSITIONS: EvaluatedPosition[] = [
 
 export function IntuitionTrainerPage() {
   const navigate = useNavigate();
+  const boardSize = useBoardSize(480, 32);
   
   // State
   const [stats, setStats] = useState<IntuitionStats>(() => {
@@ -444,7 +446,7 @@ export function IntuitionTrainerPage() {
   // ============================================
   if (!sessionActive) {
     return (
-      <div className="space-y-8 animate-fade-in">
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <header>
           <div className="flex items-center gap-2 text-sm mb-4">
@@ -454,7 +456,7 @@ export function IntuitionTrainerPage() {
             <span style={{ color: 'var(--text-muted)' }}>/</span>
             <span style={{ color: 'var(--text-secondary)' }}>Intuition Trainer</span>
           </div>
-          <h1 className="text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
             ⚖️ Intuition Trainer
           </h1>
           <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
@@ -664,16 +666,16 @@ export function IntuitionTrainerPage() {
         )}
         
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="chessboard-container">
+          <div className="flex justify-center">
             <Chessboard
               position={currentPosition.fen}
               boardOrientation="white"
               customDarkSquareStyle={{ backgroundColor: '#779556' }}
               customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
               arePiecesDraggable={false}
-              boardWidth={480}
+              boardWidth={boardSize}
             />
           </div>
           
@@ -773,7 +775,7 @@ export function IntuitionTrainerPage() {
   // RENDER: SESSION COMPLETE
   // ============================================
   return (
-    <div className="space-y-8 animate-fade-in max-w-2xl mx-auto">
+    <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0 max-w-2xl mx-auto">
       <div className="card p-8 text-center">
         <div className="text-6xl mb-4">
           {sessionScore >= 80 ? '🏆' : sessionScore >= 50 ? '👏' : '💪'}

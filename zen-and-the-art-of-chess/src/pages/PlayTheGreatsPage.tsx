@@ -11,7 +11,7 @@ export function PlayTheGreatsPage() {
   ];
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
       {/* Header */}
       <section className="text-center py-8">
         <h1 className="text-4xl md:text-5xl font-serif text-zen-100 mb-4">

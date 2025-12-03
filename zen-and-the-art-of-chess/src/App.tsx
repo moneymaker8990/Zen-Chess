@@ -11,10 +11,12 @@ import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
 import { AchievementNotificationContainer } from '@/components/AchievementNotification';
 import { AskAnything } from '@/components/AskAnything';
 import { GeniusWhisper } from '@/components/GeniusWhisper';
+import { AIAmbience } from '@/components/AIAmbience';
 import { initializeAgents } from '@/lib/agents/agentOrchestrator';
 import { useAIPreferencesStore } from '@/state/aiPreferencesStore';
 import { useAgentAwareness } from '@/hooks/useAgentAwareness';
 import { useGlobalShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useAIIntelligenceTracking } from '@/lib/aiIntelligence';
 import { HomePage } from '@/pages/HomePage';
 import { DayPage } from '@/pages/DayPage';
 import { PlayPage } from '@/pages/PlayPage';
@@ -124,6 +126,9 @@ function AppContent() {
   // Enable global keyboard shortcuts
   useGlobalShortcuts();
   
+  // 🧠 AI INTELLIGENCE - Silent tracking and adaptation
+  const { recordActivity } = useAIIntelligenceTracking();
+  
   // AI preferences for genius features
   const { showAskAnything, showWhispers } = useAIPreferencesStore();
   
@@ -136,6 +141,18 @@ function AppContent() {
     if (path.includes('study') || path.includes('course') || path.includes('learn')) return 'study';
     return 'general';
   }, [location.pathname]);
+  
+  // Track activity changes for AI Intelligence
+  useEffect(() => {
+    const activityMap: Record<string, 'idle' | 'puzzle' | 'game' | 'study' | 'opening' | 'review'> = {
+      puzzle: 'puzzle',
+      game: 'game',
+      opening: 'opening',
+      study: 'study',
+      general: 'idle',
+    };
+    recordActivity(activityMap[aiContext] || 'idle');
+  }, [aiContext, recordActivity]);
   
   return (
     <>
@@ -160,6 +177,9 @@ function AppContent() {
         activity={aiContext as 'puzzle' | 'game' | 'opening' | 'study' | 'idle'}
         enabled={showWhispers}
       />
+      
+      {/* 🌟 AI AMBIENCE - Subtle, behind-the-scenes intelligence */}
+      <AIAmbience />
     </>
   );
 }

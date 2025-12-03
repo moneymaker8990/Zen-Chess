@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import { openingLines, type OpeningLine } from '@/data/openings';
 import { PageHeader } from '@/components/Tutorial';
 
@@ -9,6 +10,7 @@ type Category = 'all' | 'e4' | 'd4' | 'c4' | 'nf3';
 
 export function OpeningTrainer() {
   const boardStyles = useBoardStyles();
+  const boardSize = useBoardSize(480, 32);
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [selectedOpening, setSelectedOpening] = useState<OpeningLine | null>(null);
   const [game, setGame] = useState(new Chess());
@@ -60,10 +62,16 @@ export function OpeningTrainer() {
       try {
         const result = gameCopy.move(move);
         if (result) {
+          // Preserve scroll position
+          const scrollY = window.scrollY;
+          
           setGame(gameCopy);
           setLastMove({ from: result.from as Square, to: result.to as Square });
           setCurrentMoveIndex(prev => prev + 1);
           setIsUserTurn(true);
+          
+          // Restore scroll position
+          requestAnimationFrame(() => window.scrollTo(0, scrollY));
         }
       } catch (e) {
         console.error('Auto-play error:', move, e);
@@ -112,11 +120,17 @@ export function OpeningTrainer() {
                         result.san.replace(/[+#]/g, '') === expectedMove.replace(/[+#]/g, '');
 
       if (isCorrect) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
         setGame(gameCopy);
         setLastMove({ from, to });
         setCurrentMoveIndex(prev => prev + 1);
         setFeedback('correct');
         setShowHint(false);
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
         
         // Check if line is complete
         if (currentMoveIndex + 1 >= selectedOpening.moves.length) {
@@ -289,9 +303,9 @@ export function OpeningTrainer() {
         </>
       ) : (
         /* Practice view */
-        <div className="grid lg:grid-cols-[1fr_350px] gap-6">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_350px] gap-4 lg:gap-6 px-2 sm:px-0">
           {/* Board */}
-          <div className="relative">
+          <div className="relative flex justify-center">
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}
@@ -303,7 +317,7 @@ export function OpeningTrainer() {
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={200}
               arePiecesDraggable={isUserTurn && feedback !== 'complete'}
-              boardWidth={480}
+              boardWidth={boardSize}
             />
             
             {/* Correct Move Feedback */}

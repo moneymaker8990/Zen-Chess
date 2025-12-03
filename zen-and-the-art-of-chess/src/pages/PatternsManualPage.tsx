@@ -222,7 +222,7 @@ export function PatternsManualPage() {
     const categories = getAllCategories();
     
     return (
-      <div className="space-y-8 animate-fade-in">
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Hero Header */}
         <section className="text-center lg:text-left">
           <div className="flex items-center gap-4 mb-4">
@@ -230,7 +230,7 @@ export function PatternsManualPage() {
               📚
             </div>
             <div>
-              <h1 className="text-3xl lg:text-4xl font-display font-medium" style={{ color: 'var(--text-primary)' }}>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium" style={{ color: 'var(--text-primary)' }}>
                 Positional Patterns
               </h1>
               <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
