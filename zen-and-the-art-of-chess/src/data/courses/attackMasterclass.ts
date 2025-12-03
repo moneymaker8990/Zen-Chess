@@ -17,61 +17,61 @@ const attackPrerequisites: CourseVariation[] = [
     fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
     toMove: 'white',
     concept: 'Attack when you have more pieces developed',
-    keyTakeaway: 'A development advantage of 2+ pieces justifies aggressive action',
+    keyTakeaway: 'A development advantage of 2+ pieces justifies aggressive action. Each undeveloped piece represents a "silent soldier" that cannot help defend—when you\'re ahead in development, your opponent is essentially playing with fewer pieces.',
     difficulty: 2,
-    introduction: 'Before attacking, you need a reason. The most common justification is superior development - you have more pieces ready for battle.',
+    introduction: 'Before attacking, you need a REASON—a concrete justification for why violence will succeed. The most common justification is superior development. Count the pieces: if you have 4 developed and your opponent has 2, you\'re effectively playing with twice the army. This temporary advantage must be exploited IMMEDIATELY—every move your opponent makes narrows the gap. Morphy was the master of this: "When you see a good move, look for a better one... but when you\'re ahead in development, attack!"',
     moves: [
       {
         move: 'Ng5',
         annotation: '!',
-        explanation: 'Targeting the weak f7 square. White has 4 pieces developed vs Black\'s 2.',
+        explanation: 'This aggressive move exploits WHITE\'S DEVELOPMENT ADVANTAGE directly. Count the pieces: White has Bc4, Nf3 (now g5), and can castle immediately (effectively 4 developed). Black has Nc6, Nf6 (only 2 developed), with the queen, bishops, and rooks all stuck at home. This 2-piece advantage is HUGE—it means White is effectively attacking with twice the force. The target is f7, the weakest square in Black\'s position (defended only by the king). When ahead in development, attack the WEAKEST point with all available forces.',
         arrows: [{ from: 'f3', to: 'g5', color: 'red' }, { from: 'g5', to: 'f7', color: 'yellow' }],
         highlights: ['f7'],
         alternatives: [
-          { move: 'O-O', evaluation: 'good', explanation: 'Safe but doesn\'t exploit the development lead.' },
-          { move: 'd3', evaluation: 'equal', explanation: 'Solid but passive.' }
+          { move: 'O-O', evaluation: 'good', explanation: 'Safe but WASTEFUL. This gives Black a free move to catch up in development. When you have an advantage, use it!' },
+          { move: 'd3', evaluation: 'equal', explanation: 'Solid but completely ignores the development lead. Black will equalize easily.' }
         ]
       },
       {
         move: 'd5',
-        explanation: 'Black tries to block the diagonal, but it\'s too late.',
+        explanation: 'Black tries to block the diagonal and challenge the center—the best defensive attempt. But watch how White\'s development lead translates into CONCRETE threats that Black cannot parry.',
       },
       {
         move: 'exd5',
-        explanation: 'Opening lines while maintaining the attack.',
+        explanation: 'Opening lines is correct when ahead in development. The center opens, and White\'s pieces can flood in. Black\'s undeveloped army cannot help defend.',
       },
       {
         move: 'Na5',
-        explanation: 'Black tries to eliminate the dangerous bishop.',
+        explanation: 'Desperately trying to eliminate the dangerous bishop. But this move LOSES TIME—the knight will have to move again, falling further behind in development.',
       },
       {
         move: 'Bb5+',
         annotation: '!',
-        explanation: 'Intermediate check! White keeps the initiative.',
+        explanation: 'ZWISCHENZUG—the "in-between move" that wins time! Instead of retreating the bishop passively, White throws in a check. This forces Black to deal with the check before continuing, essentially gaining a free move. In attacking chess, EVERY tempo matters. This intermediate check is a hallmark of aggressive play.',
         arrows: [{ from: 'c4', to: 'b5', color: 'green' }],
       },
       {
         move: 'c6',
-        explanation: 'Forced block.',
+        explanation: 'The only move—blocking with the c-pawn. But now Black\'s pawn structure is damaged, and the king is still in the center.',
       },
       {
         move: 'dxc6',
-        explanation: 'Destroying the pawn shield.',
+        explanation: 'Ripping open lines toward the exposed king. The principle: when the opponent hasn\'t castled, OPEN THE CENTER. Every open line is a highway for your pieces to reach their king.',
       },
       {
         move: 'bxc6',
-        explanation: 'The only recapture.',
+        explanation: 'The only recapture. Black\'s position is in shambles: doubled c-pawns, exposed king, undeveloped pieces.',
       },
       {
         move: 'Qf3',
         annotation: '!',
-        explanation: 'Triple attack on f7! The development lead converts to a crushing attack.',
+        explanation: 'The culmination of White\'s development advantage: a TRIPLE ATTACK on f7! The queen joins the bishop and knight all targeting the same weak point. Black cannot defend because their army is still at home. This is what a development lead MEANS—your pieces work together while your opponent\'s pieces watch helplessly. Morphy would be proud: develop, attack the weak point, and deliver the knockout blow.',
         arrows: [{ from: 'd1', to: 'f3', color: 'red' }, { from: 'f3', to: 'f7', color: 'yellow' }],
         highlights: ['f7'],
       }
     ],
-    commonMistakes: ['Attacking without sufficient development', 'Trading pieces when ahead in development'],
-    deeperPrinciple: 'Development is temporary. If you don\'t use it, you lose it.',
+    commonMistakes: ['Attacking without counting development—you need at least a 2-piece advantage', 'Making quiet developing moves when you should be ATTACKING', 'Trading pieces when ahead in development—this helps your opponent catch up'],
+    deeperPrinciple: 'Development is a TEMPORARY advantage that DEPRECIATES every move. Unlike a material advantage (which is permanent) or a structural advantage (which is long-lasting), a development lead evaporates as your opponent makes moves. You must USE IT OR LOSE IT. When ahead in development, ask: "What is the most forcing, aggressive move I can make?" The answer usually involves attacking the enemy king.',
   },
   {
     id: 'prereq-weak-king',
@@ -202,79 +202,79 @@ const classicSacrifices: CourseVariation[] = [
     fen: 'r1bq1rk1/pppn1ppp/4pn2/3p4/1bPP4/2NBPN2/PP3PPP/R1BQK2R w KQ - 0 7',
     toMove: 'white',
     concept: 'The most famous attacking sacrifice in chess',
-    keyTakeaway: 'Bxh7+ works when Ng5+ and Qh5 follow with devastating effect',
+    keyTakeaway: 'The Greek Gift sacrifice (Bxh7+) works ONLY when you can follow up with Ng5+ and Qh5, creating unstoppable mating threats. Before sacrificing, verify that ALL THREE moves are possible—the bishop sac, the knight check, and the queen lift.',
     difficulty: 3,
-    introduction: 'The Greek Gift is a bishop sacrifice on h7 (or h2 for Black). It requires specific follow-up: Ng5+ and Qh5, creating unstoppable threats.',
+    introduction: 'The Greek Gift is perhaps the most beautiful and common sacrifice in chess. Named after the Trojan Horse—a "gift" that destroys from within—Bxh7+ tears open the king\'s fortress. But this sacrifice is NOT random aggression: it requires SPECIFIC conditions to work. You need: (1) A bishop able to take on h7, (2) A knight able to reach g5 with check, (3) A queen able to reach h5 (or d3 threatening h7). If ANY of these is missing, the sacrifice likely fails. Master this pattern, and you\'ll score countless crushing victories.',
     moves: [
       {
         move: 'Bxh7+',
         annotation: '!!',
-        explanation: 'The Greek Gift! White sacrifices a bishop to expose the black king.',
+        explanation: 'THE GREEK GIFT! This sacrifice is NOT speculative—it\'s calculated violence. Before making this move, verify: (1) Can my knight reach g5 with CHECK? Yes, it\'s on f3 and can jump there. (2) Can my queen reach h5 afterward? Yes, d1-h5 is clear. (3) What happens on each king move? Calculate Kxh7, Kg8, Kg6, and Kh6. Only after confirming all lines lead to advantage do you sacrifice. This is CONCRETE CALCULATION, not wishful thinking.',
         arrows: [{ from: 'd3', to: 'h7', color: 'red' }],
         highlights: ['h7'],
       },
       {
         move: 'Kxh7',
-        explanation: 'Declining loses the pawn for nothing.',
+        explanation: 'Black must take. Declining with Kh8 leaves Black a pawn down with a shattered kingside—and White can still play Ng5 with a crushing attack anyway. Sometimes "declining" a sacrifice is worse than accepting it!',
       },
       {
         move: 'Ng5+',
         annotation: '!',
-        explanation: 'The essential follow-up! The knight joins with check.',
+        explanation: 'The ESSENTIAL follow-up. This is why the Greek Gift works: the knight joins with CHECK, giving Black no time to consolidate. The knight on g5 attacks f7 and e6 while the queen prepares to enter on h5. This is a BATTERY of attacking pieces. If this knight check is impossible (blocked by a piece or pawn), the sacrifice doesn\'t work.',
         arrows: [{ from: 'f3', to: 'g5', color: 'red' }],
       },
       {
         move: 'Kg8',
-        explanation: 'Kg6 loses to Qd3+ and Qh7#. Kh6 loses to Nxf7+.',
+        explanation: 'The safest try. Other moves are worse: Kg6 walks into a mating net (Qd3+ Kh5 Qh7+ Kg4 Qh3+ Kg5 f4#), and Kh6 allows Nxf7+ forking king and queen. Chess is a game of "least bad" moves—here all moves lose, but Kg8 delays the execution.',
         alternatives: [
-          { move: 'Kg6', evaluation: 'bad', explanation: 'Qd3+ Kh5 Qh7+ Kg4 Qh3#' },
-          { move: 'Kh6', evaluation: 'bad', explanation: 'Nxf7+ winning the queen' }
+          { move: 'Kg6', evaluation: 'bad', explanation: 'Qd3+ Kh5 (forced) Qh7+ Kg4 Qh3+ Kg5 f4+ Kg4 Qh3#—a beautiful king hunt ending in mate.' },
+          { move: 'Kh6', evaluation: 'bad', explanation: 'Nxf7+ (discovered attack!) wins the queen. The knight attacks the queen while unmasking a potential Qh5+ threat.' }
         ]
       },
       {
         move: 'Qh5',
         annotation: '!',
-        explanation: 'Threatening Qh7# and Qxf7#. Black is defenseless.',
+        explanation: 'The third element of the Greek Gift trinity. Now White threatens BOTH Qh7# and Qxf7#. Two threats that Black cannot simultaneously parry. The queen + knight combination on the kingside is one of the deadliest in chess because the knight covers squares the queen cannot, and vice versa. This is why Bxh7+/Ng5+/Qh5 is a PACKAGE DEAL.',
         arrows: [{ from: 'd1', to: 'h5', color: 'red' }, { from: 'h5', to: 'h7', color: 'yellow' }],
         highlights: ['h7', 'f7'],
       },
       {
         move: 'Re8',
-        explanation: 'Trying to create an escape square.',
+        explanation: 'Creating Kf8 as an escape square. But it\'s too slow—White\'s attack is already overwhelming.',
       },
       {
         move: 'Qxf7+',
         annotation: '!',
-        explanation: 'Collecting a second pawn with ongoing attack.',
+        explanation: 'Collecting a second pawn while maintaining the attack. The queen infiltrates to f7, attacking the rook and threatening Qg8#. Material advantage + continuing attack = winning.',
         arrows: [{ from: 'h5', to: 'f7', color: 'red' }],
       },
       {
         move: 'Kh8',
-        explanation: 'The only move.',
+        explanation: 'The only way to avoid immediate mate—hiding in the corner.',
       },
       {
         move: 'Qh5+',
-        explanation: 'Continuing the assault.',
+        explanation: 'Driving the king out of the corner. White methodically hunts the exposed king.',
       },
       {
         move: 'Kg8',
-        explanation: 'Back and forth.',
+        explanation: 'No choice—Kh7 allows Qg6 with unstoppable mate threats.',
       },
       {
         move: 'Qh7+',
-        explanation: 'Forcing the king out.',
+        explanation: 'The king is pushed further out. Each check gains either material or forces the king into a worse position.',
       },
       {
         move: 'Kf8',
-        explanation: 'The king flees.',
+        explanation: 'Running to the queenside is the only hope, but...',
       },
       {
         move: 'Qh8+',
-        explanation: 'Picking up the rook and winning.',
+        explanation: 'White picks up the rook on e8 with check. The attack has netted: the h7 pawn, the f7 pawn, and now the rook—a full rook ahead with ongoing attack. The Greek Gift has delivered.',
       }
     ],
-    commonMistakes: ['Sacrificing when Ng5 can be blocked', 'Forgetting to check if Kg6 is playable for opponent'],
-    deeperPrinciple: 'The Greek Gift requires all three moves: Bxh7+, Ng5+, Qh5. Missing any piece makes it unsound.',
+    commonMistakes: ['Sacrificing Bxh7+ without checking if Ng5+ is possible—if the knight is blocked, the sac fails', 'Not calculating Kg6 variations—this often leads to forced mate that you should see', 'Playing Bxh7+ when Black can block with ...Nf6 or when the queen can\'t reach h5', 'Sacrificing for "attacking chances" without calculating concrete lines—hope is not a strategy'],
+    deeperPrinciple: 'The Greek Gift is NOT about "hoping for the best"—it\'s about CALCULATION. Before sacrificing, you must see the ENTIRE combination: Bxh7+ Kxh7 Ng5+ (king move) Qh5 with unstoppable threats. If ANY link in this chain is broken (knight blocked, queen path obstructed, king can escape), the sacrifice is UNSOUND. Beautiful chess is also accurate chess.',
   },
   {
     id: 'double-bishop-sacrifice',

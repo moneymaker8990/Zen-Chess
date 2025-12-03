@@ -17,13 +17,13 @@ const outpostsChapter: CourseChapter = {
   id: 'ch1-outposts',
   title: 'Outposts',
   subtitle: 'Establishing Dominant Squares',
-  description: 'An outpost is a square that cannot be attacked by enemy pawns. Learn to identify, create, and exploit these powerful squares.',
+  description: 'An outpost is a square that cannot be attacked by enemy pawns—a permanent fortress for your pieces. The knight on d5 is the iconic example: radiating influence across the board while completely safe from pawn attacks. In this chapter, you\'ll learn not just to RECOGNIZE outposts, but to CREATE them through pawn exchanges and to OCCUPY them at the right moment. Mastering outposts transforms your strategic play.',
   estimatedMinutes: 45,
   keyLessons: [
-    'Knights thrive on outposts—they become permanent features',
-    'The best outposts are in the center or near the enemy king',
-    'Support your outpost piece with pawns or other pieces',
-    'Creating outposts often requires pawn exchanges'
+    'Knights thrive on outposts because they don\'t lose power when centralized—unlike bishops, they control the same 8 squares regardless of where pawns are',
+    'The best outposts are on the 5th or 6th rank, in the center (d5, e5) or near the enemy king (f5, c6)',
+    'Before occupying an outpost, secure it: control the surrounding squares so your piece cannot be easily traded off',
+    'Creating outposts requires pawn exchanges or advances—when you push e4-e5, the d4 square becomes a potential outpost'
   ],
   variations: outpostsVariations,
 };
@@ -32,13 +32,13 @@ const weakPawnsChapter: CourseChapter = {
   id: 'ch2-weak-pawns',
   title: 'Weak Pawns',
   subtitle: 'Exploiting Structural Weakness',
-  description: 'Learn to identify and attack isolated, doubled, and backward pawns—permanent weaknesses that can decide games.',
+  description: 'Pawns cannot move backwards—this makes pawn weaknesses PERMANENT. An isolated pawn must be defended by pieces forever. Doubled pawns cannot protect each other. Backward pawns are targets on semi-open files. Understanding weak pawns is understanding the ENDGAME from move one: most games are decided by who created fewer pawn weaknesses. This chapter teaches you to both exploit enemy weaknesses and avoid creating your own.',
   estimatedMinutes: 50,
   keyLessons: [
-    'Isolated pawns cannot be defended by other pawns',
-    'Doubled pawns are weak because they can\'t protect each other',
-    'Backward pawns are targets on the file in front of them',
-    'Blockade weak pawns before attacking them'
+    'Isolated pawns cannot be defended by other pawns—they require constant piece defense, tying down your army',
+    'Doubled pawns create TWO weaknesses: the pawns themselves, and the "hole" on the adjacent file',
+    'Backward pawns are targets because they sit on semi-open files where rooks and queens can attack them',
+    'Nimzowitsch\'s rule: "First restrain, then blockade, then destroy"—immobilize the weak pawn before attacking it'
   ],
   variations: weakPawnsVariations,
 };
@@ -47,13 +47,13 @@ const pawnStructureChapter: CourseChapter = {
   id: 'ch3-pawn-structure',
   title: 'Pawn Structure',
   subtitle: 'The Skeleton of the Position',
-  description: 'Master the major pawn structures: IQP, Carlsbad, Hedgehog, and more. Your pawn structure determines your plans.',
+  description: 'Philidor called pawns "the soul of chess." The pawn structure is the SKELETON of the position—it determines where pieces belong, what plans are possible, and how the endgame will unfold. Learn the major structures: the Isolated Queen\'s Pawn (dynamic but weak), the Carlsbad (minority attack territory), the Hedgehog (coiled spring waiting to strike), and more. When you understand structure, you understand chess.',
   estimatedMinutes: 55,
   keyLessons: [
-    'The pawn structure determines piece placement',
-    'Know the typical plans for each structure',
-    'Pawn breaks are the key to changing structures',
-    'Bad structures can become winning if you attack first'
+    'The pawn structure DICTATES piece placement—knights go to outposts created by pawns, bishops need diagonals opened by pawn exchanges',
+    'Each structure has TYPICAL PLANS: IQP players attack before the endgame, Carlsbad players use the minority attack, Hedgehog players wait for ...d5 or ...b5',
+    'Pawn breaks (...c5, ...d5, ...e5, ...f5) are the key to TRANSFORMING structures—know when and how to execute them',
+    'A "bad" structure with active pieces can crush a "good" structure with passive pieces—initiative trumps structure in the short term'
   ],
   variations: pawnStructureVariations,
 };
@@ -479,15 +479,20 @@ const prophylaxisChapter: CourseChapter = {
   id: 'ch10-prophylaxis',
   title: 'Prophylaxis',
   subtitle: 'Prevention Before Action',
-  description: 'Before executing your plan, stop your opponent\'s plan.',
+  description: 'Prophylaxis is the art of asking "What does my opponent want?" before making your own move. Tigran Petrosian, the 9th World Champion, was the master of this concept—he would stop his opponent\'s plans before they could even begin. Prophylactic thinking transforms you from a reactive player into a proactive one: instead of responding to threats, you prevent them from ever appearing.',
   estimatedMinutes: 45,
-  keyLessons: ['Ask "What does my opponent want?"', 'Prophylaxis doesn\'t waste time', 'Petrosian was the master of prophylaxis'],
+  keyLessons: [
+    'Before EVERY move, ask: "What does my opponent want to do?" Then consider: "Can I stop it while improving my position?"',
+    'Prophylaxis is NOT wasted time—preventing your opponent\'s best move often improves your position simultaneously',
+    'Petrosian\'s rule: "If you can prevent your opponent\'s main idea, they must find a second-best plan—and second-best plans are rarely dangerous"',
+    'Common prophylactic moves: h3 (preventing ...Bg4), a3 (preventing ...Nb4), and king moves like Kb1 (escaping the c-file before an attack)'
+  ],
   variations: [
-    { id: 'pr-1', title: 'Preventing a Break', fen: 'r1bq1rk1/ppp1bppp/2n2n2/3pp3/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 7', toMove: 'white', concept: 'Stopping opponent\'s plans', keyTakeaway: 'Prevent your opponent\'s best move.', difficulty: 3, moves: [{ move: 'c3', annotation: '!', explanation: 'Preventing ...d4!' }] },
-    { id: 'pr-2', title: 'Prophylactic Knight Move', fen: 'r1bq1rk1/ppp1bppp/2n2n2/3p4/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 7', toMove: 'white', concept: 'Knight prevents counterplay', keyTakeaway: 'A prophylactic move improves position and prevents threats.', difficulty: 4, moves: [{ move: 'Ne5', annotation: '!', explanation: 'Preventing ...Ne4!' }] },
-    { id: 'pr-3', title: 'King Safety Prophylaxis', fen: 'r1bq1rk1/ppp1bppp/2n2n2/3p4/3PP3/2N2N2/PPP1BPPP/R1BQK2R w KQ - 0 7', toMove: 'white', concept: 'Securing the king', keyTakeaway: 'Castle before attacking to prevent counterplay.', difficulty: 2, moves: [{ move: 'O-O', annotation: '!', explanation: 'Safety first!' }] },
-    { id: 'pr-4', title: 'Preventing Knight Jump', fen: 'r1bq1rk1/ppp1bppp/2n2n2/3p4/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 7', toMove: 'white', concept: 'Controlling key squares', keyTakeaway: 'Control squares your opponent wants to use.', difficulty: 3, moves: [{ move: 'h3', annotation: '!', explanation: 'Preventing ...Bg4!' }] },
-    { id: 'pr-5', title: 'Improving Before Attacking', fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 9', toMove: 'white', concept: 'Complete preparation', keyTakeaway: 'Improve your position to the maximum before attacking.', difficulty: 4, moves: [{ move: 'Kb1', annotation: '!', explanation: 'Safe king before the attack!' }] },
+    { id: 'pr-1', title: 'Preventing a Break', fen: 'r1bq1rk1/ppp1bppp/2n2n2/3pp3/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 7', toMove: 'white', concept: 'Stopping opponent\'s plans', keyTakeaway: 'Before pursuing your own plans, ask what your opponent wants. Here, Black wants ...d4, forking White\'s knights and gaining space. c3 stops this idea cold.', difficulty: 3, introduction: 'Black\'s most active idea is ...d4, attacking both knights and gaining central space. White could ignore this and develop, but prophylaxis teaches us: prevent the opponent\'s BEST move first, then continue.', moves: [{ move: 'c3', annotation: '!', explanation: 'This subtle pawn move accomplishes multiple goals: (1) It PREVENTS ...d4 entirely—now if Black plays ...d4, White can take with cxd4, (2) It supports the d4 pawn, solidifying White\'s center, (3) It prepares Qc2, a common developing move. This is prophylaxis at its best: stopping the opponent\'s plan while improving your own position.', arrows: [{ from: 'c2', to: 'c3', color: 'green' }] }], commonMistakes: ['Ignoring opponent\'s threats and getting surprised', 'Making prophylactic moves that don\'t improve your position'], deeperPrinciple: 'Prophylaxis is not passive—it\'s proactive defense. By preventing ...d4, White can now pursue their own plans without worrying about counterplay.' },
+    { id: 'pr-2', title: 'Prophylactic Knight Move', fen: 'r1bq1rk1/ppp1bppp/2n2n2/3p4/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 7', toMove: 'white', concept: 'Knight prevents counterplay', keyTakeaway: 'Ne5 is a dual-purpose move: it centralizes the knight powerfully while preventing Black\'s best idea (...Ne4, challenging the center).', difficulty: 4, introduction: 'Black wants to play ...Ne4, a strong centralizing move that challenges White\'s pawn center. Ne5 prevents this while creating threats of its own.', moves: [{ move: 'Ne5', annotation: '!', explanation: 'This move demonstrates the ideal prophylactic move: it IMPROVES White\'s position (the knight is beautifully centralized on e5) while PREVENTING Black\'s best idea (...Ne4, which is now impossible as the e4 square is attacked). Petrosian would make moves like this seem effortless—he called them "useful waiting moves."', arrows: [{ from: 'f3', to: 'e5', color: 'green' }] }], commonMistakes: ['Letting opponent achieve their ideal setup unchallenged', 'Making prophylactic moves that worsen your own position'], deeperPrinciple: 'The best prophylactic moves improve your position AND prevent your opponent\'s plan. Ne5 does both.' },
+    { id: 'pr-3', title: 'King Safety Prophylaxis', fen: 'r1bq1rk1/ppp1bppp/2n2n2/3p4/3PP3/2N2N2/PPP1BPPP/R1BQK2R w KQ - 0 7', toMove: 'white', concept: 'Securing the king', keyTakeaway: 'Before launching an attack, ensure your own king is safe. This prevents the opponent from creating counterplay against your exposed monarch.', difficulty: 2, introduction: 'Before attacking, ask: "Is my king safe?" Castling is often the most important prophylactic move in chess.', moves: [{ move: 'O-O', annotation: '!', explanation: 'This prophylactic move is so fundamental we often forget it IS prophylaxis: by castling, White prevents any potential attacks on the king in the center. The king goes from a potential target to a safe fortress. Now White can attack without worrying about counterplay against their own monarch.', arrows: [{ from: 'e1', to: 'g1', color: 'green' }] }], commonMistakes: ['Attacking with your king still in the center', 'Castling into an attack instead of away from it'], deeperPrinciple: 'Safety first, attack second. Castling is prophylaxis against all future central attacks.' },
+    { id: 'pr-4', title: 'Preventing Knight Jump', fen: 'r1bq1rk1/ppp1bppp/2n2n2/3p4/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 7', toMove: 'white', concept: 'Controlling key squares', keyTakeaway: 'h3 is a "little move with big consequences"—it prevents ...Bg4 forever, ensuring the f3 knight cannot be pinned or traded.', difficulty: 3, introduction: 'Black often wants to play ...Bg4, pinning the knight to the queen. h3 prevents this idea permanently.', moves: [{ move: 'h3', annotation: '!', explanation: 'This small pawn move has lasting effects: (1) It PREVENTS ...Bg4 forever—the bishop can never pin the knight, (2) It creates a potential retreat square for the bishop on h2 if needed, (3) It costs almost nothing—the pawn on h3 is perfectly safe. Karpov made moves like h3 famous; he would prevent small annoyances before they became real problems.', arrows: [{ from: 'h2', to: 'h3', color: 'green' }] }], commonMistakes: ['Waiting until ...Bg4 is played, then having to make a worse decision', 'Playing h3 when it weakens your king (assess each position)'], deeperPrinciple: 'Small prophylactic moves like h3 prevent long-term annoyances. The bishop will never bother the f3 knight again.' },
+    { id: 'pr-5', title: 'Improving Before Attacking', fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 9', toMove: 'white', concept: 'Complete preparation', keyTakeaway: 'Kb1 is pure prophylaxis: the king escapes the c-file before Black can open it with ...c5. Now White can attack the kingside without worrying about counterplay.', difficulty: 4, introduction: 'In opposite-side castling, king safety is paramount. Kb1 moves the king off the c-file before Black can create threats there.', moves: [{ move: 'Kb1', annotation: '!', explanation: 'This is DEEP prophylaxis: White anticipates that Black might play ...c5 and open the c-file for an attack. By playing Kb1 FIRST, White removes the king from any potential danger. Now White can attack the kingside with g4-h4-h5 without worrying about ...Rc8-c2. Petrosian called this "making your position airtight before starting operations."', arrows: [{ from: 'c1', to: 'b1', color: 'green' }] }], commonMistakes: ['Attacking immediately and getting hit by counterplay', 'Forgetting that in opposite-side castling, king safety comes first'], deeperPrinciple: 'Improve your position to the MAXIMUM before committing to an attack. Kb1 costs one tempo but prevents all future c-file counterplay.' },
   ]
 };
 
