@@ -195,7 +195,7 @@ export function Layout({ children }: LayoutProps) {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen min-h-[100dvh] flex overflow-x-hidden">
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 z-40" 
         style={{ background: 'var(--bg-secondary)', borderRight: '1px solid var(--border-subtle)' }}>
@@ -339,10 +339,14 @@ export function Layout({ children }: LayoutProps) {
       </aside>
 
       {/* Main content area */}
-      <div className="flex-1 lg:ml-64">
+      <div className="flex-1 lg:ml-64 min-w-0 overflow-x-hidden">
         {/* Top bar - Mobile */}
         <header className="lg:hidden sticky top-0 z-30 h-16 flex items-center justify-between px-4"
-          style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)' }}>
+          style={{ 
+            background: 'var(--bg-secondary)', 
+            borderBottom: '1px solid var(--border-subtle)',
+            paddingTop: 'env(safe-area-inset-top, 0px)'
+          }}>
           <button 
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors"
@@ -377,7 +381,7 @@ export function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-8">
+        <main className="p-4 lg:p-8 pb-safe">
           <div className="max-w-6xl mx-auto">
             {children}
           </div>

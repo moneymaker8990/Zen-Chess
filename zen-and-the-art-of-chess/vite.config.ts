@@ -8,18 +8,34 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'stockfish.js', 'stockfish.wasm'],
+      includeAssets: [
+        'favicon.svg', 
+        'favicon-32x32.png',
+        'favicon-16x16.png',
+        'apple-touch-icon.png',
+        'stockfish.js', 
+        'stockfish.wasm'
+      ],
       manifest: {
         name: 'Zen Chess',
         short_name: 'Zen Chess',
-        description: 'A 365-day journey combining spiritual training, chess mastery, and psychological insight',
+        description: 'Master chess through mindfulness. A 365-day journey combining spiritual training, chess mastery, and psychological insight.',
         theme_color: '#161512',
         background_color: '#161512',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',
         start_url: '/',
+        id: 'zen-chess-app',
+        categories: ['games', 'education', 'lifestyle'],
+        lang: 'en',
+        dir: 'ltr',
         icons: [
+          {
+            src: 'pwa-64x64.png',
+            sizes: '64x64',
+            type: 'image/png'
+          },
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
@@ -31,10 +47,32 @@ export default defineConfig({
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'pwa-512x512-maskable.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'maskable'
+          },
+          {
+            src: 'pwa-192x192-maskable.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ],
+        screenshots: [
+          {
+            src: 'screenshot-wide.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'Zen Chess Dashboard'
+          },
+          {
+            src: 'screenshot-narrow.png',
+            sizes: '390x844',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Zen Chess Mobile'
           }
         ]
       },

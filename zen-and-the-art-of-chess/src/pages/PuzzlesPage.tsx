@@ -1,11 +1,13 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
+import { AnimatePresence } from 'framer-motion';
 import { puzzles } from '@/data/puzzles';
 import { useCoachStore } from '@/state/coachStore';
 import { useBoardSettingsStore, useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
 import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
 import { AgentWatching, ContextualAgentTip } from '@/components/AgentPresence';
+import { PuzzleGeniusPanel } from '@/components/PuzzleGeniusPanel';
 import { MOVE_HINT_STYLES } from '@/lib/constants';
 import type { MoveHintStyle } from '@/lib/constants';
 import type { ChessPuzzle, PatternType } from '@/lib/types';
@@ -159,6 +161,10 @@ export function PuzzlesPage() {
   
   // Gentle error feedback state
   const [showIncorrectShake, setShowIncorrectShake] = useState(false);
+  
+  // AI Genius Panel state
+  const [showGeniusPanel, setShowGeniusPanel] = useState(false);
+  const [puzzleSolveTime, setPuzzleSolveTime] = useState(0);
   
   // Setup move animation state - shows opponent's last move when puzzle loads
   const [isAnimatingSetup, setIsAnimatingSetup] = useState(false);
@@ -413,7 +419,11 @@ export function PuzzlesPage() {
         setFeedback(null);
       }, 800);
     } else {
+      // Calculate solve time and show genius panel
+      const solveTime = Math.round((Date.now() - puzzleStartTime.current) / 1000);
+      setPuzzleSolveTime(solveTime);
       setFeedback('complete');
+      setShowGeniusPanel(true);
     }
   }, [currentPuzzle, stats.rating, mode, startPuzzle, showHint, recordPuzzle, recordEvent, streakCount]);
 
@@ -1257,8 +1267,8 @@ export function PuzzlesPage() {
                   boardWidth={480}
                 />
 
-                {/* Feedback Overlay */}
-                {feedback === 'complete' && (
+                {/* Feedback Overlay - simplified since we have the Genius Panel */}
+                {feedback === 'complete' && !showGeniusPanel && (
                   <div className="absolute inset-0 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.75)' }}>
                     <div className="text-center p-8">
                       <div className="text-6xl mb-4">🎉</div>
@@ -1266,9 +1276,17 @@ export function PuzzlesPage() {
                       <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
                         +{10 + currentPuzzle.difficulty * 5} points
                       </p>
-                      <button onClick={nextPuzzle} className="btn-primary">
-                        Next Puzzle →
-                      </button>
+                      <div className="flex flex-col gap-2">
+                        <button 
+                          onClick={() => setShowGeniusPanel(true)} 
+                          className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold"
+                        >
+                          🧠 See AI Analysis
+                        </button>
+                        <button onClick={nextPuzzle} className="btn-ghost text-sm">
+                          Skip to Next →
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1456,6 +1474,25 @@ export function PuzzlesPage() {
             </div>
           </div>
         )}
+
+        {/* AI Genius Panel */}
+        <AnimatePresence>
+          {showGeniusPanel && currentPuzzle && (
+            <PuzzleGeniusPanel
+              fen={currentPuzzle.fen}
+              solution={currentPuzzle.solution}
+              themes={currentPuzzle.themes}
+              userSolved={feedback === 'complete'}
+              timeTaken={puzzleSolveTime}
+              puzzleDifficulty={currentPuzzle.difficulty}
+              onClose={() => setShowGeniusPanel(false)}
+              onNextPuzzle={() => {
+                setShowGeniusPanel(false);
+                nextPuzzle();
+              }}
+            />
+          )}
+        </AnimatePresence>
       </div>
     );
   }
