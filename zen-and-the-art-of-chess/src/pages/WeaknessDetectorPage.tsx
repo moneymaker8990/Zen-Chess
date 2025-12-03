@@ -262,7 +262,7 @@ function generatePrescriptions(scores: Record<string, WeaknessScore>): TrainingP
     switch (skill.category) {
       case 'tactical':
         exercises.push(`Practice ${skill.name} puzzles in Puzzle Training`);
-        exercises.push(`Study ${skill.name} chapter in Woodpecker Method`);
+        exercises.push(`Study ${skill.name} chapter in Tactical Pattern Training`);
         exercises.push(`Do 10 Flash Training rounds focusing on threats`);
         reason = `Your ${skill.name} accuracy is ${item.accuracy.toFixed(0)}%. This tactical pattern needs drilling.`;
         break;
@@ -273,7 +273,7 @@ function generatePrescriptions(scores: Record<string, WeaknessScore>): TrainingP
         reason = `Your ${skill.name} needs work (${item.accuracy.toFixed(0)}%). Focus on strategic understanding.`;
         break;
       case 'endgame':
-        exercises.push(`Study ${skill.name} in Silman's Endgame Course`);
+        exercises.push(`Study ${skill.name} in Essential Endgame Mastery`);
         exercises.push(`Practice endgame positions against Stockfish`);
         exercises.push(`Memorize key ${skill.name} positions`);
         reason = `Endgame weakness detected: ${skill.name} (${item.accuracy.toFixed(0)}%). Endgames win games!`;
@@ -309,7 +309,7 @@ function generatePrescriptions(scores: Record<string, WeaknessScore>): TrainingP
       exercises: [
         'Complete 20 puzzles in Puzzle Training',
         'Do 5 rounds of Flash Training',
-        'Study 1 chapter of Woodpecker Method',
+        'Study 1 chapter of Tactical Pattern Training',
       ],
       estimatedTime: 30,
       reason: 'Not enough training data yet. Start with general tactical training to build your profile!',

@@ -3,16 +3,19 @@
 // Centralized configuration for consistency
 // ============================================
 
-// Standard Chessboard Colors (Zen Purple Theme)
+// Standard Chessboard Colors (Purple accent theme)
 export const BOARD_COLORS = {
-  light: '#e8e4f0',
-  dark: '#7c6b9e',
-  highlight: 'rgba(168, 85, 247, 0.4)',
-  selected: 'rgba(124, 58, 237, 0.5)',
-  lastMove: 'rgba(168, 85, 247, 0.35)',
-  correctMove: 'rgba(74, 222, 128, 0.5)',
-  incorrectMove: 'rgba(239, 68, 68, 0.5)',
-  hint: 'rgba(251, 191, 36, 0.5)',
+  // Base colors (set by theme)
+  light: '#ebecd0',
+  dark: '#779556',
+  // Accent colors - Purple theme for all highlights
+  highlight: 'rgba(147, 112, 219, 0.5)',      // Medium purple
+  selected: 'rgba(138, 43, 226, 0.45)',       // Blue violet
+  lastMove: 'rgba(147, 112, 219, 0.4)',       // Purple for last move
+  correctMove: 'rgba(74, 222, 128, 0.5)',     // Green for correct
+  incorrectMove: 'rgba(239, 68, 68, 0.4)',    // Red for incorrect
+  hint: 'rgba(147, 112, 219, 0.6)',           // Purple for hints
+  hintTarget: 'rgba(74, 222, 128, 0.5)',      // Green for hint destination
 } as const;
 
 // Board Color Themes
@@ -87,25 +90,25 @@ export const PIECE_STYLES = {
   tatiana: { name: 'Tatiana', description: 'Feminine elegant' },
 } as const;
 
-// Move Hint Styles
+// Move Hint Styles - Purple themed
 export const MOVE_HINT_STYLES = {
   dots: { 
     name: 'Dots', 
-    description: 'Chess.com style dots',
+    description: 'Purple dots for moves',
     getStyle: (isCapture: boolean) => ({
       background: isCapture
-        ? 'radial-gradient(transparent 0%, transparent 79%, rgba(0,0,0,0.3) 80%)'
-        : 'radial-gradient(rgba(0,0,0,0.2) 19%, transparent 20%)',
+        ? 'radial-gradient(transparent 0%, transparent 79%, rgba(147, 112, 219, 0.7) 80%)'
+        : 'radial-gradient(rgba(147, 112, 219, 0.5) 22%, transparent 23%)',
       borderRadius: '50%',
     })
   },
   highlights: { 
     name: 'Highlights', 
-    description: 'Full square highlights',
+    description: 'Purple square highlights',
     getStyle: (isCapture: boolean) => ({
       backgroundColor: isCapture 
-        ? 'rgba(239, 68, 68, 0.4)' 
-        : 'rgba(129, 182, 76, 0.3)',
+        ? 'rgba(147, 112, 219, 0.5)' 
+        : 'rgba(147, 112, 219, 0.3)',
     })
   },
   none: { 

@@ -8,7 +8,7 @@ export { outpostsVariations } from './outpostsVariations';
 export { weakPawnsVariations } from './weakPawnsVariations';
 export { pawnStructureVariations } from './pawnStructureVariations';
 
-// The Woodpecker Method (Tactics)
+// Tactical Pattern Training (Tactics)
 export { 
   forksVariations, 
   pinsVariations, 
@@ -17,7 +17,7 @@ export {
   backRankVariations 
 } from './tacticsVariations';
 
-// The Amateur's Mind
+// The Strategic Mind
 export {
   imbalancesVariations,
   planMakingVariations,
@@ -26,7 +26,7 @@ export {
   thinkingTechniqueVariations,
 } from './amateurMindVariations';
 
-// Silman's Complete Endgame Course
+// Essential Endgame Mastery
 export {
   kingPawnEndgameVariations,
   rookEndgameVariations,

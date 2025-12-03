@@ -361,48 +361,48 @@ export function getAgentPersonality(agentId: AgentId): AgentPersonality {
   return AGENT_PERSONALITIES[agentId];
 }
 
-// Default cooldowns in minutes
+// Default cooldowns in minutes - respect user's space
 export const AGENT_COOLDOWNS: Record<AgentId, number> = {
-  'coach': 10,
-  'training': 30,
-  'tilt-guardian': 2,       // Can intervene frequently
-  'opening': 60,
-  'pattern': 120,           // Once every 2 hours
-  'journey': 1440,          // Once per day
-  'legend': 120,
-  'mindfulness': 45,
+  'coach': 15,
+  'training': 45,
+  'tilt-guardian': 20,       // Give space between interventions
+  'opening': 90,
+  'pattern': 180,            // Once every 3 hours
+  'journey': 1440,           // Once per day
+  'legend': 180,
+  'mindfulness': 60,
   // Background agents
-  'insight-engine': 180,    // Less frequent, deeper analysis
-  'motivator': 5,           // Frequent encouragement
-  'focus-guardian': 15,     // Monitor focus regularly
-  'session-manager': 30,    // Session optimization
+  'insight-engine': 240,     // Less frequent, deeper analysis
+  'motivator': 15,           // Not too frequent
+  'focus-guardian': 30,      // Not too intrusive
+  'session-manager': 45,     // Session optimization
 };
 
-// Message templates for consistent voice
+// Message templates for consistent voice - natural, not preachy
 export const MESSAGE_TEMPLATES = {
   greetings: {
-    morning: (name: string) => `Good morning${name ? ', ' + name : ''}. Ready to train your mind?`,
-    afternoon: (name: string) => `Good afternoon${name ? ', ' + name : ''}. Time for chess?`,
-    evening: (name: string) => `Good evening${name ? ', ' + name : ''}. Wind down with some chess?`,
-    night: (name: string) => `Late night chess${name ? ', ' + name : ''}? I'm here.`,
+    morning: (name: string) => `Morning${name ? ', ' + name : ''}.`,
+    afternoon: (name: string) => `Hey${name ? ' ' + name : ''}.`,
+    evening: (name: string) => `Evening${name ? ', ' + name : ''}.`,
+    night: (name: string) => `Up late${name ? ', ' + name : ''}?`,
   },
   
   tiltPrevention: {
-    warning: (losses: number) => `${losses} losses in a row. I can feel the tension building. Let's pause.`,
-    intervention: () => `Stop. Breathe. The next game you play in this state will likely be your worst.`,
-    recovery: () => `Take 5 minutes. When you return, you'll see the board with fresh eyes.`,
+    warning: (losses: number) => `${losses} in a row. Might be worth a quick break.`,
+    intervention: () => `Consider stepping away for a few minutes.`,
+    recovery: () => `A short break often helps more than pushing through.`,
   },
   
   celebration: {
-    winStreak: (count: number) => `${count} wins! You're in the zone. This is flow state.`,
-    accuracy: (accuracy: number) => `${accuracy}% accuracy! That was precise play.`,
-    improvement: (area: string) => `I see improvement in your ${area}. Keep building.`,
+    winStreak: (count: number) => `${count} wins. Nice run.`,
+    accuracy: (accuracy: number) => `${accuracy}% accuracy. Clean game.`,
+    improvement: (area: string) => `Solid progress on ${area}.`,
   },
   
   nudges: {
-    pattern: (count: number) => `${count} pattern${count > 1 ? 's' : ''} due for review. Quick session?`,
-    opening: () => `Haven't practiced your openings this week. 10 minutes would help.`,
-    meditation: () => `Consider starting with a brief meditation to sharpen focus.`,
+    pattern: (count: number) => `${count} pattern${count > 1 ? 's' : ''} ready to review.`,
+    opening: () => `Opening review available if you're interested.`,
+    meditation: () => `Breathing exercises available.`,
   },
 };
 

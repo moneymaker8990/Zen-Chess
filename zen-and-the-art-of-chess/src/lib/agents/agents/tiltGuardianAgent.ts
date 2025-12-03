@@ -60,44 +60,31 @@ export function createTiltGuardianAgent(): Agent {
       switch (trigger.type) {
         case 'LOSING_STREAK': {
           const count = trigger.count;
+          const now = Date.now();
           
-          if (count === 2) {
-            // Warning
+          // Only intervene if we haven't recently (at least 15 min gap)
+          if (now - memory.lastIntervention < 15 * 60 * 1000) {
+            return null;
+          }
+          
+          // Only intervene on 3+ losses, and keep it gentle
+          if (count >= 3) {
+            memory.interventionCount++;
+            memory.lastIntervention = now;
+            saveMemory();
+
             return createMessage('tilt-guardian', {
-              title: '⚠️ Two in a Row',
-              body: MESSAGE_TEMPLATES.tiltPrevention.warning(count),
-              subtext: 'This is when tilt usually starts.',
-              category: 'intervention',
-              priority: 'high',
+              title: 'Tough stretch',
+              body: `${count} losses in a row. Sometimes stepping away for a few minutes helps reset your focus.`,
+              category: 'insight',
+              priority: 'normal',
               primaryAction: {
                 label: 'Take a Break',
                 route: '/mind',
               },
               secondaryAction: {
-                label: 'I\'m Fine',
+                label: 'Keep Playing',
               },
-              showAsToast: true,
-            });
-          }
-
-          if (count >= 3) {
-            memory.interventionCount++;
-            memory.lastIntervention = Date.now();
-            saveMemory();
-
-            // Strong intervention
-            return createMessage('tilt-guardian', {
-              title: '🛑 STOP',
-              body: MESSAGE_TEMPLATES.tiltPrevention.intervention(),
-              subtext: MESSAGE_TEMPLATES.tiltPrevention.recovery(),
-              category: 'intervention',
-              priority: 'urgent',
-              primaryAction: {
-                label: 'Breathing Exercise',
-                route: '/mind',
-              },
-              isPersistent: true,
-              showAsToast: true,
             });
           }
 
@@ -105,35 +92,32 @@ export function createTiltGuardianAgent(): Agent {
         }
 
         case 'TILT_DETECTED': {
+          const now = Date.now();
+          
+          // Don't spam - only intervene if 20+ minutes since last
+          if (now - memory.lastIntervention < 20 * 60 * 1000) {
+            return null;
+          }
+          
           memory.lastTiltSeverity = trigger.severity;
-          memory.interventionCount++;
-          memory.lastIntervention = Date.now();
-          saveMemory();
 
-          if (trigger.severity >= 7) {
+          // Only intervene on very high severity
+          if (trigger.severity >= 8) {
+            memory.interventionCount++;
+            memory.lastIntervention = now;
+            saveMemory();
+            
             return createMessage('tilt-guardian', {
-              title: '🚨 Emotional Alert',
-              body: "I'm detecting high emotional signals in your play. Rapid moves, cascading mistakes. This isn't you at your best.",
-              subtext: "The next game will likely be worse. Let's reset.",
-              category: 'intervention',
-              priority: 'urgent',
+              title: 'Time for a break?',
+              body: "Your play pattern suggests you might benefit from stepping away briefly.",
+              category: 'insight',
+              priority: 'normal',
               primaryAction: {
-                label: '5-Minute Reset',
+                label: 'Take 5',
                 route: '/mind',
               },
-              isPersistent: true,
-            });
-          }
-
-          if (trigger.severity >= 4) {
-            return createMessage('tilt-guardian', {
-              title: '😤 Tension Rising',
-              body: "I notice some frustration creeping in. This is normal, but dangerous if ignored.",
-              category: 'intervention',
-              priority: 'high',
-              primaryAction: {
-                label: 'Quick Breathe',
-                route: '/mind',
+              secondaryAction: {
+                label: 'I\'m okay',
               },
             });
           }
@@ -142,35 +126,23 @@ export function createTiltGuardianAgent(): Agent {
         }
 
         case 'SESSION_LONG': {
-          if (trigger.minutes > 90) {
+          // Only notify on very long sessions (2+ hours), and only once
+          if (trigger.minutes > 120 && Date.now() - memory.lastIntervention > 60 * 60 * 1000) {
+            memory.lastIntervention = Date.now();
+            saveMemory();
+            
             return createMessage('tilt-guardian', {
-              title: '⏰ Long Session',
-              body: `You've been at it for ${Math.floor(trigger.minutes / 60)} hours. Decision quality drops after 60-90 minutes.`,
-              subtext: 'Even short breaks help restore focus.',
-              category: 'reminder',
-              priority: 'normal',
-              primaryAction: {
-                label: 'Take a Break',
-                route: '/mind',
-              },
+              title: 'Long session',
+              body: `${Math.floor(trigger.minutes / 60)}+ hours of play. Breaks can help maintain focus.`,
+              category: 'insight',
+              priority: 'low',
             });
           }
           return null;
         }
 
         case 'ACCURACY_LOW': {
-          if (trigger.accuracy < 40) {
-            return createMessage('tilt-guardian', {
-              title: '📉 Accuracy Alert',
-              body: `${trigger.accuracy}% accuracy that game. Something's off. Rushed moves? Distracted?`,
-              category: 'insight',
-              priority: 'normal',
-              primaryAction: {
-                label: 'Reset Focus',
-                route: '/mind',
-              },
-            });
-          }
+          // Don't spam about accuracy
           return null;
         }
 
@@ -201,76 +173,24 @@ export function createTiltGuardianAgent(): Agent {
           
           saveMemory();
 
-          // LEVEL 1: Revenge gaming detection (most critical)
-          if (memory.rapidGamesCount >= 2) {
+          // Only intervene on rapid revenge-gaming after 3+ quick losses
+          if (memory.rapidGamesCount >= 3 && now - memory.lastIntervention > 20 * 60 * 1000) {
             memory.lastIntervention = now;
             memory.interventionCount++;
             saveMemory();
             
             return createMessage('tilt-guardian', {
-              title: '🛑 REVENGE GAMING',
-              body: "You're queuing instantly after losses. This is the #1 sign of tilt. Your next game is almost guaranteed to be worse. Stop.",
-              category: 'intervention',
-              priority: 'urgent',
-              primaryAction: {
-                label: 'Cool Down Now',
-                route: '/mind',
-              },
-              isPersistent: true,
-              showAsToast: true,
-            });
-          }
-
-          // LEVEL 2: They ignored previous warning and lost again
-          if (result === 'loss' && now - memory.lastIntervention < 10 * 60 * 1000) {
-            memory.interventionCount++;
-            saveMemory();
-            
-            return createMessage('tilt-guardian', {
-              title: '⚠️ Told You So',
-              body: "That loss was predictable. Not because you're bad - because no one plays well when tilted. Please take a break now.",
-              category: 'intervention',
-              priority: 'high',
-              primaryAction: {
-                label: 'Okay, I\'ll Rest',
-                route: '/mind',
-              },
-              isPersistent: true,
-            });
-          }
-
-          // LEVEL 3: Severe accuracy drop
-          if (accuracy > 0 && accuracy < 40 && result === 'loss') {
-            return createMessage('tilt-guardian', {
-              title: '📉 Performance Warning',
-              body: `${accuracy}% accuracy is way below your baseline. Frustration is clouding your calculation. Please pause.`,
-              category: 'intervention',
-              priority: 'high',
-              primaryAction: {
-                label: 'Take Break',
-                route: '/mind',
-              },
-              showAsToast: true,
-            });
-          }
-          
-          // LEVEL 4: Blunder spike
-          if (blunders >= 3) {
-            return createMessage('tilt-guardian', {
-              title: '🛡️ Blunder Alert',
-              body: `${blunders} blunders this game. That's not normal for you. Mental fatigue or frustration may be affecting your play.`,
+              title: 'Quick games piling up',
+              body: "A few minutes away from the board often helps more than grinding through.",
               category: 'insight',
               priority: 'normal',
-            });
-          }
-
-          // Mild accuracy warning
-          if (accuracy > 0 && accuracy < 55 && result === 'loss' && now - memory.lastIntervention > 15 * 60 * 1000) {
-            return createMessage('tilt-guardian', {
-              title: '🛡️ Quality Check',
-              body: `${accuracy}% accuracy – below your usual standard. Consider reviewing before the next game.`,
-              category: 'insight',
-              priority: 'low',
+              primaryAction: {
+                label: 'Take a break',
+                route: '/mind',
+              },
+              secondaryAction: {
+                label: 'Continue',
+              },
             });
           }
 
@@ -282,26 +202,8 @@ export function createTiltGuardianAgent(): Agent {
       }
     },
 
-    getProactiveMessage: (state: AgentOrchestratorState): AgentMessage | null => {
-      // Check session length
-      const sessionMinutes = (Date.now() - state.sessionStartTime) / 60000;
-      
-      if (sessionMinutes > 120) {
-        return createMessage('tilt-guardian', {
-          title: 'Extended Session Check',
-          body: "You've been playing for over 2 hours. How are you feeling? Mental fatigue is sneaky.",
-          category: 'question',
-          priority: 'normal',
-          primaryAction: {
-            label: 'I Need a Break',
-            route: '/mind',
-          },
-          secondaryAction: {
-            label: 'Feeling Good',
-          },
-        });
-      }
-
+    getProactiveMessage: (_state: AgentOrchestratorState): AgentMessage | null => {
+      // Don't proactively message - let the user play in peace
       return null;
     },
 
@@ -311,7 +213,7 @@ export function createTiltGuardianAgent(): Agent {
       saveMemory();
     },
 
-    getCooldownMinutes: () => 2, // Can intervene frequently
+    getCooldownMinutes: () => 20, // Intervene sparingly - respect the user
   };
 
   function saveMemory() {

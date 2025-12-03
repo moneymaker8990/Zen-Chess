@@ -152,10 +152,10 @@ export function ChessBoardPanel({
       newSquares[move.to] = {
         backgroundColor: game.get(move.to) 
           ? 'rgba(255, 0, 0, 0.4)' 
-          : 'rgba(251, 191, 36, 0.3)',
+          : 'rgba(147, 112, 219, 0.3)',
       };
     });
-    newSquares[square] = { backgroundColor: 'rgba(251, 191, 36, 0.4)' };
+    newSquares[square] = { backgroundColor: 'rgba(147, 112, 219, 0.4)' };
     setOptionSquares(newSquares);
     return true;
   }, [game]);
@@ -348,7 +348,7 @@ export function ChessBoardPanel({
 
   // Right click for arrows
   const onSquareRightClick = useCallback((square: Square) => {
-    const color = 'rgba(251, 191, 36, 0.5)';
+    const color = 'rgba(147, 112, 219, 0.5)';
     setRightClickedSquares((prev) => ({
       ...prev,
       [square]: prev[square] ? undefined! : { backgroundColor: color },
@@ -360,8 +360,8 @@ export function ChessBoardPanel({
     ...optionSquares,
     ...rightClickedSquares,
     ...(lastMove && {
-      [lastMove.from]: { backgroundColor: 'rgba(251, 191, 36, 0.3)' },
-      [lastMove.to]: { backgroundColor: 'rgba(251, 191, 36, 0.4)' },
+      [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.3)' },
+      [lastMove.to]: { backgroundColor: 'rgba(147, 112, 219, 0.4)' },
     }),
     ...(moveResult === 'correct' && lastMove && {
       [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },

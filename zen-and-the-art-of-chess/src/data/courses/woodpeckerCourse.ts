@@ -1,5 +1,5 @@
 // ============================================
-// THE WOODPECKER METHOD
+// TACTICAL PATTERN TRAINING
 // Tactical Pattern Drilling for Mastery
 // 100+ variations in tactical themes
 // ============================================
@@ -176,7 +176,7 @@ const matingPatternsChapter: CourseChapter = {
 
 export const woodpeckerCourse: Course = {
   id: 'woodpecker-method',
-  title: 'The Woodpecker Method',
+  title: 'Tactical Pattern Training',
   author: 'Zen Chess',
   description: 'Burn tactical patterns into your brain through intensive repetition. 100+ variations covering all major tactical themes, designed to be solved repeatedly until they become second nature.',
   coverImage: '⚡',

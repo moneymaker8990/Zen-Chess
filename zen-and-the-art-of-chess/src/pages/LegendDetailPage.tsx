@@ -167,12 +167,12 @@ export function LegendDetailPage() {
       // Use a subtle highlight for valid move squares
       newSquares[move.to] = {
         backgroundColor: game.get(move.to) 
-          ? 'rgba(251, 191, 36, 0.5)' // Capture - more visible
-          : 'rgba(251, 191, 36, 0.3)', // Regular move - subtle
+          ? 'rgba(147, 112, 219, 0.5)' // Capture - more visible
+          : 'rgba(147, 112, 219, 0.3)', // Regular move - subtle
       };
     });
     // Highlight the selected piece
-    newSquares[square] = { backgroundColor: 'rgba(251, 191, 36, 0.6)' };
+    newSquares[square] = { backgroundColor: 'rgba(147, 112, 219, 0.5)' };
     setOptionSquares(newSquares);
     return true;
   }, [game]);
@@ -438,8 +438,8 @@ export function LegendDetailPage() {
                   customSquareStyles={{
                     ...optionSquares,
                     ...(lastMove && {
-                      [lastMove.from]: { backgroundColor: 'rgba(251, 191, 36, 0.4)' },
-                      [lastMove.to]: { backgroundColor: 'rgba(251, 191, 36, 0.4)' },
+                      [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.3)' },
+                      [lastMove.to]: { backgroundColor: 'rgba(147, 112, 219, 0.4)' },
                     }),
                   }}
                   customDarkSquareStyle={boardStyles.customDarkSquareStyle}

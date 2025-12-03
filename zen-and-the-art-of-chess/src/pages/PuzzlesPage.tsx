@@ -500,27 +500,9 @@ export function PuzzlesPage() {
       }));
       setFeedback('incorrect');
     } else if (allowRetry) {
-      // For rated/daily/custom modes - allow retry without blocking
-      // Reset to puzzle start position after a brief pause, keeping the setup move highlight
-      setTimeout(() => {
-        if (currentPuzzle) {
-          const newGame = new Chess(currentPuzzle.fen);
-          setGame(newGame);
-          setMoveIndex(0);
-          setMoveFrom(null);
-          setOptionSquares({});
-          // Keep the setup move highlighted if it exists, otherwise clear
-          if (currentPuzzle.setupMove) {
-            setLastMove({ 
-              from: currentPuzzle.setupMove.from as Square, 
-              to: currentPuzzle.setupMove.to as Square 
-            });
-          } else {
-            setLastMove(null);
-          }
-          setFeedback(null);
-        }
-      }, 400);
+      // For rated/daily/custom modes - allow retry without auto-resetting
+      // Just show feedback, let user click Reset if they want
+      setFeedback('incorrect');
     }
   }, [currentPuzzle, stats.rating, mode, rushScore, rushStrikes, startPuzzle, showHint, recordPuzzle, recordEvent, streakCount]);
 
@@ -581,7 +563,8 @@ export function PuzzlesPage() {
                 setLastMove({ from: response.from as Square, to: response.to as Square });
                 setMoveIndex(moveIndex + 2);
                 setFeedback(null);
-                // Reset hints for the next move
+                // Reset hint level so user can request hints for next move
+                // But keep hint squares cleared so they don't see stale hints
                 setHintLevel(0);
                 setHintSquares({});
               }
@@ -703,32 +686,32 @@ export function PuzzlesPage() {
     }
   }, [currentPuzzle, moveIndex, feedback, getHintFromMove, handleMove]);
 
-  // Custom square styles
+  // Custom square styles - purple theme
   const customSquareStyles = useMemo(() => ({
     ...optionSquares,
     ...(lastMove && {
-      [lastMove.from]: { backgroundColor: 'rgba(155, 199, 0, 0.25)' },
-      [lastMove.to]: { backgroundColor: 'rgba(155, 199, 0, 0.4)' },
+      [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.25)' },
+      [lastMove.to]: { backgroundColor: 'rgba(147, 112, 219, 0.4)' },
     }),
     ...(feedback === 'correct' && lastMove && {
       [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
     }),
     // Gentle red indicator for incorrect - not blocking
-    ...(showIncorrectShake && lastMove && {
-      [lastMove.to]: { backgroundColor: 'rgba(239, 68, 68, 0.4)' },
+    ...(feedback === 'incorrect' && lastMove && {
+      [lastMove.to]: { backgroundColor: 'rgba(239, 68, 68, 0.35)' },
     }),
-    // Hint highlights - pulsing yellow/gold for the piece to move
+    // Hint highlights - purple for the piece to move
     ...(hintSquares.from && {
       [hintSquares.from]: { 
-        backgroundColor: 'rgba(251, 191, 36, 0.5)',
-        boxShadow: 'inset 0 0 0 3px rgba(251, 191, 36, 0.8)',
+        backgroundColor: 'rgba(147, 112, 219, 0.5)',
+        boxShadow: 'inset 0 0 0 3px rgba(147, 112, 219, 0.8)',
       },
     }),
-    // Hint for destination square (level 2)
+    // Hint for destination square (level 2) - lighter purple
     ...(hintSquares.to && hintLevel >= 2 && {
       [hintSquares.to]: { 
-        backgroundColor: 'rgba(74, 222, 128, 0.4)',
-        boxShadow: 'inset 0 0 0 3px rgba(74, 222, 128, 0.8)',
+        backgroundColor: 'rgba(147, 112, 219, 0.35)',
+        boxShadow: 'inset 0 0 0 3px rgba(147, 112, 219, 0.6)',
       },
     }),
   }), [optionSquares, lastMove, feedback, showIncorrectShake, hintSquares, hintLevel]);

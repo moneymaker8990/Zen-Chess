@@ -3,8 +3,300 @@ import { useProgressStore } from '@/state/useStore';
 import { useStudyStore, useNotesStore, useWeaknessStore } from '@/state/notesStore';
 import { useMistakeLibraryStore, usePositionSparringStore } from '@/state/trainingStore';
 import { useBoardSettingsStore, useBoardStyles } from '@/state/boardSettingsStore';
+import { useAIPreferencesStore, type AIIntrusiveness, type WhisperFrequency, type InsightDetail } from '@/state/aiPreferencesStore';
 import { BOARD_THEMES, PIECE_STYLES, MOVE_HINT_STYLES } from '@/lib/constants';
 import type { BoardTheme, PieceStyle, MoveHintStyle } from '@/lib/constants';
+
+// ============================================
+// AI PREFERENCES SECTION COMPONENT
+// ============================================
+
+function AIPreferencesSection() {
+  const {
+    intrusiveness,
+    insightDetail,
+    whisperFrequency,
+    showAskAnything,
+    showWhispers,
+    showPuzzleInsights,
+    autoPuzzleAnalysis,
+    showMoveExplanations,
+    showOpeningInsights,
+    showAgentPresence,
+    setPreference,
+    toggleFeature,
+    setQuickProfile,
+  } = useAIPreferencesStore();
+
+  const intrusivenesOptions: { value: AIIntrusiveness; label: string; desc: string }[] = [
+    { value: 'minimal', label: 'Minimal', desc: 'AI only when you ask' },
+    { value: 'balanced', label: 'Balanced', desc: 'Helpful suggestions' },
+    { value: 'proactive', label: 'Proactive', desc: 'Active coaching' },
+  ];
+
+  const whisperOptions: { value: WhisperFrequency; label: string }[] = [
+    { value: 'off', label: 'Off' },
+    { value: 'rare', label: 'Rare' },
+    { value: 'occasional', label: 'Occasional' },
+    { value: 'frequent', label: 'Frequent' },
+  ];
+
+  const detailOptions: { value: InsightDetail; label: string }[] = [
+    { value: 'brief', label: 'Brief' },
+    { value: 'standard', label: 'Standard' },
+    { value: 'comprehensive', label: 'Detailed' },
+  ];
+
+  return (
+    <section className="glass-card p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <span className="text-2xl">🧠</span>
+        <div>
+          <h2 className="text-lg font-serif text-zen-200">AI Coach Settings</h2>
+          <p className="text-zen-600 text-sm">Control how the AI assists you</p>
+        </div>
+      </div>
+
+      {/* Quick Profiles */}
+      <div className="mb-6">
+        <label className="block text-zen-400 text-sm mb-3">Quick Profiles</label>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            onClick={() => setQuickProfile('minimal')}
+            className={`p-3 rounded-lg border transition-all ${
+              intrusiveness === 'minimal' && whisperFrequency === 'off'
+                ? 'bg-gold-500/20 border-gold-500/50'
+                : 'bg-zen-800/40 border-zen-700/30 hover:border-zen-600/50'
+            }`}
+          >
+            <div className="text-xl mb-1">🤫</div>
+            <div className="text-xs font-medium text-zen-300">Quiet Mode</div>
+            <div className="text-xs text-zen-600">AI on demand</div>
+          </button>
+          <button
+            onClick={() => setQuickProfile('balanced')}
+            className={`p-3 rounded-lg border transition-all ${
+              intrusiveness === 'balanced'
+                ? 'bg-gold-500/20 border-gold-500/50'
+                : 'bg-zen-800/40 border-zen-700/30 hover:border-zen-600/50'
+            }`}
+          >
+            <div className="text-xl mb-1">⚖️</div>
+            <div className="text-xs font-medium text-zen-300">Balanced</div>
+            <div className="text-xs text-zen-600">Helpful tips</div>
+          </button>
+          <button
+            onClick={() => setQuickProfile('immersive')}
+            className={`p-3 rounded-lg border transition-all ${
+              intrusiveness === 'proactive'
+                ? 'bg-gold-500/20 border-gold-500/50'
+                : 'bg-zen-800/40 border-zen-700/30 hover:border-zen-600/50'
+            }`}
+          >
+            <div className="text-xl mb-1">🎓</div>
+            <div className="text-xs font-medium text-zen-300">Immersive</div>
+            <div className="text-xs text-zen-600">Active coaching</div>
+          </button>
+        </div>
+      </div>
+
+      {/* AI Intrusiveness */}
+      <div className="mb-6">
+        <label className="block text-zen-400 text-sm mb-3">AI Activity Level</label>
+        <div className="flex gap-2">
+          {intrusivenesOptions.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setPreference('intrusiveness', opt.value)}
+              className={`flex-1 p-3 rounded-lg transition-all ${
+                intrusiveness === opt.value
+                  ? 'bg-gold-500/20 border border-gold-500/50'
+                  : 'bg-zen-800/40 border border-zen-700/30 hover:border-zen-600/50'
+              }`}
+            >
+              <div className="text-sm font-medium text-zen-300">{opt.label}</div>
+              <div className="text-xs text-zen-500">{opt.desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Whisper Frequency */}
+      <div className="mb-6">
+        <label className="block text-zen-400 text-sm mb-3">Contextual Whispers</label>
+        <div className="flex gap-2">
+          {whisperOptions.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setPreference('whisperFrequency', opt.value)}
+              className={`flex-1 py-2 px-3 rounded-lg text-sm transition-all ${
+                whisperFrequency === opt.value
+                  ? 'bg-gold-500/30 text-gold-300'
+                  : 'bg-zen-800/40 text-zen-400 hover:bg-zen-700/40'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-zen-600 mt-2">
+          Non-intrusive tips that appear when the AI notices something helpful
+        </p>
+      </div>
+
+      {/* Insight Detail Level */}
+      <div className="mb-6">
+        <label className="block text-zen-400 text-sm mb-3">Explanation Detail</label>
+        <div className="flex gap-2">
+          {detailOptions.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setPreference('insightDetail', opt.value)}
+              className={`flex-1 py-2 px-3 rounded-lg text-sm transition-all ${
+                insightDetail === opt.value
+                  ? 'bg-violet-500/30 text-violet-300'
+                  : 'bg-zen-800/40 text-zen-400 hover:bg-zen-700/40'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Feature Toggles */}
+      <div className="space-y-4">
+        <h3 className="text-sm text-zen-500 uppercase tracking-wider">Features</h3>
+        
+        {/* Ask Anything Button */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-zen-300">🧠 Ask Anything Button</div>
+            <div className="text-zen-600 text-sm">Floating AI help available everywhere</div>
+          </div>
+          <button
+            onClick={() => toggleFeature('showAskAnything')}
+            className={`w-12 h-6 rounded-full transition-colors ${
+              showAskAnything ? 'bg-gold-500' : 'bg-zen-700'
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+              showAskAnything ? 'translate-x-6' : 'translate-x-0.5'
+            }`} />
+          </button>
+        </div>
+
+        {/* Whispers */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-zen-300">💭 Contextual Whispers</div>
+            <div className="text-zen-600 text-sm">Subtle AI tips based on your activity</div>
+          </div>
+          <button
+            onClick={() => toggleFeature('showWhispers')}
+            className={`w-12 h-6 rounded-full transition-colors ${
+              showWhispers ? 'bg-gold-500' : 'bg-zen-700'
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+              showWhispers ? 'translate-x-6' : 'translate-x-0.5'
+            }`} />
+          </button>
+        </div>
+
+        {/* Puzzle Insights */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-zen-300">🧩 Puzzle Deep Insights</div>
+            <div className="text-zen-600 text-sm">Genius-level explanations after puzzles</div>
+          </div>
+          <button
+            onClick={() => toggleFeature('showPuzzleInsights')}
+            className={`w-12 h-6 rounded-full transition-colors ${
+              showPuzzleInsights ? 'bg-gold-500' : 'bg-zen-700'
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+              showPuzzleInsights ? 'translate-x-6' : 'translate-x-0.5'
+            }`} />
+          </button>
+        </div>
+
+        {/* Auto Puzzle Analysis */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-zen-300">⚡ Auto-Analyze Puzzles</div>
+            <div className="text-zen-600 text-sm">Automatically explain completed puzzles</div>
+          </div>
+          <button
+            onClick={() => toggleFeature('autoPuzzleAnalysis')}
+            className={`w-12 h-6 rounded-full transition-colors ${
+              autoPuzzleAnalysis ? 'bg-gold-500' : 'bg-zen-700'
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+              autoPuzzleAnalysis ? 'translate-x-6' : 'translate-x-0.5'
+            }`} />
+          </button>
+        </div>
+
+        {/* Move Explanations */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-zen-300">♟️ Move Explanations</div>
+            <div className="text-zen-600 text-sm">AI explains moves during games</div>
+          </div>
+          <button
+            onClick={() => toggleFeature('showMoveExplanations')}
+            className={`w-12 h-6 rounded-full transition-colors ${
+              showMoveExplanations ? 'bg-gold-500' : 'bg-zen-700'
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+              showMoveExplanations ? 'translate-x-6' : 'translate-x-0.5'
+            }`} />
+          </button>
+        </div>
+
+        {/* Opening Insights */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-zen-300">📖 Opening Insights</div>
+            <div className="text-zen-600 text-sm">Deep opening knowledge and ideas</div>
+          </div>
+          <button
+            onClick={() => toggleFeature('showOpeningInsights')}
+            className={`w-12 h-6 rounded-full transition-colors ${
+              showOpeningInsights ? 'bg-gold-500' : 'bg-zen-700'
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+              showOpeningInsights ? 'translate-x-6' : 'translate-x-0.5'
+            }`} />
+          </button>
+        </div>
+
+        {/* Agent Presence */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-zen-300">👁️ Agent Presence</div>
+            <div className="text-zen-600 text-sm">Show which AI agents are watching</div>
+          </div>
+          <button
+            onClick={() => toggleFeature('showAgentPresence')}
+            className={`w-12 h-6 rounded-full transition-colors ${
+              showAgentPresence ? 'bg-gold-500' : 'bg-zen-700'
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+              showAgentPresence ? 'translate-x-6' : 'translate-x-0.5'
+            }`} />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export function SettingsPage() {
   const { progress, updateSettings } = useProgressStore();
@@ -226,6 +518,9 @@ export function SettingsPage() {
           </div>
         </div>
       </section>
+
+      {/* AI Coach Settings */}
+      <AIPreferencesSection />
 
       {/* Progress section */}
       <section className="glass-card p-6">

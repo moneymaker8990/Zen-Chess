@@ -60,23 +60,23 @@ export function ChatInterface({
   return (
     <div className={`flex flex-col h-full bg-gray-900/50 rounded-2xl border border-gray-800 ${className}`}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-800">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center">
-            <span className="text-lg">🧘</span>
+      <div className="flex items-center justify-between p-3 md:p-4 border-b border-gray-800 shrink-0">
+        <div className="flex items-center gap-2 md:gap-3 min-w-0">
+          <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shrink-0">
+            <span className="text-base md:text-lg">🧘</span>
           </div>
-          <div>
-            <h3 className="font-semibold text-white">{agentName}</h3>
-            <p className="text-xs text-gray-400">{agentRole}</p>
+          <div className="min-w-0">
+            <h3 className="font-semibold text-white text-sm md:text-base truncate">{agentName}</h3>
+            <p className="text-xs text-gray-400 truncate">{agentRole}</p>
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 md:gap-2 shrink-0">
           {showAgentSelector && (
             <select
               value={agentId}
               onChange={(e) => setAgent(e.target.value as AgentId)}
-              className="bg-gray-800 text-sm text-gray-300 rounded-lg px-3 py-1.5 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="bg-gray-800 text-xs md:text-sm text-gray-300 rounded-lg px-2 md:px-3 py-1.5 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 max-w-[150px] md:max-w-none"
             >
               {AVAILABLE_AGENTS.map(agent => (
                 <option key={agent.id} value={agent.id}>
@@ -88,7 +88,7 @@ export function ChatInterface({
           
           <button
             onClick={clearHistory}
-            className="p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-gray-800"
+            className="p-1.5 md:p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-gray-800"
             title="Clear chat"
           >
             🗑️
@@ -200,7 +200,7 @@ export function ChatInterface({
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="p-4 border-t border-gray-800">
+      <form onSubmit={handleSubmit} className="p-3 md:p-4 border-t border-gray-800 shrink-0">
         <div className="flex gap-2">
           <input
             type="text"
@@ -208,12 +208,12 @@ export function ChatInterface({
             onChange={(e) => setInput(e.target.value)}
             placeholder={`Ask ${agentName} anything...`}
             disabled={isLoading}
-            className="flex-1 bg-gray-800 text-white rounded-xl px-4 py-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder-gray-500 disabled:opacity-50"
+            className="flex-1 bg-gray-800 text-white text-sm md:text-base rounded-xl px-3 md:px-4 py-2.5 md:py-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder-gray-500 disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-medium text-sm md:text-base hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
           >
             {isLoading ? '...' : 'Send'}
           </button>

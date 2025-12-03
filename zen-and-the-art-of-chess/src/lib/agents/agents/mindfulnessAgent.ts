@@ -57,126 +57,14 @@ export function createMindfulnessAgent(): Agent {
       }
     },
 
-    handleTrigger: (trigger: AgentTrigger, state: AgentOrchestratorState): AgentMessage | null => {
-      switch (trigger.type) {
-        case 'SESSION_START': {
-          // Morning mindfulness suggestion
-          const hour = new Date().getHours();
-          
-          if (hour >= 5 && hour < 10 && memory.sessionsToday === 0) {
-            const quote = WISDOM_QUOTES[Math.floor(Math.random() * WISDOM_QUOTES.length)];
-            
-            return createMessage('mindfulness', {
-              title: '☀️ Morning Practice',
-              body: "Begin your chess day with intention. A clear mind sees clearly on the board.",
-              subtext: quote,
-              category: 'recommendation',
-              priority: 'low',
-              primaryAction: {
-                label: 'Morning Meditation',
-                route: '/mind',
-              },
-              showAsToast: false,
-            });
-          }
-          return null;
-        }
-
-        case 'GAME_END': {
-          // Suggest breathing after a loss
-          if (trigger.result === 'loss') {
-            return createMessage('mindfulness', {
-              title: '🌬️ Breathe',
-              body: "Before your next game, take three conscious breaths. In through the nose, out through the mouth.",
-              category: 'recommendation',
-              priority: 'low',
-              showAsToast: false,
-            });
-          }
-          return null;
-        }
-
-        case 'TILT_DETECTED': {
-          if (trigger.severity >= 5) {
-            return createMessage('mindfulness', {
-              title: '☯ Return to Center',
-              body: "Strong emotions cloud judgment. Let's reset. Close your eyes. Feel your feet on the ground. You are here, now, and that is enough.",
-              category: 'intervention',
-              priority: 'high',
-              primaryAction: {
-                label: 'Guided Breathing',
-                route: '/mind',
-              },
-            });
-          }
-          return null;
-        }
-
-        case 'WINNING_STREAK': {
-          if (trigger.count >= 4) {
-            return createMessage('mindfulness', {
-              title: '🌊 Stay Grounded',
-              body: "Success can intoxicate. Stay humble, stay present. Each game is new.",
-              category: 'insight',
-              priority: 'low',
-            });
-          }
-          return null;
-        }
-
-        case 'SESSION_LONG': {
-          if (trigger.minutes > 60 && memory.breathingExercisesToday === 0) {
-            return createMessage('mindfulness', {
-              title: '⏸️ Pause & Breathe',
-              body: "You've been playing for an hour. A one-minute breathing break can restore focus better than ten more games.",
-              category: 'recommendation',
-              priority: 'normal',
-              primaryAction: {
-                label: '1-Minute Breathe',
-                route: '/mind',
-              },
-            });
-          }
-          return null;
-        }
-
-        default:
-          return null;
-      }
+    handleTrigger: (_trigger: AgentTrigger, _state: AgentOrchestratorState): AgentMessage | null => {
+      // This agent stays quiet - only activates when user explicitly visits /mind
+      // We don't want to push breathing exercises or meditation on users
+      return null;
     },
 
-    getProactiveMessage: (state: AgentOrchestratorState): AgentMessage | null => {
-      // Evening wind-down suggestion
-      const hour = new Date().getHours();
-      
-      if (hour >= 21 && memory.sessionsToday === 0) {
-        return createMessage('mindfulness', {
-          title: '🌙 Evening Reflection',
-          body: "End your day with a brief meditation. Reflect on your games without judgment - just observation.",
-          category: 'recommendation',
-          priority: 'low',
-          primaryAction: {
-            label: 'Wind Down',
-            route: '/mind',
-          },
-        });
-      }
-
-      // Suggest calm play if they've been grinding
-      const sessionMinutes = (Date.now() - state.sessionStartTime) / 60000;
-      if (sessionMinutes > 45 && memory.calmPlaySessions === 0) {
-        return createMessage('mindfulness', {
-          title: '☯ Try Calm Play',
-          body: "Slow down. In Calm Play, you breathe before each move. Quality over quantity.",
-          category: 'recommendation',
-          priority: 'low',
-          primaryAction: {
-            label: 'Start Calm Play',
-            route: '/calm-play',
-          },
-        });
-      }
-
+    getProactiveMessage: (_state: AgentOrchestratorState): AgentMessage | null => {
+      // Don't proactively push mindfulness content
       return null;
     },
 
@@ -186,7 +74,7 @@ export function createMindfulnessAgent(): Agent {
       saveMemory();
     },
 
-    getCooldownMinutes: () => 45,
+    getCooldownMinutes: () => 120, // Stay quiet - let users seek this out themselves
   };
 
   function saveMemory() {

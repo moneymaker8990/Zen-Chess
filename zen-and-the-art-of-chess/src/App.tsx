@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Layout } from '@/components/Layout';
 import { PageTransition } from '@/components/PageTransition';
@@ -9,7 +9,10 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { OnboardingWrapper } from '@/components/Onboarding';
 import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
 import { AchievementNotificationContainer } from '@/components/AchievementNotification';
+import { AskAnything } from '@/components/AskAnything';
+import { GeniusWhisper } from '@/components/GeniusWhisper';
 import { initializeAgents } from '@/lib/agents/agentOrchestrator';
+import { useAIPreferencesStore } from '@/state/aiPreferencesStore';
 import { useAgentAwareness } from '@/hooks/useAgentAwareness';
 import { useGlobalShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { HomePage } from '@/pages/HomePage';
@@ -114,10 +117,25 @@ function AnimatedRoutes() {
 
 // Agent-aware inner component that tracks navigation
 function AppContent() {
+  const location = useLocation();
+  
   // This hook automatically tracks page navigation and session time
   useAgentAwareness();
   // Enable global keyboard shortcuts
   useGlobalShortcuts();
+  
+  // AI preferences for genius features
+  const { showAskAnything, showWhispers } = useAIPreferencesStore();
+  
+  // Determine context based on current route
+  const aiContext = useMemo(() => {
+    const path = location.pathname;
+    if (path.includes('train') || path.includes('puzzle')) return 'puzzle';
+    if (path.includes('play') || path.includes('sparring') || path.includes('calm-play')) return 'game';
+    if (path.includes('opening')) return 'opening';
+    if (path.includes('study') || path.includes('course') || path.includes('learn')) return 'study';
+    return 'general';
+  }, [location.pathname]);
   
   return (
     <>
@@ -130,6 +148,18 @@ function AppContent() {
       <KeyboardShortcutsHelp />
       {/* Achievement notifications */}
       <AchievementNotificationContainer />
+      
+      {/* 🧠 GENIUS AI FEATURES */}
+      {/* Floating Ask Anything button - available everywhere */}
+      <AskAnything 
+        context={aiContext as 'puzzle' | 'game' | 'opening' | 'study' | 'general'} 
+        enabled={showAskAnything}
+      />
+      {/* Contextual AI whispers - non-intrusive tips */}
+      <GeniusWhisper 
+        activity={aiContext as 'puzzle' | 'game' | 'opening' | 'study' | 'idle'}
+        enabled={showWhispers}
+      />
     </>
   );
 }

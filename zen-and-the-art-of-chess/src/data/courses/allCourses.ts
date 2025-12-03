@@ -179,12 +179,12 @@ export const positionalMasterclass: Course = {
 };
 
 // ============================================
-// THE WOODPECKER METHOD - TACTICAL TRAINING
+// TACTICAL PATTERN TRAINING - TACTICAL TRAINING
 // Deep combinations + bulk patterns for repetition
 // ============================================
 export const woodpeckerTactics: Course = {
   id: 'woodpecker-tactics',
-  title: 'The Woodpecker Method',
+  title: 'Tactical Pattern Training',
   author: 'Zen Chess Academy',
   description: 'Sharpen your tactical vision with deep multi-move combinations. Each tactic shows the complete sequence with annotations, alternatives, and visual arrows.',
   coverImage: '⚔️',
@@ -269,12 +269,12 @@ export const woodpeckerTactics: Course = {
 };
 
 // ============================================
-// SILMAN'S COMPLETE ENDGAME COURSE
+// ESSENTIAL ENDGAME MASTERY
 // Deep endgame technique with precise moves
 // ============================================
 export const endgameEssentials: Course = {
   id: 'endgame-essentials',
-  title: "Silman's Complete Endgame Course",
+  title: "Essential Endgame Mastery",
   author: 'Zen Chess Academy',
   description: 'Master endgame technique with deep variations showing precise calculation. Each pattern demonstrates complete winning or drawing technique.',
   coverImage: '♚',
@@ -332,12 +332,12 @@ export const endgameEssentials: Course = {
 };
 
 // ============================================
-// THE AMATEUR'S MIND
+// THE STRATEGIC MIND
 // Strategic thinking with imbalances
 // ============================================
 export const amateursMind: Course = {
   id: 'amateurs-mind',
-  title: "The Amateur's Mind",
+  title: "The Strategic Mind",
   author: 'Zen Chess Academy',
   description: 'Transform your chess thinking with deep strategic analysis. Learn to identify and exploit imbalances like a master.',
   coverImage: '🧠',

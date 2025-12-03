@@ -86,15 +86,15 @@ export function AICoachDashboard() {
   ];
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen p-4 md:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-gray-800">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">
               🧠 AI Coach Hub
             </h1>
-            <p className="text-gray-400">
+            <p className="text-sm md:text-base text-gray-400">
               Cutting-edge AI coaching powered by Claude
             </p>
           </div>
@@ -104,41 +104,56 @@ export function AICoachDashboard() {
         {/* Daily Message */}
         {dailyMessage && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-6 rounded-2xl"
+            className="p-6 md:p-8 rounded-2xl space-y-5"
             style={{
-              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2))',
-              border: '1px solid rgba(168, 85, 247, 0.3)',
+              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.12))',
+              border: '1px solid rgba(168, 85, 247, 0.2)',
             }}
           >
-            <p className="text-lg text-white mb-2">{dailyMessage.greeting}</p>
-            <p className="text-gray-300 italic mb-4">"{dailyMessage.wisdom}"</p>
-            <div className="flex flex-wrap gap-4 text-sm">
-              <span className="px-3 py-1 bg-purple-500/20 rounded-full text-purple-300">
-                🎯 Today: {dailyMessage.focusArea}
-              </span>
-              <span className="px-3 py-1 bg-green-500/20 rounded-full text-green-300">
-                ⚡ Challenge: {dailyMessage.challenge}
-              </span>
+            {/* Greeting */}
+            <p className="text-lg md:text-xl text-white leading-relaxed font-medium">
+              {dailyMessage.greeting}
+            </p>
+            
+            {/* Wisdom Quote */}
+            <p className="text-base md:text-lg text-gray-300 italic leading-relaxed pl-4 border-l-2 border-purple-500/40">
+              "{dailyMessage.wisdom}"
+            </p>
+            
+            {/* Today & Challenge - Stacked on mobile, side by side on larger */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <div className="flex-1 px-4 py-3 bg-purple-500/15 rounded-xl border border-purple-500/20">
+                <p className="text-purple-300 text-sm leading-relaxed">
+                  <span className="font-semibold">🎯 Today:</span>{' '}
+                  {dailyMessage.focusArea}
+                </p>
+              </div>
+              <div className="flex-1 px-4 py-3 bg-emerald-500/15 rounded-xl border border-emerald-500/20">
+                <p className="text-emerald-300 text-sm leading-relaxed">
+                  <span className="font-semibold">⚡ Challenge:</span>{' '}
+                  {dailyMessage.challenge}
+                </p>
+              </div>
             </div>
           </motion.div>
         )}
 
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+        <div className="flex flex-wrap gap-2 pb-2">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-3 rounded-xl whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap transition-all font-medium ${
                 activeTab === tab.id
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/25'
+                  : 'bg-gray-800/80 text-gray-400 hover:bg-gray-700 hover:text-gray-200'
               }`}
             >
-              <span className="text-lg mr-2">{tab.label.split(' ')[0]}</span>
-              <span className="hidden md:inline">{tab.label.split(' ').slice(1).join(' ')}</span>
+              <span className="text-base">{tab.label.split(' ')[0]}</span>
+              <span className="text-sm hidden sm:inline">{tab.label.split(' ').slice(1).join(' ')}</span>
             </button>
           ))}
         </div>
@@ -154,28 +169,30 @@ export function AICoachDashboard() {
           >
             {/* Chat Tab */}
             {activeTab === 'chat' && (
-              <div className="grid md:grid-cols-4 gap-4">
+              <div className="grid lg:grid-cols-5 gap-6">
                 {/* Agent Selector Sidebar */}
-                <div className="md:col-span-1 space-y-2">
-                  <p className="text-xs uppercase tracking-wider text-gray-500 mb-3">Select Coach</p>
-                  {AVAILABLE_AGENTS.slice(0, 6).map((agent) => (
-                    <button
-                      key={agent.id}
-                      onClick={() => setSelectedAgent(agent.id)}
-                      className={`w-full p-3 rounded-xl text-left transition-all ${
-                        selectedAgent === agent.id
-                          ? 'bg-purple-600/30 border-purple-500'
-                          : 'bg-gray-800/50 hover:bg-gray-700/50 border-transparent'
-                      } border`}
-                    >
-                      <p className="font-medium text-white">{agent.name}</p>
-                      <p className="text-xs text-gray-400">{agent.role}</p>
-                    </button>
-                  ))}
+                <div className="lg:col-span-1 space-y-3">
+                  <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Select Coach</p>
+                  <div className="space-y-2">
+                    {AVAILABLE_AGENTS.slice(0, 6).map((agent) => (
+                      <button
+                        key={agent.id}
+                        onClick={() => setSelectedAgent(agent.id)}
+                        className={`w-full p-3 rounded-xl text-left transition-all ${
+                          selectedAgent === agent.id
+                            ? 'bg-purple-600/30 border-purple-500 shadow-md shadow-purple-500/10'
+                            : 'bg-gray-800/60 hover:bg-gray-700/60 border-gray-700/50'
+                        } border`}
+                      >
+                        <p className="font-medium text-white text-sm">{agent.name}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{agent.role}</p>
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 
                 {/* Chat Interface */}
-                <div className="md:col-span-3 h-[600px]">
+                <div className="lg:col-span-4 h-[550px] md:h-[600px]">
                   <ChatInterface 
                     initialAgent={selectedAgent}
                     showAgentSelector={false}
@@ -329,29 +346,29 @@ export function AICoachDashboard() {
 
             {/* Agents Tab */}
             {activeTab === 'agents' && (
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {AVAILABLE_AGENTS.map((agent, i) => (
                   <motion.div
                     key={agent.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer"
+                    className="p-5 rounded-2xl hover:scale-[1.02] transition-all cursor-pointer border border-gray-800/50 hover:border-purple-500/30"
                     style={{ background: 'var(--bg-secondary)' }}
                     onClick={() => {
                       setSelectedAgent(agent.id);
                       setActiveTab('chat');
                     }}
                   >
-                    <div className="text-4xl mb-3">
+                    <div className="text-3xl mb-2">
                       {['🧘', '🛡️', '📐', '🔮', '🧭', '📜', '🪷', '💎', '⚡', '⚓', '🎵', '🏛️'][i] || '🤖'}
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-1">{agent.name}</h3>
+                    <h3 className="text-base font-bold text-white mb-0.5">{agent.name}</h3>
                     <p className="text-sm text-purple-400 mb-2">{agent.role}</p>
-                    <p className="text-sm text-gray-400 mb-3">
+                    <p className="text-xs text-gray-400 mb-2 line-clamp-2">
                       {agent.expertise.slice(0, 3).join(' • ')}
                     </p>
-                    <p className="text-xs text-gray-500 italic">
+                    <p className="text-xs text-gray-500 italic line-clamp-2">
                       "{agent.openingLine}"
                     </p>
                   </motion.div>
@@ -362,7 +379,7 @@ export function AICoachDashboard() {
         </AnimatePresence>
 
         {/* AI Status Details */}
-        <div className="mt-8">
+        <div className="pt-6 mt-6 border-t border-gray-800">
           <AIStatus showDetails={true} />
         </div>
       </div>

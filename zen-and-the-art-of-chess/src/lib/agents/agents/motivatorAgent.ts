@@ -17,54 +17,38 @@ interface MotivatorMemory {
 
 const CELEBRATIONS = {
   win: [
-    "That's the way! Clean execution.",
-    "Nicely done. You're building momentum.",
-    "Victory. Let it fuel, not intoxicate.",
-    "Well played. The pieces bent to your will.",
-    "Excellent. Your vision is sharpening.",
+    "Nice win.",
+    "Clean game.",
+    "Good execution.",
+    "Well played.",
   ],
   winStreak: [
-    "You're on fire! But stay grounded.",
-    "Flow state achieved. Ride this wave.",
-    "Unstoppable. Just don't get overconfident.",
-    "This is what training looks like in action.",
+    "Good run going.",
+    "Solid streak.",
   ],
   comebackWin: [
-    "From the ashes! That's mental toughness.",
-    "You didn't give up. That's what separates players.",
-    "A comeback win is worth three regular wins.",
+    "Nice comeback.",
   ],
   puzzleStreak: [
-    "Your tactical vision is sharp today!",
-    "Pattern recognition on point.",
-    "The patterns are flowing. Keep going.",
+    "Good pattern recognition.",
   ],
   milestone: [
-    "Another milestone reached. You're building something real.",
-    "Progress is progress, no matter the pace.",
-    "Each step forward matters.",
+    "Milestone reached.",
   ],
 };
 
 const ENCOURAGEMENTS = {
   loss: [
-    "Every master was once a beginner who refused to give up.",
-    "This loss contains a lesson. Find it.",
-    "Setbacks are setups for comebacks.",
-    "Even Magnus loses. What matters is the next game.",
+    // Just stay quiet after losses - no motivational cliches
   ],
   losingStreak: [
-    "Tough stretch. But diamonds form under pressure.",
-    "This is where character is built. Take a breath.",
-    "The darkest hour is just before dawn.",
+    // Stay quiet
   ],
   lowAccuracy: [
-    "Not your best game. Tomorrow is another day.",
-    "We all have off days. Rest and reset.",
+    // Stay quiet
   ],
   plateau: [
-    "Plateaus come before breakthroughs. Keep pushing.",
-    "Growth isn't linear. Trust the process.",
+    // Stay quiet
   ],
 };
 
@@ -137,18 +121,9 @@ export function createMotivatorAgent(): Agent {
             return null; // Let other agents handle regular wins
           }
           
+          // Don't push motivational messages after losses - let the user process
           if (trigger.result === 'loss') {
-            memory.totalEncouragements++;
-            saveMemory();
-            
-            // Subtle encouragement after loss
-            return createMessage('coach', {
-              title: '📖 Lesson Available',
-              body: getRandomMessage(ENCOURAGEMENTS.loss),
-              category: 'insight',
-              priority: 'low',
-              showAsToast: false,
-            });
+            return null;
           }
           
           return null;
@@ -170,16 +145,7 @@ export function createMotivatorAgent(): Agent {
         }
 
         case 'LOSING_STREAK': {
-          if (trigger.count >= 3) {
-            return createMessage('coach', {
-              title: '💪 Stay Strong',
-              body: getRandomMessage(ENCOURAGEMENTS.losingStreak),
-              subtext: "This is temporary. Your skill isn't.",
-              category: 'insight',
-              priority: 'normal',
-              showAsToast: false,
-            });
-          }
+          // Don't push motivational messages - tiltGuardian handles this if needed
           return null;
         }
 
@@ -219,7 +185,7 @@ export function createMotivatorAgent(): Agent {
       saveMemory();
     },
 
-    getCooldownMinutes: () => 5,
+    getCooldownMinutes: () => 30, // Don't spam celebrations
   };
 
   function saveMemory() {

@@ -1,6 +1,6 @@
 // ============================================
 // MASSIVE TACTICS VARIATIONS
-// 500+ variations for Woodpecker-style training
+// 500+ variations for pattern-drilling style training
 // ============================================
 
 import type { CourseVariation } from '../courseTypes';

@@ -366,26 +366,26 @@ export function AgentBriefing({
     game: {
       agent: 'coach',
       title: 'Before You Play',
-      advice: "Take three deep breaths. Clear your mind. Remember: think first, then move.",
-      focus: "Stay calm. Play your game.",
+      advice: "Check all your candidate moves before committing.",
+      focus: "Play solid moves.",
     },
     puzzles: {
       agent: 'training',
       title: 'Puzzle Session',
-      advice: "Accuracy matters more than speed. Look for all candidate moves before deciding.",
-      focus: "Find the pattern. Trust your vision.",
+      advice: "Take your time. Look for all candidate moves.",
+      focus: "Find the tactic.",
     },
     study: {
       agent: 'journey',
       title: 'Study Session',
-      advice: "Active learning beats passive reading. Try to predict moves, then see why you were wrong.",
-      focus: "Understand, don't memorize.",
+      advice: "Try to predict moves before seeing the answer.",
+      focus: "Active learning.",
     },
     meditation: {
       agent: 'mindfulness',
-      title: 'Mindfulness Practice',
-      advice: "There is nothing to achieve. Just be present with your breath.",
-      focus: "Now is enough.",
+      title: 'Focus Session',
+      advice: "A few minutes of focus before playing can help.",
+      focus: "Clear your head.",
     },
   };
   

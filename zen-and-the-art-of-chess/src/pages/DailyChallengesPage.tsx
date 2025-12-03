@@ -2210,8 +2210,8 @@ export function DailyChallengesPage() {
               customSquareStyles={{
                 ...optionSquares,
                 ...(lastMove && {
-                  [lastMove.from]: { backgroundColor: 'rgba(155, 199, 0, 0.25)' },
-                  [lastMove.to]: { backgroundColor: showCorrectFeedback ? 'rgba(34, 197, 94, 0.6)' : 'rgba(155, 199, 0, 0.4)' },
+                  [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.25)' },
+                  [lastMove.to]: { backgroundColor: showCorrectFeedback ? 'rgba(34, 197, 94, 0.6)' : 'rgba(147, 112, 219, 0.4)' },
                 }),
                 ...(solved && lastMove && {
                   [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
@@ -2489,8 +2489,8 @@ export function DailyChallengesPage() {
               customSquareStyles={{
                 ...optionSquares,
                 ...(lastMove && {
-                  [lastMove.from]: { backgroundColor: 'rgba(155, 199, 0, 0.25)' },
-                  [lastMove.to]: { backgroundColor: showCorrectFeedback ? 'rgba(34, 197, 94, 0.6)' : 'rgba(155, 199, 0, 0.4)' },
+                  [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.25)' },
+                  [lastMove.to]: { backgroundColor: showCorrectFeedback ? 'rgba(34, 197, 94, 0.6)' : 'rgba(147, 112, 219, 0.4)' },
                 }),
               }}
               arePiecesDraggable={rushActive}

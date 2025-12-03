@@ -1,5 +1,5 @@
 // ============================================
-// SILMAN'S COMPLETE ENDGAME COURSE
+// ESSENTIAL ENDGAME MASTERY
 // Essential Endgame Knowledge by Rating Level
 // 60+ variations across fundamental endgame types
 // ============================================
@@ -114,7 +114,7 @@ const queenEndgamesChapter: CourseChapter = {
 
 export const endgameCourse: Course = {
   id: 'endgame-course',
-  title: 'Silman\'s Complete Endgame Course',
+  title: 'Essential Endgame Mastery',
   author: 'Zen Chess',
   description: 'Master the endgame from basic checkmates to complex rook endings. 60+ essential positions that every serious player must know.',
   coverImage: '♔',

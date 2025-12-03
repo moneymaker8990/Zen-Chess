@@ -154,8 +154,8 @@ export function PositionSparring() {
 
   // Custom square styles
   const customSquareStyles = lastMove ? {
-    [lastMove.from]: { backgroundColor: 'rgba(251, 191, 36, 0.3)' },
-    [lastMove.to]: { backgroundColor: 'rgba(251, 191, 36, 0.4)' },
+    [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.3)' },
+    [lastMove.to]: { backgroundColor: 'rgba(147, 112, 219, 0.4)' },
   } : {};
 
   return (

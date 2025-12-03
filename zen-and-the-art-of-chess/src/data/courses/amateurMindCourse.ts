@@ -1,5 +1,5 @@
 // ============================================
-// THE AMATEUR'S MIND
+// THE STRATEGIC MIND
 // Thinking Improvement and Imbalance Recognition
 // 50+ variations across 5 key chapters
 // ============================================
@@ -98,7 +98,7 @@ const thinkingChapter: CourseChapter = {
 
 export const amateurMindCourse: Course = {
   id: 'amateur-mind',
-  title: 'The Amateur\'s Mind',
+  title: 'The Strategic Mind',
   author: 'Zen Chess',
   description: 'Bridge the gap between knowing chess and thinking like a chess player. 50+ training positions focused on imbalances, planning, and thinking technique.',
   coverImage: '🧠',
