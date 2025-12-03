@@ -617,18 +617,29 @@ export function PlayPage() {
 
       {/* Main content */}
       <div className="flex flex-col lg:grid lg:grid-cols-[auto_1fr_320px] gap-4 sm:gap-6">
-        {/* Evaluation bar (analysis mode only) */}
+        {/* Evaluation bar (analysis mode only) - visible on mobile too */}
         {selectedMode === 'ANALYSIS' && (
-          <div className="hidden lg:block">
-            <EvaluationBar 
-              evaluation={evaluation}
-              orientation={orientation}
-            />
+          <div className="order-first lg:order-none">
+            {/* Mobile: horizontal bar at top */}
+            <div className="lg:hidden mb-4">
+              <EvaluationBar 
+                evaluation={evaluation}
+                orientation={orientation}
+                horizontal
+              />
+            </div>
+            {/* Desktop: vertical bar on side */}
+            <div className="hidden lg:block">
+              <EvaluationBar 
+                evaluation={evaluation}
+                orientation={orientation}
+              />
+            </div>
           </div>
         )}
 
         {/* Chessboard */}
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 w-full max-w-full overflow-hidden">
           {/* Game status */}
           <div 
             className="text-sm px-4 py-2 rounded-lg font-medium"
@@ -646,7 +657,7 @@ export function PlayPage() {
             {status.text}
           </div>
 
-          <div className="flex justify-center">
+          <div className="w-full flex justify-center" style={{ maxWidth: `${boardSize}px`, margin: '0 auto' }}>
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}
@@ -657,7 +668,7 @@ export function PlayPage() {
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={boardStyles.animationDuration}
               arePiecesDraggable={!isThinking}
-              boardWidth={boardSize}
+              boardWidth={Math.min(boardSize, window.innerWidth - 32)}
             />
           </div>
         </div>

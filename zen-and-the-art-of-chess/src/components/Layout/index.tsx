@@ -335,11 +335,11 @@ export function Layout({ children }: LayoutProps) {
 
       {/* Mobile sidebar */}
       <aside className={`
-        lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300
+        lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 flex flex-col
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `} style={{ background: 'var(--bg-secondary)' }}>
         {/* Mobile header */}
-        <div className="h-16 flex items-center justify-between px-4" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+        <div className="h-16 flex items-center justify-between px-4 shrink-0" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
           <NavLink to="/" className="flex items-center gap-3" onClick={() => setSidebarOpen(false)}>
             <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
               style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)' }}>
@@ -358,8 +358,8 @@ export function Layout({ children }: LayoutProps) {
           </button>
         </div>
 
-        {/* Mobile navigation */}
-        <nav className="px-3 py-4 space-y-1">
+        {/* Mobile navigation - scrollable */}
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto overscroll-contain">
           {navItems.map((item) => (
             <NavLink
               key={item.path}

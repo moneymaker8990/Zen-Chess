@@ -5,12 +5,14 @@ interface EvaluationBarProps {
   evaluation: EngineEvaluation | null;
   orientation?: 'white' | 'black';
   showNumbers?: boolean;
+  horizontal?: boolean; // For mobile horizontal bar
 }
 
 export function EvaluationBar({ 
   evaluation, 
   orientation = 'white',
-  showNumbers = true 
+  showNumbers = true,
+  horizontal = false,
 }: EvaluationBarProps) {
   // Convert centipawns to percentage (0-100)
   const percentage = useMemo(() => {
@@ -45,6 +47,47 @@ export function EvaluationBar({
   // Adjust for board orientation
   const whitePercentage = orientation === 'white' ? percentage : 100 - percentage;
 
+  // Horizontal layout for mobile
+  if (horizontal) {
+    return (
+      <div className="flex items-center gap-3 w-full">
+        {/* Evaluation number */}
+        {showNumbers && (
+          <div className={`text-sm font-mono min-w-[48px] ${
+            !evaluation ? 'text-zen-500' :
+            evaluation.score > 50 ? 'text-zen-100' :
+            evaluation.score < -50 ? 'text-zen-700' :
+            'text-zen-400'
+          }`}>
+            {displayText}
+          </div>
+        )}
+
+        {/* Horizontal bar container */}
+        <div className="flex-1 h-4 rounded-full overflow-hidden flex" style={{ background: '#2a2825' }}>
+          {/* Black's portion (left) */}
+          <div 
+            className="h-full bg-zen-700 transition-all duration-500"
+            style={{ width: `${100 - whitePercentage}%` }}
+          />
+          {/* White's portion (right) */}
+          <div 
+            className="h-full bg-zen-100 transition-all duration-500"
+            style={{ width: `${whitePercentage}%` }}
+          />
+        </div>
+
+        {/* Depth indicator */}
+        {evaluation && (
+          <div className="text-xs text-zen-600 min-w-[24px]">
+            d{evaluation.depth}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Vertical layout (default)
   return (
     <div className="flex flex-col items-center gap-2 h-full">
       {/* Evaluation number */}

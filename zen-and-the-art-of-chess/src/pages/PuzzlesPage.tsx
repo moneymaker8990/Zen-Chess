@@ -1284,10 +1284,10 @@ export function PuzzlesPage() {
 
         {/* Main Puzzle Area */}
         {!isRushOver && (
-          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(300px,520px)_380px] gap-4 lg:gap-8 items-start px-2 sm:px-0">
+          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,520px)_1fr] gap-4 lg:gap-8 items-start">
             {/* Board */}
-            <div className="space-y-4 w-full flex flex-col items-center lg:items-start">
-              <div className="relative">
+            <div className="space-y-4 w-full flex flex-col items-center lg:items-start overflow-hidden">
+              <div className="relative w-full" style={{ maxWidth: `${Math.min(boardSize, window.innerWidth - 32)}px` }}>
                 <Chessboard
                   position={game.fen()}
                   onSquareClick={isAnimatingSetup ? undefined : onSquareClick}
@@ -1298,7 +1298,7 @@ export function PuzzlesPage() {
                   customLightSquareStyle={boardStyles.customLightSquareStyle}
                   animationDuration={boardStyles.animationDuration}
                   arePiecesDraggable={!isAnimatingSetup && feedback !== 'complete' && !(feedback === 'incorrect' && mode === 'streak')}
-                  boardWidth={boardSize}
+                  boardWidth={Math.min(boardSize, window.innerWidth - 32)}
                 />
 
                 {/* Feedback Overlay - simplified since we have the Genius Panel */}

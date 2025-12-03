@@ -501,18 +501,18 @@ export function LegendDetailPage() {
 
       {/* Play vs Legend Tab */}
       {activeTab === 'play' && (
-        <div className="space-y-6 px-2 sm:px-0">
+        <div className="space-y-6">
           {/* Game Area - Board and Controls */}
           <div className="flex flex-col lg:grid lg:grid-cols-[1fr,320px] gap-4 lg:gap-6 items-start">
             {/* Chessboard */}
-            <div className="glass-card p-3 sm:p-4 lg:p-6 w-full">
-              <div className="w-full flex justify-center">
+            <div className="glass-card p-3 sm:p-4 lg:p-6 w-full overflow-hidden">
+              <div className="w-full flex justify-center" style={{ maxWidth: `${Math.min(boardSize, window.innerWidth - 48)}px`, margin: '0 auto' }}>
                 <Chessboard
                   position={game.fen()}
                   onSquareClick={onSquareClick}
                   onPieceDrop={onDrop}
                   boardOrientation={playerColor}
-                  boardWidth={boardSize}
+                  boardWidth={Math.min(boardSize, window.innerWidth - 48)}
                   customSquareStyles={{
                     ...optionSquares,
                     ...(lastMove && {
@@ -779,9 +779,9 @@ export function LegendDetailPage() {
               )}
             </div>
           ) : (
-            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-6 px-2 sm:px-0">
-              <div className="glass-card p-3 sm:p-4 lg:p-6">
-                <div className="mb-4 flex justify-center">
+            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-6">
+              <div className="glass-card p-3 sm:p-4 lg:p-6 overflow-hidden">
+                <div className="mb-4 flex justify-center" style={{ maxWidth: `${Math.min(boardSize, window.innerWidth - 48)}px`, margin: '0 auto' }}>
                   {guessChess && (
                     <Chessboard
                       position={guessChess.fen()}
@@ -790,7 +790,7 @@ export function LegendDetailPage() {
                         return true;
                       }}
                       boardOrientation={guessSession?.legendColor || 'white'}
-                      boardWidth={boardSize}
+                      boardWidth={Math.min(boardSize, window.innerWidth - 48)}
                       customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                       customLightSquareStyle={boardStyles.customLightSquareStyle}
                     />

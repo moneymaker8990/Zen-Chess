@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import allOpenings, { type OpeningLine } from '@/data/openings';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 
@@ -373,8 +374,9 @@ export function OpeningsPage() {
   const autoPlayTimeout = useRef<ReturnType<typeof setTimeout>>();
   const [showDatabaseLines, setShowDatabaseLines] = useState(false);
   
-  // Board settings
+  // Board settings and sizing
   const boardStyles = useBoardStyles();
+  const boardSize = useBoardSize(480, 32);
 
   // Calculate lines count for each course - separate learning vs database
   const coursesWithCounts = useMemo(() => {
@@ -673,19 +675,19 @@ export function OpeningsPage() {
         </section>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-4 items-center justify-between">
-          <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center justify-between">
+          <div className="flex gap-1 sm:gap-2 overflow-x-auto pb-1">
             {(['all', 'white', 'black'] as const).map(side => (
               <button
                 key={side}
                 onClick={() => setFilterSide(side)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                className={`px-2 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
                   filterSide === side
                     ? 'bg-gold-500/20 text-gold-400 border border-gold-500/50'
                     : 'bg-zen-800/40 text-zen-400 border border-zen-700/30 hover:border-zen-600/50'
                 }`}
               >
-                {side === 'all' ? '🎯 All Openings' : side === 'white' ? '⬜ For White' : '⬛ For Black'}
+                {side === 'all' ? '🎯 All' : side === 'white' ? '⬜ White' : '⬛ Black'}
               </button>
             ))}
           </div>
@@ -696,7 +698,7 @@ export function OpeningsPage() {
               placeholder="Search openings..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-64 px-4 py-2 pl-10 rounded-lg bg-zen-800/40 border border-zen-700/30 text-zen-200 placeholder-zen-600 focus:outline-none focus:border-gold-500/50"
+              className="w-full sm:w-64 px-4 py-2 pl-10 rounded-lg bg-zen-800/40 border border-zen-700/30 text-zen-200 placeholder-zen-600 focus:outline-none focus:border-gold-500/50"
             />
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zen-600">🔍</span>
           </div>
@@ -774,24 +776,24 @@ export function OpeningsPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-4 gap-4">
-          <div className="glass-card p-6 text-center">
-            <div className="text-3xl font-serif text-gold-400">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+          <div className="glass-card p-3 sm:p-6 text-center">
+            <div className="text-xl sm:text-3xl font-serif text-gold-400">
               {coursesWithCounts.reduce((sum, c) => sum + (c.learningCount > 0 ? c.learningCount : Math.min(50, c.totalCount)), 0)}
             </div>
-            <div className="text-zen-500 text-sm">Learning Lines</div>
+            <div className="text-zen-500 text-xs sm:text-sm">Learning Lines</div>
           </div>
-          <div className="glass-card p-6 text-center">
-            <div className="text-3xl font-serif text-zen-400">{allOpenings.length.toLocaleString()}</div>
-            <div className="text-zen-600 text-sm">Full Database</div>
+          <div className="glass-card p-3 sm:p-6 text-center">
+            <div className="text-xl sm:text-3xl font-serif text-zen-400">{allOpenings.length.toLocaleString()}</div>
+            <div className="text-zen-600 text-xs sm:text-sm">Full Database</div>
           </div>
-          <div className="glass-card p-6 text-center">
-            <div className="text-3xl font-serif text-gold-400">{OPENING_COURSES.length}</div>
-            <div className="text-zen-500 text-sm">Opening Systems</div>
+          <div className="glass-card p-3 sm:p-6 text-center">
+            <div className="text-xl sm:text-3xl font-serif text-gold-400">{OPENING_COURSES.length}</div>
+            <div className="text-zen-500 text-xs sm:text-sm">Opening Systems</div>
           </div>
-          <div className="glass-card p-6 text-center">
-            <div className="text-3xl font-serif text-gold-400">12</div>
-            <div className="text-zen-500 text-sm">Legend References</div>
+          <div className="glass-card p-3 sm:p-6 text-center">
+            <div className="text-xl sm:text-3xl font-serif text-gold-400">12</div>
+            <div className="text-zen-500 text-xs sm:text-sm">Legend References</div>
           </div>
         </div>
       </div>
@@ -977,15 +979,15 @@ export function OpeningsPage() {
           <span className="text-zen-300">{selectedOpening.variation}</span>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_400px] gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_360px] gap-4 lg:gap-8">
           {/* Board Section */}
-          <div className="space-y-4">
+          <div className="space-y-4 w-full overflow-hidden">
             {/* Mode Toggle */}
-            <div className="flex items-center gap-4 mb-2">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-2">
               <div className="flex rounded-lg bg-zen-800/40 p-1">
                 <button
                   onClick={() => setPracticeMode('learn')}
-                  className={`px-4 py-2 rounded-md text-sm transition-all ${
+                  className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm transition-all ${
                     practiceMode === 'learn'
                       ? 'bg-gold-500/20 text-gold-400'
                       : 'text-zen-400 hover:text-zen-200'
@@ -995,7 +997,7 @@ export function OpeningsPage() {
                 </button>
                 <button
                   onClick={() => setPracticeMode('test')}
-                  className={`px-4 py-2 rounded-md text-sm transition-all ${
+                  className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm transition-all ${
                     practiceMode === 'test'
                       ? 'bg-gold-500/20 text-gold-400'
                       : 'text-zen-400 hover:text-zen-200'
@@ -1006,7 +1008,7 @@ export function OpeningsPage() {
               </div>
               
               {streak > 2 && (
-                <div className="flex items-center gap-2 text-amber-400 text-sm">
+                <div className="flex items-center gap-2 text-amber-400 text-xs sm:text-sm">
                   <span>🔥</span>
                   <span>{streak} streak</span>
                 </div>
@@ -1014,7 +1016,7 @@ export function OpeningsPage() {
             </div>
 
             {/* Chessboard */}
-            <div className="relative">
+            <div className="relative w-full" style={{ maxWidth: `${Math.min(boardSize, window.innerWidth - 32)}px` }}>
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}
@@ -1025,6 +1027,7 @@ export function OpeningsPage() {
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
                 animationDuration={boardStyles.animationDuration}
                 arePiecesDraggable={isUserTurn && feedback !== 'complete'}
+                boardWidth={Math.min(boardSize, window.innerWidth - 32)}
               />
               
               {/* Correct Move Feedback */}
