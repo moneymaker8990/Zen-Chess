@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/:path((?!assets|api|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
