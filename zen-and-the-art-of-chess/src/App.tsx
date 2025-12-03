@@ -55,6 +55,7 @@ import { AuthPage } from '@/pages/AuthPage';
 import { AICoachDashboard } from '@/pages/AICoachDashboard';
 import { PlayFriendPage } from '@/pages/PlayFriendPage';
 import { LiveGamePage } from '@/pages/LiveGamePage';
+import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { useProgressStore } from '@/state/useStore';
 import { useAuthStore } from '@/state/useAuthStore';
 import { initializeCoach } from '@/state/coachStore';
@@ -210,6 +211,8 @@ function App() {
           <AppContent />
         </Layout>
       </OnboardingWrapper>
+      {/* Update prompt for new app versions */}
+      <UpdatePrompt />
     </ErrorBoundary>
   );
 }

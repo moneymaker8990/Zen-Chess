@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt', // Prompt user to refresh instead of auto-updating
       includeAssets: [
         'favicon.svg', 
         'favicon-32x32.png',
@@ -80,7 +80,40 @@ export default defineConfig({
         globPatterns: ['**/*.{css,html,ico,png,svg,wasm}'],
         globIgnores: ['**/data/**', '**/assets/index-*.js'],
         maximumFileSizeToCacheInBytes: 100 * 1024 * 1024, // 100 MB
+        // Clean up old caches on activation
+        cleanupOutdatedCaches: true,
+        // Skip waiting for old service worker to finish
+        skipWaiting: true,
+        // Take control of all clients immediately
+        clientsClaim: true,
         runtimeCaching: [
+          // Network-first for navigation requests (HTML)
+          {
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 // 1 hour
+              },
+              networkTimeoutSeconds: 3
+            }
+          },
+          // Network-first for JS bundles to always get fresh code
+          {
+            urlPattern: /\/assets\/.*\.js$/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'js-cache',
+              expiration: {
+                maxEntries: 20,
+                maxAgeSeconds: 60 * 60 * 24 // 1 day
+              },
+              networkTimeoutSeconds: 3
+            }
+          },
+          // Cache-first for fonts (they rarely change)
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
@@ -106,6 +139,18 @@ export default defineConfig({
               },
               cacheableResponse: {
                 statuses: [0, 200]
+              }
+            }
+          },
+          // Stale-while-revalidate for images and other assets
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'image-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
               }
             }
           }
