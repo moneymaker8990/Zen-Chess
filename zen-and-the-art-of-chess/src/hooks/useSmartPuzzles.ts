@@ -4,10 +4,10 @@
 // Works silently behind the scenes
 // ============================================
 
-import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useAIIntelligence, useIntelligentDefaults } from '@/lib/aiIntelligence';
-import { puzzles } from '@/data/puzzles';
-import type { ChessPuzzle, PatternType } from '@/lib/types';
+import { getNextPuzzleAnonymous, getPuzzlesByTheme, type PuzzleWithMeta } from '@/lib/puzzleService';
+import type { PatternType } from '@/lib/types';
 
 // ============================================
 // TYPES
@@ -24,7 +24,7 @@ interface SmartPuzzleConfig {
 
 interface SmartPuzzleState {
   /** Currently selected puzzle */
-  currentPuzzle: ChessPuzzle | null;
+  currentPuzzle: PuzzleWithMeta | null;
   /** AI-determined difficulty for this puzzle */
   effectiveDifficulty: number;
   /** Why this puzzle was selected */
@@ -33,11 +33,13 @@ interface SmartPuzzleState {
   adaptiveMode: boolean;
   /** Puzzles seen this session (to avoid repetition) */
   seenCount: number;
+  /** Loading state */
+  isLoading: boolean;
 }
 
 interface SmartPuzzleActions {
   /** Get next puzzle with AI selection */
-  getNextPuzzle: () => ChessPuzzle;
+  getNextPuzzle: () => Promise<PuzzleWithMeta | null>;
   /** Record puzzle result for learning */
   recordResult: (solved: boolean, timeSeconds: number, usedHint: boolean) => void;
   /** Skip current puzzle (records as skipped) */
@@ -47,93 +49,83 @@ interface SmartPuzzleActions {
 }
 
 // ============================================
-// SMART PUZZLE SELECTION LOGIC
+// SMART PUZZLE SELECTION LOGIC (Async, uses Supabase)
 // ============================================
 
-function selectSmartPuzzle(
-  allPuzzles: ChessPuzzle[],
+async function selectSmartPuzzle(
   seenIds: Set<string>,
   targetDifficulty: number,
   targetTheme: string | null,
   mode: SmartPuzzleConfig['mode'],
   userStrengths: string[],
   userWeaknesses: string[],
-): { puzzle: ChessPuzzle; reason: string } {
-  // Filter out seen puzzles
-  let pool = allPuzzles.filter(p => !seenIds.has(p.id));
+): Promise<{ puzzle: PuzzleWithMeta | null; reason: string }> {
+  // Convert difficulty (1-5) to rating (600-2100)
+  const targetRating = 600 + (targetDifficulty * 300);
+  const ratingRange = mode === 'streak' ? 150 : 200;
+  const excludeIds = Array.from(seenIds);
   
-  // If we've seen too many, reset
-  if (pool.length < 10) {
-    pool = allPuzzles;
-  }
-  
-  // Apply difficulty filter (with tolerance)
-  const difficultyRange = mode === 'streak' ? 0 : 1; // Streak mode is more strict
-  pool = pool.filter(p => 
-    p.difficulty >= targetDifficulty - difficultyRange && 
-    p.difficulty <= targetDifficulty + difficultyRange
-  );
-  
-  // If too few puzzles, widen the range
-  if (pool.length < 5) {
-    pool = allPuzzles.filter(p => !seenIds.has(p.id));
-  }
-  
-  // Apply theme filtering based on mode
   let reason = 'Random selection';
+  let puzzle: PuzzleWithMeta | null = null;
   
-  if (mode === 'weakness' && userWeaknesses.length > 0) {
-    // Target weaknesses
-    const weaknessPool = pool.filter(p => 
-      p.themes.some(t => userWeaknesses.includes(t))
-    );
-    if (weaknessPool.length > 0) {
-      pool = weaknessPool;
-      reason = `Targeting weakness: ${userWeaknesses[0]}`;
-    }
-  } else if (targetTheme) {
-    // Specific theme requested
-    const themePool = pool.filter(p => p.themes.includes(targetTheme as PatternType));
-    if (themePool.length > 0) {
-      pool = themePool;
-      reason = `Theme focus: ${targetTheme}`;
-    }
-  } else if (mode === 'practice') {
-    // Mix of strengths and weaknesses - smart practice
-    const rand = Math.random();
-    if (rand < 0.3 && userWeaknesses.length > 0) {
-      // 30% chance to target a weakness
-      const weakness = userWeaknesses[Math.floor(Math.random() * userWeaknesses.length)];
-      const weaknessPool = pool.filter(p => p.themes.includes(weakness as PatternType));
-      if (weaknessPool.length > 0) {
-        pool = weaknessPool;
-        reason = `Building up: ${weakness}`;
+  try {
+    if (mode === 'weakness' && userWeaknesses.length > 0) {
+      // Target weaknesses
+      const weakness = userWeaknesses[0].toLowerCase();
+      const themePuzzles = await getPuzzlesByTheme(weakness, 20, targetRating);
+      const unseen = themePuzzles.filter(p => !seenIds.has(p.id));
+      if (unseen.length > 0) {
+        puzzle = unseen[Math.floor(Math.random() * unseen.length)];
+        reason = `Targeting weakness: ${userWeaknesses[0]}`;
       }
-    } else if (rand < 0.5 && userStrengths.length > 0) {
-      // 20% chance to reinforce a strength
-      const strength = userStrengths[Math.floor(Math.random() * userStrengths.length)];
-      const strengthPool = pool.filter(p => p.themes.includes(strength as PatternType));
-      if (strengthPool.length > 0) {
-        pool = strengthPool;
-        reason = `Reinforcing: ${strength}`;
+    } else if (targetTheme) {
+      // Specific theme requested
+      const themePuzzles = await getPuzzlesByTheme(targetTheme.toLowerCase(), 20, targetRating);
+      const unseen = themePuzzles.filter(p => !seenIds.has(p.id));
+      if (unseen.length > 0) {
+        puzzle = unseen[Math.floor(Math.random() * unseen.length)];
+        reason = `Theme focus: ${targetTheme}`;
       }
-    } else {
-      reason = 'Balanced practice';
+    } else if (mode === 'practice') {
+      // Mix of strengths and weaknesses
+      const rand = Math.random();
+      if (rand < 0.3 && userWeaknesses.length > 0) {
+        const weakness = userWeaknesses[Math.floor(Math.random() * userWeaknesses.length)];
+        const themePuzzles = await getPuzzlesByTheme(weakness.toLowerCase(), 20, targetRating);
+        const unseen = themePuzzles.filter(p => !seenIds.has(p.id));
+        if (unseen.length > 0) {
+          puzzle = unseen[Math.floor(Math.random() * unseen.length)];
+          reason = `Building up: ${weakness}`;
+        }
+      } else if (rand < 0.5 && userStrengths.length > 0) {
+        const strength = userStrengths[Math.floor(Math.random() * userStrengths.length)];
+        const themePuzzles = await getPuzzlesByTheme(strength.toLowerCase(), 20, targetRating);
+        const unseen = themePuzzles.filter(p => !seenIds.has(p.id));
+        if (unseen.length > 0) {
+          puzzle = unseen[Math.floor(Math.random() * unseen.length)];
+          reason = `Reinforcing: ${strength}`;
+        }
+      }
+      if (!puzzle) {
+        reason = 'Balanced practice';
+      }
     }
-  } else if (mode === 'rated') {
-    // Rated mode - pure difficulty matching
-    reason = `Difficulty: ${targetDifficulty}★`;
-  } else if (mode === 'rush') {
-    // Rush mode - slightly easier, focus on speed
-    pool = pool.filter(p => p.difficulty <= targetDifficulty);
-    reason = 'Speed challenge';
-  } else if (mode === 'streak') {
-    // Streak mode - gradually harder
-    reason = `Streak difficulty: ${targetDifficulty}★`;
+    
+    // Fallback to rating-based selection
+    if (!puzzle) {
+      puzzle = await getNextPuzzleAnonymous(targetRating, excludeIds, { ratingRange });
+      
+      if (mode === 'rated') {
+        reason = `Difficulty: ${targetDifficulty}★`;
+      } else if (mode === 'rush') {
+        reason = 'Speed challenge';
+      } else if (mode === 'streak') {
+        reason = `Streak difficulty: ${targetDifficulty}★`;
+      }
+    }
+  } catch (err) {
+    console.error('Failed to select puzzle:', err);
   }
-  
-  // Select random from pool
-  const puzzle = pool[Math.floor(Math.random() * pool.length)] || allPuzzles[0];
   
   return { puzzle, reason };
 }
@@ -153,13 +145,13 @@ export function useSmartPuzzles(config: SmartPuzzleConfig): SmartPuzzleState & S
     recordPuzzleAttempt,
     learnFromBehavior,
     patterns,
-    session,
     adaptiveDifficultyEnabled,
   } = useAIIntelligence();
   
   // Local state
-  const [currentPuzzle, setCurrentPuzzle] = useState<ChessPuzzle | null>(null);
+  const [currentPuzzle, setCurrentPuzzle] = useState<PuzzleWithMeta | null>(null);
   const [selectionReason, setSelectionReason] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const seenPuzzles = useRef<Set<string>>(new Set());
   const puzzleStartTime = useRef<number>(Date.now());
   
@@ -175,24 +167,36 @@ export function useSmartPuzzles(config: SmartPuzzleConfig): SmartPuzzleState & S
     return getSmartPuzzleTheme();
   }, [forcedTheme, getSmartPuzzleTheme]);
   
-  // Get next puzzle with smart selection
-  const getNextPuzzle = useCallback(() => {
-    const { puzzle, reason } = selectSmartPuzzle(
-      puzzles,
-      seenPuzzles.current,
-      effectiveDifficulty,
-      effectiveTheme,
-      mode,
-      patterns.puzzleStrengths,
-      patterns.puzzleWeaknesses,
-    );
+  // Get next puzzle with smart selection (async)
+  const getNextPuzzle = useCallback(async () => {
+    setIsLoading(true);
     
-    seenPuzzles.current.add(puzzle.id);
-    setCurrentPuzzle(puzzle);
-    setSelectionReason(reason);
-    puzzleStartTime.current = Date.now();
-    
-    return puzzle;
+    try {
+      const { puzzle, reason } = await selectSmartPuzzle(
+        seenPuzzles.current,
+        effectiveDifficulty,
+        effectiveTheme,
+        mode,
+        patterns.puzzleStrengths,
+        patterns.puzzleWeaknesses,
+      );
+      
+      if (puzzle) {
+        seenPuzzles.current.add(puzzle.id);
+        // Reset seen if too many
+        if (seenPuzzles.current.size > 100) {
+          seenPuzzles.current.clear();
+          seenPuzzles.current.add(puzzle.id);
+        }
+        setCurrentPuzzle(puzzle);
+        setSelectionReason(reason);
+        puzzleStartTime.current = Date.now();
+      }
+      
+      return puzzle;
+    } finally {
+      setIsLoading(false);
+    }
   }, [effectiveDifficulty, effectiveTheme, mode, patterns]);
   
   // Record puzzle result
@@ -234,6 +238,7 @@ export function useSmartPuzzles(config: SmartPuzzleConfig): SmartPuzzleState & S
     selectionReason,
     adaptiveMode: adaptiveDifficultyEnabled,
     seenCount: seenPuzzles.current.size,
+    isLoading,
     
     // Actions
     getNextPuzzle,

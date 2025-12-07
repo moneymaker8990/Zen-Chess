@@ -1,8 +1,7 @@
-import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { AnimatePresence } from 'framer-motion';
-import { allPuzzles } from '@/data/puzzles';
 import { useCoachStore } from '@/state/coachStore';
 import { useBoardSettingsStore, useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
 import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
@@ -18,18 +17,14 @@ import {
   saveLocalPuzzleData,
   calculateEloChange,
   getThemeLabel,
+  getNextPuzzleAnonymous,
+  getDailyPuzzle,
+  getPuzzlesByTheme,
+  type PuzzleWithMeta,
 } from '@/lib/puzzleService';
-import {
-  selectLocalPuzzle,
-  getDailyPuzzle as getLocalDailyPuzzle,
-  getStreakPuzzle,
-  getRushPuzzle,
-  getOriginalPuzzle,
-  getPuzzlePoolStats,
-} from '@/lib/puzzlePool';
-import type { PuzzleWithMeta } from '@/lib/puzzleService';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import type { MoveHintStyle } from '@/lib/constants';
-import type { ChessPuzzle, PatternType } from '@/lib/types';
+import type { PatternType } from '@/lib/types';
 
 // ============================================
 // TYPES & CONSTANTS
@@ -112,45 +107,23 @@ function getNextTier(tier: TierLevel): TierLevel | null {
   return idx < tiers.length - 1 ? tiers[idx + 1] : null;
 }
 
-// Get puzzle rating - supports both old ChessPuzzle and new PuzzleWithMeta formats
-function getPuzzleRating(puzzle: ChessPuzzle | PuzzleWithMeta): number {
-  // New format has rating directly
-  if ('rating' in puzzle && typeof puzzle.rating === 'number') {
-    return puzzle.rating;
-  }
-  // Old format - estimate from difficulty
-  if ('difficulty' in puzzle) {
-    const ratings: Record<number, number> = {
-      1: 800,   // Beginner
-      2: 1100,  // Easy
-      3: 1400,  // Intermediate
-      4: 1700,  // Advanced
-      5: 2000,  // Master
-    };
-    return ratings[(puzzle as ChessPuzzle).difficulty] || 1000;
-  }
-  return 1000;
+// Get puzzle rating (Lichess puzzles always have rating)
+function getPuzzleRating(puzzle: PuzzleWithMeta): number {
+  return puzzle.rating;
 }
 
-// Get solution moves as array - supports both formats
-function getSolutionMoves(puzzle: ChessPuzzle | PuzzleWithMeta): string[] {
-  if ('solutionMoves' in puzzle) {
-    return puzzle.solutionMoves;
-  }
-  return (puzzle as ChessPuzzle).solution;
+// Get solution moves as array (Lichess puzzles use UCI format)
+function getSolutionMoves(puzzle: PuzzleWithMeta): string[] {
+  return puzzle.solutionMoves;
 }
 
-// Get themes - supports both formats
-function getThemes(puzzle: ChessPuzzle | PuzzleWithMeta): string[] {
+// Get themes
+function getThemes(puzzle: PuzzleWithMeta): string[] {
   return puzzle.themes || [];
 }
 
-// Get puzzle title
-function getPuzzleTitle(puzzle: ChessPuzzle | PuzzleWithMeta): string {
-  if ('title' in puzzle && puzzle.title) {
-    return puzzle.title;
-  }
-  // Generate title from themes
+// Get puzzle title from themes
+function getPuzzleTitle(puzzle: PuzzleWithMeta): string {
   const themes = getThemes(puzzle);
   if (themes.length > 0) {
     return getThemeLabel(themes[0]);
@@ -158,26 +131,34 @@ function getPuzzleTitle(puzzle: ChessPuzzle | PuzzleWithMeta): string {
   return 'Find the Best Move';
 }
 
-// Get puzzle explanation
-function getPuzzleExplanation(puzzle: ChessPuzzle | PuzzleWithMeta): string | undefined {
-  if ('explanation' in puzzle) {
-    return (puzzle as ChessPuzzle).explanation;
-  }
-  return undefined;
-}
-
-// Get difficulty (1-5 scale)
-function getPuzzleDifficulty(puzzle: ChessPuzzle | PuzzleWithMeta): number {
-  if ('difficulty' in puzzle) {
-    return (puzzle as ChessPuzzle).difficulty;
-  }
-  // Estimate from rating
-  const rating = getPuzzleRating(puzzle);
+// Get difficulty (1-5 scale) from rating
+function getPuzzleDifficulty(puzzle: PuzzleWithMeta): number {
+  const rating = puzzle.rating;
   if (rating < 1000) return 1;
   if (rating < 1300) return 2;
   if (rating < 1600) return 3;
   if (rating < 1900) return 4;
   return 5;
+}
+
+// Convert UCI move (e.g., "e2e4") to from/to squares
+function parseUciMove(uci: string): { from: string; to: string; promotion?: string } | null {
+  if (uci.length < 4) return null;
+  return {
+    from: uci.slice(0, 2),
+    to: uci.slice(2, 4),
+    promotion: uci.length > 4 ? uci[4] : undefined,
+  };
+}
+
+// Check if a move matches the expected UCI move
+function moveMatchesUci(move: { from: string; to: string; promotion?: string }, uci: string): boolean {
+  const expected = parseUciMove(uci);
+  if (!expected) return false;
+  if (move.from !== expected.from || move.to !== expected.to) return false;
+  // Check promotion if present
+  if (expected.promotion && move.promotion !== expected.promotion) return false;
+  return true;
 }
 
 // ============================================
@@ -195,8 +176,15 @@ export function PuzzlesPage() {
   // Navigation State
   const [mode, setMode] = useState<PuzzleMode>('menu');
   
-  // Puzzle State - supports both old ChessPuzzle and new PuzzleWithMeta formats
-  const [currentPuzzle, setCurrentPuzzle] = useState<ChessPuzzle | PuzzleWithMeta | null>(null);
+  // Puzzle State - uses Lichess puzzles only
+  const [currentPuzzle, setCurrentPuzzle] = useState<PuzzleWithMeta | null>(null);
+  
+  // Loading state for async puzzle fetching
+  const [isLoadingPuzzle, setIsLoadingPuzzle] = useState(false);
+  const [puzzleError, setPuzzleError] = useState<string | null>(null);
+  
+  // Puzzle count from Supabase
+  const [puzzleCount, setPuzzleCount] = useState<number>(50000);
   
   // Last rating change (for chess.com style display)
   const [lastRatingChange, setLastRatingChange] = useState<number | null>(null);
@@ -296,53 +284,41 @@ export function PuzzlesPage() {
     return () => clearInterval(rushInterval.current);
   }, [rushActive]);
 
-  // Get filtered puzzles for custom mode
-  const filteredPuzzles = useMemo(() => {
-    return allPuzzles.filter(p => {
-      if (selectedTheme && !p.themes.includes(selectedTheme)) return false;
-      if (selectedDifficulty && p.difficulty !== selectedDifficulty) return false;
-      return true;
-    });
-  }, [selectedTheme, selectedDifficulty]);
-
-  // Select puzzle based on rating (for rated mode) - uses new adaptive puzzle pool
-  const selectRatedPuzzle = useCallback((): ChessPuzzle | PuzzleWithMeta | null => {
-    // Use new puzzle pool with proper selection algorithm
-    const puzzle = selectLocalPuzzle({
-      userRating: stats.rating,
-      ratingRange: 200,
-      excludeIds: Array.from(seenPuzzleIds.current),
-      mode: 'rated',
-    });
-    
-    if (puzzle) {
-      // Try to get the original ChessPuzzle for richer data (title, explanation, etc.)
-      const original = getOriginalPuzzle(puzzle.id);
-      if (original) {
-        return original;
+  // Fetch puzzle count on mount
+  useEffect(() => {
+    const fetchPuzzleCount = async () => {
+      if (isSupabaseConfigured) {
+        try {
+          const { count } = await supabase
+            .from('puzzles')
+            .select('*', { count: 'exact', head: true });
+          if (count) setPuzzleCount(count);
+        } catch (e) {
+          // Keep default count
+        }
       }
-      return puzzle;
-    }
-    
-    // Fallback to old method if new pool fails
-    const targetRating = stats.rating;
-    const range = 200;
-    const eligible = allPuzzles.filter(p => {
-      const pr = getPuzzleRating(p);
-      return pr >= targetRating - range && pr <= targetRating + range;
+    };
+    fetchPuzzleCount();
+  }, []);
+
+  // Async puzzle fetching function - replaces old synchronous selection
+  const fetchNextPuzzle = useCallback(async (
+    targetRating: number = stats.rating,
+    options: { theme?: string; ratingRange?: number } = {}
+  ): Promise<PuzzleWithMeta | null> => {
+    const excludeIds = Array.from(seenPuzzleIds.current);
+    return getNextPuzzleAnonymous(targetRating, excludeIds, {
+      theme: options.theme,
+      ratingRange: options.ratingRange || 200,
     });
-    
-    const unseenEligible = eligible.filter(p => !seenPuzzleIds.current.has(p.id));
-    const pool = unseenEligible.length > 0 ? unseenEligible : allPuzzles;
-    return pool[Math.floor(Math.random() * pool.length)];
   }, [stats.rating]);
 
   // Track if we've already recorded a failure for this puzzle attempt
   const hasRecordedFailure = useRef(false);
   
-  // Start a puzzle - with setup move animation if available
-  // Supports both old ChessPuzzle and new PuzzleWithMeta formats
-  const startPuzzle = useCallback((puzzle: ChessPuzzle | PuzzleWithMeta) => {
+  // Start a puzzle - with setup move animation
+  // Uses Lichess puzzles with UCI move format
+  const startPuzzle = useCallback((puzzle: PuzzleWithMeta) => {
     // Mark puzzle as seen to avoid repetition
     seenPuzzleIds.current.add(puzzle.id);
     
@@ -403,57 +379,71 @@ export function PuzzlesPage() {
     }
   }, [recordEvent]);
 
-  // Helper to get random unseen puzzle from a pool
-  const getRandomUnseenPuzzle = useCallback((pool: ChessPuzzle[]): ChessPuzzle => {
-    const unseen = pool.filter(p => !seenPuzzleIds.current.has(p.id));
-    const finalPool = unseen.length > 0 ? unseen : pool;
-    return finalPool[Math.floor(Math.random() * finalPool.length)];
-  }, []);
-
-  // Start a mode
-  const startMode = useCallback((newMode: PuzzleMode) => {
+  // Start a mode - now async, fetches from Supabase
+  const startMode = useCallback(async (newMode: PuzzleMode) => {
     setMode(newMode);
+    setIsLoadingPuzzle(true);
+    setPuzzleError(null);
     
     // Clear seen puzzles when starting a new mode (except for rush/streak continuation)
     if (newMode !== 'rush' && newMode !== 'streak') {
       seenPuzzleIds.current.clear();
     }
     
-    if (newMode === 'rated') {
-      startPuzzle(selectRatedPuzzle());
-    } else if (newMode === 'rush') {
-      setRushTimer(180);
-      setRushStrikes(0);
-      setRushScore(0);
-      setRushActive(true);
-      seenPuzzleIds.current.clear(); // Fresh start for rush
-      startPuzzle(getRandomUnseenPuzzle(allPuzzles));
-    } else if (newMode === 'streak') {
-      setStreakCount(0);
-      setStreakDifficulty(1);
-      setStreakActive(true);
-      seenPuzzleIds.current.clear(); // Fresh start for streak
-      // Use new streak puzzle system - starts easy, gets harder
-      const streakPuzzle = getStreakPuzzle(0);
-      if (streakPuzzle) {
-        const original = getOriginalPuzzle(streakPuzzle.id);
-        startPuzzle(original || streakPuzzle);
+    try {
+      let puzzle: PuzzleWithMeta | null = null;
+      
+      if (newMode === 'rated') {
+        puzzle = await fetchNextPuzzle(stats.rating, { ratingRange: 200 });
+      } else if (newMode === 'rush') {
+        setRushTimer(180);
+        setRushStrikes(0);
+        setRushScore(0);
+        setRushActive(true);
+        seenPuzzleIds.current.clear();
+        puzzle = await fetchNextPuzzle(stats.rating, { ratingRange: 200 });
+      } else if (newMode === 'streak') {
+        setStreakCount(0);
+        setStreakDifficulty(1);
+        setStreakActive(true);
+        seenPuzzleIds.current.clear();
+        // Start easy for streak mode
+        puzzle = await fetchNextPuzzle(800, { ratingRange: 200 });
+      } else if (newMode === 'daily') {
+        puzzle = await getDailyPuzzle();
+      } else if (newMode === 'custom') {
+        if (selectedTheme) {
+          const themePuzzles = await getPuzzlesByTheme(selectedTheme, 20, stats.rating);
+          if (themePuzzles.length > 0) {
+            const unseen = themePuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+            puzzle = unseen.length > 0 
+              ? unseen[Math.floor(Math.random() * unseen.length)]
+              : themePuzzles[Math.floor(Math.random() * themePuzzles.length)];
+          }
+        }
+        if (!puzzle) {
+          const targetRating = selectedDifficulty 
+            ? 600 + (selectedDifficulty * 300)
+            : stats.rating;
+          puzzle = await fetchNextPuzzle(targetRating, { 
+            theme: selectedTheme || undefined,
+            ratingRange: 250 
+          });
+        }
+      }
+      
+      if (puzzle) {
+        startPuzzle(puzzle);
       } else {
-        // Fallback to old method
-        const easyPuzzles = allPuzzles.filter(p => p.difficulty === 1);
-        startPuzzle(getRandomUnseenPuzzle(easyPuzzles.length > 0 ? easyPuzzles : allPuzzles));
+        setPuzzleError('Unable to load puzzle. Please check your connection.');
       }
-    } else if (newMode === 'daily') {
-      const dailyPuzzle = getLocalDailyPuzzle();
-      // Try to get original puzzle for richer data
-      const original = getOriginalPuzzle(dailyPuzzle.id);
-      startPuzzle(original || dailyPuzzle);
-    } else if (newMode === 'custom') {
-      if (filteredPuzzles.length > 0) {
-        startPuzzle(getRandomUnseenPuzzle(filteredPuzzles));
-      }
+    } catch (err) {
+      console.error('Failed to start puzzle mode:', err);
+      setPuzzleError('Failed to load puzzle. Please try again.');
+    } finally {
+      setIsLoadingPuzzle(false);
     }
-  }, [selectRatedPuzzle, startPuzzle, filteredPuzzles, getRandomUnseenPuzzle]);
+  }, [fetchNextPuzzle, startPuzzle, stats.rating, selectedTheme, selectedDifficulty]);
 
   // Handle puzzle completion
   const handlePuzzleSolved = useCallback(() => {
@@ -518,33 +508,19 @@ export function PuzzlesPage() {
 
     if (mode === 'rush') {
       setRushScore(prev => prev + 1);
-      setTimeout(() => {
-        const unseen = allPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
-        const pool = unseen.length > 0 ? unseen : allPuzzles;
-        startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
+      setTimeout(async () => {
+        const puzzle = await fetchNextPuzzle(stats.rating, { ratingRange: 200 });
+        if (puzzle) startPuzzle(puzzle);
       }, 500);
     } else if (mode === 'streak') {
       const newStreakCount = streakCount + 1;
       setStreakCount(newStreakCount);
-      // Increase difficulty every 3 puzzles (same as before)
-      const newDifficulty = Math.min(5, Math.floor(newStreakCount / 3) + 1);
-      setStreakDifficulty(newDifficulty);
-      setTimeout(() => {
-        // Use new streak puzzle system for progressive difficulty
-        const streakPuzzle = getStreakPuzzle(newStreakCount);
-        if (streakPuzzle) {
-          const original = getOriginalPuzzle(streakPuzzle.id);
-          startPuzzle(original || streakPuzzle);
-        } else {
-          // Fallback to old method
-          const difficultyPuzzles = allPuzzles.filter(p => p.difficulty === newDifficulty);
-          const unseenDifficulty = difficultyPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
-          const pool = unseenDifficulty.length > 0 
-            ? unseenDifficulty 
-            : difficultyPuzzles.length > 0 
-              ? difficultyPuzzles 
-              : allPuzzles;
-          startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
+      // Increase difficulty every 3 puzzles - rating goes up by 100 each tier
+      const streakRating = Math.min(800 + (newStreakCount * 50), 2500);
+      setTimeout(async () => {
+        const puzzle = await fetchNextPuzzle(streakRating, { ratingRange: 150 });
+        if (puzzle) {
+          startPuzzle(puzzle);
         }
         setFeedback(null);
       }, 800);
@@ -641,10 +617,9 @@ export function PuzzlesPage() {
         return newStrikes;
       });
       if (rushStrikes < 2) {
-        setTimeout(() => {
-          const unseen = allPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
-          const pool = unseen.length > 0 ? unseen : allPuzzles;
-          startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
+        setTimeout(async () => {
+          const puzzle = await fetchNextPuzzle(stats.rating, { ratingRange: 200 });
+          if (puzzle) startPuzzle(puzzle);
         }, 800);
       }
     } else if (mode === 'streak') {
@@ -697,8 +672,11 @@ export function PuzzlesPage() {
 
       const solutionMoves = getSolutionMoves(currentPuzzle);
       const expectedMove = solutionMoves[moveIndex];
-      const isCorrect = result.san === expectedMove || 
-        `${from}${to}` === expectedMove ||
+      
+      // Check if move matches - Lichess uses UCI format (e2e4), also support SAN for legacy
+      const playerMove = `${from}${to}${result.promotion || ''}`;
+      const isCorrect = moveMatchesUci({ from, to, promotion: result.promotion }, expectedMove) ||
+        result.san === expectedMove ||
         result.san.replace(/[+#]/g, '') === expectedMove?.replace(/[+#]/g, '');
 
       if (isCorrect) {
@@ -806,14 +784,41 @@ export function PuzzlesPage() {
     return handleMove(sourceSquare, targetSquare);
   }, [feedback, mode, handleMove]);
 
-  // Next puzzle
-  const nextPuzzle = useCallback(() => {
-    if (mode === 'rated') {
-      startPuzzle(selectRatedPuzzle());
-    } else if (mode === 'custom' && filteredPuzzles.length > 0) {
-      startPuzzle(filteredPuzzles[Math.floor(Math.random() * filteredPuzzles.length)]);
+  // Next puzzle - async, fetches from Supabase
+  const nextPuzzle = useCallback(async () => {
+    setIsLoadingPuzzle(true);
+    try {
+      let puzzle: PuzzleWithMeta | null = null;
+      
+      if (mode === 'rated') {
+        puzzle = await fetchNextPuzzle(stats.rating, { ratingRange: 200 });
+      } else if (mode === 'custom') {
+        if (selectedTheme) {
+          const themePuzzles = await getPuzzlesByTheme(selectedTheme, 20, stats.rating);
+          if (themePuzzles.length > 0) {
+            const unseen = themePuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+            puzzle = unseen.length > 0 
+              ? unseen[Math.floor(Math.random() * unseen.length)]
+              : themePuzzles[Math.floor(Math.random() * themePuzzles.length)];
+          }
+        }
+        if (!puzzle) {
+          const targetRating = selectedDifficulty 
+            ? 600 + (selectedDifficulty * 300)
+            : stats.rating;
+          puzzle = await fetchNextPuzzle(targetRating, { ratingRange: 250 });
+        }
+      }
+      
+      if (puzzle) {
+        startPuzzle(puzzle);
+      }
+    } catch (err) {
+      console.error('Failed to get next puzzle:', err);
+    } finally {
+      setIsLoadingPuzzle(false);
     }
-  }, [mode, selectRatedPuzzle, filteredPuzzles, startPuzzle]);
+  }, [mode, stats.rating, selectedTheme, selectedDifficulty, fetchNextPuzzle, startPuzzle]);
 
   // Get hint squares from the expected move
   const getHintFromMove = useCallback((moveNotation: string): { from?: Square; to?: Square } => {
@@ -934,7 +939,7 @@ export function PuzzlesPage() {
             <span className="hidden sm:inline"><AgentWatching agents={['training', 'pattern']} /></span>
           </div>
           <p className="text-sm sm:text-lg" style={{ color: 'var(--text-tertiary)' }}>
-            {allPuzzles.length}+ puzzles to master
+            {puzzleCount.toLocaleString()}+ puzzles to master
           </p>
         </section>
 
@@ -1281,10 +1286,10 @@ export function PuzzlesPage() {
           </button>
           <button
             onClick={() => startMode('custom')}
-            disabled={filteredPuzzles.length === 0}
+            disabled={isLoadingPuzzle}
             className="btn-primary flex-1"
           >
-            Start Training ({filteredPuzzles.length} puzzles)
+            {isLoadingPuzzle ? 'Loading...' : 'Start Training'}
           </button>
         </div>
       </div>

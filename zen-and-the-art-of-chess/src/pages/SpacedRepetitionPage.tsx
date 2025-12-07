@@ -1,16 +1,21 @@
 // ============================================
 // SPACED REPETITION PUZZLE TRAINER
 // Smart review scheduling for long-term retention
+// Uses Lichess puzzles from Supabase
 // ============================================
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
-import { puzzles } from '@/data/puzzles';
 import { useBoardSize } from '@/hooks/useBoardSize';
-import type { ChessPuzzle } from '@/lib/types';
 import { playSmartMoveSound } from '@/lib/soundSystem';
+import { 
+  getPuzzlesByTheme, 
+  getNextPuzzleAnonymous,
+  type PuzzleWithMeta 
+} from '@/lib/puzzleService';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import {
   SRSCard,
   SRSStats,
@@ -151,20 +156,54 @@ export function SpacedRepetitionPage() {
     [srsState.cards, srsState.settings, srsState.reviewedToday.length]
   );
   
-  // Get available puzzles (not already in deck)
-  const availablePuzzles = useMemo(() => {
-    const cardIds = new Set(srsState.cards.map(c => c.id));
-    let available = puzzles.filter(p => !cardIds.has(p.id));
+  // Available puzzles from Supabase (fetched on demand)
+  const [availablePuzzles, setAvailablePuzzles] = useState<PuzzleWithMeta[]>([]);
+  const [isLoadingPuzzles, setIsLoadingPuzzles] = useState(false);
+  
+  // Fetch available puzzles when filter changes or add-cards view opens
+  useEffect(() => {
+    if (viewMode !== 'add-cards') return;
     
-    if (filterTheme) {
-      available = available.filter(p => p.themes.includes(filterTheme as any));
-    }
-    if (filterDifficulty) {
-      available = available.filter(p => p.difficulty === filterDifficulty);
-    }
+    const fetchPuzzles = async () => {
+      setIsLoadingPuzzles(true);
+      try {
+        const cardIds = new Set(srsState.cards.map(c => c.id));
+        
+        // Fetch puzzles from Supabase based on filters
+        let puzzles: PuzzleWithMeta[] = [];
+        
+        if (filterTheme) {
+          puzzles = await getPuzzlesByTheme(filterTheme, 50);
+        } else {
+          // Get random puzzles matching difficulty
+          const targetRating = filterDifficulty 
+            ? 600 + (filterDifficulty * 300) // difficulty 1-5 -> 900-2100
+            : 1200;
+          
+          // Fetch 50 puzzles around the target rating
+          const result = await getNextPuzzleAnonymous(targetRating, [], { ratingRange: 400 });
+          if (result) puzzles = [result];
+          
+          // Try to get more puzzles
+          for (let i = 0; i < 49 && puzzles.length < 50; i++) {
+            const p = await getNextPuzzleAnonymous(targetRating, puzzles.map(p => p.id), { ratingRange: 400 });
+            if (p) puzzles.push(p);
+          }
+        }
+        
+        // Filter out puzzles already in deck
+        const available = puzzles.filter(p => !cardIds.has(p.id));
+        setAvailablePuzzles(available);
+      } catch (err) {
+        console.error('Failed to fetch puzzles:', err);
+        setAvailablePuzzles([]);
+      } finally {
+        setIsLoadingPuzzles(false);
+      }
+    };
     
-    return available;
-  }, [srsState.cards, filterTheme, filterDifficulty]);
+    fetchPuzzles();
+  }, [viewMode, filterTheme, filterDifficulty, srsState.cards]);
   
   // Load a card with setup animation (shows opponent's last move)
   const loadCardWithSetup = useCallback((card: SRSCard) => {
@@ -342,21 +381,28 @@ export function SpacedRepetitionPage() {
     setOptionSquares({});
   }, [game, moveFrom, isAnimatingSetup, solved, failed, handleMove]);
   
-  // Add puzzles to deck
+  // Add puzzles to deck - now uses Supabase puzzles
   const addPuzzlesToDeck = useCallback(() => {
     const newCards: SRSCard[] = [];
     
     selectedPuzzles.forEach(puzzleId => {
-      const puzzle = puzzles.find(p => p.id === puzzleId);
+      // Find puzzle in our fetched available puzzles
+      const puzzle = availablePuzzles.find(p => p.id === puzzleId);
       if (puzzle) {
+        // Convert rating to difficulty (1-5)
+        const difficulty = puzzle.rating < 1000 ? 1 
+          : puzzle.rating < 1300 ? 2 
+          : puzzle.rating < 1600 ? 3 
+          : puzzle.rating < 1900 ? 4 : 5;
+        
         newCards.push(createSRSCard(
           puzzle.id,
           puzzle.fen,
-          puzzle.solution,
+          puzzle.solutionMoves, // Already an array for Lichess puzzles
           puzzle.themes,
-          puzzle.difficulty,
-          puzzle.beforeFen,
-          puzzle.setupMove
+          difficulty,
+          undefined, // Lichess puzzles don't have beforeFen
+          undefined  // Lichess puzzles don't have setupMove
         ));
       }
     });
@@ -368,7 +414,7 @@ export function SpacedRepetitionPage() {
     
     setSelectedPuzzles(new Set());
     setViewMode('overview');
-  }, [selectedPuzzles]);
+  }, [selectedPuzzles, availablePuzzles]);
   
   // ============================================
   // RENDER: OVERVIEW
@@ -894,9 +940,23 @@ export function SpacedRepetitionPage() {
         </div>
         
         {/* Puzzle Grid */}
+        {isLoadingPuzzles ? (
+          <div className="text-center py-8" style={{ color: 'var(--text-muted)' }}>
+            Loading puzzles from Lichess database...
+          </div>
+        ) : availablePuzzles.length === 0 ? (
+          <div className="text-center py-8" style={{ color: 'var(--text-muted)' }}>
+            No puzzles found. Try adjusting your filters.
+          </div>
+        ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto">
           {availablePuzzles.slice(0, 50).map(puzzle => {
             const isSelected = selectedPuzzles.has(puzzle.id);
+            // Convert rating to stars (1-5)
+            const stars = puzzle.rating < 1000 ? 1 
+              : puzzle.rating < 1300 ? 2 
+              : puzzle.rating < 1600 ? 3 
+              : puzzle.rating < 1900 ? 4 : 5;
             
             return (
               <button
@@ -922,7 +982,7 @@ export function SpacedRepetitionPage() {
                     ))}
                   </div>
                   <span style={{ color: '#f59e0b' }}>
-                    {'★'.repeat(puzzle.difficulty)}
+                    {'★'.repeat(stars)} ({puzzle.rating})
                   </span>
                 </div>
                 <div className="text-sm font-mono truncate" style={{ color: 'var(--text-muted)' }}>
@@ -937,6 +997,7 @@ export function SpacedRepetitionPage() {
             );
           })}
         </div>
+        )}
         
         {availablePuzzles.length > 50 && (
           <p className="text-center text-sm" style={{ color: 'var(--text-muted)' }}>

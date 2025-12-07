@@ -242,6 +242,215 @@ export async function getNextPuzzleFromSupabase(
 }
 
 /**
+ * Get next puzzle from Supabase for ANY user (including anonymous)
+ * This is the PRIMARY way to get puzzles - uses Lichess database
+ */
+export async function getNextPuzzleAnonymous(
+  userRating: number = DEFAULT_RATING,
+  excludeIds: string[] = [],
+  options: {
+    theme?: string;
+    minRating?: number;
+    maxRating?: number;
+    ratingRange?: number;
+  } = {}
+): Promise<PuzzleWithMeta | null> {
+  if (!isSupabaseConfigured) {
+    logger.error('Supabase not configured - cannot fetch puzzles');
+    return null;
+  }
+  
+  const {
+    theme,
+    minRating,
+    maxRating,
+    ratingRange = RATING_RANGE,
+  } = options;
+  
+  // Calculate rating bounds
+  const lowerBound = minRating ?? (userRating - ratingRange);
+  const upperBound = maxRating ?? (userRating + ratingRange);
+  
+  try {
+    // Build query for puzzles table
+    let query = supabase
+      .from('puzzles')
+      .select('id, fen, solution_moves, rating, themes, popularity')
+      .gte('rating', lowerBound)
+      .lte('rating', upperBound);
+    
+    // Filter by theme if specified
+    if (theme) {
+      query = query.contains('themes', [theme]);
+    }
+    
+    // Exclude recently seen puzzles (limit to 50 for query efficiency)
+    if (excludeIds.length > 0) {
+      const idsToExclude = excludeIds.slice(0, 50);
+      query = query.not('id', 'in', `(${idsToExclude.join(',')})`);
+    }
+    
+    // Get random puzzle - use order by random() equivalent
+    // Supabase doesn't have ORDER BY RANDOM(), so we fetch a few and pick one
+    const { data, error } = await query.limit(20);
+    
+    if (error) throw error;
+    
+    if (data && data.length > 0) {
+      // Pick a random puzzle from the results
+      const puzzle = data[Math.floor(Math.random() * data.length)];
+      return {
+        id: puzzle.id,
+        fen: puzzle.fen,
+        solutionMoves: puzzle.solution_moves.split(' '),
+        rating: puzzle.rating,
+        themes: puzzle.themes || [],
+        popularity: puzzle.popularity,
+      };
+    }
+    
+    // Widen the search if no puzzles found
+    logger.info('No puzzles in range, widening search...');
+    const { data: widerData, error: widerError } = await supabase
+      .from('puzzles')
+      .select('id, fen, solution_moves, rating, themes, popularity')
+      .gte('rating', userRating - ratingRange * 3)
+      .lte('rating', userRating + ratingRange * 3)
+      .limit(20);
+    
+    if (widerError) throw widerError;
+    
+    if (widerData && widerData.length > 0) {
+      const puzzle = widerData[Math.floor(Math.random() * widerData.length)];
+      return {
+        id: puzzle.id,
+        fen: puzzle.fen,
+        solutionMoves: puzzle.solution_moves.split(' '),
+        rating: puzzle.rating,
+        themes: puzzle.themes || [],
+        popularity: puzzle.popularity,
+      };
+    }
+    
+    // Last resort: get any puzzle
+    const { data: anyData, error: anyError } = await supabase
+      .from('puzzles')
+      .select('id, fen, solution_moves, rating, themes, popularity')
+      .limit(10);
+    
+    if (anyError) throw anyError;
+    
+    if (anyData && anyData.length > 0) {
+      const puzzle = anyData[Math.floor(Math.random() * anyData.length)];
+      return {
+        id: puzzle.id,
+        fen: puzzle.fen,
+        solutionMoves: puzzle.solution_moves.split(' '),
+        rating: puzzle.rating,
+        themes: puzzle.themes || [],
+        popularity: puzzle.popularity,
+      };
+    }
+    
+    return null;
+  } catch (err) {
+    logger.error('Failed to get puzzle from Supabase:', err);
+    return null;
+  }
+}
+
+/**
+ * Get puzzles by theme from Supabase (for pattern trainer, custom mode)
+ */
+export async function getPuzzlesByTheme(
+  theme: string,
+  limit: number = 20,
+  userRating?: number
+): Promise<PuzzleWithMeta[]> {
+  if (!isSupabaseConfigured) return [];
+  
+  try {
+    let query = supabase
+      .from('puzzles')
+      .select('id, fen, solution_moves, rating, themes, popularity')
+      .contains('themes', [theme]);
+    
+    // Optionally filter by rating
+    if (userRating) {
+      query = query
+        .gte('rating', userRating - 300)
+        .lte('rating', userRating + 300);
+    }
+    
+    const { data, error } = await query.limit(limit);
+    
+    if (error) throw error;
+    
+    return (data || []).map(puzzle => ({
+      id: puzzle.id,
+      fen: puzzle.fen,
+      solutionMoves: puzzle.solution_moves.split(' '),
+      rating: puzzle.rating,
+      themes: puzzle.themes || [],
+      popularity: puzzle.popularity,
+    }));
+  } catch (err) {
+    logger.error('Failed to get puzzles by theme:', err);
+    return [];
+  }
+}
+
+/**
+ * Get daily puzzle (deterministic based on date)
+ */
+export async function getDailyPuzzle(): Promise<PuzzleWithMeta | null> {
+  if (!isSupabaseConfigured) return null;
+  
+  try {
+    // Use date as seed for consistent daily puzzle
+    const today = new Date().toISOString().split('T')[0];
+    const dateNum = parseInt(today.replace(/-/g, ''), 10);
+    
+    // Get puzzle count
+    const { count, error: countError } = await supabase
+      .from('puzzles')
+      .select('*', { count: 'exact', head: true });
+    
+    if (countError) throw countError;
+    
+    if (!count || count === 0) return null;
+    
+    // Pick a puzzle based on date
+    const offset = dateNum % count;
+    
+    const { data, error } = await supabase
+      .from('puzzles')
+      .select('id, fen, solution_moves, rating, themes, popularity')
+      .range(offset, offset)
+      .limit(1);
+    
+    if (error) throw error;
+    
+    if (data && data.length > 0) {
+      const puzzle = data[0];
+      return {
+        id: puzzle.id,
+        fen: puzzle.fen,
+        solutionMoves: puzzle.solution_moves.split(' '),
+        rating: puzzle.rating,
+        themes: puzzle.themes || [],
+        popularity: puzzle.popularity,
+      };
+    }
+    
+    return null;
+  } catch (err) {
+    logger.error('Failed to get daily puzzle:', err);
+    return null;
+  }
+}
+
+/**
  * Submit puzzle result to Supabase
  */
 export async function submitPuzzleResultToSupabase(

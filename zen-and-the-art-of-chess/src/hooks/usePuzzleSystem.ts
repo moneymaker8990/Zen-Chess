@@ -1,7 +1,7 @@
 // ============================================
 // UNIFIED PUZZLE SYSTEM HOOK
 // Chess.com-style adaptive puzzle system
-// Works offline with localStorage, syncs with Supabase when available
+// Uses Lichess puzzles from Supabase for ALL users
 // ============================================
 
 import { useState, useCallback, useEffect, useRef } from 'react';
@@ -9,21 +9,15 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import {
   getPuzzleStats,
   submitPuzzleResult,
-  getNextPuzzleFromSupabase,
+  getNextPuzzleAnonymous,
+  getDailyPuzzle,
+  getPuzzlesByTheme,
   getLocalPuzzleData,
-  recordLocalPuzzleAttempt,
   calculateEloChange,
   type PuzzleWithMeta,
   type UserPuzzleData,
   type RatingUpdate,
 } from '@/lib/puzzleService';
-import {
-  selectLocalPuzzle,
-  getDailyPuzzle,
-  getStreakPuzzle,
-  getRushPuzzle,
-  getOriginalPuzzle,
-} from '@/lib/puzzlePool';
 import { logger } from '@/lib/logger';
 
 // ============================================
@@ -173,49 +167,58 @@ export function usePuzzleSystem(): PuzzleState & PuzzleActions {
     
     try {
       let puzzle: PuzzleWithMeta | null = null;
+      const excludeIds = Array.from(seenPuzzleIds.current);
       
-      // Try Supabase first if available and user is logged in
-      if (userId && isSupabaseConfigured) {
-        puzzle = await getNextPuzzleFromSupabase(
-          userId,
-          state.userRating,
-          state.mode === 'rated' ? [] : undefined
-        );
-      }
-      
-      // Fall back to local puzzle pool
-      if (!puzzle) {
-        switch (state.mode) {
-          case 'daily':
-            puzzle = getDailyPuzzle();
-            break;
-          case 'streak':
-            puzzle = getStreakPuzzle(state.streakCount);
-            break;
-          case 'rush':
-            puzzle = getRushPuzzle(state.userRating);
-            break;
-          case 'custom':
-            puzzle = selectLocalPuzzle({
-              userRating: state.userRating,
+      // ALWAYS fetch from Supabase (Lichess puzzles) - for ALL users
+      switch (state.mode) {
+        case 'daily':
+          puzzle = await getDailyPuzzle();
+          break;
+        case 'streak':
+          // For streak, start easy and get progressively harder
+          const streakRating = Math.min(state.userRating + (state.streakCount * 50), 2500);
+          puzzle = await getNextPuzzleAnonymous(streakRating, excludeIds, {
+            ratingRange: 150,
+          });
+          break;
+        case 'rush':
+          // Rush mode - puzzles at user's rating level
+          puzzle = await getNextPuzzleAnonymous(state.userRating, excludeIds, {
+            ratingRange: 200,
+          });
+          break;
+        case 'custom':
+          // Custom mode with theme/difficulty filters
+          if (customTheme) {
+            const themePuzzles = await getPuzzlesByTheme(customTheme, 20, state.userRating);
+            if (themePuzzles.length > 0) {
+              // Pick a random one that's not seen
+              const unseen = themePuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+              puzzle = unseen.length > 0 
+                ? unseen[Math.floor(Math.random() * unseen.length)]
+                : themePuzzles[Math.floor(Math.random() * themePuzzles.length)];
+            }
+          }
+          if (!puzzle) {
+            const targetRating = customDifficulty 
+              ? 600 + (customDifficulty * 300) // difficulty 1-5 -> 900-2100
+              : state.userRating;
+            puzzle = await getNextPuzzleAnonymous(targetRating, excludeIds, {
               theme: customTheme || undefined,
-              difficulty: customDifficulty || undefined,
-              excludeIds: Array.from(seenPuzzleIds.current),
-              mode: 'custom',
+              ratingRange: 250,
             });
-            break;
-          case 'rated':
-          default:
-            puzzle = selectLocalPuzzle({
-              userRating: state.userRating,
-              excludeIds: Array.from(seenPuzzleIds.current),
-              mode: 'rated',
-            });
-        }
+          }
+          break;
+        case 'rated':
+        default:
+          // Rated mode - adaptive puzzles at user's rating
+          puzzle = await getNextPuzzleAnonymous(state.userRating, excludeIds, {
+            ratingRange: 200,
+          });
       }
       
       if (!puzzle) {
-        throw new Error('No puzzles available');
+        throw new Error('No puzzles available. Please check your connection.');
       }
       
       // Track this puzzle as seen
@@ -242,10 +245,10 @@ export function usePuzzleSystem(): PuzzleState & PuzzleActions {
       setState(prev => ({
         ...prev,
         isLoading: false,
-        error: 'Failed to load puzzle. Please try again.',
+        error: 'Failed to load puzzle. Please check your connection and try again.',
       }));
     }
-  }, [state.mode, state.userRating, state.streakCount, userId, customTheme, customDifficulty]);
+  }, [state.mode, state.userRating, state.streakCount, customTheme, customDifficulty]);
   
   // ============================================
   // SUBMIT RESULT
@@ -400,6 +403,6 @@ export function usePuzzleSystem(): PuzzleState & PuzzleActions {
 // UTILITY EXPORTS
 // ============================================
 
-export { calculateEloChange, getOriginalPuzzle };
+export { calculateEloChange };
 export type { PuzzleWithMeta, RatingUpdate };
 
