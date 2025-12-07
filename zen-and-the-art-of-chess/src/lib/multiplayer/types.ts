@@ -342,3 +342,6 @@ export function getOpponentColor(color: PlayerColor): PlayerColor {
   return color === 'w' ? 'b' : 'w';
 }
 
+
+
+

@@ -3,6 +3,8 @@
 // Backup and restore user progress
 // ============================================
 
+import { logger } from './logger';
+
 // ============================================
 // EXPORT FUNCTIONS
 // ============================================
@@ -127,7 +129,7 @@ export function importUserData(jsonData: string): ImportResult {
           localStorage.setItem(key, stringValue);
           keysImported++;
         } catch (e) {
-          console.warn(`Failed to import key ${key}:`, e);
+          logger.warn(`Failed to import key ${key}:`, e);
         }
       }
     });

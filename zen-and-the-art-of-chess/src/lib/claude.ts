@@ -4,6 +4,7 @@
 // ============================================
 
 import Anthropic from '@anthropic-ai/sdk';
+import { logger } from './logger';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -241,7 +242,7 @@ export async function getAgentResponse(
     const textContent = response.content.find(block => block.type === 'text');
     return textContent?.text || 'I\'m here to help. Could you tell me more?';
   } catch (error) {
-    console.error('Claude API error:', error);
+    logger.error('Claude API error:', error);
     throw error;
   }
 }
@@ -394,7 +395,7 @@ export async function* streamAgentResponse(
       }
     }
   } catch (error) {
-    console.error('Claude streaming error:', error);
+    logger.error('Claude streaming error:', error);
     throw error;
   }
 }

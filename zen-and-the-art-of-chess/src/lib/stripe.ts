@@ -4,6 +4,7 @@
 // ============================================
 
 import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { logger } from './logger';
 
 let stripePromise: Promise<Stripe | null>;
 
@@ -11,7 +12,7 @@ const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '';
 
 export const getStripe = () => {
   if (!stripePublishableKey) {
-    console.warn('⚠️ Stripe not configured. Add VITE_STRIPE_PUBLISHABLE_KEY to .env');
+    logger.info('Stripe not configured. Add VITE_STRIPE_PUBLISHABLE_KEY to .env');
     return Promise.resolve(null);
   }
   
@@ -46,7 +47,7 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
   
   if (!apiUrl) {
     // Development mode - show instructions
-    console.log('💡 To enable payments, set up a backend with Stripe Checkout');
+    logger.info('To enable payments, set up a backend with Stripe Checkout');
     return { error: 'Payment backend not configured. See console for setup instructions.' };
   }
   
@@ -72,7 +73,7 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
     const { sessionId } = await response.json();
     return { sessionId };
   } catch (error) {
-    console.error('Checkout error:', error);
+    logger.error('Checkout error:', error);
     return { error: 'Failed to start checkout. Please try again.' };
   }
 }
@@ -129,9 +130,12 @@ export async function redirectToCustomerPortal(customerId: string): Promise<{ er
     window.location.href = url;
     return {};
   } catch (error) {
-    console.error('Portal error:', error);
+    logger.error('Portal error:', error);
     return { error: 'Failed to open customer portal' };
   }
 }
+
+
+
 
 

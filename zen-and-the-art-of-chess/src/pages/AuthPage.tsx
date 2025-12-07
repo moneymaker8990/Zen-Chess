@@ -81,19 +81,20 @@ export function AuthPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <div className="text-6xl mb-4">🔧</div>
+          <div className="text-6xl mb-4">👤</div>
           <h1 className="text-2xl font-display font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-            Coming Soon
+            Guest Mode
           </h1>
           <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
-            Cloud sync and user accounts are being set up. Your progress is saved locally on this device.
+            You're using Zen Chess in guest mode. Your progress is saved locally on this device. 
+            Cloud sync is available when authentication is configured.
           </p>
           <button
             onClick={() => navigate('/')}
             className="px-6 py-3 rounded-xl font-medium"
             style={{ background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
           >
-            Continue as Guest
+            Continue Learning
           </button>
         </div>
       </div>

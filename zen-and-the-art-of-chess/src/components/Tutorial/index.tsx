@@ -80,6 +80,198 @@ export const tutorials: Record<string, TutorialData> = {
     ],
   },
 
+  beginner: {
+    id: 'beginner',
+    title: 'Welcome, Future Chess Master!',
+    subtitle: 'Your chess journey starts here',
+    icon: '🌱',
+    steps: [
+      {
+        title: 'You\'re in the Right Place',
+        content: 'This page is designed specifically for beginners. No jargon, no pressure—just a gentle introduction to the wonderful game of chess.',
+        tip: 'Take your time! There\'s no rush to learn everything at once.',
+      },
+      {
+        title: 'What is Chess Notation?',
+        content: 'You might see things like "e4" or "Nf3" in chess. Don\'t worry! These are just ways to name squares (e4 = column e, row 4) and pieces (N = Knight). You\'ll learn naturally.',
+        tip: 'The columns are letters a-h (left to right) and rows are numbers 1-8 (bottom to top).',
+      },
+      {
+        title: 'Start with the Journey',
+        content: 'Click "Start the Journey" to begin our structured lessons. Each lesson teaches one concept with visual examples. Start with "The Chessboard" and work your way up!',
+      },
+    ],
+    connections: [
+      { page: 'Journey', description: 'Step-by-step lessons from the basics' },
+      { page: 'Play', description: 'Practice against a computer at your level' },
+      { page: 'Puzzles', description: 'Fun tactical challenges to sharpen your skills' },
+    ],
+    quickStart: [
+      'Read through the basics on this page',
+      'Go to Journey to start your first lesson',
+      'Try a game against an easy AI when ready',
+      'Don\'t worry about winning—focus on learning!',
+    ],
+  },
+
+  journey: {
+    id: 'journey',
+    title: 'Your Learning Journey',
+    subtitle: 'Structured lessons from beginner to master',
+    icon: '🎓',
+    steps: [
+      {
+        title: 'Learn Step by Step',
+        content: 'This is your curriculum—a structured path through chess mastery. Start with "The Basics" and progress through increasingly advanced topics.',
+        tip: 'Complete lessons in order. Each builds on the previous ones.',
+      },
+      {
+        title: 'Unlock New Sections',
+        content: 'As you earn XP from puzzles and lessons, you\'ll unlock new sections. This ensures you have the foundation before tackling advanced material.',
+        tip: 'Solve puzzles and complete lessons to earn XP faster.',
+      },
+      {
+        title: 'Interactive Lessons',
+        content: 'Each lesson includes chessboard positions to study. You\'ll see highlighted squares and arrows showing key ideas. Read, observe, understand.',
+      },
+    ],
+    connections: [
+      { page: 'Beginner', description: 'Quick intro if you\'re brand new to chess' },
+      { page: 'Puzzles', description: 'Practice what you learn with tactical puzzles' },
+      { page: 'Play', description: 'Apply your knowledge in real games' },
+    ],
+    quickStart: [
+      'Click on "The Basics" section to expand it',
+      'Start with the first lesson: "The Chessboard"',
+      'Complete all steps in each lesson',
+      'Move to the next lesson when ready',
+    ],
+  },
+
+  courses: {
+    id: 'courses',
+    title: 'Zen Chess Courses',
+    subtitle: 'Deep-dive training modules',
+    icon: '📖',
+    steps: [
+      {
+        title: 'Chessable-Style Learning',
+        content: 'Our courses use spaced repetition—the scientifically proven method for long-term retention. Learn a concept, then review it at optimal intervals.',
+        tip: 'Courses are more in-depth than Journey lessons. Great for focused improvement.',
+      },
+      {
+        title: 'Choose Your Focus',
+        content: 'We have courses on tactics, positional play, endgames, and more. Pick the area you want to improve and dive deep.',
+        tip: 'One course at a time! Focus leads to faster improvement.',
+      },
+      {
+        title: 'Track Your Progress',
+        content: 'Each course tracks which chapters you\'ve completed and schedules reviews. Come back daily to reinforce what you\'ve learned.',
+      },
+    ],
+    connections: [
+      { page: 'Spaced Repetition', description: 'Review cards scheduled for today' },
+      { page: 'Journey', description: 'Foundational lessons if courses feel advanced' },
+      { page: 'Puzzles', description: 'Apply course concepts in puzzle form' },
+    ],
+    quickStart: [
+      'Browse available courses',
+      'Pick one that matches your goals',
+      'Complete at least one chapter',
+      'Check back for review cards',
+    ],
+  },
+
+  'flash-training': {
+    id: 'flash-training',
+    title: 'Flash Training',
+    subtitle: 'Build lightning-fast pattern recognition',
+    icon: '⚡',
+    steps: [
+      {
+        title: 'Speed = Intuition',
+        content: 'Flash training shows you positions briefly and asks you to identify the best move. This builds the instant pattern recognition that grandmasters have.',
+        tip: 'Don\'t think too hard—trust your instincts! Speed training is about rapid pattern matching.',
+      },
+      {
+        title: 'Train Your Eyes',
+        content: 'The more patterns you see, the faster you recognize them in real games. This is how you develop "chess vision."',
+        tip: 'Do 5-10 minutes of flash training daily for best results.',
+      },
+    ],
+    connections: [
+      { page: 'Puzzles', description: 'Standard puzzles for deeper calculation' },
+      { page: 'Intuition', description: 'Another form of pattern training' },
+      { page: 'Daily Challenges', description: 'Test your skills with daily puzzles' },
+    ],
+    quickStart: [
+      'Choose a theme or random positions',
+      'Try to identify the best move quickly',
+      'Review positions you got wrong',
+      'Aim to improve your speed over time',
+    ],
+  },
+
+  'thinking-system': {
+    id: 'thinking-system',
+    title: 'The Thinking System',
+    subtitle: 'A structured approach to every move',
+    icon: '🧠',
+    steps: [
+      {
+        title: 'Why You Need a System',
+        content: 'Amateurs think randomly. Masters follow a system. Our 5-step thinking framework ensures you consider all important factors before moving.',
+        tip: 'At first, the system feels slow. With practice, it becomes automatic.',
+      },
+      {
+        title: 'The 5 Steps',
+        content: 'Threats, Checks, Captures, Imbalances, Candidate Moves. Every position, every time. This discipline prevents blunders and finds opportunities.',
+        tip: 'Print out the checklist and use it during training games until it\'s memorized.',
+      },
+    ],
+    connections: [
+      { page: 'Play', description: 'Apply the system in real games' },
+      { page: 'Puzzles', description: 'Practice systematic thinking on tactics' },
+      { page: 'Mistakes', description: 'See where your thinking went wrong' },
+    ],
+    quickStart: [
+      'Read through the 5-step system',
+      'Practice on a few simple positions',
+      'Play a slow game using the system',
+      'Review to see if you missed any steps',
+    ],
+  },
+
+  'daily-challenges': {
+    id: 'daily-challenges',
+    title: 'Daily Challenges',
+    subtitle: 'Fresh puzzles every day',
+    icon: '📅',
+    steps: [
+      {
+        title: 'New Every Day',
+        content: 'Each day brings new themed puzzles—endgames on Monday, tactics on Tuesday, visualization on Wednesday, and more!',
+        tip: 'Complete daily challenges to maintain your streak!',
+      },
+      {
+        title: 'Compete on Leaderboard',
+        content: 'See how you rank against other players. Solve faster and more accurately to climb the leaderboard.',
+        tip: 'Accuracy matters more than speed for the leaderboard.',
+      },
+    ],
+    connections: [
+      { page: 'Puzzles', description: 'Unlimited practice puzzles' },
+      { page: 'Flash Training', description: 'Speed-focused training' },
+      { page: 'Home', description: 'See your streak on the dashboard' },
+    ],
+    quickStart: [
+      'Check today\'s theme',
+      'Complete all daily puzzles',
+      'See your rank on the leaderboard',
+      'Come back tomorrow for new challenges!',
+    ],
+  },
+
   study: {
     id: 'study',
     title: 'Study Dashboard',
@@ -639,6 +831,7 @@ export function IntegrationHint({ from, to, action }: IntegrationHintProps) {
 }
 
 export default TutorialModal;
+
 
 
 

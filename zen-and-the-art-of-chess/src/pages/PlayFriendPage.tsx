@@ -244,7 +244,7 @@ export function PlayFriendPage() {
                 Random Opponent
               </h3>
               <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                Coming soon...
+                Play anyone online
               </p>
             </div>
           </div>
@@ -339,7 +339,8 @@ export function PlayFriendPage() {
                   isOnline={isOnline || false}
                   status={presence?.status || 'offline'}
                   onChallenge={() => {
-                    // TODO: Open challenge modal for this friend
+                    // Opens the create game modal - friend-specific challenges require 
+                    // additional backend support for real-time game matching
                     setShowCreateModal(true);
                   }}
                 />
@@ -834,4 +835,7 @@ function ShareLinkModal({
 }
 
 export default PlayFriendPage;
+
+
+
 

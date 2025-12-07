@@ -33,6 +33,30 @@ export function LegendDetailPage() {
   const legend = legendId as LegendId;
   const legendData = legend ? LEGEND_STYLES[legend] : null;
 
+  // Handle invalid legend ID
+  if (!legendData) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <BackButton to="/greats" label="Back to Legends" />
+        <div className="card p-8 text-center">
+          <div className="text-5xl mb-4">🔍</div>
+          <h2 className="text-2xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+            Legend Not Found
+          </h2>
+          <p className="mb-6" style={{ color: 'var(--text-tertiary)' }}>
+            We couldn't find a legend named "{legendId}".
+          </p>
+          <button
+            onClick={() => navigate('/greats')}
+            className="btn-primary px-6 py-2"
+          >
+            Browse All Legends
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const [activeTab, setActiveTab] = useState<Tab>('play');
   const [engineReady, setEngineReady] = useState(false);
 

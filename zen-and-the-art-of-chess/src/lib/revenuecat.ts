@@ -5,6 +5,7 @@
 
 import { Capacitor } from '@capacitor/core';
 import type { SubscriptionTier } from './premium';
+import { logger } from './logger';
 
 // RevenueCat types (SDK loaded dynamically)
 interface CustomerInfo {
@@ -86,7 +87,7 @@ let Purchases: typeof import('@revenuecat/purchases-capacitor').Purchases | null
 export async function initializeRevenueCat(userId?: string): Promise<boolean> {
   // Only run on native platforms
   if (!Capacitor.isNativePlatform()) {
-    console.log('RevenueCat: Skipping initialization (not native platform)');
+    logger.debug('RevenueCat: Skipping initialization (not native platform)');
     return false;
   }
 
@@ -95,7 +96,7 @@ export async function initializeRevenueCat(userId?: string): Promise<boolean> {
     : REVENUECAT_API_KEY_ANDROID;
 
   if (!apiKey) {
-    console.warn('RevenueCat: API key not configured for', Capacitor.getPlatform());
+    logger.info('RevenueCat: API key not configured for', Capacitor.getPlatform());
     return false;
   }
 
@@ -110,10 +111,10 @@ export async function initializeRevenueCat(userId?: string): Promise<boolean> {
     });
 
     isInitialized = true;
-    console.log('RevenueCat: Initialized successfully');
+    logger.debug('RevenueCat: Initialized successfully');
     return true;
   } catch (error) {
-    console.error('RevenueCat: Initialization failed', error);
+    logger.error('RevenueCat: Initialization failed', error);
     return false;
   }
 }
@@ -128,9 +129,9 @@ export async function identifyUser(userId: string): Promise<void> {
 
   try {
     await Purchases.logIn({ appUserID: userId });
-    console.log('RevenueCat: User identified', userId);
+    logger.debug('RevenueCat: User identified', userId);
   } catch (error) {
-    console.error('RevenueCat: Failed to identify user', error);
+    logger.error('RevenueCat: Failed to identify user', error);
   }
 }
 
@@ -139,9 +140,9 @@ export async function logoutUser(): Promise<void> {
 
   try {
     await Purchases.logOut();
-    console.log('RevenueCat: User logged out');
+    logger.debug('RevenueCat: User logged out');
   } catch (error) {
-    console.error('RevenueCat: Failed to logout', error);
+    logger.error('RevenueCat: Failed to logout', error);
   }
 }
 
@@ -180,7 +181,7 @@ export async function checkPremiumStatus(): Promise<{
       willRenew: premiumEntitlement.willRenew,
     };
   } catch (error) {
-    console.error('RevenueCat: Failed to check premium status', error);
+    logger.error('RevenueCat: Failed to check premium status', error);
     return { isPremium: false, tier: 'free', expirationDate: null, willRenew: false };
   }
 }
@@ -196,7 +197,7 @@ export async function getOfferings(): Promise<Offerings | null> {
     const { offerings } = await Purchases.getOfferings();
     return offerings as Offerings;
   } catch (error) {
-    console.error('RevenueCat: Failed to get offerings', error);
+    logger.error('RevenueCat: Failed to get offerings', error);
     return null;
   }
 }
@@ -238,7 +239,7 @@ export async function purchasePackage(packageToPurchase: Package): Promise<{
       return { success: false, error: 'Purchase cancelled' };
     }
 
-    console.error('RevenueCat: Purchase failed', error);
+    logger.error('RevenueCat: Purchase failed', error);
     return { success: false, error: err.message || 'Purchase failed' };
   }
 }
@@ -277,7 +278,7 @@ export async function restorePurchases(): Promise<{
     return { success: true, isPremium };
   } catch (error: unknown) {
     const err = error as { message?: string };
-    console.error('RevenueCat: Restore failed', error);
+    logger.error('RevenueCat: Restore failed', error);
     return { success: false, isPremium: false, error: err.message || 'Restore failed' };
   }
 }
@@ -305,7 +306,7 @@ export async function openManageSubscriptions(): Promise<void> {
       }
     }
   } catch (error) {
-    console.error('RevenueCat: Failed to open manage subscriptions', error);
+    logger.error('RevenueCat: Failed to open manage subscriptions', error);
   }
 }
 
@@ -337,7 +338,7 @@ async function setupPurchaseListener(): Promise<void> {
       listeners.forEach(listener => listener(customerInfo as CustomerInfo));
     });
   } catch (error) {
-    console.error('RevenueCat: Failed to set up listener', error);
+    logger.error('RevenueCat: Failed to set up listener', error);
   }
 }
 
@@ -383,5 +384,8 @@ export const getPlatform = (): 'ios' | 'android' | 'web' => {
   if (platform === 'android') return 'android';
   return 'web';
 };
+
+
+
 
 

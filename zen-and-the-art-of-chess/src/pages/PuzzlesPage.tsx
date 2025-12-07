@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { AnimatePresence } from 'framer-motion';
-import { puzzles } from '@/data/puzzles';
+import { puzzles, allPuzzles } from '@/data/puzzles';
 import { useCoachStore } from '@/state/coachStore';
 import { useBoardSettingsStore, useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
 import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
@@ -110,8 +110,8 @@ function getPuzzleRating(puzzle: ChessPuzzle): number {
 function getDailyPuzzle(): ChessPuzzle {
   const today = new Date().toISOString().split('T')[0];
   const seed = today.split('-').reduce((acc, n) => acc + parseInt(n), 0);
-  const index = seed % puzzles.length;
-  return puzzles[index];
+  const index = seed % allPuzzles.length;
+  return allPuzzles[index];
 }
 
 // ============================================
@@ -205,7 +205,7 @@ export function PuzzlesPage() {
 
   // Get filtered puzzles for custom mode
   const filteredPuzzles = useMemo(() => {
-    return puzzles.filter(p => {
+    return allPuzzles.filter(p => {
       if (selectedTheme && !p.themes.includes(selectedTheme)) return false;
       if (selectedDifficulty && p.difficulty !== selectedDifficulty) return false;
       return true;
@@ -216,14 +216,14 @@ export function PuzzlesPage() {
   const selectRatedPuzzle = useCallback(() => {
     const targetRating = stats.rating;
     const range = 200;
-    const eligible = puzzles.filter(p => {
+    const eligible = allPuzzles.filter(p => {
       const pr = getPuzzleRating(p);
       return pr >= targetRating - range && pr <= targetRating + range;
     });
     
     // Filter out recently seen puzzles
     const unseenEligible = eligible.filter(p => !seenPuzzleIds.current.has(p.id));
-    const unseenAll = puzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+    const unseenAll = allPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
     
     // Reset seen puzzles if we've seen too many
     if (unseenAll.length < 5) {
@@ -236,7 +236,7 @@ export function PuzzlesPage() {
         ? unseenAll 
         : eligible.length > 0 
           ? eligible 
-          : puzzles;
+          : allPuzzles;
     
     const puzzle = pool[Math.floor(Math.random() * pool.length)];
     return puzzle;
@@ -328,15 +328,15 @@ export function PuzzlesPage() {
       setRushScore(0);
       setRushActive(true);
       seenPuzzleIds.current.clear(); // Fresh start for rush
-      startPuzzle(getRandomUnseenPuzzle(puzzles));
+      startPuzzle(getRandomUnseenPuzzle(allPuzzles));
     } else if (newMode === 'streak') {
       setStreakCount(0);
       setStreakDifficulty(1);
       setStreakActive(true);
       seenPuzzleIds.current.clear(); // Fresh start for streak
       // Start with easy puzzles
-      const easyPuzzles = puzzles.filter(p => p.difficulty === 1);
-      startPuzzle(getRandomUnseenPuzzle(easyPuzzles.length > 0 ? easyPuzzles : puzzles));
+      const easyPuzzles = allPuzzles.filter(p => p.difficulty === 1);
+      startPuzzle(getRandomUnseenPuzzle(easyPuzzles.length > 0 ? easyPuzzles : allPuzzles));
     } else if (newMode === 'daily') {
       startPuzzle(getDailyPuzzle());
     } else if (newMode === 'custom') {
@@ -401,8 +401,8 @@ export function PuzzlesPage() {
     if (mode === 'rush') {
       setRushScore(prev => prev + 1);
       setTimeout(() => {
-        const unseen = puzzles.filter(p => !seenPuzzleIds.current.has(p.id));
-        const pool = unseen.length > 0 ? unseen : puzzles;
+        const unseen = allPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+        const pool = unseen.length > 0 ? unseen : allPuzzles;
         startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
       }, 500);
     } else if (mode === 'streak') {
@@ -411,13 +411,13 @@ export function PuzzlesPage() {
       const newDifficulty = Math.min(5, Math.floor((streakCount + 1) / 3) + 1);
       setStreakDifficulty(newDifficulty);
       setTimeout(() => {
-        const difficultyPuzzles = puzzles.filter(p => p.difficulty === newDifficulty);
+        const difficultyPuzzles = allPuzzles.filter(p => p.difficulty === newDifficulty);
         const unseenDifficulty = difficultyPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
         const pool = unseenDifficulty.length > 0 
           ? unseenDifficulty 
           : difficultyPuzzles.length > 0 
             ? difficultyPuzzles 
-            : puzzles;
+            : allPuzzles;
         startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
         setFeedback(null);
       }, 800);
@@ -499,8 +499,8 @@ export function PuzzlesPage() {
       });
       if (rushStrikes < 2) {
         setTimeout(() => {
-          const unseen = puzzles.filter(p => !seenPuzzleIds.current.has(p.id));
-          const pool = unseen.length > 0 ? unseen : puzzles;
+          const unseen = allPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+          const pool = unseen.length > 0 ? unseen : allPuzzles;
           startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
         }, 800);
       }
@@ -788,7 +788,7 @@ export function PuzzlesPage() {
             <span className="hidden sm:inline"><AgentWatching agents={['training', 'pattern']} /></span>
           </div>
           <p className="text-sm sm:text-lg" style={{ color: 'var(--text-tertiary)' }}>
-            {puzzles.length}+ puzzles to master
+            {allPuzzles.length}+ puzzles to master
           </p>
         </section>
 
@@ -1286,8 +1286,8 @@ export function PuzzlesPage() {
         {!isRushOver && (
           <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,520px)_1fr] gap-4 lg:gap-8 items-start">
             {/* Board */}
-            <div className="space-y-4 w-full flex flex-col items-center lg:items-start overflow-hidden">
-              <div className="relative w-full" style={{ maxWidth: `${Math.min(boardSize, window.innerWidth - 32)}px` }}>
+            <div className="space-y-4 w-full flex flex-col items-center lg:items-start overflow-hidden px-2 sm:px-0">
+              <div className="relative w-full max-w-full" style={{ maxWidth: `min(${boardSize}px, calc(100vw - 2rem))` }}>
                 <Chessboard
                   position={game.fen()}
                   onSquareClick={isAnimatingSetup ? undefined : onSquareClick}
@@ -1298,7 +1298,7 @@ export function PuzzlesPage() {
                   customLightSquareStyle={boardStyles.customLightSquareStyle}
                   animationDuration={boardStyles.animationDuration}
                   arePiecesDraggable={!isAnimatingSetup && feedback !== 'complete' && !(feedback === 'incorrect' && mode === 'streak')}
-                  boardWidth={Math.min(boardSize, window.innerWidth - 32)}
+                  boardWidth={boardSize}
                 />
 
                 {/* Feedback Overlay - simplified since we have the Genius Panel */}
@@ -1411,30 +1411,30 @@ export function PuzzlesPage() {
               </div>
             </div>
 
-            {/* Info Panel */}
-            <div className="space-y-4">
-              {/* Puzzle Info */}
-              <div className="card p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-xl font-display" style={{ color: 'var(--text-primary)' }}>
+            {/* Info Panel - Condensed on mobile */}
+            <div className="space-y-3 lg:space-y-4">
+              {/* Puzzle Info - Compact on mobile */}
+              <div className="card p-4 lg:p-6">
+                <div className="flex items-center justify-between mb-2 lg:mb-4">
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-base lg:text-xl font-display truncate" style={{ color: 'var(--text-primary)' }}>
                       {currentPuzzle.title || 'Find the Best Move'}
                     </h2>
-                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                    <p className="text-xs lg:text-sm" style={{ color: 'var(--text-muted)' }}>
                       {game.turn() === 'w' ? '⬜ White' : '⬛ Black'} to move
                     </p>
                   </div>
-                  <span className="text-xs" style={{ color: 'var(--accent-gold)' }}>
+                  <span className="text-xs ml-2 shrink-0" style={{ color: 'var(--accent-gold)' }}>
                     {'★'.repeat(currentPuzzle.difficulty)}{'☆'.repeat(5 - currentPuzzle.difficulty)}
                   </span>
                 </div>
 
-                {/* Themes */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                {/* Themes - horizontal scroll on mobile */}
+                <div className="flex flex-wrap gap-1.5 lg:gap-2 mb-3 lg:mb-4">
                   {currentPuzzle.themes.map(theme => (
                     <span 
                       key={theme}
-                      className="badge"
+                      className="badge text-xs"
                     >
                       {THEME_LABELS[theme]}
                     </span>
@@ -1443,22 +1443,22 @@ export function PuzzlesPage() {
 
                 {/* Hint - Progressive hints */}
                 {hintLevel >= 1 && (
-                  <div className="p-3 rounded-lg space-y-2" style={{ background: 'var(--bg-elevated)' }}>
+                  <div className="p-2 lg:p-3 rounded-lg space-y-2" style={{ background: 'var(--bg-elevated)' }}>
                     {hintLevel === 1 && (
-                      <p className="text-sm" style={{ color: '#fbbf24' }}>
+                      <p className="text-xs lg:text-sm" style={{ color: '#fbbf24' }}>
                         💡 <span className="font-medium">The highlighted piece should move.</span>
                         {currentPuzzle.explanation && (
-                          <span className="block mt-1 opacity-80">
+                          <span className="block mt-1 opacity-80 line-clamp-2">
                             {currentPuzzle.explanation.split('.')[0]}
                           </span>
                         )}
                       </p>
                     )}
                     {hintLevel >= 2 && (
-                      <p className="text-sm" style={{ color: '#4ade80' }}>
-                        ✨ <span className="font-medium">Move from the yellow square to the green square.</span>
+                      <p className="text-xs lg:text-sm" style={{ color: '#4ade80' }}>
+                        ✨ <span className="font-medium">Move to the highlighted square.</span>
                         {currentPuzzle.explanation && (
-                          <span className="block mt-1 opacity-80">
+                          <span className="block mt-1 opacity-80 line-clamp-3">
                             {currentPuzzle.explanation}
                           </span>
                         )}
@@ -1468,40 +1468,43 @@ export function PuzzlesPage() {
                 )}
               </div>
 
-              {/* Rating Info (Rated Mode) */}
-              {mode === 'rated' && (
-                <div className="card p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Your Rating</div>
-                      <div className="text-2xl font-display font-bold" style={{ color: tierConfig.color }}>
-                        {stats.rating}
+              {/* Rating & Streak - Combined row on mobile */}
+              <div className="flex gap-3 lg:flex-col">
+                {/* Rating Info (Rated Mode) */}
+                {mode === 'rated' && (
+                  <div className="card p-3 lg:p-6 flex-1">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs lg:text-sm" style={{ color: 'var(--text-muted)' }}>Rating</div>
+                        <div className="text-lg lg:text-2xl font-display font-bold" style={{ color: tierConfig.color }}>
+                          {stats.rating}
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Puzzle Rating</div>
-                      <div className="text-2xl font-display font-bold" style={{ color: 'var(--text-secondary)' }}>
-                        ~{getPuzzleRating(currentPuzzle)}
+                      <div className="text-right hidden lg:block">
+                        <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Puzzle</div>
+                        <div className="text-2xl font-display font-bold" style={{ color: 'var(--text-secondary)' }}>
+                          ~{getPuzzleRating(currentPuzzle)}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Streak */}
-              <div className="card p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Current Streak</span>
-                  <span className="text-lg font-mono font-bold" style={{ color: stats.currentStreak > 0 ? '#f59e0b' : 'var(--text-tertiary)' }}>
-                    🔥 {stats.currentStreak}
-                  </span>
+                {/* Streak */}
+                <div className="card p-3 lg:p-4 flex-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs lg:text-sm" style={{ color: 'var(--text-muted)' }}>Streak</span>
+                    <span className="text-base lg:text-lg font-mono font-bold" style={{ color: stats.currentStreak > 0 ? '#f59e0b' : 'var(--text-tertiary)' }}>
+                      🔥 {stats.currentStreak}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              {/* Back Button */}
+              {/* Back Button - Hidden on mobile (use breadcrumb instead) */}
               <button
                 onClick={() => { setMode('menu'); setCurrentPuzzle(null); setRushActive(false); }}
-                className="w-full btn-ghost"
+                className="w-full btn-ghost hidden lg:block"
               >
                 ← Back to Menu
               </button>

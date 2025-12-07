@@ -5,6 +5,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { logger } from './logger';
 
 // ============================================
 // SOUND STORE
@@ -108,7 +109,7 @@ async function loadSound(name: string, url: string): Promise<AudioBuffer | null>
       audioCache.set(name, audioBuffer);
       return audioBuffer;
     } catch (e) {
-      console.warn(`Failed to load sound "${name}":`, e);
+      logger.debug(`Failed to load sound "${name}":`, e);
       return null;
     }
   })();
@@ -156,7 +157,7 @@ async function playSound(name: keyof typeof SOUND_URLS, volumeMultiplier: number
     gainNode.connect(ctx.destination);
     source.start(0);
   } catch (e) {
-    console.warn(`Sound playback failed for "${name}":`, e);
+    logger.debug(`Sound playback failed for "${name}":`, e);
     playSynthesizedFallback(name);
   }
 }
@@ -211,7 +212,7 @@ function playSynthesizedFallback(name: string): void {
       osc.stop(now + 0.25);
     }
   } catch (e) {
-    console.warn('Fallback sound failed:', e);
+    logger.debug('Fallback sound failed:', e);
   }
 }
 
@@ -350,7 +351,7 @@ function playTone(
       hOsc.stop(now + duration);
     });
   } catch (e) {
-    console.warn('Tone playback failed:', e);
+    logger.debug('Tone playback failed:', e);
   }
 }
 
@@ -405,7 +406,7 @@ export const UISounds = {
       osc.start(now);
       osc.stop(now + 0.04);
     } catch (e) {
-      console.warn('Click sound failed:', e);
+      logger.debug('Click sound failed:', e);
     }
   },
   

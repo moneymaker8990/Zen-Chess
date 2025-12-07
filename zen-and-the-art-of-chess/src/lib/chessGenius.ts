@@ -5,6 +5,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import type { Square } from 'chess.js';
+import { logger } from './logger';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -148,7 +149,7 @@ Be specific, insightful, and help the player truly understand the position.`;
     
     throw new Error('Could not parse position analysis');
   } catch (error) {
-    console.error('Position analysis error:', error);
+    logger.error('Position analysis error:', error);
     throw error;
   }
 }
@@ -211,7 +212,7 @@ Explain this move with genius-level insight. Return JSON:
     
     throw new Error('Could not parse move explanation');
   } catch (error) {
-    console.error('Move explanation error:', error);
+    logger.error('Move explanation error:', error);
     throw error;
   }
 }
@@ -262,7 +263,7 @@ Provide a genius-level breakdown that helps the player truly internalize this pa
     
     throw new Error('Could not parse puzzle insight');
   } catch (error) {
-    console.error('Puzzle insight error:', error);
+    logger.error('Puzzle insight error:', error);
     throw error;
   }
 }
@@ -342,7 +343,7 @@ OR if you have something truly useful:
     
     return null;
   } catch (error) {
-    console.error('Whisper error:', error);
+    logger.warn('Whisper error:', error);
     return null;
   }
 }
@@ -371,7 +372,7 @@ Give a concise, insightful answer (2-3 sentences max). Be specific to the positi
     const text = response.content[0].type === 'text' ? response.content[0].text : '';
     return text;
   } catch (error) {
-    console.error('Quick insight error:', error);
+    logger.error('Quick insight error:', error);
     throw error;
   }
 }
@@ -418,7 +419,7 @@ Provide a comprehensive but concise opening insight:
     
     throw new Error('Could not parse opening insight');
   } catch (error) {
-    console.error('Opening insight error:', error);
+    logger.error('Opening insight error:', error);
     throw error;
   }
 }
@@ -478,7 +479,7 @@ Analyze this mistake with empathy and insight:
     
     throw new Error('Could not parse mistake analysis');
   } catch (error) {
-    console.error('Mistake analysis error:', error);
+    logger.error('Mistake analysis error:', error);
     throw error;
   }
 }
@@ -511,7 +512,7 @@ export async function* streamGeniusAnalysis(
       }
     }
   } catch (error) {
-    console.error('Streaming analysis error:', error);
+    logger.error('Streaming analysis error:', error);
     throw error;
   }
 }

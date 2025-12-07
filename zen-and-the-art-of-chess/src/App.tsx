@@ -53,9 +53,15 @@ import { WeaknessDetectorPage } from '@/pages/WeaknessDetectorPage';
 import { PricingPage } from '@/pages/PricingPage';
 import { AuthPage } from '@/pages/AuthPage';
 import { AICoachDashboard } from '@/pages/AICoachDashboard';
+import { BeginnerPage } from '@/pages/BeginnerPage';
 import { PlayFriendPage } from '@/pages/PlayFriendPage';
 import { LiveGamePage } from '@/pages/LiveGamePage';
+import { HowToPage } from '@/pages/HowToPage';
+import { NotFoundPage } from '@/pages/NotFoundPage';
+import { PrivacyPage } from '@/pages/PrivacyPage';
+import { TermsPage } from '@/pages/TermsPage';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
+import { OfflineIndicator } from '@/components/OfflineIndicator';
 import { useProgressStore } from '@/state/useStore';
 import { useAuthStore } from '@/state/useAuthStore';
 import { initializeCoach } from '@/state/coachStore';
@@ -83,6 +89,7 @@ function AnimatedRoutes() {
         <Route path="/calm-play" element={<PageTransition><CalmPlayPage /></PageTransition>} />
         <Route path="/mind" element={<PageTransition><MindTrainingPage /></PageTransition>} />
         <Route path="/journey" element={<PageTransition><JourneyPage /></PageTransition>} />
+        <Route path="/beginner" element={<PageTransition><BeginnerPage /></PageTransition>} />
         <Route path="/learn/:lessonId" element={<PageTransition><LearnPage /></PageTransition>} />
         <Route path="/greats" element={<PageTransition><PlayTheGreatsPage /></PageTransition>} />
         <Route path="/greats/:legendId" element={<PageTransition><LegendDetailPage /></PageTransition>} />
@@ -120,6 +127,16 @@ function AnimatedRoutes() {
         <Route path="/play/friend" element={<PageTransition><PlayFriendPage /></PageTransition>} />
         <Route path="/play/friend/:inviteCode" element={<PageTransition><PlayFriendPage /></PageTransition>} />
         <Route path="/play/live/:gameId" element={<PageTransition><LiveGamePage /></PageTransition>} />
+        
+        {/* Help & Documentation */}
+        <Route path="/how-to" element={<PageTransition><HowToPage /></PageTransition>} />
+        
+        {/* Legal Pages */}
+        <Route path="/privacy" element={<PageTransition><PrivacyPage /></PageTransition>} />
+        <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />
+        
+        {/* 404 Catch-all - must be last */}
+        <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
       </Routes>
     </AnimatePresence>
   );
@@ -213,6 +230,8 @@ function App() {
       </OnboardingWrapper>
       {/* Update prompt for new app versions */}
       <UpdatePrompt />
+      {/* Offline indicator */}
+      <OfflineIndicator />
     </ErrorBoundary>
   );
 }

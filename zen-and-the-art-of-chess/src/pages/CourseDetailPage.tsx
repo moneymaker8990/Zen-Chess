@@ -174,9 +174,12 @@ export default function CourseDetailPage() {
   const [course, setCourse] = useState<Course | null>(null);
   const [progress, setProgress] = useState<CourseProgress | undefined>();
   const [expandedChapter, setExpandedChapter] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (courseId) {
+      setLoading(true);
       const foundCourse = getCourseById(courseId);
       if (foundCourse) {
         setCourse(foundCourse);
@@ -185,14 +188,43 @@ export default function CourseDetailPage() {
         if (foundCourse.chapters.length > 0) {
           setExpandedChapter(foundCourse.chapters[0].id);
         }
+        setNotFound(false);
+      } else {
+        setNotFound(true);
       }
+      setLoading(false);
     }
   }, [courseId]);
 
-  if (!course) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="text-slate-400">Loading...</div>
+        <div className="text-slate-400 flex items-center gap-3">
+          <div className="animate-spin w-5 h-5 border-2 border-slate-400 border-t-transparent rounded-full" />
+          Loading course...
+        </div>
+      </div>
+    );
+  }
+
+  if (notFound || !course) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
+        <div className="text-center">
+          <div className="text-5xl mb-4">📚</div>
+          <h2 className="text-2xl font-display font-medium mb-2 text-white">
+            Course Not Found
+          </h2>
+          <p className="mb-6 text-slate-400">
+            We couldn't find a course with ID "{courseId}".
+          </p>
+          <button
+            onClick={() => navigate('/courses')}
+            className="px-6 py-3 rounded-xl font-semibold bg-blue-600 text-white hover:bg-blue-500 transition-colors"
+          >
+            Browse All Courses
+          </button>
+        </div>
       </div>
     );
   }

@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Chessboard } from 'react-chessboard';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
+import { useContainerBoardSize } from '@/hooks/useBoardSize';
 import { BackButton } from '@/components/BackButton';
 import { CURRICULUM } from '@/data/curriculum';
 import type { Lesson, LessonStep } from '@/data/curriculum';
@@ -15,7 +15,8 @@ export function LearnPage() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(360, 32);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useContainerBoardSize(boardContainerRef, 360, 16);
   
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
@@ -172,10 +173,16 @@ export function LearnPage() {
       <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
         <div className="flex flex-col md:flex-row gap-4 sm:gap-8">
           {/* Top on mobile, Right on desktop: Chessboard */}
-          <div className="md:sticky md:top-24 self-start flex-shrink-0 w-full md:w-[360px] md:order-2">
+          <div 
+            ref={boardContainerRef}
+            className="md:sticky md:top-24 self-start flex-shrink-0 w-full md:w-[360px] md:order-2 max-w-full overflow-hidden"
+          >
             {currentStep?.fen ? (
               <div className="animate-fade-in flex justify-center">
-                <div className="rounded-xl overflow-hidden shadow-2xl">
+                <div 
+                  className="rounded-xl overflow-hidden shadow-2xl"
+                  style={{ maxWidth: '100%', width: `${boardSize}px` }}
+                >
                   <Chessboard
                     position={currentStep.fen}
                     boardWidth={boardSize}

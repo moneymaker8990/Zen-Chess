@@ -39,12 +39,12 @@ function AccountSection() {
         </div>
         
         <div className="p-6 rounded-xl text-center" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-subtle)' }}>
-          <div className="text-4xl mb-3">🔧</div>
+          <div className="text-4xl mb-3">☁️</div>
           <h3 className="font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
-            Cloud Sync Coming Soon
+            Local Storage Mode
           </h3>
           <p className="text-sm mb-4" style={{ color: 'var(--text-tertiary)' }}>
-            Your progress is saved locally on this device. Cloud sync and user accounts are being set up.
+            Your progress is saved locally on this device. Sign in to sync across devices.
           </p>
           <div className="flex items-center justify-center gap-2 text-xs" style={{ color: 'var(--text-muted)' }}>
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -536,6 +536,7 @@ function AIPreferencesSection() {
 }
 
 export function SettingsPage() {
+  const navigate = useNavigate();
   const { progress, updateSettings } = useProgressStore();
   const { sessions, notes } = { sessions: useStudyStore((s) => s.sessions), notes: useNotesStore((s) => s.notes) };
   const weaknesses = useWeaknessStore((s) => s.weaknesses);
@@ -872,6 +873,28 @@ export function SettingsPage() {
           the rules of the game are what we call the laws of Nature."
           <br />
           — Thomas Huxley
+        </p>
+      </section>
+
+      {/* Legal Links */}
+      <section className="glass-card p-6">
+        <h2 className="text-lg font-serif text-zen-200 mb-4">Legal</h2>
+        <div className="flex flex-wrap gap-4">
+          <button
+            onClick={() => navigate('/privacy')}
+            className="text-sm text-purple-400 hover:text-purple-300 hover:underline transition-colors"
+          >
+            Privacy Policy
+          </button>
+          <button
+            onClick={() => navigate('/terms')}
+            className="text-sm text-purple-400 hover:text-purple-300 hover:underline transition-colors"
+          >
+            Terms of Service
+          </button>
+        </div>
+        <p className="text-zen-600 text-xs mt-4">
+          Version 1.0.0 • © 2025 Zen Chess
         </p>
       </section>
     </div>

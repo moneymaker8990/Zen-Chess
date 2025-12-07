@@ -102,21 +102,23 @@ export const puzzles: ChessPuzzle[] = [
   },
   {
     id: 'skewer-001',
-    fen: '4k3/8/8/8/8/4B3/8/4K3 w - - 0 1',
-    solution: ['Bb5+', 'Kd7', 'Bxa6'],
+    fen: 'r3k3/8/8/8/8/4B3/8/4K3 w q - 0 1',
+    solution: ['Bb5+', 'Kd7', 'Bxa8'],
     themes: ['SKEWER'],
     difficulty: 2,
     title: 'Bishop Skewer',
-    explanation: 'The bishop check forces the king away, revealing an attack on the rook.',
+    explanation: 'The bishop check forces the king to move, then we win the rook with a skewer.',
+    beforeFen: 'r3k3/4b3/8/8/8/4B3/8/4K3 b q - 0 1',
+    setupMove: { from: 'e7', to: 'd8' },
   },
   {
     id: 'backrank-002',
-    fen: '3r2k1/5ppp/8/8/8/8/5PPP/2R3K1 w - - 0 1',
-    solution: ['Rc8+', 'Rxc8'],
+    fen: '3r2k1/5ppp/8/8/8/8/5PPP/1RR3K1 w - - 0 1',
+    solution: ['Rc8+', 'Rxc8', 'Rxc8#'],
     themes: ['BACK_RANK', 'SACRIFICE'],
     difficulty: 2,
     title: 'Back Rank Combination',
-    explanation: 'Sacrifice forces the exchange, then deliver mate with the other rook.',
+    explanation: 'Sacrifice the rook to deflect the defender, then deliver mate with the second rook.',
   },
   {
     id: 'discovery-001',
@@ -365,9 +367,10 @@ export const puzzles: ChessPuzzle[] = [
 
 // Import master puzzles from legendary games
 import { masterPuzzles } from './master-puzzles';
+import { expandedPuzzles } from './expanded-puzzles';
 
 // Combine all puzzles
-export const allPuzzles: ChessPuzzle[] = [...puzzles, ...masterPuzzles];
+export const allPuzzles: ChessPuzzle[] = [...puzzles, ...masterPuzzles, ...expandedPuzzles];
 
 // Get puzzles by difficulty
 export const getPuzzlesByDifficulty = (difficulty: 1 | 2 | 3 | 4 | 5) =>
@@ -383,5 +386,5 @@ export const getRandomPuzzles = (count: number): ChessPuzzle[] => {
   return shuffled.slice(0, count);
 };
 
-export { masterPuzzles };
+export { masterPuzzles, expandedPuzzles };
 export default allPuzzles;

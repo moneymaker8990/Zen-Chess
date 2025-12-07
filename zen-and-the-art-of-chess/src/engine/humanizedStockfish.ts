@@ -5,6 +5,7 @@
 
 import { stockfish } from './stockfish';
 import { Chess } from 'chess.js';
+import { logger } from '@/lib/logger';
 
 export type BotLevel = 'beginner' | 'intermediate' | 'advanced' | 'coach';
 
@@ -72,7 +73,7 @@ export async function getEngineCandidatesWithFeatures(params: {
   try {
     bestMove = await stockfish.getBestMove(fen, 10000); // 10 second timeout
   } catch (err) {
-    console.error('Engine failed to get best move:', err);
+    logger.error('Engine failed to get best move:', err);
     // Fallback: return first legal move
     const fallbackMoves = chess.moves({ verbose: true });
     if (fallbackMoves.length === 0) {

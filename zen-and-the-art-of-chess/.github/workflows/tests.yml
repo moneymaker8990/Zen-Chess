@@ -1,0 +1,134 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  unit-tests:
+    name: Unit & Component Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: zen-and-the-art-of-chess/package-lock.json
+
+      - name: Install dependencies
+        working-directory: zen-and-the-art-of-chess
+        run: npm ci --legacy-peer-deps
+
+      - name: Run unit tests
+        working-directory: zen-and-the-art-of-chess
+        run: npm run test:run
+
+      - name: Run tests with coverage
+        working-directory: zen-and-the-art-of-chess
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          files: zen-and-the-art-of-chess/coverage/coverage-final.json
+          fail_ci_if_error: false
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: zen-and-the-art-of-chess/package-lock.json
+
+      - name: Install dependencies
+        working-directory: zen-and-the-art-of-chess
+        run: npm ci --legacy-peer-deps
+
+      - name: Install Playwright browsers
+        working-directory: zen-and-the-art-of-chess
+        run: npx playwright install --with-deps chromium
+
+      - name: Build application
+        working-directory: zen-and-the-art-of-chess
+        run: npm run build
+
+      - name: Run E2E tests
+        working-directory: zen-and-the-art-of-chess
+        run: npm run test:e2e -- --project=chromium
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: zen-and-the-art-of-chess/playwright-report/
+          retention-days: 7
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: zen-and-the-art-of-chess/package-lock.json
+
+      - name: Install dependencies
+        working-directory: zen-and-the-art-of-chess
+        run: npm ci --legacy-peer-deps
+
+      - name: Run ESLint
+        working-directory: zen-and-the-art-of-chess
+        run: npm run lint
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: zen-and-the-art-of-chess/package-lock.json
+
+      - name: Install dependencies
+        working-directory: zen-and-the-art-of-chess
+        run: npm ci --legacy-peer-deps
+
+      - name: Build application
+        working-directory: zen-and-the-art-of-chess
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: zen-and-the-art-of-chess/dist/
+          retention-days: 7
+

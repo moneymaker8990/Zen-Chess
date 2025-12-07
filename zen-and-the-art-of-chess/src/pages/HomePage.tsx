@@ -8,6 +8,7 @@ import { AgentQuickActions, AgentWatching } from '@/components/AgentPresence';
 import { useAgentTrigger, useAgentMessages, useAgentStore } from '@/lib/agents/agentOrchestrator';
 import { AGENT_PERSONALITIES } from '@/lib/agents/agentTypes';
 import type { ActionType } from '@/lib/coachTypes';
+import { useAutoTutorial, TutorialModal, TutorialButton } from '@/components/Tutorial';
 
 // ============================================
 // ENHANCED HOME PAGE - Chess.com Style Dashboard
@@ -127,6 +128,9 @@ export function HomePage() {
   const navigate = useNavigate();
   const { progress } = useProgressStore();
   
+  // Auto-show tutorial for first-time visitors
+  const { showTutorial, closeTutorial } = useAutoTutorial('home');
+  
   const currentDayData = getDayByNumber(progress.currentDay);
   const currentPhase = currentDayData?.phase || 'CALM_MIND';
   const phaseData = phaseInfo[currentPhase];
@@ -158,16 +162,27 @@ export function HomePage() {
   const totalXP = progress.puzzlesSolved + progress.currentDay;
 
   return (
-    <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0">
+    <>
+      {/* First-time tutorial */}
+      <TutorialModal
+        tutorialId="home"
+        isOpen={showTutorial}
+        onClose={closeTutorial}
+      />
+      
+      <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0">
       {/* Welcome Header */}
       <section className="flex flex-col gap-3">
-        <div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
-            Welcome back
-          </h1>
-          <p className="text-sm sm:text-lg" style={{ color: 'var(--text-tertiary)' }}>
-            Continue your journey to chess mastery
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+              Welcome back
+            </h1>
+            <p className="text-sm sm:text-lg" style={{ color: 'var(--text-tertiary)' }}>
+              Continue your journey to chess mastery
+            </p>
+          </div>
+          <TutorialButton tutorialId="home" />
         </div>
         <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
           <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full" style={{ background: 'var(--bg-tertiary)' }}>
@@ -439,7 +454,16 @@ export function HomePage() {
           )}
 
           {/* Mental Game & Tools */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3">
+            <button
+              onClick={() => navigate('/beginner')}
+              className="card p-2 sm:p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all"
+              style={{ background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%)', border: '1px solid rgba(74, 222, 128, 0.2)' }}
+            >
+              <div className="text-xl sm:text-2xl mb-1 sm:mb-2">🌱</div>
+              <span className="text-xs sm:text-sm font-medium block truncate" style={{ color: '#4ade80' }}>Beginner</span>
+              <p className="text-[10px] sm:text-xs mt-0.5 sm:mt-1 hidden sm:block" style={{ color: 'var(--text-muted)' }}>Start here</p>
+            </button>
             <button
               onClick={() => navigate('/mind')}
               className="card p-2 sm:p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all"
@@ -600,6 +624,7 @@ export function HomePage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

@@ -599,12 +599,12 @@ export function PatternsManualPage() {
         {/* Empty state if no patterns */}
         {categoryPatterns.length === 0 && (
           <div className="card p-12 text-center">
-            <div className="text-4xl mb-4">🚧</div>
+            <div className="text-4xl mb-4">📚</div>
             <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
-              Coming Soon
+              Patterns In Progress
             </h3>
             <p style={{ color: 'var(--text-muted)' }}>
-              Patterns for this category are being developed.
+              New patterns for this category will be added in future updates.
             </p>
           </div>
         )}

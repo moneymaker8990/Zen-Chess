@@ -4,6 +4,7 @@
 // ============================================
 
 import { Chess, Square } from 'chess.js';
+import { logger } from './logger';
 
 export interface MoveValidationResult {
   valid: boolean;
@@ -137,7 +138,7 @@ export function canMoveFrom(game: Chess, square: Square): boolean {
 export function executeEngineMove(fen: string, uci: string): Chess | null {
   const parsed = parseUciMove(uci);
   if (!parsed) {
-    console.error('Invalid UCI move format:', uci);
+    logger.warn('Invalid UCI move format:', uci);
     return null;
   }
 
@@ -150,13 +151,13 @@ export function executeEngineMove(fen: string, uci: string): Chess | null {
     });
 
     if (!result) {
-      console.error('Engine move was not legal:', uci, 'in position', fen);
+      logger.warn('Engine move was not legal:', uci, 'in position', fen);
       return null;
     }
 
     return game;
   } catch (err) {
-    console.error('Error executing engine move:', err);
+    logger.error('Error executing engine move:', err);
     return null;
   }
 }
@@ -172,4 +173,7 @@ export function isValidFen(fen: string): boolean {
     return false;
   }
 }
+
+
+
 

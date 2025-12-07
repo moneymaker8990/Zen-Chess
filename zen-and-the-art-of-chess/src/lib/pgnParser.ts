@@ -1,5 +1,6 @@
 import { Chess } from 'chess.js';
 import type { AnnotatedMove } from '@/data/instructiveGames/types';
+import { logger } from './logger';
 
 /**
  * Parse a PGN string and convert it to annotated moves with FEN positions
@@ -30,7 +31,7 @@ export function parsePgnToMoves(pgn: string): AnnotatedMove[] {
       });
     }
   } catch (error) {
-    console.warn('Failed to parse PGN:', error);
+    logger.warn('Failed to parse PGN:', error);
   }
   
   return moves;
@@ -94,7 +95,7 @@ export async function fetchLegendGames(legendId: string): Promise<LegendGame[]> 
     }
     return await response.json();
   } catch (error) {
-    console.error('Error fetching legend games:', error);
+    logger.error('Error fetching legend games:', error);
     return [];
   }
 }
@@ -172,6 +173,9 @@ export function getPlayerLegendId(playerName: string): LegendId | null {
   
   return null;
 }
+
+
+
 
 
 

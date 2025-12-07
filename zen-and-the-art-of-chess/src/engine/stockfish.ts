@@ -1,4 +1,5 @@
 import type { EngineEvaluation } from '@/lib/types';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // STOCKFISH ENGINE WRAPPER
@@ -49,7 +50,7 @@ class StockfishEngine {
   }
 
   private async doInit(): Promise<boolean> {
-    console.log('🔄 Initializing Stockfish engine...');
+    logger.debug('Initializing Stockfish engine...');
 
     try {
       // Load stockfish.js from public folder as a Web Worker
@@ -57,7 +58,7 @@ class StockfishEngine {
 
       return new Promise((resolve) => {
         if (!this.worker) {
-          console.error('❌ Failed to create worker');
+          logger.error('Failed to create Stockfish worker');
           resolve(false);
           return;
         }
@@ -69,7 +70,7 @@ class StockfishEngine {
         };
 
         this.worker.onerror = (e) => {
-          console.error('❌ Worker error:', e.message);
+          logger.error('Stockfish worker error:', e.message);
           this.handleWorkerError();
           resolve(false);
         };
@@ -85,18 +86,18 @@ class StockfishEngine {
             clearInterval(check);
             this.applySettings();
             this.startHealthCheck();
-            console.log('✅ Stockfish engine ready!');
+            logger.debug('Stockfish engine ready');
             resolve(true);
           } else if (attempts > 100) {
             clearInterval(check);
-            console.error('❌ Engine timeout');
-            console.log('Messages received:', this.messageQueue.slice(-10));
+            logger.error('Engine init timeout');
+            logger.debug('Recent messages:', this.messageQueue.slice(-10));
             resolve(false);
           }
         }, 100);
       });
     } catch (err) {
-      console.error('❌ Init error:', err);
+      logger.error('Engine init error:', err);
       return false;
     }
   }
@@ -109,7 +110,7 @@ class StockfishEngine {
         const timeSinceLastMessage = Date.now() - this.lastMessageTime;
         // If no message for 60 seconds while supposedly ready, engine might be stuck
         if (timeSinceLastMessage > 60000 && this.lastMessageTime > 0) {
-          console.warn('⚠️ Engine appears unresponsive, sending ping...');
+          logger.warn('Engine appears unresponsive, sending ping...');
           this.send('isready');
         }
       }
@@ -266,7 +267,7 @@ class StockfishEngine {
 
   analyzePosition(fen: string, callback: EvaluationCallback, depth?: number) {
     if (!this.isReady) {
-      console.warn('Engine not ready for analysis');
+      logger.warn('Engine not ready for analysis');
       return;
     }
     
@@ -343,7 +344,7 @@ class StockfishEngine {
 
   playMove(fen: string, callback: BestMoveCallback) {
     if (!this.isReady) {
-      console.warn('Engine not ready for playMove');
+      logger.warn('Engine not ready for playMove');
       return;
     }
     

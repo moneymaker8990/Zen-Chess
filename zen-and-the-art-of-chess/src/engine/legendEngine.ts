@@ -13,6 +13,7 @@
 
 import { getHumanizedMove, BotLevel, getEngineCandidatesWithFeatures } from './humanizedStockfish';
 import { type LegendId, type OpeningBookNode, type LegendPositionIndex, LEGEND_STYLES } from '@/lib/legendTypes';
+import { logger } from '@/lib/logger';
 
 // File paths (relative to public folder for browser)
 const LEGENDS_DATA_PREFIX = '/data/legends';
@@ -91,14 +92,14 @@ async function loadOpeningBook(legend: LegendId): Promise<OpeningBookNode[]> {
     if (text.trim().startsWith('<!')) {
       const warningKey = `opening-book-${legend}`;
       if (!missingFileWarnings.has(warningKey)) {
-        console.warn(`Opening book file for ${legend} not found.`);
+        logger.debug(`Opening book file for ${legend} not found.`);
         missingFileWarnings.add(warningKey);
       }
       return [];
     }
     const data = JSON.parse(text) as OpeningBookNode[];
     openingBooks[legend] = data;
-    console.log(`[${legend}] Loaded opening book: ${data.length} positions`);
+    logger.debug(`[${legend}] Loaded opening book: ${data.length} positions`);
     return data;
   } catch (err) {
     return [];
@@ -118,14 +119,14 @@ async function loadPositionIndex(legend: LegendId): Promise<LegendPositionIndex>
     if (text.trim().startsWith('<!')) {
       const warningKey = `position-index-${legend}`;
       if (!missingFileWarnings.has(warningKey)) {
-        console.warn(`Position index file for ${legend} not found.`);
+        logger.debug(`Position index file for ${legend} not found.`);
         missingFileWarnings.add(warningKey);
       }
       return {};
     }
     const data = JSON.parse(text) as LegendPositionIndex;
     positionIndices[legend] = data;
-    console.log(`[${legend}] Loaded position index: ${Object.keys(data).length} unique positions`);
+    logger.debug(`[${legend}] Loaded position index: ${Object.keys(data).length} unique positions`);
     return data;
   } catch (err) {
     return {};
@@ -212,7 +213,7 @@ async function getLegendBookMove(fen: string, legend: LegendId): Promise<string 
   
   // Log available options for debugging
   if (candidates.length > 1) {
-    console.log(`[${legend}] Opening book options:`, 
+    logger.debug(`[${legend}] Opening book options:`, 
       candidates.slice(0, 3).map(c => `${c.move}(${c.count})`).join(', '));
   }
   
@@ -258,7 +259,7 @@ async function getLegendDbMove(fen: string, legend: LegendId): Promise<string | 
   moveOptions.sort((a, b) => b.count - a.count);
   
   if (moveOptions.length > 1) {
-    console.log(`[${legend}] Position database options:`,
+    logger.debug(`[${legend}] Position database options:`,
       moveOptions.slice(0, 3).map(m => `${m.move}(${m.count})`).join(', '));
   }
   
@@ -601,13 +602,13 @@ export async function getLegendMove(params: {
   const fullmoveNumber = getFullmoveNumberFromFen(fen);
   const mood = getLegendMood(legend);
   
-  console.log(`[${legend}] Move ${fullmoveNumber} | Mood: agg=${mood.aggMod.toFixed(2)}, exp=${mood.expMod.toFixed(2)}`);
+  logger.debug(`[${legend}] Move ${fullmoveNumber} | Mood: agg=${mood.aggMod.toFixed(2)}, exp=${mood.expMod.toFixed(2)}`);
 
   // 1) OPENING: Use their real opening moves with personality-based variety
   if (fullmoveNumber <= 20) {
     const bookMove = await getLegendBookMove(fen, legend);
     if (bookMove) {
-      console.log(`[${legend}] ✓ Opening book move: ${bookMove}`);
+      logger.debug(`[${legend}] Opening book move: ${bookMove}`);
       return bookMove;
     }
   }
@@ -615,18 +616,18 @@ export async function getLegendMove(params: {
   // 2) KNOWN POSITIONS: Use their real move with variety
   const dbMove = await getLegendDbMove(fen, legend);
   if (dbMove) {
-    console.log(`[${legend}] ✓ Database move: ${dbMove}`);
+    logger.debug(`[${legend}] Database move: ${dbMove}`);
     return dbMove;
   }
 
   // 3) SIMILAR POSITIONS: Try transpositions
   const similarMove = await findSimilarLegendMove(fen, legend);
   if (similarMove) {
-    console.log(`[${legend}] ✓ Similar position move: ${similarMove}`);
+    logger.debug(`[${legend}] Similar position move: ${similarMove}`);
     return similarMove;
   }
 
-  console.log(`[${legend}] → Engine fallback with style bias`);
+  logger.debug(`[${legend}] Engine fallback with style bias`);
 
   // 4) STYLE-BIASED ENGINE FALLBACK
   try {
@@ -639,11 +640,11 @@ export async function getLegendMove(params: {
     
     if (candidates.length > 0) {
       const styledMove = applyLegendStyle(candidates, legend);
-      console.log(`[${legend}] ✓ Styled engine move: ${styledMove}`);
+      logger.debug(`[${legend}] Styled engine move: ${styledMove}`);
       return styledMove;
     }
   } catch (err) {
-    console.warn('Error getting styled candidates:', err);
+    logger.warn('Error getting styled candidates:', err);
   }
 
   // Final fallback
@@ -665,7 +666,7 @@ export async function getLegendGame(legend: LegendId, gameId: string): Promise<a
     const games = await response.json();
     return games.find((g: any) => g.id === gameId) || null;
   } catch (err) {
-    console.error('Error loading legend game:', err);
+    logger.error('Error loading legend game:', err);
     return null;
   }
 }
@@ -682,7 +683,7 @@ export async function getLegendGames(legend: LegendId): Promise<any[]> {
     if (text.trim().startsWith('<!')) {
       const warningKey = `games-${legend}`;
       if (!missingFileWarnings.has(warningKey)) {
-        console.warn(`Games file for ${legend} not found.`);
+        logger.debug(`Games file for ${legend} not found.`);
         missingFileWarnings.add(warningKey);
       }
       return [];

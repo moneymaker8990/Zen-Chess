@@ -3,23 +3,36 @@ import { useState, useEffect } from 'react';
 /**
  * Hook to calculate responsive chessboard size based on container and viewport.
  * Returns the optimal board width in pixels.
+ * 
+ * Properly accounts for mobile viewports with safe margins to prevent overflow.
  */
 export function useBoardSize(
   maxWidth: number = 520,
   padding: number = 32
 ): number {
   const [boardSize, setBoardSize] = useState(() => {
-    if (typeof window === 'undefined') return Math.min(maxWidth, 400);
-    return Math.min(maxWidth, window.innerWidth - padding);
+    if (typeof window === 'undefined') return Math.min(maxWidth, 360);
+    const vw = window.innerWidth;
+    // Mobile-first: always account for safe margins
+    if (vw < 640) {
+      // Extra conservative on mobile - account for page margins and safe area
+      return Math.min(maxWidth, vw - Math.max(padding, 48));
+    }
+    return Math.min(maxWidth, vw - padding);
   });
 
   useEffect(() => {
     const calculateSize = () => {
       const viewportWidth = window.innerWidth;
       
-      // Mobile: use almost full width
-      if (viewportWidth < 640) {
-        setBoardSize(Math.min(maxWidth, viewportWidth - padding));
+      // Mobile: conservative width - must fit within viewport with room for margins
+      if (viewportWidth < 480) {
+        // Very small screens - leave good margins
+        setBoardSize(Math.min(maxWidth, viewportWidth - 48));
+      }
+      else if (viewportWidth < 640) {
+        // Small mobile - still conservative
+        setBoardSize(Math.min(maxWidth, viewportWidth - 40));
       }
       // Tablet: constrained width
       else if (viewportWidth < 1024) {
@@ -33,7 +46,17 @@ export function useBoardSize(
 
     calculateSize();
     window.addEventListener('resize', calculateSize);
-    return () => window.removeEventListener('resize', calculateSize);
+    
+    // Also handle orientation changes for mobile
+    const handleOrientationChange = () => {
+      setTimeout(calculateSize, 100); // Wait for orientation change to complete
+    };
+    window.addEventListener('orientationchange', handleOrientationChange);
+    
+    return () => {
+      window.removeEventListener('resize', calculateSize);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
   }, [maxWidth, padding]);
 
   return boardSize;

@@ -4,6 +4,8 @@
 // Optimized for chess pattern learning
 // ============================================
 
+import { logger } from './logger';
+
 export interface SRSCard {
   id: string;
   easeFactor: number;      // 1.3 to 2.5, default 2.5
@@ -107,7 +109,7 @@ export function loadPatternProgress(): PatternProgress {
       return JSON.parse(saved);
     }
   } catch (e) {
-    console.error('Failed to load pattern progress:', e);
+    logger.error('Failed to load pattern progress:', e);
   }
   
   return {
@@ -123,7 +125,7 @@ export function savePatternProgress(progress: PatternProgress): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
   } catch (e) {
-    console.error('Failed to save pattern progress:', e);
+    logger.error('Failed to save pattern progress:', e);
   }
 }
 
@@ -346,6 +348,9 @@ export function calculateQuality(
   // Complete blackout
   return 0;
 }
+
+
+
 
 
 

@@ -339,3 +339,6 @@ console.log('Required files will be generated:');
 icons.forEach(icon => console.log(`  - ${icon.name}`));
 splashScreens.forEach(s => console.log(`  - ${s.name}`));
 
+
+
+

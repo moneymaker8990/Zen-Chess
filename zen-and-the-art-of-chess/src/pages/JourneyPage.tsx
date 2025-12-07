@@ -2,11 +2,15 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProgressStore } from '@/state/useStore';
 import { CURRICULUM, type Section, type Lesson } from '@/data/curriculum';
+import { useAutoTutorial, TutorialModal, TutorialButton } from '@/components/Tutorial';
 
 export function JourneyPage() {
   const navigate = useNavigate();
   const { progress } = useProgressStore();
   const [expandedSection, setExpandedSection] = useState<string | null>(CURRICULUM[0].id);
+  
+  // Auto-show tutorial for first-time visitors
+  const { showTutorial, closeTutorial } = useAutoTutorial('journey');
   
   // Calculate XP and progress
   const totalXP = progress.puzzlesSolved + progress.currentDay;
@@ -42,7 +46,15 @@ export function JourneyPage() {
   };
 
   return (
-    <div className="min-h-screen pb-16">
+    <>
+      {/* First-time tutorial */}
+      <TutorialModal
+        tutorialId="journey"
+        isOpen={showTutorial}
+        onClose={closeTutorial}
+      />
+      
+      <div className="min-h-screen pb-16">
       {/* Hero Header with Coach */}
       <div 
         className="relative py-10 mb-8"
@@ -78,9 +90,12 @@ export function JourneyPage() {
 
         {/* Title */}
         <div className="text-center">
-          <h1 className="text-4xl lg:text-5xl font-display font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-            Learn Chess
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <h1 className="text-4xl lg:text-5xl font-display font-bold" style={{ color: 'var(--text-primary)' }}>
+              Learn Chess
+            </h1>
+            <TutorialButton tutorialId="journey" />
+          </div>
           <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
             Master the game from basics to advanced strategy
           </p>
@@ -304,6 +319,7 @@ export function JourneyPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

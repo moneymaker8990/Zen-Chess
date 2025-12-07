@@ -244,3 +244,6 @@ export function useAIFeature(feature: keyof Pick<AIPreferences,
   return useAIPreferencesStore((s) => s[feature]);
 }
 
+
+
+

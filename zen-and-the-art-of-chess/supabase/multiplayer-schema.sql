@@ -556,3 +556,6 @@ GRANT EXECUTE ON FUNCTION accept_game_invite TO authenticated;
 GRANT EXECUTE ON FUNCTION update_ratings_after_game TO authenticated;
 GRANT EXECUTE ON FUNCTION generate_invite_code TO authenticated;
 
+
+
+

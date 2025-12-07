@@ -92,12 +92,12 @@ export function AuthModal({ isOpen, onClose, defaultMode = 'signin', onSuccess }
               style={{ background: 'var(--bg-secondary)' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="text-4xl mb-4">🔧</div>
+              <div className="text-4xl mb-4">👤</div>
               <h2 className="text-xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>
-                Authentication Coming Soon
+                Guest Mode Active
               </h2>
               <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
-                Cloud sync and accounts are being set up. Your progress is saved locally for now.
+                You're using Zen Chess offline. Your progress is safely stored on this device.
               </p>
               <button
                 onClick={onClose}
@@ -422,5 +422,8 @@ export function AuthButton({ className = '' }: AuthButtonProps) {
     </div>
   );
 }
+
+
+
 
 

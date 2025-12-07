@@ -107,6 +107,11 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
   ),
+  help: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+    </svg>
+  ),
   user: (
     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
@@ -165,12 +170,18 @@ const navSections = [
     ],
   },
   {
+    title: 'Learn',
+    items: [
+      { path: '/beginner', label: 'New to Chess?', icon: Icons.lotus, highlight: true },
+      { path: '/journey', label: 'Learning Path', icon: Icons.map },
+      { path: '/day', label: 'Daily Practice', icon: Icons.book },
+    ],
+  },
+  {
     title: 'Tools',
     items: [
       { path: '/coach', label: 'AI Coach', icon: Icons.coach },
       { path: '/study-plan', label: 'Study Plan', icon: Icons.studyPlan },
-      { path: '/journey', label: 'Journey', icon: Icons.map },
-      { path: '/day', label: 'Daily Practice', icon: Icons.lotus },
     ],
   },
   {
@@ -210,6 +221,15 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen min-h-[100dvh] flex overflow-x-hidden">
+      {/* Skip to main content link for keyboard users */}
+      <a 
+        href="#main-content" 
+        className="sr-only sr-only-focusable fixed top-4 left-4 z-[100] px-4 py-2 rounded-lg text-white font-medium"
+        style={{ background: 'var(--accent-primary)' }}
+      >
+        Skip to main content
+      </a>
+      
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 z-40" 
         style={{ background: 'var(--bg-secondary)', borderRight: '1px solid var(--border-subtle)' }}>
@@ -325,6 +345,15 @@ export function Layout({ children }: LayoutProps) {
             </button>
           )}
 
+          {/* How to Use / Help */}
+          <NavLink
+            to="/how-to"
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          >
+            {Icons.help}
+            <span>How to Use</span>
+          </NavLink>
+
           {/* Settings link */}
           <NavLink
             to="/settings"
@@ -345,13 +374,19 @@ export function Layout({ children }: LayoutProps) {
       )}
 
       {/* Mobile sidebar */}
-      <aside className={`
-        lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 flex flex-col
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `} style={{ background: 'var(--bg-secondary)' }}>
+      <aside 
+        id="mobile-sidebar"
+        className={`
+          lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 flex flex-col
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        `} 
+        style={{ background: 'var(--bg-secondary)' }}
+        aria-label="Navigation menu"
+        aria-hidden={!sidebarOpen}
+      >
         {/* Mobile header */}
         <div className="h-16 flex items-center justify-between px-4 shrink-0" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-          <NavLink to="/" className="flex items-center gap-3" onClick={() => setSidebarOpen(false)}>
+          <NavLink to="/" className="flex items-center gap-3" onClick={() => setSidebarOpen(false)} aria-label="Zen Chess Home">
             <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
               style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)' }}>
               ♔
@@ -364,6 +399,7 @@ export function Layout({ children }: LayoutProps) {
             onClick={() => setSidebarOpen(false)}
             className="p-2 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors"
             style={{ color: 'var(--text-secondary)' }}
+            aria-label="Close navigation menu"
           >
             {Icons.close}
           </button>
@@ -421,6 +457,15 @@ export function Layout({ children }: LayoutProps) {
           )}
           
           <NavLink
+            to="/how-to"
+            onClick={() => setSidebarOpen(false)}
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          >
+            {Icons.help}
+            <span>How to Use</span>
+          </NavLink>
+          
+          <NavLink
             to="/settings"
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
@@ -439,11 +484,16 @@ export function Layout({ children }: LayoutProps) {
             background: 'var(--bg-secondary)', 
             borderBottom: '1px solid var(--border-subtle)',
             paddingTop: 'env(safe-area-inset-top, 0px)'
-          }}>
+          }}
+          role="banner"
+        >
           <button 
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors"
             style={{ color: 'var(--text-secondary)' }}
+            aria-label="Open navigation menu"
+            aria-expanded={sidebarOpen}
+            aria-controls="mobile-sidebar"
           >
             {Icons.menu}
           </button>
@@ -499,7 +549,7 @@ export function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-8 pb-safe">
+        <main id="main-content" className="p-4 lg:p-8 pb-safe" role="main">
           <div className="max-w-6xl mx-auto">
             {children}
           </div>

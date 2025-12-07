@@ -132,10 +132,10 @@ export function AskAnything({
   
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button - positioned higher to avoid fixed navigation footers */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 ${positionClass} z-40 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110`}
+        className={`fixed bottom-24 sm:bottom-6 ${positionClass} z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110`}
         style={{
           background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))',
         }}
@@ -145,7 +145,7 @@ export function AskAnything({
         animate={isOpen ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
       >
         <motion.span
-          className="text-2xl"
+          className="text-xl sm:text-2xl"
           animate={{ rotate: [0, 10, -10, 0] }}
           transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
         >
@@ -393,4 +393,5 @@ export function AskAnything({
 }
 
 export default AskAnything;
+
 

@@ -114,7 +114,13 @@ export function OnboardingFlow() {
     }
     
     completeOnboarding();
-    navigate('/');
+    
+    // Route beginners to the beginner-friendly landing page
+    if (userProfile.experience === 'beginner') {
+      navigate('/beginner');
+    } else {
+      navigate('/');
+    }
   };
 
   return (

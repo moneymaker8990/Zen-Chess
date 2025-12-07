@@ -5,6 +5,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { AGENT_PERSONAS, type CoachingContext, type AgentMessage } from './claude';
+import { logger } from './logger';
 
 const anthropic = new Anthropic({
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
@@ -68,7 +69,7 @@ Be specific and instructive. This is for a ${context?.rating || 1200} rated play
       return JSON.parse(jsonMatch[0]);
     }
   } catch (e) {
-    console.error('Failed to parse position analysis:', e);
+    logger.warn('Failed to parse position analysis:', e);
   }
 
   // Fallback response
@@ -177,7 +178,7 @@ Focus extra attention on their weaknesses while reinforcing strengths.`;
       return JSON.parse(jsonMatch[0]);
     }
   } catch (e) {
-    console.error('Failed to parse study plan:', e);
+    logger.warn('Failed to parse study plan:', e);
   }
 
   // Return a default plan
@@ -250,7 +251,7 @@ Be encouraging but honest. Sound like Magnus Carlsen commenting mixed with a zen
       return JSON.parse(jsonMatch[0]);
     }
   } catch (e) {
-    console.error('Failed to parse commentary:', e);
+    logger.warn('Failed to parse commentary:', e);
   }
 
   return {
@@ -344,7 +345,7 @@ Be insightful and specific. This helps personalize their entire experience.`;
       return JSON.parse(jsonMatch[0]);
     }
   } catch (e) {
-    console.error('Failed to parse psychological profile:', e);
+    logger.warn('Failed to parse psychological profile:', e);
   }
 
   return {
@@ -437,7 +438,7 @@ Be specific, constructive, and encouraging. Focus on teaching, not judging.`;
       return JSON.parse(jsonMatch[0]);
     }
   } catch (e) {
-    console.error('Failed to parse game review:', e);
+    logger.warn('Failed to parse game review:', e);
   }
 
   return {
@@ -530,7 +531,7 @@ Only intervene when truly helpful. Don't interrupt unnecessarily.`;
       return JSON.parse(jsonMatch[0]);
     }
   } catch (e) {
-    console.error('Failed to parse intervention:', e);
+    logger.warn('Failed to parse intervention:', e);
   }
 
   return {
@@ -599,7 +600,7 @@ Make it feel personal, warm, and motivating. Not generic.`;
       return JSON.parse(jsonMatch[0]);
     }
   } catch (e) {
-    console.error('Failed to parse daily message:', e);
+    logger.warn('Failed to parse daily message:', e);
   }
 
   return {
@@ -716,7 +717,7 @@ Be specific and actionable. These insights should feel personalized.`;
       return JSON.parse(jsonMatch[0]);
     }
   } catch (e) {
-    console.error('Failed to parse weakness analysis:', e);
+    logger.warn('Failed to parse weakness analysis:', e);
   }
 
   return {

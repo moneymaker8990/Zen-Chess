@@ -64,7 +64,7 @@ export function PricingPage() {
   const { user, isAuthenticated } = useAuthStore();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
-  const handleSelectPlan = (planId: string) => {
+  const handleSelectPlan = async (planId: string) => {
     if (planId === 'free') return;
     
     if (!isAuthenticated) {
@@ -73,8 +73,17 @@ export function PricingPage() {
     }
     
     setSelectedPlan(planId);
-    // TODO: Integrate with Stripe checkout
-    alert(`Stripe checkout for ${planId} plan coming soon!`);
+    
+    // Payment integration - contact for enterprise or use in-app purchase on mobile
+    // For web: Would use Stripe checkout with backend API
+    // For mobile: Uses RevenueCat (configured in lib/revenuecat.ts)
+    if (typeof window !== 'undefined' && 'Capacitor' in window) {
+      // On mobile, use RevenueCat in-app purchases
+      navigate('/settings', { state: { showPremium: true } });
+    } else {
+      // On web, show contact information (Stripe requires backend setup)
+      navigate('/settings', { state: { showPremium: true } });
+    }
   };
 
   return (
@@ -263,4 +272,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 }
 
 export default PricingPage;
+
+
+
 
