@@ -226,6 +226,17 @@ export function PuzzlesPage() {
   const [showGeniusPanel, setShowGeniusPanel] = useState(false);
   const [puzzleSolveTime, setPuzzleSolveTime] = useState(0);
   
+  // AI Analysis toggle - stored in localStorage for persistence
+  const [aiAnalysisEnabled, setAiAnalysisEnabled] = useState(() => {
+    const stored = localStorage.getItem('puzzle_ai_analysis_enabled');
+    return stored !== 'false'; // Default to true
+  });
+  
+  // Save AI analysis preference when it changes
+  useEffect(() => {
+    localStorage.setItem('puzzle_ai_analysis_enabled', String(aiAnalysisEnabled));
+  }, [aiAnalysisEnabled]);
+  
   // Setup move animation state - shows opponent's last move when puzzle loads
   const [isAnimatingSetup, setIsAnimatingSetup] = useState(false);
   
@@ -317,7 +328,7 @@ export function PuzzlesPage() {
   const hasRecordedFailure = useRef(false);
   
   // Start a puzzle - with setup move animation
-  // Uses Lichess puzzles with UCI move format
+  // Lichess puzzles: FEN is BEFORE opponent's move, first solution move is opponent's setup
   const startPuzzle = useCallback((puzzle: PuzzleWithMeta) => {
     // Mark puzzle as seen to avoid repetition
     seenPuzzleIds.current.add(puzzle.id);
@@ -329,7 +340,6 @@ export function PuzzlesPage() {
     hasRecordedFailure.current = false;
     
     setCurrentPuzzle(puzzle);
-    setMoveIndex(0);
     setMoveFrom(null);
     setOptionSquares({});
     setFeedback(null);
@@ -337,45 +347,63 @@ export function PuzzlesPage() {
     setHintLevel(0);
     setHintSquares({});
     
-    // If puzzle has setup move data, animate the opponent's last move
-    if (puzzle.beforeFen && puzzle.setupMove) {
-      setIsAnimatingSetup(true);
-      // Start with the position BEFORE opponent's move
-      const beforeGame = new Chess(puzzle.beforeFen);
-      setGame(beforeGame);
+    // For Lichess puzzles:
+    // - FEN is position BEFORE opponent's last move
+    // - solutionMoves[0] is opponent's setup move
+    // - Player solves starting from move 1
+    const solutionMoves = puzzle.solutionMoves;
+    
+    if (solutionMoves.length > 0) {
+      // Start from the FEN position
+      const startGame = new Chess(puzzle.fen);
+      setGame(startGame);
       setLastMove(null);
+      setIsAnimatingSetup(true);
       
-      // After a brief moment, show the opponent making their move
+      // Play the opponent's setup move after a brief delay
       setTimeout(() => {
-        const newGame = new Chess(puzzle.fen);
-        setGame(newGame);
-        // Highlight the opponent's last move so user sees what just happened
-        setLastMove({ 
-          from: puzzle.setupMove!.from as Square, 
-          to: puzzle.setupMove!.to as Square 
-        });
+        const setupMove = solutionMoves[0];
+        const parsed = parseUciMove(setupMove);
+        
+        if (parsed) {
+          const afterSetupGame = new Chess(puzzle.fen);
+          try {
+            afterSetupGame.move({ 
+              from: parsed.from, 
+              to: parsed.to, 
+              promotion: parsed.promotion as any 
+            });
+            setGame(afterSetupGame);
+            // Highlight opponent's last move
+            setLastMove({ 
+              from: parsed.from as Square, 
+              to: parsed.to as Square 
+            });
+          } catch (e) {
+            // If move fails, just use FEN directly
+            console.error('Setup move failed:', setupMove, e);
+          }
+        }
+        
+        // Player solves from move index 1 (after opponent's setup)
+        setMoveIndex(1);
         setIsAnimatingSetup(false);
         
         // Track puzzle start for coach
         puzzleStartTime.current = Date.now();
         recordEvent('PUZZLE_START', { 
           themes: puzzle.themes, 
-          difficulty: puzzle.difficulty 
+          difficulty: getPuzzleDifficulty(puzzle) 
         });
-      }, 600); // Give time for the animation
+      }, 500);
     } else {
-      // No setup move - just show the puzzle position directly
+      // No solution moves - just show the FEN
       const newGame = new Chess(puzzle.fen);
       setGame(newGame);
       setLastMove(null);
+      setMoveIndex(0);
       setIsAnimatingSetup(false);
-      
-      // Track puzzle start for coach
       puzzleStartTime.current = Date.now();
-      recordEvent('PUZZLE_START', { 
-        themes: puzzle.themes, 
-        difficulty: puzzle.difficulty 
-      });
     }
   }, [recordEvent]);
 
@@ -525,11 +553,12 @@ export function PuzzlesPage() {
         setFeedback(null);
       }, 800);
     } else {
-      // Calculate solve time and show genius panel
+      // Calculate solve time - show simple success overlay, user can optionally open AI analysis
       const solveTime = Math.round((Date.now() - puzzleStartTime.current) / 1000);
       setPuzzleSolveTime(solveTime);
       setFeedback('complete');
-      setShowGeniusPanel(true);
+      // Don't auto-open Genius Panel - let user maintain flow
+      // User can click "See AI Analysis" if they want deeper analysis
     }
   }, [currentPuzzle, stats.rating, mode, startPuzzle, showHint, recordPuzzle, recordEvent, streakCount]);
 
@@ -909,9 +938,15 @@ export function PuzzlesPage() {
     }),
   }), [optionSquares, lastMove, feedback, hintSquares, hintLevel]);
 
+  // Board orientation based on player's color (opposite of whose turn in FEN)
+  // Lichess FEN shows position BEFORE opponent's setup move
+  // So if FEN has 'w', white moves first (opponent), then black solves (player)
   const boardOrientation = currentPuzzle 
-    ? (currentPuzzle.fen.includes(' w ') ? 'white' : 'black')
+    ? (currentPuzzle.fen.includes(' w ') ? 'black' : 'white')
     : 'white';
+  
+  // Player's color (who solves the puzzle)
+  const playerColor = boardOrientation;
 
   const tierConfig = TIER_CONFIG[stats.tier];
   const nextTier = getNextTier(stats.tier);
@@ -1452,7 +1487,7 @@ export function PuzzlesPage() {
                   boardWidth={boardSize}
                 />
 
-                {/* Feedback Overlay - simplified since we have the Genius Panel */}
+                {/* Feedback Overlay - clean success screen */}
                 {feedback === 'complete' && !showGeniusPanel && (
                   <div className="absolute inset-0 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.75)' }}>
                     <div className="text-center p-8">
@@ -1462,14 +1497,16 @@ export function PuzzlesPage() {
                         +{10 + getPuzzleDifficulty(currentPuzzle) * 5} points
                       </p>
                       <div className="flex flex-col gap-2">
-                        <button 
-                          onClick={() => setShowGeniusPanel(true)} 
-                          className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold"
-                        >
-                          🧠 See AI Analysis
-                        </button>
-                        <button onClick={nextPuzzle} className="btn-ghost text-sm">
-                          Skip to Next →
+                        {aiAnalysisEnabled && (
+                          <button 
+                            onClick={() => setShowGeniusPanel(true)} 
+                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold"
+                          >
+                            🧠 See AI Analysis
+                          </button>
+                        )}
+                        <button onClick={nextPuzzle} className={aiAnalysisEnabled ? "btn-ghost text-sm" : "px-6 py-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold"}>
+                          {aiAnalysisEnabled ? 'Skip to Next →' : 'Next Puzzle →'}
                         </button>
                       </div>
                     </div>
@@ -1559,6 +1596,19 @@ export function PuzzlesPage() {
                     </button>
                   ))}
                 </div>
+              </div>
+              
+              {/* AI Analysis Toggle */}
+              <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
+                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI Analysis</span>
+                <button
+                  onClick={() => setAiAnalysisEnabled(!aiAnalysisEnabled)}
+                  className={`relative w-12 h-6 rounded-full transition-colors ${aiAnalysisEnabled ? 'bg-purple-600' : 'bg-gray-600'}`}
+                >
+                  <span 
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${aiAnalysisEnabled ? 'left-7' : 'left-1'}`}
+                  />
+                </button>
               </div>
             </div>
 
