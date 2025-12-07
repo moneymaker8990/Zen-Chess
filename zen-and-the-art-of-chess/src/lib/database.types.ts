@@ -310,6 +310,119 @@ export interface Database {
         };
         Update: never;
       };
+      // ============================================
+      // PUZZLE TABLES
+      // ============================================
+      puzzles: {
+        Row: {
+          id: string;
+          fen: string;
+          solution_moves: string;
+          rating: number;
+          rating_deviation: number | null;
+          themes: string[];
+          popularity: number;
+          nb_plays: number;
+          game_url: string | null;
+          opening_tags: string[];
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          fen: string;
+          solution_moves: string;
+          rating: number;
+          rating_deviation?: number | null;
+          themes?: string[];
+          popularity?: number;
+          nb_plays?: number;
+          game_url?: string | null;
+          opening_tags?: string[];
+          created_at?: string;
+        };
+        Update: {
+          fen?: string;
+          solution_moves?: string;
+          rating?: number;
+          rating_deviation?: number | null;
+          themes?: string[];
+          popularity?: number;
+          nb_plays?: number;
+          game_url?: string | null;
+          opening_tags?: string[];
+        };
+      };
+      user_puzzle_ratings: {
+        Row: {
+          user_id: string;
+          rating: number;
+          highest_rating: number;
+          lowest_rating: number;
+          games_played: number;
+          wins: number;
+          losses: number;
+          current_streak: number;
+          best_streak: number;
+          last_themes: string[];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          rating?: number;
+          highest_rating?: number;
+          lowest_rating?: number;
+          games_played?: number;
+          wins?: number;
+          losses?: number;
+          current_streak?: number;
+          best_streak?: number;
+          last_themes?: string[];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          rating?: number;
+          highest_rating?: number;
+          lowest_rating?: number;
+          games_played?: number;
+          wins?: number;
+          losses?: number;
+          current_streak?: number;
+          best_streak?: number;
+          last_themes?: string[];
+          updated_at?: string;
+        };
+      };
+      user_puzzle_history: {
+        Row: {
+          id: string;
+          user_id: string;
+          puzzle_id: string;
+          solved: boolean;
+          time_taken_ms: number | null;
+          hints_used: number;
+          user_rating_before: number;
+          user_rating_after: number;
+          puzzle_rating: number;
+          mode: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          puzzle_id: string;
+          solved: boolean;
+          time_taken_ms?: number | null;
+          hints_used?: number;
+          user_rating_before: number;
+          user_rating_after: number;
+          puzzle_rating: number;
+          mode?: string;
+          created_at?: string;
+        };
+        Update: never;
+      };
     };
     Views: {
       [_ in never]: never;
@@ -338,5 +451,10 @@ export type GameInvite = Database['public']['Tables']['game_invites']['Row'];
 export type Friendship = Database['public']['Tables']['friends']['Row'];
 export type Presence = Database['public']['Tables']['presence']['Row'];
 export type GameChat = Database['public']['Tables']['game_chat']['Row'];
+
+// Puzzle system types
+export type DbPuzzle = Database['public']['Tables']['puzzles']['Row'];
+export type UserPuzzleRating = Database['public']['Tables']['user_puzzle_ratings']['Row'];
+export type UserPuzzleHistory = Database['public']['Tables']['user_puzzle_history']['Row'];
 
 

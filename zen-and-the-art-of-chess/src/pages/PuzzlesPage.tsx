@@ -2,15 +2,32 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { AnimatePresence } from 'framer-motion';
-import { puzzles, allPuzzles } from '@/data/puzzles';
+import { allPuzzles } from '@/data/puzzles';
 import { useCoachStore } from '@/state/coachStore';
 import { useBoardSettingsStore, useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
 import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
 import { AgentWatching, ContextualAgentTip } from '@/components/AgentPresence';
 import { PuzzleGeniusPanel } from '@/components/PuzzleGeniusPanel';
-import { ChessSounds, UISounds, playSmartMoveSound } from '@/lib/soundSystem';
+import { UISounds, playSmartMoveSound } from '@/lib/soundSystem';
 import { MOVE_HINT_STYLES } from '@/lib/constants';
 import { useBoardSize } from '@/hooks/useBoardSize';
+import {
+  getPuzzleStats,
+  submitPuzzleResult,
+  getLocalPuzzleData,
+  saveLocalPuzzleData,
+  calculateEloChange,
+  getThemeLabel,
+} from '@/lib/puzzleService';
+import {
+  selectLocalPuzzle,
+  getDailyPuzzle as getLocalDailyPuzzle,
+  getStreakPuzzle,
+  getRushPuzzle,
+  getOriginalPuzzle,
+  getPuzzlePoolStats,
+} from '@/lib/puzzlePool';
+import type { PuzzleWithMeta } from '@/lib/puzzleService';
 import type { MoveHintStyle } from '@/lib/constants';
 import type { ChessPuzzle, PatternType } from '@/lib/types';
 
@@ -95,23 +112,72 @@ function getNextTier(tier: TierLevel): TierLevel | null {
   return idx < tiers.length - 1 ? tiers[idx + 1] : null;
 }
 
-function calculateRatingChange(userRating: number, puzzleRating: number, solved: boolean): number {
-  const expected = 1 / (1 + Math.pow(10, (puzzleRating - userRating) / 400));
-  const k = 32; // K-factor
-  const actual = solved ? 1 : 0;
-  return Math.round(k * (actual - expected));
+// Get puzzle rating - supports both old ChessPuzzle and new PuzzleWithMeta formats
+function getPuzzleRating(puzzle: ChessPuzzle | PuzzleWithMeta): number {
+  // New format has rating directly
+  if ('rating' in puzzle && typeof puzzle.rating === 'number') {
+    return puzzle.rating;
+  }
+  // Old format - estimate from difficulty
+  if ('difficulty' in puzzle) {
+    const ratings: Record<number, number> = {
+      1: 800,   // Beginner
+      2: 1100,  // Easy
+      3: 1400,  // Intermediate
+      4: 1700,  // Advanced
+      5: 2000,  // Master
+    };
+    return ratings[(puzzle as ChessPuzzle).difficulty] || 1000;
+  }
+  return 1000;
 }
 
-function getPuzzleRating(puzzle: ChessPuzzle): number {
-  // Estimate puzzle rating based on difficulty
-  return 600 + (puzzle.difficulty - 1) * 350;
+// Get solution moves as array - supports both formats
+function getSolutionMoves(puzzle: ChessPuzzle | PuzzleWithMeta): string[] {
+  if ('solutionMoves' in puzzle) {
+    return puzzle.solutionMoves;
+  }
+  return (puzzle as ChessPuzzle).solution;
 }
 
-function getDailyPuzzle(): ChessPuzzle {
-  const today = new Date().toISOString().split('T')[0];
-  const seed = today.split('-').reduce((acc, n) => acc + parseInt(n), 0);
-  const index = seed % allPuzzles.length;
-  return allPuzzles[index];
+// Get themes - supports both formats
+function getThemes(puzzle: ChessPuzzle | PuzzleWithMeta): string[] {
+  return puzzle.themes || [];
+}
+
+// Get puzzle title
+function getPuzzleTitle(puzzle: ChessPuzzle | PuzzleWithMeta): string {
+  if ('title' in puzzle && puzzle.title) {
+    return puzzle.title;
+  }
+  // Generate title from themes
+  const themes = getThemes(puzzle);
+  if (themes.length > 0) {
+    return getThemeLabel(themes[0]);
+  }
+  return 'Find the Best Move';
+}
+
+// Get puzzle explanation
+function getPuzzleExplanation(puzzle: ChessPuzzle | PuzzleWithMeta): string | undefined {
+  if ('explanation' in puzzle) {
+    return (puzzle as ChessPuzzle).explanation;
+  }
+  return undefined;
+}
+
+// Get difficulty (1-5 scale)
+function getPuzzleDifficulty(puzzle: ChessPuzzle | PuzzleWithMeta): number {
+  if ('difficulty' in puzzle) {
+    return (puzzle as ChessPuzzle).difficulty;
+  }
+  // Estimate from rating
+  const rating = getPuzzleRating(puzzle);
+  if (rating < 1000) return 1;
+  if (rating < 1300) return 2;
+  if (rating < 1600) return 3;
+  if (rating < 1900) return 4;
+  return 5;
 }
 
 // ============================================
@@ -129,8 +195,11 @@ export function PuzzlesPage() {
   // Navigation State
   const [mode, setMode] = useState<PuzzleMode>('menu');
   
-  // Puzzle State
-  const [currentPuzzle, setCurrentPuzzle] = useState<ChessPuzzle | null>(null);
+  // Puzzle State - supports both old ChessPuzzle and new PuzzleWithMeta formats
+  const [currentPuzzle, setCurrentPuzzle] = useState<ChessPuzzle | PuzzleWithMeta | null>(null);
+  
+  // Last rating change (for chess.com style display)
+  const [lastRatingChange, setLastRatingChange] = useState<number | null>(null);
   const [game, setGame] = useState(new Chess());
   const [moveFrom, setMoveFrom] = useState<Square | null>(null);
   const [optionSquares, setOptionSquares] = useState<Record<string, React.CSSProperties>>({});
@@ -175,15 +244,39 @@ export function PuzzlesPage() {
   // Track seen puzzles in this session to avoid repetition
   const seenPuzzleIds = useRef<Set<string>>(new Set());
   
-  // Stats State (persisted)
+  // Stats State (persisted via new puzzle service)
   const [stats, setStats] = useState<PuzzleStats>(() => {
-    const saved = localStorage.getItem('zenChessPuzzleStats');
-    return saved ? { ...DEFAULT_STATS, ...JSON.parse(saved) } : DEFAULT_STATS;
+    // Load from new puzzle service storage
+    const newData = getLocalPuzzleData();
+    // Also check legacy storage for backwards compatibility
+    const legacySaved = localStorage.getItem('zenChessPuzzleStats');
+    const legacy = legacySaved ? JSON.parse(legacySaved) : {};
+    
+    return {
+      ...DEFAULT_STATS,
+      ...legacy,
+      rating: newData.rating || legacy.rating || DEFAULT_STATS.rating,
+      puzzlesSolved: newData.wins || legacy.puzzlesSolved || 0,
+      puzzlesFailed: newData.losses || legacy.puzzlesFailed || 0,
+      currentStreak: newData.currentStreak || legacy.currentStreak || 0,
+      bestStreak: newData.bestStreak || legacy.bestStreak || 0,
+      tier: getTierFromRating(newData.rating || legacy.rating || DEFAULT_STATS.rating),
+    };
   });
 
-  // Save stats
+  // Save stats to both legacy and new storage
   useEffect(() => {
     localStorage.setItem('zenChessPuzzleStats', JSON.stringify(stats));
+    // Also save to new format for the puzzle service
+    saveLocalPuzzleData({
+      rating: stats.rating,
+      highestRating: Math.max(stats.rating, getLocalPuzzleData().highestRating || stats.rating),
+      gamesPlayed: stats.puzzlesSolved + stats.puzzlesFailed,
+      wins: stats.puzzlesSolved,
+      losses: stats.puzzlesFailed,
+      currentStreak: stats.currentStreak,
+      bestStreak: stats.bestStreak,
+    });
   }, [stats]);
 
   // Rush timer
@@ -212,8 +305,26 @@ export function PuzzlesPage() {
     });
   }, [selectedTheme, selectedDifficulty]);
 
-  // Select puzzle based on rating (for rated mode) - avoids recently seen puzzles
-  const selectRatedPuzzle = useCallback(() => {
+  // Select puzzle based on rating (for rated mode) - uses new adaptive puzzle pool
+  const selectRatedPuzzle = useCallback((): ChessPuzzle | PuzzleWithMeta | null => {
+    // Use new puzzle pool with proper selection algorithm
+    const puzzle = selectLocalPuzzle({
+      userRating: stats.rating,
+      ratingRange: 200,
+      excludeIds: Array.from(seenPuzzleIds.current),
+      mode: 'rated',
+    });
+    
+    if (puzzle) {
+      // Try to get the original ChessPuzzle for richer data (title, explanation, etc.)
+      const original = getOriginalPuzzle(puzzle.id);
+      if (original) {
+        return original;
+      }
+      return puzzle;
+    }
+    
+    // Fallback to old method if new pool fails
     const targetRating = stats.rating;
     const range = 200;
     const eligible = allPuzzles.filter(p => {
@@ -221,34 +332,22 @@ export function PuzzlesPage() {
       return pr >= targetRating - range && pr <= targetRating + range;
     });
     
-    // Filter out recently seen puzzles
     const unseenEligible = eligible.filter(p => !seenPuzzleIds.current.has(p.id));
-    const unseenAll = allPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
-    
-    // Reset seen puzzles if we've seen too many
-    if (unseenAll.length < 5) {
-      seenPuzzleIds.current.clear();
-    }
-    
-    const pool = unseenEligible.length > 0 
-      ? unseenEligible 
-      : unseenAll.length > 0 
-        ? unseenAll 
-        : eligible.length > 0 
-          ? eligible 
-          : allPuzzles;
-    
-    const puzzle = pool[Math.floor(Math.random() * pool.length)];
-    return puzzle;
+    const pool = unseenEligible.length > 0 ? unseenEligible : allPuzzles;
+    return pool[Math.floor(Math.random() * pool.length)];
   }, [stats.rating]);
 
   // Track if we've already recorded a failure for this puzzle attempt
   const hasRecordedFailure = useRef(false);
   
   // Start a puzzle - with setup move animation if available
-  const startPuzzle = useCallback((puzzle: ChessPuzzle) => {
+  // Supports both old ChessPuzzle and new PuzzleWithMeta formats
+  const startPuzzle = useCallback((puzzle: ChessPuzzle | PuzzleWithMeta) => {
     // Mark puzzle as seen to avoid repetition
     seenPuzzleIds.current.add(puzzle.id);
+    
+    // Clear last rating change for new puzzle
+    setLastRatingChange(null);
     
     // Reset failure tracking for new puzzle
     hasRecordedFailure.current = false;
@@ -334,11 +433,21 @@ export function PuzzlesPage() {
       setStreakDifficulty(1);
       setStreakActive(true);
       seenPuzzleIds.current.clear(); // Fresh start for streak
-      // Start with easy puzzles
-      const easyPuzzles = allPuzzles.filter(p => p.difficulty === 1);
-      startPuzzle(getRandomUnseenPuzzle(easyPuzzles.length > 0 ? easyPuzzles : allPuzzles));
+      // Use new streak puzzle system - starts easy, gets harder
+      const streakPuzzle = getStreakPuzzle(0);
+      if (streakPuzzle) {
+        const original = getOriginalPuzzle(streakPuzzle.id);
+        startPuzzle(original || streakPuzzle);
+      } else {
+        // Fallback to old method
+        const easyPuzzles = allPuzzles.filter(p => p.difficulty === 1);
+        startPuzzle(getRandomUnseenPuzzle(easyPuzzles.length > 0 ? easyPuzzles : allPuzzles));
+      }
     } else if (newMode === 'daily') {
-      startPuzzle(getDailyPuzzle());
+      const dailyPuzzle = getLocalDailyPuzzle();
+      // Try to get original puzzle for richer data
+      const original = getOriginalPuzzle(dailyPuzzle.id);
+      startPuzzle(original || dailyPuzzle);
     } else if (newMode === 'custom') {
       if (filteredPuzzles.length > 0) {
         startPuzzle(getRandomUnseenPuzzle(filteredPuzzles));
@@ -351,9 +460,18 @@ export function PuzzlesPage() {
     if (!currentPuzzle) return;
     
     const puzzleRating = getPuzzleRating(currentPuzzle);
-    const ratingChange = calculateRatingChange(stats.rating, puzzleRating, true);
-    const points = 10 + currentPuzzle.difficulty * 5 + (mode === 'rush' ? 5 : 0);
+    const puzzleDifficulty = getPuzzleDifficulty(currentPuzzle);
+    const themes = getThemes(currentPuzzle);
+    
+    // Calculate rating change (only for rated mode, not streak/rush)
+    const ratingChange = (mode === 'streak' || mode === 'rush') 
+      ? 0 
+      : calculateEloChange(stats.rating, puzzleRating, true);
+    const points = 10 + puzzleDifficulty * 5 + (mode === 'rush' ? 5 : 0);
     const timeToSolve = Date.now() - puzzleStartTime.current;
+    
+    // Store rating change for chess.com style display
+    setLastRatingChange(ratingChange);
     
     // Record puzzle success to coach (solved, timeSeconds, hintsUsed)
     const timeSeconds = Math.round(timeToSolve / 1000);
@@ -361,7 +479,7 @@ export function PuzzlesPage() {
     recordEvent('PUZZLE_COMPLETE', { 
       solved: true, 
       timeSeconds, 
-      themes: currentPuzzle.themes 
+      themes,
     });
     
     // Track puzzle streak for agents
@@ -386,11 +504,11 @@ export function PuzzlesPage() {
         tier: getTierFromRating(newRating),
         themeStats: {
           ...prev.themeStats,
-          ...currentPuzzle.themes.reduce((acc, theme) => ({
+          ...themes.reduce((acc, theme) => ({
             ...acc,
-            [theme]: {
-              solved: (prev.themeStats[theme]?.solved || 0) + 1,
-              failed: prev.themeStats[theme]?.failed || 0,
+            [theme as PatternType]: {
+              solved: (prev.themeStats[theme as PatternType]?.solved || 0) + 1,
+              failed: prev.themeStats[theme as PatternType]?.failed || 0,
             }
           }), {}),
         },
@@ -406,19 +524,28 @@ export function PuzzlesPage() {
         startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
       }, 500);
     } else if (mode === 'streak') {
-      setStreakCount(prev => prev + 1);
-      // Increase difficulty every 3 puzzles
-      const newDifficulty = Math.min(5, Math.floor((streakCount + 1) / 3) + 1);
+      const newStreakCount = streakCount + 1;
+      setStreakCount(newStreakCount);
+      // Increase difficulty every 3 puzzles (same as before)
+      const newDifficulty = Math.min(5, Math.floor(newStreakCount / 3) + 1);
       setStreakDifficulty(newDifficulty);
       setTimeout(() => {
-        const difficultyPuzzles = allPuzzles.filter(p => p.difficulty === newDifficulty);
-        const unseenDifficulty = difficultyPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
-        const pool = unseenDifficulty.length > 0 
-          ? unseenDifficulty 
-          : difficultyPuzzles.length > 0 
-            ? difficultyPuzzles 
-            : allPuzzles;
-        startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
+        // Use new streak puzzle system for progressive difficulty
+        const streakPuzzle = getStreakPuzzle(newStreakCount);
+        if (streakPuzzle) {
+          const original = getOriginalPuzzle(streakPuzzle.id);
+          startPuzzle(original || streakPuzzle);
+        } else {
+          // Fallback to old method
+          const difficultyPuzzles = allPuzzles.filter(p => p.difficulty === newDifficulty);
+          const unseenDifficulty = difficultyPuzzles.filter(p => !seenPuzzleIds.current.has(p.id));
+          const pool = unseenDifficulty.length > 0 
+            ? unseenDifficulty 
+            : difficultyPuzzles.length > 0 
+              ? difficultyPuzzles 
+              : allPuzzles;
+          startPuzzle(pool[Math.floor(Math.random() * pool.length)]);
+        }
         setFeedback(null);
       }, 800);
     } else {
@@ -442,12 +569,22 @@ export function PuzzlesPage() {
     // This allows retries without repeated penalties
     const shouldRecordFailure = !hasRecordedFailure.current;
     
+    const puzzleRating = getPuzzleRating(currentPuzzle);
+    const themes = getThemes(currentPuzzle);
+    
     if (shouldRecordFailure) {
       hasRecordedFailure.current = true;
       
-      const puzzleRating = getPuzzleRating(currentPuzzle);
-      const ratingChange = calculateRatingChange(stats.rating, puzzleRating, false);
+      // Calculate rating change - only apply in rated mode, not streak/rush
+      const ratingChange = (mode === 'streak' || mode === 'rush') 
+        ? 0 
+        : calculateEloChange(stats.rating, puzzleRating, false);
       const timeToFail = Date.now() - puzzleStartTime.current;
+      
+      // Store rating change for chess.com style display
+      if (mode === 'rated') {
+        setLastRatingChange(ratingChange);
+      }
       
       // Record puzzle failure to coach (solved, timeSeconds, hintsUsed)
       const timeSeconds = Math.round(timeToFail / 1000);
@@ -455,16 +592,15 @@ export function PuzzlesPage() {
       recordEvent('PUZZLE_COMPLETE', { 
         solved: false, 
         timeSeconds, 
-        themes: currentPuzzle.themes 
+        themes,
       });
       
       // Reset puzzle streak and notify agents
       puzzleStreakRef.current = 0;
       triggerAgent({ type: 'PUZZLE_COMPLETE', solved: false, time: timeSeconds });
       
-      // Only penalize stats in competitive modes (rush/streak)
-      // For rated/daily/custom, just track for analytics but don't penalize retries
-      if (mode === 'rush' || mode === 'streak') {
+      // Update stats - rating only changes in rated mode, not streak/rush
+      if (mode === 'rated') {
         setStats(prev => ({
           ...prev,
           rating: Math.max(100, prev.rating + ratingChange),
@@ -473,14 +609,21 @@ export function PuzzlesPage() {
           tier: getTierFromRating(Math.max(100, prev.rating + ratingChange)),
           themeStats: {
             ...prev.themeStats,
-            ...currentPuzzle.themes.reduce((acc, theme) => ({
+            ...themes.reduce((acc, theme) => ({
               ...acc,
-              [theme]: {
-                solved: prev.themeStats[theme]?.solved || 0,
-                failed: (prev.themeStats[theme]?.failed || 0) + 1,
+              [theme as PatternType]: {
+                solved: prev.themeStats[theme as PatternType]?.solved || 0,
+                failed: (prev.themeStats[theme as PatternType]?.failed || 0) + 1,
               }
             }), {}),
           },
+        }));
+      } else if (mode === 'rush' || mode === 'streak') {
+        // In rush/streak, just update failure count without rating change
+        setStats(prev => ({
+          ...prev,
+          puzzlesFailed: prev.puzzlesFailed + 1,
+          currentStreak: 0,
         }));
       }
     }
@@ -552,7 +695,8 @@ export function PuzzlesPage() {
       const result = gameCopy.move({ from, to, promotion: 'q' });
       if (!result) return false;
 
-      const expectedMove = currentPuzzle.solution[moveIndex];
+      const solutionMoves = getSolutionMoves(currentPuzzle);
+      const expectedMove = solutionMoves[moveIndex];
       const isCorrect = result.san === expectedMove || 
         `${from}${to}` === expectedMove ||
         result.san.replace(/[+#]/g, '') === expectedMove?.replace(/[+#]/g, '');
@@ -574,14 +718,14 @@ export function PuzzlesPage() {
         });
         
         // Check if puzzle complete
-        if (moveIndex + 1 >= currentPuzzle.solution.length) {
+        if (moveIndex + 1 >= solutionMoves.length) {
           // Play success sound after a brief delay
           setTimeout(() => UISounds.puzzleCorrect(), 200);
           handlePuzzleSolved();
         } else {
           // Play opponent's response
           setTimeout(() => {
-            const opponentMove = currentPuzzle.solution[moveIndex + 1];
+            const opponentMove = solutionMoves[moveIndex + 1];
             if (opponentMove) {
               const responseGame = new Chess(gameCopy.fen());
               const opponentCapture = responseGame.get(opponentMove.slice(2, 4) as Square);
@@ -697,7 +841,8 @@ export function PuzzlesPage() {
   const handleHint = useCallback(() => {
     if (!currentPuzzle || feedback === 'complete') return;
     
-    const expectedMove = currentPuzzle.solution[moveIndex];
+    const solutionMoves = getSolutionMoves(currentPuzzle);
+    const expectedMove = solutionMoves[moveIndex];
     if (!expectedMove) return;
     
     const squares = getHintFromMove(expectedMove);
@@ -718,7 +863,8 @@ export function PuzzlesPage() {
   const showCorrectMove = useCallback(() => {
     if (!currentPuzzle || feedback === 'complete') return;
     
-    const expectedMove = currentPuzzle.solution[moveIndex];
+    const solutionMoves = getSolutionMoves(currentPuzzle);
+    const expectedMove = solutionMoves[moveIndex];
     if (!expectedMove) return;
     
     const squares = getHintFromMove(expectedMove);
@@ -1308,7 +1454,7 @@ export function PuzzlesPage() {
                       <div className="text-6xl mb-4">🎉</div>
                       <h3 className="text-2xl font-display mb-2" style={{ color: '#4ade80' }}>Excellent!</h3>
                       <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
-                        +{10 + currentPuzzle.difficulty * 5} points
+                        +{10 + getPuzzleDifficulty(currentPuzzle) * 5} points
                       </p>
                       <div className="flex flex-col gap-2">
                         <button 
@@ -1418,25 +1564,25 @@ export function PuzzlesPage() {
                 <div className="flex items-center justify-between mb-2 lg:mb-4">
                   <div className="flex-1 min-w-0">
                     <h2 className="text-base lg:text-xl font-display truncate" style={{ color: 'var(--text-primary)' }}>
-                      {currentPuzzle.title || 'Find the Best Move'}
+                      {getPuzzleTitle(currentPuzzle)}
                     </h2>
                     <p className="text-xs lg:text-sm" style={{ color: 'var(--text-muted)' }}>
                       {game.turn() === 'w' ? '⬜ White' : '⬛ Black'} to move
                     </p>
                   </div>
                   <span className="text-xs ml-2 shrink-0" style={{ color: 'var(--accent-gold)' }}>
-                    {'★'.repeat(currentPuzzle.difficulty)}{'☆'.repeat(5 - currentPuzzle.difficulty)}
+                    {'★'.repeat(getPuzzleDifficulty(currentPuzzle))}{'☆'.repeat(5 - getPuzzleDifficulty(currentPuzzle))}
                   </span>
                 </div>
 
                 {/* Themes - horizontal scroll on mobile */}
                 <div className="flex flex-wrap gap-1.5 lg:gap-2 mb-3 lg:mb-4">
-                  {currentPuzzle.themes.map(theme => (
+                  {getThemes(currentPuzzle).map(theme => (
                     <span 
                       key={theme}
                       className="badge text-xs"
                     >
-                      {THEME_LABELS[theme]}
+                      {getThemeLabel(theme)}
                     </span>
                   ))}
                 </div>
@@ -1447,9 +1593,9 @@ export function PuzzlesPage() {
                     {hintLevel === 1 && (
                       <p className="text-xs lg:text-sm" style={{ color: '#fbbf24' }}>
                         💡 <span className="font-medium">The highlighted piece should move.</span>
-                        {currentPuzzle.explanation && (
+                        {getPuzzleExplanation(currentPuzzle) && (
                           <span className="block mt-1 opacity-80 line-clamp-2">
-                            {currentPuzzle.explanation.split('.')[0]}
+                            {getPuzzleExplanation(currentPuzzle)!.split('.')[0]}
                           </span>
                         )}
                       </p>
@@ -1457,9 +1603,9 @@ export function PuzzlesPage() {
                     {hintLevel >= 2 && (
                       <p className="text-xs lg:text-sm" style={{ color: '#4ade80' }}>
                         ✨ <span className="font-medium">Move to the highlighted square.</span>
-                        {currentPuzzle.explanation && (
+                        {getPuzzleExplanation(currentPuzzle) && (
                           <span className="block mt-1 opacity-80 line-clamp-3">
-                            {currentPuzzle.explanation}
+                            {getPuzzleExplanation(currentPuzzle)}
                           </span>
                         )}
                       </p>
@@ -1470,20 +1616,33 @@ export function PuzzlesPage() {
 
               {/* Rating & Streak - Combined row on mobile */}
               <div className="flex gap-3 lg:flex-col">
-                {/* Rating Info (Rated Mode) */}
+                {/* Rating Info (Rated Mode) - Chess.com style */}
                 {mode === 'rated' && (
                   <div className="card p-3 lg:p-6 flex-1">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xs lg:text-sm" style={{ color: 'var(--text-muted)' }}>Rating</div>
-                        <div className="text-lg lg:text-2xl font-display font-bold" style={{ color: tierConfig.color }}>
-                          {stats.rating}
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-lg lg:text-2xl font-display font-bold" style={{ color: tierConfig.color }}>
+                            {stats.rating}
+                          </span>
+                          {/* Chess.com style rating change display */}
+                          {lastRatingChange !== null && lastRatingChange !== 0 && (
+                            <span 
+                              className="text-sm lg:text-base font-bold animate-fade-in"
+                              style={{ 
+                                color: lastRatingChange > 0 ? '#4ade80' : '#ef4444',
+                              }}
+                            >
+                              ({lastRatingChange > 0 ? '+' : ''}{lastRatingChange})
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div className="text-right hidden lg:block">
                         <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Puzzle</div>
                         <div className="text-2xl font-display font-bold" style={{ color: 'var(--text-secondary)' }}>
-                          ~{getPuzzleRating(currentPuzzle)}
+                          {getPuzzleRating(currentPuzzle)}
                         </div>
                       </div>
                     </div>
@@ -1517,11 +1676,11 @@ export function PuzzlesPage() {
           {showGeniusPanel && currentPuzzle && (
             <PuzzleGeniusPanel
               fen={currentPuzzle.fen}
-              solution={currentPuzzle.solution}
-              themes={currentPuzzle.themes}
+              solution={getSolutionMoves(currentPuzzle)}
+              themes={getThemes(currentPuzzle)}
               userSolved={feedback === 'complete'}
               timeTaken={puzzleSolveTime}
-              puzzleDifficulty={currentPuzzle.difficulty}
+              puzzleDifficulty={getPuzzleDifficulty(currentPuzzle)}
               onClose={() => setShowGeniusPanel(false)}
               onNextPuzzle={() => {
                 setShowGeniusPanel(false);

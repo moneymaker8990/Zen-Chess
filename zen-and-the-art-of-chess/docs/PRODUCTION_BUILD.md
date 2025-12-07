@@ -157,3 +157,4 @@ npm run cap:android   # Open Android Studio
    - Performance monitoring
    - User analytics (privacy-respecting)
 
+
