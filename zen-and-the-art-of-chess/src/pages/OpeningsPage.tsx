@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import allOpenings, { type OpeningLine } from '@/data/openings';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 
@@ -373,24 +374,9 @@ export function OpeningsPage() {
   const autoPlayTimeout = useRef<ReturnType<typeof setTimeout>>();
   const [showDatabaseLines, setShowDatabaseLines] = useState(false);
   
-  // Board settings and sizing
+  // Board settings and sizing - use the same hook as PlayPage
   const boardStyles = useBoardStyles();
-  const [openingsBoardSize, setOpeningsBoardSize] = useState(350);
-  
-  // Calculate board size based on viewport
-  useEffect(() => {
-    const calculateBoardSize = () => {
-      const maxSize = 400;
-      const viewportWidth = window.innerWidth;
-      // Account for padding and margins
-      const availableWidth = viewportWidth - 64; // 32px padding on each side
-      setOpeningsBoardSize(Math.min(maxSize, availableWidth));
-    };
-    
-    calculateBoardSize();
-    window.addEventListener('resize', calculateBoardSize);
-    return () => window.removeEventListener('resize', calculateBoardSize);
-  }, []);
+  const boardSize = useBoardSize(480, 32);
 
   // Calculate lines count for each course - separate learning vs database
   const coursesWithCounts = useMemo(() => {
@@ -995,7 +981,7 @@ export function OpeningsPage() {
 
         <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_340px] gap-4 lg:gap-6 w-full max-w-full">
           {/* Board Section */}
-          <div className="space-y-4 w-full max-w-full">
+          <div className="space-y-4 w-full" style={{ minHeight: boardSize + 100 }}>
             {/* Mode Toggle */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-2">
               <div className="flex rounded-lg bg-zen-800/40 p-1">
@@ -1030,14 +1016,8 @@ export function OpeningsPage() {
             </div>
 
             {/* Chessboard */}
-            <div className="relative w-full flex justify-center items-start">
-              <div 
-                className="relative flex-shrink-0"
-                style={{ 
-                  width: openingsBoardSize,
-                  aspectRatio: '1 / 1'
-                }}
-              >
+            <div className="w-full flex justify-center">
+              <div className="relative" style={{ width: boardSize, height: boardSize, maxWidth: '100%' }}>
                 <Chessboard
                   position={game.fen()}
                   onSquareClick={onSquareClick}
@@ -1048,7 +1028,7 @@ export function OpeningsPage() {
                   customLightSquareStyle={boardStyles.customLightSquareStyle}
                   animationDuration={boardStyles.animationDuration}
                   arePiecesDraggable={isUserTurn && feedback !== 'complete'}
-                  boardWidth={openingsBoardSize}
+                  boardWidth={boardSize}
                 />
               
                 {/* Correct Move Feedback */}

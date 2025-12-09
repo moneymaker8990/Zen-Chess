@@ -550,7 +550,7 @@ export function Layout({ children }: LayoutProps) {
 
         {/* Page content */}
         <main id="main-content" className="p-4 lg:p-8 pb-safe overflow-x-hidden" role="main">
-          <div className="max-w-6xl mx-auto overflow-hidden">
+          <div className="max-w-6xl mx-auto">
             {children}
           </div>
         </main>
