@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import allOpenings, { type OpeningLine } from '@/data/openings';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 
@@ -376,7 +375,22 @@ export function OpeningsPage() {
   
   // Board settings and sizing
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480, 32);
+  const [openingsBoardSize, setOpeningsBoardSize] = useState(350);
+  
+  // Calculate board size based on viewport
+  useEffect(() => {
+    const calculateBoardSize = () => {
+      const maxSize = 400;
+      const viewportWidth = window.innerWidth;
+      // Account for padding and margins
+      const availableWidth = viewportWidth - 64; // 32px padding on each side
+      setOpeningsBoardSize(Math.min(maxSize, availableWidth));
+    };
+    
+    calculateBoardSize();
+    window.addEventListener('resize', calculateBoardSize);
+    return () => window.removeEventListener('resize', calculateBoardSize);
+  }, []);
 
   // Calculate lines count for each course - separate learning vs database
   const coursesWithCounts = useMemo(() => {
@@ -1016,8 +1030,14 @@ export function OpeningsPage() {
             </div>
 
             {/* Chessboard */}
-            <div className="relative w-full flex justify-center lg:justify-start overflow-visible">
-              <div style={{ width: boardSize, maxWidth: '100%' }}>
+            <div className="relative w-full flex justify-center items-start">
+              <div 
+                className="relative flex-shrink-0"
+                style={{ 
+                  width: openingsBoardSize,
+                  aspectRatio: '1 / 1'
+                }}
+              >
                 <Chessboard
                   position={game.fen()}
                   onSquareClick={onSquareClick}
@@ -1028,44 +1048,44 @@ export function OpeningsPage() {
                   customLightSquareStyle={boardStyles.customLightSquareStyle}
                   animationDuration={boardStyles.animationDuration}
                   arePiecesDraggable={isUserTurn && feedback !== 'complete'}
-                  boardWidth={boardSize}
+                  boardWidth={openingsBoardSize}
                 />
-              </div>
               
-              {/* Correct Move Feedback */}
-              {feedback === 'correct' && (
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full animate-bounce-in" 
-                     style={{ background: 'rgba(34, 197, 94, 0.9)', boxShadow: '0 4px 20px rgba(34, 197, 94, 0.5)' }}>
-                  <span className="text-white font-bold flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Correct!
-                  </span>
-                </div>
-              )}
-              
-              {/* Feedback Overlay */}
-              {feedback === 'complete' && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-                  <div className="text-center p-8">
-                    <div className="text-6xl mb-4">🎉</div>
-                    <h3 className="text-2xl font-serif text-gold-400 mb-2">Line Complete!</h3>
-                    <p className="text-zen-400 mb-6">You've mastered this variation.</p>
-                    <div className="flex gap-3 justify-center">
-                      <button onClick={resetLine} className="zen-button">
-                        Practice Again
-                      </button>
-                      <button
-                        onClick={() => setViewMode('lines')}
-                        className="zen-button-ghost"
-                      >
-                        Next Line
-                      </button>
+                {/* Correct Move Feedback */}
+                {feedback === 'correct' && (
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full animate-bounce-in" 
+                       style={{ background: 'rgba(34, 197, 94, 0.9)', boxShadow: '0 4px 20px rgba(34, 197, 94, 0.5)' }}>
+                    <span className="text-white font-bold flex items-center gap-2">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Correct!
+                    </span>
+                  </div>
+                )}
+                
+                {/* Feedback Overlay */}
+                {feedback === 'complete' && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+                    <div className="text-center p-8">
+                      <div className="text-6xl mb-4">🎉</div>
+                      <h3 className="text-2xl font-serif text-gold-400 mb-2">Line Complete!</h3>
+                      <p className="text-zen-400 mb-6">You've mastered this variation.</p>
+                      <div className="flex gap-3 justify-center">
+                        <button onClick={resetLine} className="zen-button">
+                          Practice Again
+                        </button>
+                        <button
+                          onClick={() => setViewMode('lines')}
+                          className="zen-button-ghost"
+                        >
+                          Next Line
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {/* Controls */}

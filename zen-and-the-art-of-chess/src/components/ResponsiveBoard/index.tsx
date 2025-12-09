@@ -99,10 +99,10 @@ export function ResponsiveBoard({
   return (
     <div 
       ref={containerRef}
-      className="w-full max-w-full overflow-hidden"
+      className="w-full max-w-full"
       style={{ maxWidth: `${maxWidth}px` }}
     >
-      <div className="relative" style={{ width: `${boardWidth}px`, maxWidth: '100%', margin: '0 auto' }}>
+      <div className="relative" style={{ width: `${boardWidth}px`, height: `${boardWidth}px`, maxWidth: '100%', margin: '0 auto' }}>
         <Chessboard
           id={boardId}
           position={position}
