@@ -90,3 +90,4 @@ If you discover a security vulnerability, please email: security@zenchess.app
 Do not create public GitHub issues for security vulnerabilities.
 
 
+

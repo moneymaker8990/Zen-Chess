@@ -392,7 +392,7 @@
 
   /* Chessboard customization - RESPONSIVE */
   .chessboard-container {
-    border-radius: 8px;
+    border-radius: 0;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     width: 100%;
@@ -406,7 +406,7 @@
     aspect-ratio: 1 / 1;
     position: relative;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: 0;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
@@ -419,7 +419,21 @@
   /* Mobile-specific board sizing */
   @media (max-width: 640px) {
     .chessboard-responsive {
-      max-width: calc(100vw - 32px); /* Account for page padding */
+      max-width: calc(100vw - 48px); /* Account for page padding */
+    }
+    
+    /* Force all chessboard containers to respect viewport */
+    [data-boardcontainer], 
+    div[style*="width"][style*="height"] > div > svg {
+      max-width: 100% !important;
+    }
+  }
+  
+  /* Universal chessboard constraint for mobile */
+  @media (max-width: 480px) {
+    /* Target react-chessboard elements */
+    main [style*="width"][style*="height"]:has(svg) {
+      max-width: calc(100vw - 56px) !important;
     }
   }
 

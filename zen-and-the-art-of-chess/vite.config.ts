@@ -167,4 +167,35 @@ export default defineConfig({
     exclude: ['stockfish.wasm']
   },
   assetsInclude: ['**/*.wasm'],
+  build: {
+    // Optimize chunk splitting for faster loading
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Core vendor chunks
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-chess': ['chess.js', 'react-chessboard'],
+          'vendor-animation': ['framer-motion'],
+          // Heavy components in separate chunk
+          'chunk-ai': [
+            './src/lib/claude.ts',
+            './src/lib/claudeAdvanced.ts',
+            './src/lib/chessGenius.ts',
+          ],
+        },
+      },
+    },
+    // Enable CSS code splitting
+    cssCodeSplit: true,
+    // Reduce chunk size warnings threshold
+    chunkSizeWarningLimit: 1000,
+    // Minify for smaller bundles
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.logs in production
+        drop_debugger: true,
+      },
+    },
+  },
 })

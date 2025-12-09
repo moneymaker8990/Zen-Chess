@@ -260,7 +260,7 @@ export function PositionSparring() {
           {/* Board */}
           <div className="relative flex justify-center">
             {isThinking && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-zen-900/60 backdrop-blur-sm rounded-lg">
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-zen-900/60 backdrop-blur-sm">
                 <div className="text-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold-400 mb-4"></div>
                   <p className="text-zen-300 font-serif italic">Engine thinking...</p>
@@ -269,7 +269,7 @@ export function PositionSparring() {
             )}
 
             {gameResult && (
-              <div className="absolute inset-0 z-20 flex items-center justify-center bg-zen-900/80 backdrop-blur-sm rounded-lg">
+              <div className="absolute inset-0 z-20 flex items-center justify-center bg-zen-900/80 backdrop-blur-sm">
                 <div className="text-center">
                   <p className={`text-3xl font-serif mb-2 ${
                     gameResult === 'WIN' ? 'text-emerald-400' :
@@ -297,17 +297,19 @@ export function PositionSparring() {
               </div>
             )}
 
-            <Chessboard
-              position={game?.fen() || selectedPosition?.fen || ''}
-              onPieceDrop={onDrop}
-              boardOrientation={selectedPosition?.playerColor || 'white'}
-              customSquareStyles={customSquareStyles}
-              customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-              customLightSquareStyle={boardStyles.customLightSquareStyle}
-              animationDuration={200}
-              arePiecesDraggable={isPlaying && !isThinking && !gameResult}
-              boardWidth={boardSize}
-            />
+            <div style={{ width: boardSize, maxWidth: '100%' }}>
+              <Chessboard
+                position={game?.fen() || selectedPosition?.fen || ''}
+                onPieceDrop={onDrop}
+                boardOrientation={selectedPosition?.playerColor || 'white'}
+                customSquareStyles={customSquareStyles}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
+                animationDuration={200}
+                arePiecesDraggable={isPlaying && !isThinking && !gameResult}
+                boardWidth={boardSize}
+              />
+            </div>
           </div>
 
           {/* Info panel */}

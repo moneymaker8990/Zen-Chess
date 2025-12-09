@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, lazy, Suspense } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Layout } from '@/components/Layout';
 import { PageTransition } from '@/components/PageTransition';
@@ -17,54 +17,83 @@ import { useAIPreferencesStore } from '@/state/aiPreferencesStore';
 import { useAgentAwareness } from '@/hooks/useAgentAwareness';
 import { useGlobalShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useAIIntelligenceTracking } from '@/lib/aiIntelligence';
-import { HomePage } from '@/pages/HomePage';
-import { DayPage } from '@/pages/DayPage';
-import { PlayPage } from '@/pages/PlayPage';
-import { PuzzlesPage } from '@/pages/PuzzlesPage';
-import { OpeningsPage } from '@/pages/OpeningsPage';
-import { GamesPage } from '@/pages/GamesPage';
-import { NotesPage } from '@/pages/NotesPage';
-import { StudyPage } from '@/pages/StudyPage';
-import { MistakesPage } from '@/pages/MistakesPage';
-import { SparringPage } from '@/pages/SparringPage';
-import { SettingsPage } from '@/pages/SettingsPage';
-import { CalmPlayPage } from '@/pages/CalmPlayPage';
-import { MindTrainingPage } from '@/pages/MindTrainingPage';
-import { JourneyPage } from '@/pages/JourneyPage';
-import { LearnPage } from '@/pages/LearnPage';
-import { PlayTheGreatsPage } from '@/pages/PlayTheGreatsPage';
-import { LegendDetailPage } from '@/pages/LegendDetailPage';
-import { CommandCenterPage } from '@/pages/CommandCenterPage';
-import { PatternsManualPage } from '@/pages/PatternsManualPage';
-import { CoachPage } from '@/pages/CoachPage';
-import CoursesPage from '@/pages/CoursesPage';
-import CourseDetailPage from '@/pages/CourseDetailPage';
-import CourseLearningPage from '@/pages/CourseLearningPage';
-import { SocialPage } from '@/pages/SocialPage';
-import { StudyPlanPage } from '@/pages/StudyPlanPage';
-import { TournamentPrepPage } from '@/pages/TournamentPrepPage';
-import { FlashTrainingPage } from '@/pages/FlashTrainingPage';
-import { ThinkingSystemPage } from '@/pages/ThinkingSystemPage';
-import { DailyChallengesPage } from '@/pages/DailyChallengesPage';
-import { SpacedRepetitionPage } from '@/pages/SpacedRepetitionPage';
-import { BlindfoldTrainerPage } from '@/pages/BlindfoldTrainerPage';
-import { IntuitionTrainerPage } from '@/pages/IntuitionTrainerPage';
-import { WeaknessDetectorPage } from '@/pages/WeaknessDetectorPage';
-import { PricingPage } from '@/pages/PricingPage';
-import { AuthPage } from '@/pages/AuthPage';
-import { AICoachDashboard } from '@/pages/AICoachDashboard';
-import { BeginnerPage } from '@/pages/BeginnerPage';
-import { PlayFriendPage } from '@/pages/PlayFriendPage';
-import { LiveGamePage } from '@/pages/LiveGamePage';
-import { HowToPage } from '@/pages/HowToPage';
-import { NotFoundPage } from '@/pages/NotFoundPage';
-import { PrivacyPage } from '@/pages/PrivacyPage';
-import { TermsPage } from '@/pages/TermsPage';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { OfflineIndicator } from '@/components/OfflineIndicator';
 import { useProgressStore } from '@/state/useStore';
 import { useAuthStore } from '@/state/useAuthStore';
 import { initializeCoach } from '@/state/coachStore';
+
+// ============================================
+// LAZY-LOADED PAGES FOR FASTER INITIAL LOAD
+// ============================================
+
+// Core pages (loaded immediately)
+import { HomePage } from '@/pages/HomePage';
+import { NotFoundPage } from '@/pages/NotFoundPage';
+
+// Lazy-loaded pages (loaded on demand)
+const DayPage = lazy(() => import('@/pages/DayPage'));
+const PlayPage = lazy(() => import('@/pages/PlayPage'));
+const PuzzlesPage = lazy(() => import('@/pages/PuzzlesPage'));
+const OpeningsPage = lazy(() => import('@/pages/OpeningsPage'));
+const GamesPage = lazy(() => import('@/pages/GamesPage'));
+const NotesPage = lazy(() => import('@/pages/NotesPage'));
+const StudyPage = lazy(() => import('@/pages/StudyPage'));
+const MistakesPage = lazy(() => import('@/pages/MistakesPage'));
+const SparringPage = lazy(() => import('@/pages/SparringPage'));
+const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
+const CalmPlayPage = lazy(() => import('@/pages/CalmPlayPage'));
+const MindTrainingPage = lazy(() => import('@/pages/MindTrainingPage'));
+const JourneyPage = lazy(() => import('@/pages/JourneyPage'));
+const LearnPage = lazy(() => import('@/pages/LearnPage'));
+const PlayTheGreatsPage = lazy(() => import('@/pages/PlayTheGreatsPage'));
+const LegendDetailPage = lazy(() => import('@/pages/LegendDetailPage'));
+const CommandCenterPage = lazy(() => import('@/pages/CommandCenterPage'));
+const PatternsManualPage = lazy(() => import('@/pages/PatternsManualPage'));
+const CoachPage = lazy(() => import('@/pages/CoachPage'));
+const CoursesPage = lazy(() => import('@/pages/CoursesPage'));
+const CourseDetailPage = lazy(() => import('@/pages/CourseDetailPage'));
+const CourseLearningPage = lazy(() => import('@/pages/CourseLearningPage'));
+const SocialPage = lazy(() => import('@/pages/SocialPage'));
+const StudyPlanPage = lazy(() => import('@/pages/StudyPlanPage'));
+const TournamentPrepPage = lazy(() => import('@/pages/TournamentPrepPage'));
+const FlashTrainingPage = lazy(() => import('@/pages/FlashTrainingPage'));
+const ThinkingSystemPage = lazy(() => import('@/pages/ThinkingSystemPage'));
+const DailyChallengesPage = lazy(() => import('@/pages/DailyChallengesPage'));
+const SpacedRepetitionPage = lazy(() => import('@/pages/SpacedRepetitionPage'));
+const BlindfoldTrainerPage = lazy(() => import('@/pages/BlindfoldTrainerPage'));
+const IntuitionTrainerPage = lazy(() => import('@/pages/IntuitionTrainerPage'));
+const WeaknessDetectorPage = lazy(() => import('@/pages/WeaknessDetectorPage'));
+const PricingPage = lazy(() => import('@/pages/PricingPage'));
+const AuthPage = lazy(() => import('@/pages/AuthPage'));
+const AICoachDashboard = lazy(() => import('@/pages/AICoachDashboard'));
+const BeginnerPage = lazy(() => import('@/pages/BeginnerPage'));
+const PlayFriendPage = lazy(() => import('@/pages/PlayFriendPage'));
+const LiveGamePage = lazy(() => import('@/pages/LiveGamePage'));
+const HowToPage = lazy(() => import('@/pages/HowToPage'));
+const PrivacyPage = lazy(() => import('@/pages/PrivacyPage'));
+const TermsPage = lazy(() => import('@/pages/TermsPage'));
+
+// Loading fallback component
+function PageLoader() {
+  return (
+    <div className="min-h-[50vh] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-8 h-8 border-2 border-t-transparent border-[var(--accent-primary)] rounded-full animate-spin" />
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+// Helper to wrap lazy components with Suspense
+function LazyPage({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <PageTransition>{children}</PageTransition>
+    </Suspense>
+  );
+}
 
 // Wrapper component that adds page transitions to routes
 function AnimatedRoutes() {
@@ -73,67 +102,70 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
+        {/* Homepage - not lazy loaded for fastest initial paint */}
         <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
-        <Route path="/day" element={<PageTransition><DayPage /></PageTransition>} />
-        <Route path="/play" element={<PageTransition><PlayPage /></PageTransition>} />
-        <Route path="/train" element={<PageTransition><PuzzlesPage /></PageTransition>} />
-        <Route path="/patterns" element={<PageTransition><PatternsManualPage /></PageTransition>} />
-        <Route path="/openings" element={<PageTransition><OpeningsPage /></PageTransition>} />
-        <Route path="/games" element={<PageTransition><GamesPage /></PageTransition>} />
-        <Route path="/notes" element={<PageTransition><NotesPage /></PageTransition>} />
-        <Route path="/study" element={<PageTransition><StudyPage /></PageTransition>} />
-        <Route path="/hub" element={<PageTransition><CommandCenterPage /></PageTransition>} />
-        <Route path="/mistakes" element={<PageTransition><MistakesPage /></PageTransition>} />
-        <Route path="/sparring" element={<PageTransition><SparringPage /></PageTransition>} />
-        <Route path="/settings" element={<PageTransition><SettingsPage /></PageTransition>} />
-        <Route path="/calm-play" element={<PageTransition><CalmPlayPage /></PageTransition>} />
-        <Route path="/mind" element={<PageTransition><MindTrainingPage /></PageTransition>} />
-        <Route path="/journey" element={<PageTransition><JourneyPage /></PageTransition>} />
-        <Route path="/beginner" element={<PageTransition><BeginnerPage /></PageTransition>} />
-        <Route path="/learn/:lessonId" element={<PageTransition><LearnPage /></PageTransition>} />
-        <Route path="/greats" element={<PageTransition><PlayTheGreatsPage /></PageTransition>} />
-        <Route path="/greats/:legendId" element={<PageTransition><LegendDetailPage /></PageTransition>} />
-        <Route path="/courses" element={<PageTransition><CoursesPage /></PageTransition>} />
-        <Route path="/courses/:courseId" element={<PageTransition><CourseDetailPage /></PageTransition>} />
-        <Route path="/courses/:courseId/learn" element={<PageTransition><CourseLearningPage /></PageTransition>} />
-        <Route path="/courses/:courseId/chapter/:chapterId" element={<PageTransition><CourseLearningPage /></PageTransition>} />
-        <Route path="/courses/:courseId/review" element={<PageTransition><CourseLearningPage /></PageTransition>} />
+        
+        {/* Core Training Routes */}
+        <Route path="/day" element={<LazyPage><DayPage /></LazyPage>} />
+        <Route path="/play" element={<LazyPage><PlayPage /></LazyPage>} />
+        <Route path="/train" element={<LazyPage><PuzzlesPage /></LazyPage>} />
+        <Route path="/patterns" element={<LazyPage><PatternsManualPage /></LazyPage>} />
+        <Route path="/openings" element={<LazyPage><OpeningsPage /></LazyPage>} />
+        <Route path="/games" element={<LazyPage><GamesPage /></LazyPage>} />
+        <Route path="/notes" element={<LazyPage><NotesPage /></LazyPage>} />
+        <Route path="/study" element={<LazyPage><StudyPage /></LazyPage>} />
+        <Route path="/hub" element={<LazyPage><CommandCenterPage /></LazyPage>} />
+        <Route path="/mistakes" element={<LazyPage><MistakesPage /></LazyPage>} />
+        <Route path="/sparring" element={<LazyPage><SparringPage /></LazyPage>} />
+        <Route path="/settings" element={<LazyPage><SettingsPage /></LazyPage>} />
+        <Route path="/calm-play" element={<LazyPage><CalmPlayPage /></LazyPage>} />
+        <Route path="/mind" element={<LazyPage><MindTrainingPage /></LazyPage>} />
+        <Route path="/journey" element={<LazyPage><JourneyPage /></LazyPage>} />
+        <Route path="/beginner" element={<LazyPage><BeginnerPage /></LazyPage>} />
+        <Route path="/learn/:lessonId" element={<LazyPage><LearnPage /></LazyPage>} />
+        <Route path="/greats" element={<LazyPage><PlayTheGreatsPage /></LazyPage>} />
+        <Route path="/greats/:legendId" element={<LazyPage><LegendDetailPage /></LazyPage>} />
+        <Route path="/courses" element={<LazyPage><CoursesPage /></LazyPage>} />
+        <Route path="/courses/:courseId" element={<LazyPage><CourseDetailPage /></LazyPage>} />
+        <Route path="/courses/:courseId/learn" element={<LazyPage><CourseLearningPage /></LazyPage>} />
+        <Route path="/courses/:courseId/chapter/:chapterId" element={<LazyPage><CourseLearningPage /></LazyPage>} />
+        <Route path="/courses/:courseId/review" element={<LazyPage><CourseLearningPage /></LazyPage>} />
         
         {/* New Feature Routes */}
-        <Route path="/social" element={<PageTransition><SocialPage /></PageTransition>} />
-        <Route path="/study-plan" element={<PageTransition><StudyPlanPage /></PageTransition>} />
-        <Route path="/coach" element={<PageTransition><CoachPage /></PageTransition>} />
-        <Route path="/tournament" element={<PageTransition><TournamentPrepPage /></PageTransition>} />
+        <Route path="/social" element={<LazyPage><SocialPage /></LazyPage>} />
+        <Route path="/study-plan" element={<LazyPage><StudyPlanPage /></LazyPage>} />
+        <Route path="/coach" element={<LazyPage><CoachPage /></LazyPage>} />
+        <Route path="/tournament" element={<LazyPage><TournamentPrepPage /></LazyPage>} />
         
         {/* Cutting-Edge Training Features */}
-        <Route path="/flash-training" element={<PageTransition><FlashTrainingPage /></PageTransition>} />
-        <Route path="/thinking-system" element={<PageTransition><ThinkingSystemPage /></PageTransition>} />
-        <Route path="/daily-challenges" element={<PageTransition><DailyChallengesPage /></PageTransition>} />
-        <Route path="/spaced-repetition" element={<PageTransition><SpacedRepetitionPage /></PageTransition>} />
+        <Route path="/flash-training" element={<LazyPage><FlashTrainingPage /></LazyPage>} />
+        <Route path="/thinking-system" element={<LazyPage><ThinkingSystemPage /></LazyPage>} />
+        <Route path="/daily-challenges" element={<LazyPage><DailyChallengesPage /></LazyPage>} />
+        <Route path="/spaced-repetition" element={<LazyPage><SpacedRepetitionPage /></LazyPage>} />
         
-        {/* NEW: Phase 2 Killer Features */}
-        <Route path="/blindfold" element={<PageTransition><BlindfoldTrainerPage /></PageTransition>} />
-        <Route path="/intuition" element={<PageTransition><IntuitionTrainerPage /></PageTransition>} />
-        <Route path="/weakness-detector" element={<PageTransition><WeaknessDetectorPage /></PageTransition>} />
+        {/* Phase 2 Killer Features */}
+        <Route path="/blindfold" element={<LazyPage><BlindfoldTrainerPage /></LazyPage>} />
+        <Route path="/intuition" element={<LazyPage><IntuitionTrainerPage /></LazyPage>} />
+        <Route path="/weakness-detector" element={<LazyPage><WeaknessDetectorPage /></LazyPage>} />
         
         {/* Auth & Monetization */}
-        <Route path="/pricing" element={<PageTransition><PricingPage /></PageTransition>} />
-        <Route path="/auth" element={<PageTransition><AuthPage /></PageTransition>} />
+        <Route path="/pricing" element={<LazyPage><PricingPage /></LazyPage>} />
+        <Route path="/auth" element={<LazyPage><AuthPage /></LazyPage>} />
         
         {/* AI Coach Hub */}
-        <Route path="/ai-coach" element={<PageTransition><AICoachDashboard /></PageTransition>} />
+        <Route path="/ai-coach" element={<LazyPage><AICoachDashboard /></LazyPage>} />
         
         {/* Multiplayer - Play with Friends */}
-        <Route path="/play/friend" element={<PageTransition><PlayFriendPage /></PageTransition>} />
-        <Route path="/play/friend/:inviteCode" element={<PageTransition><PlayFriendPage /></PageTransition>} />
-        <Route path="/play/live/:gameId" element={<PageTransition><LiveGamePage /></PageTransition>} />
+        <Route path="/play/friend" element={<LazyPage><PlayFriendPage /></LazyPage>} />
+        <Route path="/play/friend/:inviteCode" element={<LazyPage><PlayFriendPage /></LazyPage>} />
+        <Route path="/play/live/:gameId" element={<LazyPage><LiveGamePage /></LazyPage>} />
         
         {/* Help & Documentation */}
-        <Route path="/how-to" element={<PageTransition><HowToPage /></PageTransition>} />
+        <Route path="/how-to" element={<LazyPage><HowToPage /></LazyPage>} />
         
         {/* Legal Pages */}
-        <Route path="/privacy" element={<PageTransition><PrivacyPage /></PageTransition>} />
-        <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />
+        <Route path="/privacy" element={<LazyPage><PrivacyPage /></LazyPage>} />
+        <Route path="/terms" element={<LazyPage><TermsPage /></LazyPage>} />
         
         {/* 404 Catch-all - must be last */}
         <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />

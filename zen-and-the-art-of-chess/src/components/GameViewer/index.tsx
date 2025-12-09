@@ -177,14 +177,16 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
       <div className="flex flex-col lg:grid lg:grid-cols-[1fr_400px] gap-4 lg:gap-6 px-2 sm:px-0">
         {/* Board and controls */}
         <div className="space-y-4 flex flex-col items-center lg:items-start">
-          <Chessboard
-            position={getCurrentFen()}
-            boardOrientation="white"
-            customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-            customLightSquareStyle={boardStyles.customLightSquareStyle}
-            arePiecesDraggable={false}
-            boardWidth={boardSize}
-          />
+          <div style={{ width: boardSize, maxWidth: '100%' }}>
+            <Chessboard
+              position={getCurrentFen()}
+              boardOrientation="white"
+              customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+              customLightSquareStyle={boardStyles.customLightSquareStyle}
+              arePiecesDraggable={false}
+              boardWidth={boardSize}
+            />
+          </div>
 
           {/* Navigation controls */}
           <div className="flex items-center justify-center gap-2">

@@ -11,12 +11,17 @@ export function useBoardSize(
   padding: number = 32
 ): number {
   const [boardSize, setBoardSize] = useState(() => {
-    if (typeof window === 'undefined') return Math.min(maxWidth, 360);
+    if (typeof window === 'undefined') return Math.min(maxWidth, 300);
     const vw = window.innerWidth;
-    // Mobile-first: always account for safe margins
+    // Mobile-first: VERY conservative to prevent any overflow
+    if (vw < 400) {
+      return Math.min(maxWidth, vw - 72);
+    }
+    if (vw < 480) {
+      return Math.min(maxWidth, vw - 68);
+    }
     if (vw < 640) {
-      // Extra conservative on mobile - account for page margins and safe area
-      return Math.min(maxWidth, vw - Math.max(padding, 48));
+      return Math.min(maxWidth, vw - 64);
     }
     return Math.min(maxWidth, vw - padding);
   });
@@ -25,18 +30,23 @@ export function useBoardSize(
     const calculateSize = () => {
       const viewportWidth = window.innerWidth;
       
-      // Mobile: conservative width - must fit within viewport with room for margins
-      if (viewportWidth < 480) {
-        // Very small screens - leave good margins
-        setBoardSize(Math.min(maxWidth, viewportWidth - 48));
+      // Mobile: VERY conservative width - must fit within viewport with all margins/padding
+      // Account for: Layout p-4 (32px) + page px-2 (16px) + scrollbar (~8px) + safety buffer (16px) = ~72px minimum
+      if (viewportWidth < 400) {
+        // Very small screens - be very conservative
+        setBoardSize(Math.min(maxWidth, viewportWidth - 72));
+      }
+      else if (viewportWidth < 480) {
+        // Small screens - still very conservative  
+        setBoardSize(Math.min(maxWidth, viewportWidth - 68));
       }
       else if (viewportWidth < 640) {
-        // Small mobile - still conservative
-        setBoardSize(Math.min(maxWidth, viewportWidth - 40));
+        // Small mobile - conservative
+        setBoardSize(Math.min(maxWidth, viewportWidth - 64));
       }
       // Tablet: constrained width
       else if (viewportWidth < 1024) {
-        setBoardSize(Math.min(maxWidth, viewportWidth - 48, 480));
+        setBoardSize(Math.min(maxWidth, viewportWidth - 56, 480));
       }
       // Desktop: use max width
       else {

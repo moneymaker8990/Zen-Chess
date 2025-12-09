@@ -309,7 +309,7 @@ export function ZenChessboard({
   };
   
   return (
-    <div className="zen-chessboard relative">
+    <div className="zen-chessboard relative" style={{ width: boardWidth, maxWidth: '100%' }}>
       <Chessboard
         position={position}
         onSquareClick={handleSquareClick}

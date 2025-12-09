@@ -297,3 +297,4 @@ GRANT EXECUTE ON FUNCTION public.get_next_puzzle TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_recent_puzzle_ids TO authenticated;
 GRANT EXECUTE ON FUNCTION public.record_puzzle_attempt TO authenticated;
 
+

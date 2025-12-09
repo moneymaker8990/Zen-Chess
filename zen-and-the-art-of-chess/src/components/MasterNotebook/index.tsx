@@ -309,14 +309,16 @@ function NoteDetail({
         <div className="space-y-3">
           <h4 className="text-sm text-zen-500 uppercase tracking-wider">Positions</h4>
           {note.positions.map((pos, i) => (
-            <div key={i} className="bg-zen-900/50 p-3 rounded-lg">
-              <Chessboard
-                position={pos.fen}
-                arePiecesDraggable={false}
-                boardWidth={280}
-                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                customLightSquareStyle={boardStyles.customLightSquareStyle}
-              />
+            <div key={i} className="bg-zen-900/50 p-3">
+              <div style={{ width: 280, maxWidth: '100%' }}>
+                <Chessboard
+                  position={pos.fen}
+                  arePiecesDraggable={false}
+                  boardWidth={280}
+                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                  customLightSquareStyle={boardStyles.customLightSquareStyle}
+                />
+              </div>
               {pos.caption && (
                 <p className="text-zen-500 text-xs mt-2 italic">{pos.caption}</p>
               )}
@@ -498,7 +500,7 @@ function NoteEditor({
           className="w-full px-3 py-2 rounded-lg bg-zen-900/50 border border-zen-700/30 text-zen-200 font-mono text-sm"
         />
         {fen && (
-          <div className="mt-2">
+          <div className="mt-2" style={{ width: 200, maxWidth: '100%' }}>
             <Chessboard
               position={fen}
               arePiecesDraggable={false}

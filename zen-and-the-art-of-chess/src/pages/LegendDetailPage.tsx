@@ -527,16 +527,17 @@ export function LegendDetailPage() {
       {activeTab === 'play' && (
         <div className="space-y-6">
           {/* Game Area - Board and Controls */}
-          <div className="flex flex-col lg:grid lg:grid-cols-[1fr,320px] gap-4 lg:gap-6 items-start">
+          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden">
             {/* Chessboard */}
-            <div className="glass-card p-3 sm:p-4 lg:p-6 w-full overflow-hidden">
-              <div className="w-full flex justify-center" style={{ maxWidth: `${Math.min(boardSize, window.innerWidth - 48)}px`, margin: '0 auto' }}>
+            <div className="glass-card p-3 sm:p-4 lg:p-6 w-full max-w-full overflow-hidden">
+              <div className="w-full flex justify-center">
+                <div style={{ width: boardSize, maxWidth: '100%' }}>
                 <Chessboard
                   position={game.fen()}
                   onSquareClick={onSquareClick}
                   onPieceDrop={onDrop}
                   boardOrientation={playerColor}
-                  boardWidth={Math.min(boardSize, window.innerWidth - 48)}
+                  boardWidth={boardSize}
                   customSquareStyles={{
                     ...optionSquares,
                     ...(lastMove && {
@@ -549,6 +550,7 @@ export function LegendDetailPage() {
                   animationDuration={200}
                   arePiecesDraggable={!isThinking}
                 />
+                </div>
               </div>
 
               {game.isGameOver() && (
@@ -803,9 +805,10 @@ export function LegendDetailPage() {
               )}
             </div>
           ) : (
-            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-6">
-              <div className="glass-card p-3 sm:p-4 lg:p-6 overflow-hidden">
-                <div className="mb-4 flex justify-center" style={{ maxWidth: `${Math.min(boardSize, window.innerWidth - 48)}px`, margin: '0 auto' }}>
+            <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
+              <div className="glass-card p-3 sm:p-4 lg:p-6 w-full max-w-full overflow-hidden">
+                <div className="mb-4 flex justify-center">
+                  <div style={{ width: boardSize, maxWidth: '100%' }}>
                   {guessChess && (
                     <Chessboard
                       position={guessChess.fen()}
@@ -814,11 +817,12 @@ export function LegendDetailPage() {
                         return true;
                       }}
                       boardOrientation={guessSession?.legendColor || 'white'}
-                      boardWidth={Math.min(boardSize, window.innerWidth - 48)}
+                      boardWidth={boardSize}
                       customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                       customLightSquareStyle={boardStyles.customLightSquareStyle}
                     />
                   )}
+                  </div>
                 </div>
                 {currentPosition && (
                   <div className="text-center text-zen-400 text-sm mt-4">

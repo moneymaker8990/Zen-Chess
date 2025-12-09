@@ -617,15 +617,16 @@ export default function CourseLearningPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3 sm:py-6">
-        <div className="flex flex-col lg:grid lg:grid-cols-[1fr,340px] gap-4 lg:gap-6">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3 sm:py-6 w-full">
+        <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_320px] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
           {/* Board + Controls */}
-          <div>
+          <div className="w-full max-w-full overflow-hidden">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex justify-center rounded-xl overflow-hidden shadow-2xl"
+              className="flex justify-center overflow-hidden shadow-2xl"
             >
+              <div style={{ width: boardSize, maxWidth: '100%' }}>
               <Chessboard
                 position={game.fen()}
                 onPieceDrop={handleMove}
@@ -633,12 +634,10 @@ export default function CourseLearningPage() {
                 boardWidth={boardSize}
                 customArrows={customArrows}
                 customSquareStyles={customSquareStyles}
-                customBoardStyle={{
-                  borderRadius: '12px',
-                }}
                 customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
               />
+              </div>
             </motion.div>
 
             {/* Move Controls */}

@@ -1489,7 +1489,7 @@ export function PuzzlesPage() {
 
                 {/* Feedback Overlay - clean success screen */}
                 {feedback === 'complete' && !showGeniusPanel && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.75)' }}>
+                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.75)' }}>
                     <div className="text-center p-8">
                       <div className="text-6xl mb-4">🎉</div>
                       <h3 className="text-2xl font-display mb-2" style={{ color: '#4ade80' }}>Excellent!</h3>
@@ -1515,7 +1515,7 @@ export function PuzzlesPage() {
 
                 {/* Only show blocking overlay for streak mode where game ends */}
                 {feedback === 'incorrect' && mode === 'streak' && !streakActive && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.75)' }}>
+                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.75)' }}>
                     <div className="text-center p-8">
                       <div className="text-5xl mb-4">⚡</div>
                       <h3 className="text-xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>Streak Ended</h3>

@@ -2217,26 +2217,28 @@ export function DailyChallengesPage() {
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
           <div className="relative flex justify-center">
-            <Chessboard
-              position={game.fen()}
-              onSquareClick={onSquareClick}
-              boardOrientation={game.turn() === 'w' ? 'white' : 'black'}
-              customDarkSquareStyle={{ backgroundColor: '#779556' }}
-              customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
-              customSquareStyles={{
-                ...optionSquares,
-                ...(lastMove && {
-                  [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.25)' },
-                  [lastMove.to]: { backgroundColor: showCorrectFeedback ? 'rgba(34, 197, 94, 0.6)' : 'rgba(147, 112, 219, 0.4)' },
-                }),
-                ...(solved && lastMove && {
-                  [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
-                })
-              }}
-              arePiecesDraggable={!solved}
-              onPieceDrop={(from, to) => handleMove(from as Square, to as Square)}
-              boardWidth={boardSize}
-            />
+            <div style={{ width: boardSize, maxWidth: '100%' }}>
+              <Chessboard
+                position={game.fen()}
+                onSquareClick={onSquareClick}
+                boardOrientation={game.turn() === 'w' ? 'white' : 'black'}
+                customDarkSquareStyle={{ backgroundColor: '#779556' }}
+                customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                customSquareStyles={{
+                  ...optionSquares,
+                  ...(lastMove && {
+                    [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.25)' },
+                    [lastMove.to]: { backgroundColor: showCorrectFeedback ? 'rgba(34, 197, 94, 0.6)' : 'rgba(147, 112, 219, 0.4)' },
+                  }),
+                  ...(solved && lastMove && {
+                    [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
+                  })
+                }}
+                arePiecesDraggable={!solved}
+                onPieceDrop={(from, to) => handleMove(from as Square, to as Square)}
+                boardWidth={boardSize}
+              />
+            </div>
             
             {/* Correct Move Feedback Overlay */}
             {showCorrectFeedback && !solved && (
@@ -2253,7 +2255,7 @@ export function DailyChallengesPage() {
             
             {/* Puzzle Complete Overlay */}
             {solved && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.7)' }}>
+              <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.7)' }}>
                 <div className="text-center p-6 animate-scale-in">
                   <div className="text-5xl mb-3">✨</div>
                   <h3 className="text-xl font-display font-bold mb-1" style={{ color: '#4ade80' }}>Excellent!</h3>
@@ -2495,7 +2497,7 @@ export function DailyChallengesPage() {
         
         {/* Board */}
         <div className="flex justify-center px-2 sm:px-0">
-          <div className="relative">
+          <div className="relative" style={{ width: boardSize, maxWidth: '100%' }}>
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}

@@ -66,16 +66,16 @@ function ChapterCard({ chapter, index, progress, onStart, expanded, onToggle }: 
       {/* Chapter Header */}
       <button
         onClick={onToggle}
-        className="w-full p-4 flex items-center gap-4 hover:bg-slate-700/30 transition-colors"
+        className="w-full p-3 sm:p-4 flex items-center gap-2 sm:gap-4 hover:bg-slate-700/30 transition-colors"
       >
         {/* Chapter Number */}
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg shrink-0 ${
+        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-bold text-sm sm:text-lg shrink-0 ${
           isComplete 
             ? 'bg-emerald-500/20 text-emerald-400' 
             : 'bg-slate-700 text-slate-300'
         }`}>
           {isComplete ? (
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           ) : (
@@ -84,19 +84,19 @@ function ChapterCard({ chapter, index, progress, onStart, expanded, onToggle }: 
         </div>
 
         {/* Chapter Info */}
-        <div className="flex-1 text-left">
-          <h3 className="font-semibold text-white">{chapter.title}</h3>
+        <div className="flex-1 text-left min-w-0">
+          <h3 className="font-semibold text-white text-sm sm:text-base truncate">{chapter.title}</h3>
           {chapter.subtitle && (
-            <p className="text-sm text-slate-400">{chapter.subtitle}</p>
+            <p className="text-xs sm:text-sm text-slate-400 truncate">{chapter.subtitle}</p>
           )}
         </div>
 
         {/* Progress */}
-        <div className="text-right pr-2">
-          <div className="text-sm font-medium text-slate-300">
+        <div className="text-right shrink-0">
+          <div className="text-xs sm:text-sm font-medium text-slate-300">
             {completedInChapter}/{chapter.variations.length}
           </div>
-          <div className="w-16 h-1 bg-slate-700 rounded-full mt-1">
+          <div className="w-12 sm:w-16 h-1 bg-slate-700 rounded-full mt-1">
             <div 
               className="h-full bg-blue-500 rounded-full transition-all"
               style={{ width: `${progressPercent}%` }}
@@ -106,7 +106,7 @@ function ChapterCard({ chapter, index, progress, onStart, expanded, onToggle }: 
 
         {/* Expand Arrow */}
         <svg 
-          className={`w-5 h-5 text-slate-400 transition-transform ${expanded ? 'rotate-180' : ''}`} 
+          className={`w-4 h-4 sm:w-5 sm:h-5 text-slate-400 transition-transform shrink-0 ${expanded ? 'rotate-180' : ''}`} 
           fill="none" 
           viewBox="0 0 24 24" 
           stroke="currentColor"
@@ -125,20 +125,20 @@ function ChapterCard({ chapter, index, progress, onStart, expanded, onToggle }: 
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4 space-y-3">
+            <div className="px-3 sm:px-4 pb-3 sm:pb-4 space-y-2 sm:space-y-3">
               {/* Description */}
-              <p className="text-sm text-slate-400 pl-14">
+              <p className="text-xs sm:text-sm text-slate-400 pl-10 sm:pl-14">
                 {chapter.description}
               </p>
 
               {/* Key Lessons */}
               {chapter.keyLessons && chapter.keyLessons.length > 0 && (
-                <div className="pl-14 space-y-1">
+                <div className="pl-10 sm:pl-14 space-y-1">
                   <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Key Lessons</h4>
                   <ul className="space-y-1">
                     {chapter.keyLessons.map((lesson, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                        <span className="text-emerald-400 mt-1">•</span>
+                      <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-slate-300">
+                        <span className="text-emerald-400 mt-0.5 sm:mt-1">•</span>
                         <span>{lesson}</span>
                       </li>
                     ))}
@@ -147,10 +147,10 @@ function ChapterCard({ chapter, index, progress, onStart, expanded, onToggle }: 
               )}
 
               {/* Start Button */}
-              <div className="pl-14 pt-2">
+              <div className="pl-10 sm:pl-14 pt-2">
                 <button
                   onClick={onStart}
-                  className="px-6 py-2.5 rounded-lg font-semibold text-sm bg-blue-600 text-white hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/25"
+                  className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-semibold text-xs sm:text-sm bg-blue-600 text-white hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/25"
                 >
                   {completedInChapter === 0 ? 'Start Chapter' : 
                    completedInChapter < chapter.variations.length ? 'Continue' : 'Practice Again'}
@@ -248,30 +248,30 @@ export default function CourseDetailPage() {
           background: `linear-gradient(135deg, ${course.coverColor}22, transparent)` 
         }}
       >
-        <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
           {/* Back Button */}
-          <div className="mb-6">
-            <BackButton fallback="/courses" label="Back to Courses" className="text-slate-400 hover:text-white" />
+          <div className="mb-4 sm:mb-6">
+            <BackButton fallback="/courses" label="Back to Courses" className="text-slate-400 hover:text-white text-sm" />
           </div>
 
           {/* Course Header */}
-          <div className="flex gap-6">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
             {/* Cover */}
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="w-32 h-40 rounded-xl flex items-center justify-center text-6xl shrink-0 shadow-2xl"
+              className="w-20 h-24 sm:w-32 sm:h-40 rounded-xl flex items-center justify-center text-4xl sm:text-6xl shrink-0 shadow-2xl mx-auto sm:mx-0"
               style={{ backgroundColor: course.coverColor }}
             >
               {course.coverImage}
             </motion.div>
 
             {/* Info */}
-            <div className="flex-1">
+            <div className="flex-1 min-w-0 text-center sm:text-left">
               <motion.h1 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-2xl font-bold text-white mb-2"
+                className="text-xl sm:text-2xl font-bold text-white mb-2"
               >
                 {course.title}
               </motion.h1>
@@ -279,7 +279,7 @@ export default function CourseDetailPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="text-slate-400 text-sm mb-4 line-clamp-2"
+                className="text-slate-400 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2"
               >
                 {course.description}
               </motion.p>
@@ -289,19 +289,19 @@ export default function CourseDetailPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex gap-6 text-sm"
+                className="flex flex-wrap justify-center sm:justify-start gap-3 sm:gap-6 text-xs sm:text-sm"
               >
                 <div>
                   <span className="text-slate-400">Chapters:</span>
-                  <span className="text-white font-semibold ml-2">{stats.totalChapters}</span>
+                  <span className="text-white font-semibold ml-1 sm:ml-2">{stats.totalChapters}</span>
                 </div>
                 <div>
                   <span className="text-slate-400">Variations:</span>
-                  <span className="text-white font-semibold ml-2">{stats.totalVariations}</span>
+                  <span className="text-white font-semibold ml-1 sm:ml-2">{stats.totalVariations}</span>
                 </div>
                 <div>
                   <span className="text-slate-400">Time:</span>
-                  <span className="text-white font-semibold ml-2">{stats.totalMinutes} min</span>
+                  <span className="text-white font-semibold ml-1 sm:ml-2">{stats.totalMinutes} min</span>
                 </div>
               </motion.div>
             </div>
@@ -332,17 +332,17 @@ export default function CourseDetailPage() {
       </div>
 
       {/* Action Buttons */}
-      <div className="max-w-4xl mx-auto px-4 py-4">
-        <div className="flex gap-3">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+        <div className="flex gap-2 sm:gap-3">
           <button
             onClick={() => navigate(`/courses/${courseId}/learn`)}
-            className="flex-1 py-3 px-6 rounded-xl font-semibold bg-blue-600 text-white hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/25"
+            className="flex-1 py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl font-semibold text-sm sm:text-base bg-blue-600 text-white hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/25"
           >
             Start Learning
           </button>
           <button
             onClick={() => navigate(`/courses/${courseId}/review`)}
-            className="flex-1 py-3 px-6 rounded-xl font-semibold bg-slate-700 text-blue-400 border border-slate-600 hover:bg-slate-600 transition-colors"
+            className="flex-1 py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl font-semibold text-sm sm:text-base bg-slate-700 text-blue-400 border border-slate-600 hover:bg-slate-600 transition-colors"
           >
             Review
           </button>
@@ -350,8 +350,8 @@ export default function CourseDetailPage() {
       </div>
 
       {/* Chapters */}
-      <div className="max-w-4xl mx-auto px-4 py-4 space-y-3">
-        <h2 className="text-lg font-semibold text-white mb-4">Chapters</h2>
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4 space-y-2 sm:space-y-3">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Chapters</h2>
         {course.chapters.map((chapter, index) => (
           <ChapterCard
             key={chapter.id}

@@ -607,6 +607,7 @@ export function FlashTrainingPage() {
                 transitionPhase === 'fading-in' ? 'opacity-100 scale-100' :
                 showingPosition ? 'opacity-100' : 'opacity-0'
               } ${countdownWarning ? 'ring-4 ring-amber-400/50 animate-pulse' : ''}`}
+              style={{ width: boardSize, maxWidth: '100%' }}
             >
               <Chessboard
                 position={currentPosition.fen}
@@ -633,7 +634,7 @@ export function FlashTrainingPage() {
             {/* Flash overlay - smoother transition */}
             {!showingPosition && !showResult && transitionPhase !== 'fading-out' && (
               <div
-                className="absolute inset-0 flex items-center justify-center rounded-xl animate-fade-in"
+                className="absolute inset-0 flex items-center justify-center animate-fade-in"
                 style={{ background: 'var(--bg-primary)' }}
               >
                 <div className="text-center">
@@ -652,7 +653,7 @@ export function FlashTrainingPage() {
             {showResult && (
               <div className={`transition-opacity duration-300 ${
                 transitionPhase === 'fading-out' ? 'opacity-50' : 'opacity-100'
-              }`}>
+              }`} style={{ width: boardSize, maxWidth: '100%' }}>
                 <Chessboard
                   position={currentPosition.fen}
                   boardOrientation={new Chess(currentPosition.fen).turn() === 'w' ? 'white' : 'black'}

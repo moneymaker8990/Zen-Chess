@@ -449,10 +449,10 @@ export function ChessBoardPanel({
   const boardOrientation = vsEngine ? playerColor : gameState.orientation;
 
   return (
-    <div className="chessboard-container relative">
+    <div className="chessboard-container relative" style={{ width: boardSize, maxWidth: '100%' }}>
       {/* Engine thinking overlay */}
       {isThinking && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-zen-900/30 rounded-lg pointer-events-none">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-zen-900/30 pointer-events-none">
           <div className="text-center">
             <div className="w-6 h-6 border-2 border-zen-400 border-t-transparent rounded-full animate-spin mx-auto mb-1" />
             <p className="text-zen-500 text-xs">Thinking...</p>
@@ -462,7 +462,7 @@ export function ChessBoardPanel({
 
       {/* Waiting for opponent move in puzzle */}
       {waitingForOpponent && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-zen-900/30 rounded-lg pointer-events-none">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-zen-900/30 pointer-events-none">
           <div className="text-center">
             <p className="text-emerald-400 text-sm">✓ Correct!</p>
           </div>

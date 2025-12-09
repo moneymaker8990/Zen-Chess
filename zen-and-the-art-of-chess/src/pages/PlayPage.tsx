@@ -547,7 +547,7 @@ export function PlayPage() {
   const status = getGameStatus();
 
   return (
-    <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0 max-w-full overflow-hidden">
       {/* Tilt Intervention Overlay */}
       {showIntervention && tiltState.interventionType !== 'NONE' && (
         <TiltIntervention
@@ -666,19 +666,21 @@ export function PlayPage() {
             {status.text}
           </div>
 
-          <div className="w-full flex justify-center" style={{ maxWidth: `${boardSize}px`, margin: '0 auto' }}>
-            <Chessboard
-              position={game.fen()}
-              onSquareClick={onSquareClick}
-              onPieceDrop={onDrop}
-              boardOrientation={orientation}
-              customSquareStyles={customSquareStyles}
-              customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-              customLightSquareStyle={boardStyles.customLightSquareStyle}
-              animationDuration={boardStyles.animationDuration}
-              arePiecesDraggable={!isThinking}
-              boardWidth={Math.min(boardSize, window.innerWidth - 32)}
-            />
+          <div className="w-full flex justify-center overflow-hidden">
+            <div style={{ width: boardSize, maxWidth: '100%' }}>
+              <Chessboard
+                position={game.fen()}
+                onSquareClick={onSquareClick}
+                onPieceDrop={onDrop}
+                boardOrientation={orientation}
+                customSquareStyles={customSquareStyles}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
+                animationDuration={boardStyles.animationDuration}
+                arePiecesDraggable={!isThinking}
+                boardWidth={boardSize}
+              />
+            </div>
           </div>
         </div>
 

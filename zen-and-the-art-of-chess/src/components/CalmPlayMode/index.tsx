@@ -807,8 +807,8 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
             </div>
           )}
 
-          <div className="rounded-xl overflow-hidden shadow-2xl shadow-violet-500/10"
-            style={{ border: '1px solid rgba(167, 139, 250, 0.1)' }}>
+          <div className="overflow-hidden shadow-2xl shadow-violet-500/10"
+            style={{ border: '1px solid rgba(167, 139, 250, 0.1)', width: Math.min(480, typeof window !== 'undefined' ? window.innerWidth - 48 : 480), maxWidth: '100%' }}>
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}

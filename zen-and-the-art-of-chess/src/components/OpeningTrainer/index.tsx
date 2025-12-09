@@ -306,19 +306,21 @@ export function OpeningTrainer() {
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_350px] gap-4 lg:gap-6 px-2 sm:px-0">
           {/* Board */}
           <div className="relative flex justify-center">
-            <Chessboard
-              position={game.fen()}
-              onSquareClick={onSquareClick}
-              onPieceDrop={onDrop}
-              boardOrientation={userColor}
-              customSquareStyles={customSquareStyles}
-              customArrows={customArrows}
-              customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-              customLightSquareStyle={boardStyles.customLightSquareStyle}
-              animationDuration={200}
-              arePiecesDraggable={isUserTurn && feedback !== 'complete'}
-              boardWidth={boardSize}
-            />
+            <div style={{ width: boardSize, maxWidth: '100%' }}>
+              <Chessboard
+                position={game.fen()}
+                onSquareClick={onSquareClick}
+                onPieceDrop={onDrop}
+                boardOrientation={userColor}
+                customSquareStyles={customSquareStyles}
+                customArrows={customArrows}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
+                animationDuration={200}
+                arePiecesDraggable={isUserTurn && feedback !== 'complete'}
+                boardWidth={boardSize}
+              />
+            </div>
             
             {/* Correct Move Feedback */}
             {feedback === 'correct' && (

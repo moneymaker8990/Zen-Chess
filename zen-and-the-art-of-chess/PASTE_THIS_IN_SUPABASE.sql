@@ -62,3 +62,4 @@ GRANT ALL ON public.user_puzzle_ratings TO authenticated;
 -- The local puzzle pool (~100+ puzzles) will work immediately.
 -- To add 50K+ Lichess puzzles, run: npx ts-node scripts/import-lichess-puzzles.ts
 
+

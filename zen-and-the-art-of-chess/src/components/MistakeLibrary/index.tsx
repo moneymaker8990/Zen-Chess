@@ -289,15 +289,17 @@ function MistakeDetail({
       </div>
 
       {/* Position */}
-      <div className="bg-zen-900/50 p-3 rounded-lg">
-        <Chessboard
-          position={mistake.fen}
-          boardOrientation={mistake.playerColor}
-          arePiecesDraggable={false}
-          boardWidth={280}
-          customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-          customLightSquareStyle={boardStyles.customLightSquareStyle}
-        />
+      <div className="bg-zen-900/50 p-3">
+        <div style={{ width: 280, maxWidth: '100%' }}>
+          <Chessboard
+            position={mistake.fen}
+            boardOrientation={mistake.playerColor}
+            arePiecesDraggable={false}
+            boardWidth={280}
+            customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+            customLightSquareStyle={boardStyles.customLightSquareStyle}
+          />
+        </div>
         <p className="text-zen-600 text-xs text-center mt-2">
           Move {mistake.moveNumber} • Playing as {mistake.playerColor}
         </p>

@@ -514,18 +514,18 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
   // ============================================
   
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4 animate-fade-in w-full max-w-full overflow-hidden">
       {/* Header with progress */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-2 sm:px-0 flex-wrap gap-2">
         <button onClick={onExit} className="btn-ghost text-sm">
           ← Exit
         </button>
         
-        <div className="flex items-center gap-4">
-          <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            Move {currentMoveIndex + 1} of {pattern.mainLine.length}
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
+            Move {currentMoveIndex + 1}/{pattern.mainLine.length}
           </span>
-          <div className="w-32 h-2 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
+          <div className="w-20 sm:w-32 h-2 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
             <div 
               className="h-full rounded-full transition-all duration-300"
               style={{ 
@@ -538,20 +538,20 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
         
         <div className="flex items-center gap-2">
           {mode === 'test' && (
-            <span className="badge badge-purple">Test Mode</span>
+            <span className="badge badge-purple text-xs">Test</span>
           )}
           {mode === 'learn' && (
-            <span className="badge badge-blue">Learn Mode</span>
+            <span className="badge badge-blue text-xs">Learn</span>
           )}
         </div>
       </div>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-[minmax(300px,520px)_1fr] gap-4 lg:gap-6 items-start px-2 sm:px-0">
+      <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_1fr] gap-4 lg:gap-6 items-start px-2 sm:px-4 lg:px-0 w-full max-w-full overflow-hidden">
         {/* Board Section */}
-        <div className="space-y-4 w-full flex flex-col items-center lg:items-start">
+        <div className="space-y-4 w-full max-w-full flex flex-col items-center lg:items-start overflow-hidden">
           {/* Chessboard */}
-          <div className="relative">
-            <div className="rounded-xl overflow-hidden shadow-2xl">
+          <div className="relative w-full max-w-full flex justify-center lg:justify-start">
+            <div className="overflow-hidden shadow-2xl" style={{ width: boardSize, maxWidth: '100%' }}>
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}
@@ -601,48 +601,71 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
           </div>
 
           {/* Navigation Controls */}
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
+            {/* Restart Button */}
+            <button 
+              onClick={() => {
+                setGame(new Chess(pattern.fen));
+                setCurrentMoveIndex(0);
+                setPhase('playing');
+                setShowHint(false);
+                setShowAlternatives(false);
+                setFeedback(null);
+              }}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center transition-all hover:bg-[var(--bg-hover)]"
+              style={{ background: 'var(--bg-elevated)' }}
+              title="Restart"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
+            
+            {/* Back Button */}
             <button 
               onClick={goBack}
               disabled={currentMoveIndex === 0}
-              className="w-12 h-12 rounded-lg flex items-center justify-center disabled:opacity-30 transition-all hover:bg-[var(--bg-hover)]"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center disabled:opacity-30 transition-all hover:bg-[var(--bg-hover)]"
               style={{ background: 'var(--bg-elevated)' }}
+              title="Previous Move"
             >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             
+            {/* Hint Button (Test Mode) */}
             {mode === 'test' && isUserMove && phase === 'playing' && (
               <button 
                 onClick={useHint}
-                className="px-4 h-12 rounded-lg flex items-center gap-2 transition-all hover:bg-[var(--bg-hover)]"
+                className="px-3 sm:px-4 h-10 sm:h-12 rounded-lg flex items-center gap-1.5 sm:gap-2 text-sm transition-all hover:bg-[var(--bg-hover)]"
                 style={{ background: 'var(--bg-elevated)', color: 'var(--accent-gold)' }}
               >
-                💡 Hint
+                💡 <span className="hidden sm:inline">Hint</span>
               </button>
             )}
             
-            {(mode === 'learn' || phase === 'move_explanation') && (
-              <button 
-                onClick={advanceMove}
-                disabled={currentMoveIndex >= pattern.mainLine.length - 1 && phase === 'move_explanation'}
-                className="px-6 h-12 rounded-lg flex items-center gap-2 font-medium transition-all"
-                style={{ 
-                  background: 'linear-gradient(135deg, #4ade80, #22d3ee)',
-                  color: '#000'
-                }}
-              >
-                Next Move
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            )}
+            {/* Next Move Button - Always show in learn mode, or when explanation is shown */}
+            <button 
+              onClick={advanceMove}
+              disabled={currentMoveIndex >= pattern.mainLine.length}
+              className="px-4 sm:px-6 h-10 sm:h-12 rounded-lg flex items-center gap-1.5 sm:gap-2 font-medium transition-all disabled:opacity-50"
+              style={{ 
+                background: 'linear-gradient(135deg, #4ade80, #22d3ee)',
+                color: '#000'
+              }}
+              title="Next Move"
+            >
+              <span className="text-sm sm:text-base">Next</span>
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
             
+            {/* Skip Button */}
             <button 
               onClick={() => setPhase('summary')}
-              className="px-4 h-12 rounded-lg flex items-center gap-2 transition-all hover:bg-[var(--bg-hover)]"
+              className="px-3 sm:px-4 h-10 sm:h-12 rounded-lg flex items-center gap-2 transition-all hover:bg-[var(--bg-hover)] text-sm"
               style={{ background: 'var(--bg-elevated)' }}
             >
               Skip
@@ -651,10 +674,10 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
         </div>
 
         {/* Explanation Panel */}
-        <div className="space-y-4">
+        <div className="space-y-4 w-full max-w-full overflow-hidden">
           {/* Move Display */}
           {currentMove && (
-            <div className="card p-6">
+            <div className="card p-4 sm:p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">

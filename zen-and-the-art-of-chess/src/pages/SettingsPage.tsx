@@ -654,7 +654,7 @@ export function SettingsPage() {
         <div className="space-y-6">
           {/* Board Preview */}
           <div className="flex justify-center">
-            <div className="w-48 h-48 rounded-lg overflow-hidden shadow-lg">
+            <div className="w-48 h-48 overflow-hidden shadow-lg">
               <Chessboard
                 position="r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4"
                 boardWidth={192}

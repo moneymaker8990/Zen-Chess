@@ -805,7 +805,7 @@ export function OpeningsPage() {
   // ============================================
   if (viewMode === 'lines' && selectedCourse) {
     return (
-      <div className="space-y-6 animate-fade-in">
+      <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0 w-full max-w-full overflow-hidden">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm">
           <button
@@ -819,13 +819,13 @@ export function OpeningsPage() {
         </div>
 
         {/* Course Header */}
-        <div className={`rounded-2xl p-8 bg-gradient-to-br ${selectedCourse.color} border border-zen-700/30`}>
-          <div className="flex items-start gap-6">
-            <div className="text-6xl">{selectedCourse.icon}</div>
-            <div className="flex-1">
-              <h1 className="text-3xl font-serif text-zen-100 mb-2">{selectedCourse.name}</h1>
-              <p className="text-gold-400 font-serif italic mb-4">{selectedCourse.tagline}</p>
-              <p className="text-zen-400">{selectedCourse.description}</p>
+        <div className={`rounded-xl sm:rounded-2xl p-4 sm:p-8 bg-gradient-to-br ${selectedCourse.color} border border-zen-700/30`}>
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+            <div className="text-4xl sm:text-6xl">{selectedCourse.icon}</div>
+            <div className="flex-1 w-full">
+              <h1 className="text-xl sm:text-3xl font-serif text-zen-100 mb-2">{selectedCourse.name}</h1>
+              <p className="text-gold-400 font-serif italic mb-3 sm:mb-4 text-sm sm:text-base">{selectedCourse.tagline}</p>
+              <p className="text-zen-400 text-sm sm:text-base">{selectedCourse.description}</p>
               
               {selectedCourse.legends && selectedCourse.legends.length > 0 && (
                 <div className="mt-4 flex items-center gap-2">
@@ -842,11 +842,11 @@ export function OpeningsPage() {
         </div>
 
         {/* Lines Mode Toggle */}
-        <div className="flex items-center justify-between">
-          <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setShowDatabaseLines(false)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                 !showDatabaseLines
                   ? 'bg-gold-500/20 text-gold-400 border border-gold-500/50'
                   : 'bg-zen-800/40 text-zen-400 border border-zen-700/30 hover:border-zen-600/50'
@@ -856,55 +856,55 @@ export function OpeningsPage() {
             </button>
             <button
               onClick={() => setShowDatabaseLines(true)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                 showDatabaseLines
                   ? 'bg-gold-500/20 text-gold-400 border border-gold-500/50'
                   : 'bg-zen-800/40 text-zen-400 border border-zen-700/30 hover:border-zen-600/50'
               }`}
             >
-              🔍 Full Database ({courseLines.all.length.toLocaleString()})
+              🔍 Full DB ({courseLines.all.length.toLocaleString()})
             </button>
           </div>
           
           {!showDatabaseLines && courseLines.database.length > 0 && (
-            <p className="text-zen-600 text-sm">
-              Focus on these curated lines first
+            <p className="text-zen-600 text-xs sm:text-sm">
+              Focus on curated lines first
             </p>
           )}
           {showDatabaseLines && (
-            <p className="text-zen-600 text-sm">
-              Explore all master game positions
+            <p className="text-zen-600 text-xs sm:text-sm">
+              Explore all positions
             </p>
           )}
         </div>
 
         {/* Lines Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {displayedLines.slice(0, showDatabaseLines ? 100 : undefined).map((opening, index) => (
-            <div key={opening.id} className="glass-card p-5 hover:border-gold-500/30 transition-all group">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-zen-800/60 flex items-center justify-center text-gold-400 text-sm font-mono">
+            <div key={opening.id} className="glass-card p-4 sm:p-5 hover:border-gold-500/30 transition-all group">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                  <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zen-800/60 flex items-center justify-center text-gold-400 text-xs sm:text-sm font-mono shrink-0">
                     {index + 1}
                   </span>
-                  <div>
-                    <h3 className="text-zen-200 font-medium">{opening.variation || opening.name}</h3>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-zen-200 font-medium text-sm sm:text-base truncate">{opening.variation || opening.name}</h3>
                     <span className="text-xs text-zen-600 font-mono">{opening.eco}</span>
                   </div>
                 </div>
-                <span className="text-gold-400/60 text-xs">
+                <span className="text-gold-400/60 text-xs shrink-0 ml-2">
                   {'★'.repeat(opening.difficulty)}
                 </span>
               </div>
               
-              <p className="text-zen-500 text-xs mb-4 line-clamp-2">
+              <p className="text-zen-500 text-xs mb-3 sm:mb-4 line-clamp-2">
                 {opening.description}
               </p>
 
               {/* Key Ideas Preview */}
-              <div className="mb-4 flex flex-wrap gap-1">
+              <div className="mb-3 sm:mb-4 flex flex-wrap gap-1">
                 {opening.keyIdeas.slice(0, 2).map((idea, i) => (
-                  <span key={i} className="text-xs px-2 py-0.5 rounded bg-zen-800/40 text-zen-400">
+                  <span key={i} className="text-xs px-2 py-0.5 rounded bg-zen-800/40 text-zen-400 truncate max-w-full">
                     {idea}
                   </span>
                 ))}
@@ -912,7 +912,7 @@ export function OpeningsPage() {
 
               <button
                 onClick={() => startOpening(opening, selectedCourse.forWhite ? 'white' : 'black')}
-                className={`w-full text-xs px-3 py-2.5 rounded-lg font-medium transition-all ${
+                className={`w-full text-xs px-3 py-2 sm:py-2.5 rounded-lg font-medium transition-all ${
                   selectedCourse.forWhite
                     ? 'bg-zinc-200 text-zinc-800 hover:bg-zinc-100'
                     : 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700 border border-zinc-600'
@@ -955,9 +955,9 @@ export function OpeningsPage() {
   // ============================================
   if (viewMode === 'practice' && selectedOpening) {
     return (
-      <div className="space-y-6 animate-fade-in">
+      <div className="space-y-4 sm:space-y-6 animate-fade-in w-full max-w-full overflow-hidden px-2 sm:px-0">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-2 text-xs sm:text-sm flex-wrap">
           <button
             onClick={() => setViewMode('courses')}
             className="text-zen-500 hover:text-gold-400 transition-colors"
@@ -976,12 +976,12 @@ export function OpeningsPage() {
               <span className="text-zen-600">/</span>
             </>
           )}
-          <span className="text-zen-300">{selectedOpening.variation}</span>
+          <span className="text-zen-300 truncate max-w-[150px] sm:max-w-none">{selectedOpening.variation}</span>
         </div>
 
-        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_360px] gap-4 lg:gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_340px] gap-4 lg:gap-6 w-full max-w-full">
           {/* Board Section */}
-          <div className="space-y-4 w-full overflow-hidden">
+          <div className="space-y-4 w-full max-w-full">
             {/* Mode Toggle */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-2">
               <div className="flex rounded-lg bg-zen-800/40 p-1">
@@ -1016,19 +1016,21 @@ export function OpeningsPage() {
             </div>
 
             {/* Chessboard */}
-            <div className="relative w-full" style={{ maxWidth: `${Math.min(boardSize, window.innerWidth - 32)}px` }}>
-              <Chessboard
-                position={game.fen()}
-                onSquareClick={onSquareClick}
-                onPieceDrop={onDrop}
-                boardOrientation={userColor}
-                customSquareStyles={customSquareStyles}
-                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                customLightSquareStyle={boardStyles.customLightSquareStyle}
-                animationDuration={boardStyles.animationDuration}
-                arePiecesDraggable={isUserTurn && feedback !== 'complete'}
-                boardWidth={Math.min(boardSize, window.innerWidth - 32)}
-              />
+            <div className="relative w-full flex justify-center lg:justify-start overflow-visible">
+              <div style={{ width: boardSize, maxWidth: '100%' }}>
+                <Chessboard
+                  position={game.fen()}
+                  onSquareClick={onSquareClick}
+                  onPieceDrop={onDrop}
+                  boardOrientation={userColor}
+                  customSquareStyles={customSquareStyles}
+                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                  customLightSquareStyle={boardStyles.customLightSquareStyle}
+                  animationDuration={boardStyles.animationDuration}
+                  arePiecesDraggable={isUserTurn && feedback !== 'complete'}
+                  boardWidth={boardSize}
+                />
+              </div>
               
               {/* Correct Move Feedback */}
               {feedback === 'correct' && (
@@ -1045,7 +1047,7 @@ export function OpeningsPage() {
               
               {/* Feedback Overlay */}
               {feedback === 'complete' && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-lg">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/60">
                   <div className="text-center p-8">
                     <div className="text-6xl mb-4">🎉</div>
                     <h3 className="text-2xl font-serif text-gold-400 mb-2">Line Complete!</h3>
@@ -1067,24 +1069,24 @@ export function OpeningsPage() {
             </div>
 
             {/* Controls */}
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3 flex-wrap justify-center">
               <button
                 onClick={() => setShowHint(true)}
                 disabled={showHint || feedback === 'complete'}
-                className="zen-button-ghost flex-1"
+                className="zen-button-ghost flex-1 min-w-[100px] text-sm sm:text-base"
               >
                 💡 Hint
               </button>
-              <button onClick={resetLine} className="zen-button-ghost flex-1">
+              <button onClick={resetLine} className="zen-button-ghost flex-1 min-w-[100px] text-sm sm:text-base">
                 🔄 Reset
               </button>
             </div>
           </div>
 
           {/* Info Panel */}
-          <div className="space-y-4">
+          <div className="space-y-4 w-full max-w-full overflow-hidden">
             {/* Opening Info */}
-            <div className="glass-card p-6">
+            <div className="glass-card p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h2 className="text-xl font-serif text-zen-100">{selectedOpening.name}</h2>
@@ -1098,8 +1100,8 @@ export function OpeningsPage() {
             </div>
 
             {/* Progress */}
-            <div className="glass-card p-6">
-              <h4 className="text-sm text-zen-500 uppercase tracking-wider mb-4">Progress</h4>
+            <div className="glass-card p-4 sm:p-6">
+              <h4 className="text-sm text-zen-500 uppercase tracking-wider mb-3 sm:mb-4">Progress</h4>
               
               {/* Progress Bar */}
               <div className="relative h-3 bg-zen-800 rounded-full overflow-hidden mb-3">
@@ -1138,8 +1140,8 @@ export function OpeningsPage() {
             </div>
 
             {/* Key Ideas */}
-            <div className="glass-card p-6">
-              <h4 className="text-sm text-zen-500 uppercase tracking-wider mb-4">Key Ideas</h4>
+            <div className="glass-card p-4 sm:p-6">
+              <h4 className="text-sm text-zen-500 uppercase tracking-wider mb-3 sm:mb-4">Key Ideas</h4>
               <ul className="space-y-3">
                 {selectedOpening.keyIdeas.map((idea, i) => (
                   <li key={i} className="flex items-start gap-3 text-zen-400 text-sm">

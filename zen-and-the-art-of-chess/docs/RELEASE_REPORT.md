@@ -216,3 +216,4 @@ The application successfully combines chess training with mindfulness, providing
 *Zen Chess - Master Chess Through Mindfulness*
 
 
+
