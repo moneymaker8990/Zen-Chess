@@ -174,7 +174,7 @@ const navSections = [
     items: [
       { path: '/beginner', label: 'New to Chess?', icon: Icons.lotus, highlight: true },
       { path: '/journey', label: 'Learning Path', icon: Icons.map },
-      { path: '/day', label: 'Daily Practice', icon: Icons.mind, highlight: true },
+      { path: '/day', label: 'Daily Practice', icon: Icons.book },
     ],
   },
   {
@@ -187,6 +187,7 @@ const navSections = [
   {
     title: 'Mental Game',
     items: [
+      { path: '/mind', label: 'Mind Training', icon: Icons.mind },
       { path: '/calm-play', label: 'Calm Play', icon: Icons.calm },
       { path: '/mistakes', label: 'Mistakes', icon: Icons.alert },
     ],

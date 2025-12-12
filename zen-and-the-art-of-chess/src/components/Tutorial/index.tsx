@@ -599,7 +599,7 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm animate-fade-in" style={{ backgroundColor: 'rgba(10, 10, 10, 0.95)' }}>
-      <div className="card p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto">
+      <div className="card p-8 max-w-xl w-full mx-4 max-h-[85vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <span className="text-3xl">{tutorial.icon}</span>
@@ -622,16 +622,16 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
 
         {/* Current step */}
         <div className="mb-6">
-          <h3 className="text-lg font-medium mb-3" style={{ color: 'var(--text-secondary)' }}>
+          <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
             {tutorial.steps[currentStep].title}
           </h3>
-          <p className="leading-relaxed mb-4" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="leading-relaxed mb-4 text-base" style={{ color: 'var(--text-secondary)', lineHeight: '1.7' }}>
             {tutorial.steps[currentStep].content}
           </p>
           {tutorial.steps[currentStep].tip && (
-            <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(251, 191, 36, 0.1)', border: '1px solid rgba(251, 191, 36, 0.2)' }}>
-              <p className="text-sm" style={{ color: 'var(--accent-gold)' }}>
-                💡 <span className="font-medium">Tip:</span> {tutorial.steps[currentStep].tip}
+            <div className="rounded-lg p-4" style={{ backgroundColor: 'rgba(251, 191, 36, 0.15)', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
+              <p className="text-sm" style={{ color: 'var(--accent-gold)', lineHeight: '1.6' }}>
+                💡 <span className="font-semibold">Tip:</span> {tutorial.steps[currentStep].tip}
               </p>
             </div>
           )}
@@ -660,10 +660,10 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
               <h4 className="text-sm uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
                 Quick Start
               </h4>
-              <ol className="space-y-2">
+              <ol className="space-y-3">
                 {tutorial.quickStart.map((step, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                    <span className="font-mono" style={{ color: 'var(--accent-gold)' }}>{i + 1}.</span>
+                  <li key={i} className="flex items-start gap-3 text-sm" style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                    <span className="font-mono font-bold" style={{ color: 'var(--accent-gold)' }}>{i + 1}.</span>
                     <span>{step}</span>
                   </li>
                 ))}

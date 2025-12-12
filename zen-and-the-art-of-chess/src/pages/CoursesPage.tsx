@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BackButton } from '@/components/BackButton';
 import { 
   allCourses, 
   calculateCourseStats, 
@@ -162,6 +163,9 @@ export default function CoursesPage() {
 
   return (
     <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
+      {/* Back Button */}
+      <BackButton fallback="/" />
+
       {/* Header */}
       <section className="text-center lg:text-left">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>

@@ -323,42 +323,6 @@ export default function CourseLearningPage() {
     }
   }, [courseId]);
 
-  // Setup position when variation changes
-  useEffect(() => {
-    if (currentVariation) {
-      const newGame = new Chess(currentVariation.fen);
-      setGame(newGame);
-      setCurrentMoveIndex(0);
-      setShowHint(false);
-      setFeedback(null);
-      
-      // Check if first move is opponent's turn - auto-play it
-      const turn = newGame.turn();
-      const isUserWhite = currentVariation.toMove === 'white';
-      const isFirstMoveOpponents = (turn === 'w' && !isUserWhite) || (turn === 'b' && isUserWhite);
-      
-      if (isFirstMoveOpponents && currentVariation.moves.length > 0) {
-        // Auto-play first opponent move after short delay
-        const firstMove = currentVariation.moves[0];
-        setTimeout(() => {
-          try {
-            const isCapture = firstMove.move.includes('x');
-            const result = newGame.move(firstMove.move);
-            if (result) {
-              playSmartMoveSound(newGame, result, { isCapture });
-              setGame(new Chess(newGame.fen()));
-              setCurrentMoveIndex(1);
-              setFeedback({ type: 'info', message: `Opponent plays ${firstMove.move}` });
-              setTimeout(() => setFeedback(null), 1500);
-            }
-          } catch {
-            console.error('Failed to auto-play first opponent move');
-          }
-        }, 600);
-      }
-    }
-  }, [currentVariation]);
-
   // Mark variation as complete
   const markVariationComplete = useCallback(() => {
     if (!progress || !currentVariation || !courseId) return;
@@ -387,9 +351,12 @@ export default function CourseLearningPage() {
     return (turn === 'w' && !isUserWhite) || (turn === 'b' && isUserWhite);
   }, [userColor]);
 
-  // Auto-play opponent moves
+  // Auto-play opponent moves (with chaining for multiple opponent moves in a row)
   const playOpponentMove = useCallback((gameState: Chess, moveIndex: number) => {
-    if (!currentVariation || moveIndex >= currentVariation.moves.length) return;
+    if (!currentVariation || moveIndex >= currentVariation.moves.length) {
+      // Variation complete or no more moves
+      return;
+    }
     
     const move = currentVariation.moves[moveIndex];
     const newGame = new Chess(gameState.fen());
@@ -397,21 +364,77 @@ export default function CourseLearningPage() {
     try {
       const isCapture = move.move.includes('x');
       const result = newGame.move(move.move);
+      
       if (result) {
         setTimeout(() => {
           playSmartMoveSound(newGame, result, { isCapture });
           setGame(newGame);
-          setCurrentMoveIndex(moveIndex + 1);
+          
+          const nextIndex = moveIndex + 1;
+          setCurrentMoveIndex(nextIndex);
           setFeedback({ type: 'info', message: `Opponent plays ${move.move}` });
           
-          // Clear feedback after a moment
-          setTimeout(() => setFeedback(null), 1000);
-        }, 500); // Slight delay for opponent move
+          // Check if variation is complete
+          if (nextIndex >= currentVariation.moves.length) {
+            markVariationComplete();
+            setTimeout(() => {
+              setFeedback({ type: 'correct', message: '🎉 Variation Complete!' });
+            }, 500);
+            return;
+          }
+          
+          // Check if the NEXT move is also an opponent's move (check whose turn it is now)
+          const isNextMoveOpponent = isOpponentTurn(newGame);
+          
+          if (isNextMoveOpponent) {
+            // Chain to the next opponent move after a brief delay
+            setTimeout(() => {
+              playOpponentMove(newGame, nextIndex);
+            }, 600);
+          } else {
+            // It's now the user's turn - clear feedback and let them play
+            setTimeout(() => {
+              setFeedback(null);
+              setShowHint(false);
+            }, 1000);
+          }
+        }, 500);
+      } else {
+        // Move parsing returned null - try to recover by advancing
+        console.error('Opponent move returned null:', move.move);
+        setCurrentMoveIndex(moveIndex + 1);
+        setFeedback({ type: 'info', message: 'Advancing to next move...' });
       }
-    } catch {
-      console.error('Invalid opponent move:', move.move);
+    } catch (e) {
+      // Move failed - advance anyway to prevent getting stuck
+      console.error('Invalid opponent move:', move.move, e);
+      setCurrentMoveIndex(moveIndex + 1);
+      setFeedback({ type: 'info', message: 'Skipped invalid move, continuing...' });
     }
-  }, [currentVariation]);
+  }, [currentVariation, isOpponentTurn, markVariationComplete]);
+
+  // Setup position when variation changes
+  useEffect(() => {
+    if (currentVariation) {
+      const newGame = new Chess(currentVariation.fen);
+      setGame(newGame);
+      setCurrentMoveIndex(0);
+      setShowHint(false);
+      setFeedback(null);
+      
+      // Check if first move is opponent's turn - auto-play it (and chain if needed)
+      const turn = newGame.turn();
+      const isUserWhite = currentVariation.toMove === 'white';
+      const isFirstMoveOpponents = (turn === 'w' && !isUserWhite) || (turn === 'b' && isUserWhite);
+      
+      if (isFirstMoveOpponents && currentVariation.moves.length > 0) {
+        // Auto-play opponent moves starting from index 0 (will chain if multiple)
+        setTimeout(() => {
+          playOpponentMove(newGame, 0);
+        }, 600);
+      }
+    }
+  }, [currentVariation, playOpponentMove]);
 
   // Handle advancing to next move - plays through ALL moves including opponent's
   const advanceMove = useCallback(() => {
@@ -559,10 +582,11 @@ export default function CourseLearningPage() {
 
       // Check if we're in learning mode (have an expected move)
       if (currentMove && currentMoveIndex < currentVariation.moves.length) {
-        // Check if it matches the expected move
+        // Check if it matches the expected move (normalize notation for comparison)
         const expectedMove = currentMove.move;
+        const normalizeMove = (m: string) => m.replace(/[+#x]/g, '').replace(/=.*$/, '');
         const moveMatches = move.san === expectedMove || 
-                            move.san.replace(/[+#]/, '') === expectedMove.replace(/[+#]/, '');
+                            normalizeMove(move.san) === normalizeMove(expectedMove);
 
         if (moveMatches) {
           // Preserve scroll position
@@ -602,8 +626,12 @@ export default function CourseLearningPage() {
 
           return true;
         } else {
-          // Wrong move - show hint
-          setFeedback({ type: 'incorrect', message: 'Try again! Hint: ' + (currentMove.annotation || currentMove.explanation || '') });
+          // Wrong move - show clear feedback with the expected move
+          const hint = currentMove.explanation || currentMove.annotation || '';
+          setFeedback({ 
+            type: 'incorrect', 
+            message: `Not quite! The expected move is ${expectedMove}. ${hint ? '(' + hint + ')' : ''}`
+          });
           return false;
         }
       } else {
@@ -854,13 +882,13 @@ export default function CourseLearningPage() {
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3 sm:py-6 w-full">
-        <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_320px] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
+        <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_320px] gap-4 lg:gap-6 w-full max-w-full">
           {/* Board + Controls */}
-          <div className="w-full max-w-full overflow-hidden">
+          <div className="w-full max-w-full">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex justify-center overflow-hidden shadow-2xl"
+              className="flex justify-center shadow-2xl"
             >
               <div style={{ width: boardSize, maxWidth: '100%' }}>
               <Chessboard

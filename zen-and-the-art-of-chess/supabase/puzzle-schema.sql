@@ -300,3 +300,5 @@ GRANT EXECUTE ON FUNCTION public.record_puzzle_attempt TO authenticated;
 
 
 
+
+

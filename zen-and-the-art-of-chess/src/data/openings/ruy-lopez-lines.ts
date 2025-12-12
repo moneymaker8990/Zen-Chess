@@ -904,3 +904,5 @@ export const ruyLopezLines: OpeningLine[] = [
 ];
 
 export default ruyLopezLines;
+
+

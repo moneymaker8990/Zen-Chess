@@ -219,3 +219,5 @@ The application successfully combines chess training with mindfulness, providing
 
 
 
+
+

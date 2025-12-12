@@ -143,6 +143,21 @@ html, body {
   color: var(--text-primary);
 }
 
+/* Study Plan Cards */
+.study-plan-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.study-plan-card:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-tertiary);
+}
+
 /* Zen-themed buttons */
 .zen-button {
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
