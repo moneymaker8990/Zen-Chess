@@ -304,6 +304,9 @@ export default function CourseLearningPage() {
   const currentVariation = variations[currentVariationIndex];
   const currentMove = currentVariation?.moves[currentMoveIndex];
   const isLastMove = currentMoveIndex >= (currentVariation?.moves.length || 0) - 1;
+  
+  // Determine which color the user is playing (based on first move's turn)
+  const userColor = currentVariation?.toMove || 'white';
 
   // Initialize
   useEffect(() => {
@@ -324,6 +327,31 @@ export default function CourseLearningPage() {
       setCurrentMoveIndex(0);
       setShowHint(false);
       setFeedback(null);
+      
+      // Check if first move is opponent's turn - auto-play it
+      const turn = newGame.turn();
+      const isUserWhite = currentVariation.toMove === 'white';
+      const isFirstMoveOpponents = (turn === 'w' && !isUserWhite) || (turn === 'b' && isUserWhite);
+      
+      if (isFirstMoveOpponents && currentVariation.moves.length > 0) {
+        // Auto-play first opponent move after short delay
+        const firstMove = currentVariation.moves[0];
+        setTimeout(() => {
+          try {
+            const isCapture = firstMove.move.includes('x');
+            const result = newGame.move(firstMove.move);
+            if (result) {
+              playSmartMoveSound(newGame, result, { isCapture });
+              setGame(new Chess(newGame.fen()));
+              setCurrentMoveIndex(1);
+              setFeedback({ type: 'info', message: `Opponent plays ${firstMove.move}` });
+              setTimeout(() => setFeedback(null), 1500);
+            }
+          } catch {
+            console.error('Failed to auto-play first opponent move');
+          }
+        }, 600);
+      }
     }
   }, [currentVariation]);
 
@@ -347,6 +375,39 @@ export default function CourseLearningPage() {
     saveCourseProgress(courseId, newProgress);
     setVariationsCompleted(prev => prev + 1);
   }, [progress, currentVariation, courseId]);
+
+  // Check if it's the opponent's turn to move
+  const isOpponentTurn = useCallback((gameState: Chess): boolean => {
+    const turn = gameState.turn(); // 'w' or 'b'
+    const isUserWhite = userColor === 'white';
+    return (turn === 'w' && !isUserWhite) || (turn === 'b' && isUserWhite);
+  }, [userColor]);
+
+  // Auto-play opponent moves
+  const playOpponentMove = useCallback((gameState: Chess, moveIndex: number) => {
+    if (!currentVariation || moveIndex >= currentVariation.moves.length) return;
+    
+    const move = currentVariation.moves[moveIndex];
+    const newGame = new Chess(gameState.fen());
+    
+    try {
+      const isCapture = move.move.includes('x');
+      const result = newGame.move(move.move);
+      if (result) {
+        setTimeout(() => {
+          playSmartMoveSound(newGame, result, { isCapture });
+          setGame(newGame);
+          setCurrentMoveIndex(moveIndex + 1);
+          setFeedback({ type: 'info', message: `Opponent plays ${move.move}` });
+          
+          // Clear feedback after a moment
+          setTimeout(() => setFeedback(null), 1000);
+        }, 500); // Slight delay for opponent move
+      }
+    } catch {
+      console.error('Invalid opponent move:', move.move);
+    }
+  }, [currentVariation]);
 
   // Handle advancing to next move
   const advanceMove = useCallback(() => {
@@ -384,7 +445,7 @@ export default function CourseLearningPage() {
 
   // Handle user move attempt
   const handleMove = useCallback((sourceSquare: string, targetSquare: string) => {
-    if (!currentMove) return false;
+    if (!currentMove || !currentVariation) return false;
 
     const newGame = new Chess(game.fen());
     try {
@@ -408,21 +469,34 @@ export default function CourseLearningPage() {
         
         playSmartMoveSound(newGame, move, { isCapture });
         setGame(newGame);
-        setFeedback({ type: 'correct', message: currentMove.explanation });
+        setFeedback({ type: 'correct', message: '✓ Correct!' });
         
         // Restore scroll position
         requestAnimationFrame(() => window.scrollTo(0, scrollY));
         
-        // Auto-advance after delay
+        const nextMoveIndex = currentMoveIndex + 1;
+        
+        // Check if variation is complete
+        if (nextMoveIndex >= currentVariation.moves.length) {
+          setTimeout(() => {
+            markVariationComplete();
+            setFeedback({ type: 'correct', message: '🎉 Variation Complete!' });
+          }, 800);
+          return true;
+        }
+        
+        // Check if next move is opponent's turn - if so, auto-play it
         setTimeout(() => {
-          if (currentMoveIndex < (currentVariation?.moves.length || 0) - 1) {
-            setCurrentMoveIndex(prev => prev + 1);
+          if (isOpponentTurn(newGame)) {
+            // Auto-play opponent's move
+            playOpponentMove(newGame, nextMoveIndex);
+          } else {
+            // It's still user's turn, just advance the index
+            setCurrentMoveIndex(nextMoveIndex);
             setFeedback(null);
             setShowHint(false);
-          } else {
-            markVariationComplete();
           }
-        }, 1500);
+        }, 800);
 
         return true;
       } else {
@@ -432,7 +506,7 @@ export default function CourseLearningPage() {
     } catch {
       return false;
     }
-  }, [currentMove, game, currentMoveIndex, currentVariation, markVariationComplete]);
+  }, [currentMove, currentVariation, game, currentMoveIndex, markVariationComplete, isOpponentTurn, playOpponentMove]);
 
   // Next variation
   const nextVariation = useCallback(() => {
@@ -533,7 +607,9 @@ export default function CourseLearningPage() {
             }`}
             title="Toggle AI Coach (A)"
           >
-            <span className="text-xl">🧠</span>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
           </button>
         </div>
       </div>
@@ -577,15 +653,6 @@ export default function CourseLearningPage() {
 
                 {/* Explanation */}
                 <p className="text-slate-200 flex-1">{currentMove.explanation}</p>
-
-                {/* AI Button */}
-                <button
-                  onClick={() => setShowAICoach(true)}
-                  className="shrink-0 flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-300 hover:bg-purple-500/30 transition-colors"
-                >
-                  <span>🧠</span>
-                  <span className="text-sm">Why?</span>
-                </button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -786,8 +853,11 @@ export default function CourseLearningPage() {
         <button
           onClick={() => setShowAICoach(true)}
           className="lg:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 text-white shadow-xl shadow-purple-500/30 flex items-center justify-center z-40"
+          title="AI Coach"
         >
-          <span className="text-2xl">🧠</span>
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
         </button>
       )}
     </div>
