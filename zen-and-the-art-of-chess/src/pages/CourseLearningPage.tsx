@@ -283,6 +283,10 @@ export default function CourseLearningPage() {
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'incorrect' | 'info'; message: string } | null>(null);
   
+  // Click-to-move state
+  const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
+  const [moveOptions, setMoveOptions] = useState<Record<string, React.CSSProperties>>({});
+  
   // Progress
   const [progress, setProgress] = useState<CourseProgress | null>(null);
   const [variationsCompleted, setVariationsCompleted] = useState(0);
@@ -409,12 +413,12 @@ export default function CourseLearningPage() {
     }
   }, [currentVariation]);
 
-  // Handle advancing to next move
+  // Handle advancing to next move - plays through ALL moves including opponent's
   const advanceMove = useCallback(() => {
     if (!currentVariation) return;
 
-    if (currentMoveIndex < currentVariation.moves.length - 1) {
-      // Make the move on the board
+    if (currentMoveIndex < currentVariation.moves.length) {
+      // Make the current move on the board
       const move = currentVariation.moves[currentMoveIndex];
       const newGame = new Chess(game.fen());
       try {
@@ -426,27 +430,118 @@ export default function CourseLearningPage() {
           
           playSmartMoveSound(newGame, result, { isCapture });
           setGame(newGame);
-          setCurrentMoveIndex(prev => prev + 1);
+          const nextIndex = currentMoveIndex + 1;
+          setCurrentMoveIndex(nextIndex);
           setShowHint(false);
-          setFeedback(null);
+          setSelectedSquare(null);
+          setMoveOptions({});
+          
+          // Check if variation is complete
+          if (nextIndex >= currentVariation.moves.length) {
+            markVariationComplete();
+            setFeedback({ type: 'correct', message: '✓ Variation Complete!' });
+          } else {
+            setFeedback(null);
+          }
           
           // Restore scroll position
           requestAnimationFrame(() => window.scrollTo(0, scrollY));
         }
-      } catch {
-        console.error('Invalid move:', move.move);
+      } catch (e) {
+        console.error('Invalid move:', move.move, e);
       }
     } else {
-      // Variation complete!
+      // Already at the end - variation complete!
       markVariationComplete();
       setFeedback({ type: 'correct', message: '✓ Variation Complete!' });
     }
   }, [currentVariation, currentMoveIndex, game, markVariationComplete]);
 
-  // Handle user move attempt
-  const handleMove = useCallback((sourceSquare: string, targetSquare: string) => {
-    if (!currentMove || !currentVariation) return false;
+  // Go back to previous move
+  const goToPreviousMove = useCallback(() => {
+    if (!currentVariation || currentMoveIndex <= 0) return;
+    
+    // Rebuild the position up to the previous move
+    const targetIndex = currentMoveIndex - 1;
+    const newGame = new Chess(currentVariation.fen);
+    
+    for (let i = 0; i < targetIndex; i++) {
+      try {
+        newGame.move(currentVariation.moves[i].move);
+      } catch {
+        console.error('Failed to replay move:', currentVariation.moves[i].move);
+        break;
+      }
+    }
+    
+    setGame(newGame);
+    setCurrentMoveIndex(targetIndex);
+    setShowHint(false);
+    setFeedback(null);
+    setSelectedSquare(null);
+    setMoveOptions({});
+  }, [currentVariation, currentMoveIndex]);
 
+  // Go to first move (reset to starting position)
+  const goToFirstMove = useCallback(() => {
+    if (!currentVariation) return;
+    setGame(new Chess(currentVariation.fen));
+    setCurrentMoveIndex(0);
+    setShowHint(false);
+    setFeedback(null);
+    setSelectedSquare(null);
+    setMoveOptions({});
+  }, [currentVariation]);
+
+  // Go to last move
+  const goToLastMove = useCallback(() => {
+    if (!currentVariation) return;
+    
+    const newGame = new Chess(currentVariation.fen);
+    for (const move of currentVariation.moves) {
+      try {
+        newGame.move(move.move);
+      } catch {
+        break;
+      }
+    }
+    
+    setGame(newGame);
+    setCurrentMoveIndex(currentVariation.moves.length);
+    markVariationComplete();
+    setFeedback({ type: 'correct', message: '✓ Variation Complete!' });
+    setSelectedSquare(null);
+    setMoveOptions({});
+  }, [currentVariation, markVariationComplete]);
+
+  // Get legal moves for a square (for click-to-move highlighting)
+  const getMoveOptions = useCallback((square: Square) => {
+    const moves = game.moves({ square, verbose: true });
+    if (moves.length === 0) {
+      setMoveOptions({});
+      return false;
+    }
+    
+    const newSquares: Record<string, React.CSSProperties> = {};
+    moves.forEach((move) => {
+      const isCapture = move.captured;
+      newSquares[move.to] = {
+        background: isCapture
+          ? 'radial-gradient(circle, rgba(255,0,0,0.4) 85%, transparent 85%)'
+          : 'radial-gradient(circle, rgba(0,0,0,0.2) 25%, transparent 25%)',
+        borderRadius: '50%',
+      };
+    });
+    newSquares[square] = { backgroundColor: 'rgba(129, 182, 76, 0.4)' };
+    setMoveOptions(newSquares);
+    return true;
+  }, [game]);
+
+  // Handle user move attempt (drag-drop or click-to-move)
+  const handleMove = useCallback((sourceSquare: string, targetSquare: string): boolean => {
+    if (!currentVariation) return false;
+    
+    // Allow moves even if we're past the expected move index (exploration mode)
     const newGame = new Chess(game.fen());
     try {
       const isCapture = !!newGame.get(targetSquare as Square);
@@ -457,56 +552,108 @@ export default function CourseLearningPage() {
       });
 
       if (!move) return false;
+      
+      // Clear selection
+      setSelectedSquare(null);
+      setMoveOptions({});
 
-      // Check if it matches the expected move
-      const expectedMove = currentMove.move;
-      const moveMatches = move.san === expectedMove || 
-                          move.san.replace(/[+#]/, '') === expectedMove.replace(/[+#]/, '');
+      // Check if we're in learning mode (have an expected move)
+      if (currentMove && currentMoveIndex < currentVariation.moves.length) {
+        // Check if it matches the expected move
+        const expectedMove = currentMove.move;
+        const moveMatches = move.san === expectedMove || 
+                            move.san.replace(/[+#]/, '') === expectedMove.replace(/[+#]/, '');
 
-      if (moveMatches) {
-        // Preserve scroll position
-        const scrollY = window.scrollY;
-        
+        if (moveMatches) {
+          // Preserve scroll position
+          const scrollY = window.scrollY;
+          
+          playSmartMoveSound(newGame, move, { isCapture });
+          setGame(newGame);
+          setFeedback({ type: 'correct', message: '✓ Correct!' });
+          
+          // Restore scroll position
+          requestAnimationFrame(() => window.scrollTo(0, scrollY));
+          
+          const nextMoveIndex = currentMoveIndex + 1;
+          
+          // Check if variation is complete
+          if (nextMoveIndex >= currentVariation.moves.length) {
+            setTimeout(() => {
+              markVariationComplete();
+              setCurrentMoveIndex(nextMoveIndex);
+              setFeedback({ type: 'correct', message: '🎉 Variation Complete!' });
+            }, 800);
+            return true;
+          }
+          
+          // Check if next move is opponent's turn - if so, auto-play it
+          setTimeout(() => {
+            if (isOpponentTurn(newGame)) {
+              // Auto-play opponent's move
+              playOpponentMove(newGame, nextMoveIndex);
+            } else {
+              // It's still user's turn, just advance the index
+              setCurrentMoveIndex(nextMoveIndex);
+              setFeedback(null);
+              setShowHint(false);
+            }
+          }, 800);
+
+          return true;
+        } else {
+          // Wrong move - show hint
+          setFeedback({ type: 'incorrect', message: 'Try again! Hint: ' + (currentMove.annotation || currentMove.explanation || '') });
+          return false;
+        }
+      } else {
+        // No expected move - just allow the move (exploration mode)
         playSmartMoveSound(newGame, move, { isCapture });
         setGame(newGame);
-        setFeedback({ type: 'correct', message: '✓ Correct!' });
-        
-        // Restore scroll position
-        requestAnimationFrame(() => window.scrollTo(0, scrollY));
-        
-        const nextMoveIndex = currentMoveIndex + 1;
-        
-        // Check if variation is complete
-        if (nextMoveIndex >= currentVariation.moves.length) {
-          setTimeout(() => {
-            markVariationComplete();
-            setFeedback({ type: 'correct', message: '🎉 Variation Complete!' });
-          }, 800);
-          return true;
-        }
-        
-        // Check if next move is opponent's turn - if so, auto-play it
-        setTimeout(() => {
-          if (isOpponentTurn(newGame)) {
-            // Auto-play opponent's move
-            playOpponentMove(newGame, nextMoveIndex);
-          } else {
-            // It's still user's turn, just advance the index
-            setCurrentMoveIndex(nextMoveIndex);
-            setFeedback(null);
-            setShowHint(false);
-          }
-        }, 800);
-
         return true;
-      } else {
-        setFeedback({ type: 'incorrect', message: 'Try again! Hint: ' + currentMove.annotation });
-        return false;
       }
     } catch {
       return false;
     }
   }, [currentMove, currentVariation, game, currentMoveIndex, markVariationComplete, isOpponentTurn, playOpponentMove]);
+
+  // Handle square click (for click-to-move)
+  const onSquareClick = useCallback((square: Square) => {
+    // If no square selected, try to select this one
+    if (!selectedSquare) {
+      const piece = game.get(square);
+      if (piece && piece.color === game.turn()) {
+        setSelectedSquare(square);
+        getMoveOptions(square);
+      }
+      return;
+    }
+    
+    // If clicking the same square, deselect
+    if (selectedSquare === square) {
+      setSelectedSquare(null);
+      setMoveOptions({});
+      return;
+    }
+    
+    // Try to make the move
+    const moveResult = handleMove(selectedSquare, square);
+    
+    // If move failed, try selecting the new square instead
+    if (!moveResult) {
+      const piece = game.get(square);
+      if (piece && piece.color === game.turn()) {
+        setSelectedSquare(square);
+        getMoveOptions(square);
+      } else {
+        setSelectedSquare(null);
+        setMoveOptions({});
+      }
+    } else {
+      setSelectedSquare(null);
+      setMoveOptions({});
+    }
+  }, [selectedSquare, game, getMoveOptions, handleMove]);
 
   // Next variation
   const nextVariation = useCallback(() => {
@@ -523,6 +670,12 @@ export default function CourseLearningPage() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') {
         advanceMove();
+      } else if (e.key === 'ArrowLeft') {
+        goToPreviousMove();
+      } else if (e.key === 'ArrowUp' || e.key === 'Home') {
+        goToFirstMove();
+      } else if (e.key === 'ArrowDown' || e.key === 'End') {
+        goToLastMove();
       } else if (e.key === 'h') {
         setShowHint(true);
       } else if (e.key === 'n') {
@@ -533,7 +686,7 @@ export default function CourseLearningPage() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [advanceMove, nextVariation]);
+  }, [advanceMove, goToPreviousMove, goToFirstMove, goToLastMove, nextVariation]);
 
   // Build arrows from current move
   const customArrows = useMemo((): [Square, Square, string][] => {
@@ -545,16 +698,32 @@ export default function CourseLearningPage() {
     ]);
   }, [currentMove]);
 
-  // Build highlights
+  // Build highlights - merge move highlights with click-to-move options
   const customSquareStyles = useMemo(() => {
     const styles: Record<string, React.CSSProperties> = {};
+    
+    // Add move hints/highlights from course data
     if (currentMove?.highlights) {
       currentMove.highlights.forEach(sq => {
         styles[sq] = { backgroundColor: 'rgba(255, 200, 0, 0.4)' };
       });
     }
+    
+    // Merge with click-to-move options
+    Object.entries(moveOptions).forEach(([sq, style]) => {
+      styles[sq] = { ...styles[sq], ...style };
+    });
+    
+    // Highlight selected square
+    if (selectedSquare) {
+      styles[selectedSquare] = { 
+        ...styles[selectedSquare], 
+        backgroundColor: 'rgba(129, 182, 76, 0.6)' 
+      };
+    }
+    
     return styles;
-  }, [currentMove]);
+  }, [currentMove, moveOptions, selectedSquare]);
 
   if (!course || !currentVariation) {
     return (
@@ -697,31 +866,72 @@ export default function CourseLearningPage() {
               <Chessboard
                 position={game.fen()}
                 onPieceDrop={handleMove}
+                onSquareClick={onSquareClick}
                 boardOrientation={currentVariation.toMove === 'white' ? 'white' : 'black'}
                 boardWidth={boardSize}
                 customArrows={customArrows}
                 customSquareStyles={customSquareStyles}
                 customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
+                arePiecesDraggable={true}
               />
               </div>
             </motion.div>
 
-            {/* Move Controls */}
-            <div className="flex justify-center gap-1.5 sm:gap-2 mt-3 sm:mt-4">
+            {/* Move Controls - Full navigation */}
+            <div className="flex justify-center gap-1 sm:gap-1.5 mt-3 sm:mt-4">
+              {/* First Move */}
               <button
-                onClick={() => {
-                  setGame(new Chess(currentVariation.fen));
-                  setCurrentMoveIndex(0);
-                  setFeedback(null);
-                }}
-                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-                title="Reset"
+                onClick={goToFirstMove}
+                disabled={currentMoveIndex === 0}
+                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                title="First Move (Home)"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
                 </svg>
               </button>
+              
+              {/* Previous Move */}
+              <button
+                onClick={goToPreviousMove}
+                disabled={currentMoveIndex === 0}
+                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Previous Move (←)"
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              
+              {/* Next Move */}
+              <button
+                onClick={advanceMove}
+                disabled={currentMoveIndex >= (currentVariation?.moves.length || 0)}
+                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Next Move (→)"
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+              
+              {/* Last Move */}
+              <button
+                onClick={goToLastMove}
+                disabled={currentMoveIndex >= (currentVariation?.moves.length || 0)}
+                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Last Move (End)"
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                </svg>
+              </button>
+              
+              {/* Separator */}
+              <div className="w-px bg-slate-600 mx-1 sm:mx-2" />
+              
+              {/* Hint */}
               <button
                 onClick={() => setShowHint(!showHint)}
                 className={`p-2 sm:p-3 rounded-lg transition-colors ${
@@ -735,23 +945,14 @@ export default function CourseLearningPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </button>
-              <button
-                onClick={advanceMove}
-                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-                title="Next Move (→)"
-              >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+              
+              {/* Next Variation */}
               <button
                 onClick={nextVariation}
                 className="p-2 sm:p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors"
                 title="Next Variation (N)"
               >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                </svg>
+                <span className="text-xs sm:text-sm font-semibold">Next</span>
               </button>
             </div>
 
