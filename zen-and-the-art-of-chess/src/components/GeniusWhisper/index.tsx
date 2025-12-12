@@ -7,6 +7,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useChessGenius } from '@/hooks/useChessGenius';
 import { useCoachStore } from '@/state/coachStore';
+import { logger } from '@/lib/logger';
 import type { GeniusWhisper as WhisperType } from '@/lib/chessGenius';
 
 interface GeniusWhisperProps {
@@ -91,7 +92,7 @@ export function GeniusWhisper({
   
   const handleAction = useCallback(() => {
     // Could navigate or trigger action based on whisper.actionable
-    console.log('Whisper action:', whisper?.actionable);
+    logger.debug('Whisper action:', whisper?.actionable);
     handleDismiss();
   }, [whisper, handleDismiss]);
   
@@ -259,6 +260,7 @@ export function InlineWhisper({ type, content, onDismiss, className = '' }: Inli
 }
 
 export default GeniusWhisper;
+
 
 
 

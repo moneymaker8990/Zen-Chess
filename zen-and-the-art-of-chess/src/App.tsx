@@ -98,6 +98,9 @@ function LazyPage({ children }: { children: React.ReactNode }) {
 // Wrapper component that adds page transitions to routes
 function AnimatedRoutes() {
   const location = useLocation();
+  // #region agent log
+  fetch('http://127.0.0.1:7242/ingest/36a72d14-14e6-4dc3-8f08-e0b574ec4f5a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.tsx:AnimatedRoutes',message:'Route navigation',data:{pathname:location.pathname},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'C'})}).catch(()=>{});
+  // #endregion
   
   return (
     <AnimatePresence mode="wait" initial={false}>

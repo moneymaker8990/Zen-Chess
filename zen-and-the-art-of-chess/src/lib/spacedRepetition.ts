@@ -1,7 +1,10 @@
 // ============================================
 // SM-2 SPACED REPETITION ALGORITHM
+// For Pattern Recognition Training
 // Based on SuperMemo 2 algorithm by Piotr Wozniak
-// Optimized for chess pattern learning
+// 
+// NOTE: This module is for pattern training (PatternsManualPage).
+// For puzzle-specific SRS, see spacedRepetitionSystem.ts
 // ============================================
 
 import { logger } from './logger';

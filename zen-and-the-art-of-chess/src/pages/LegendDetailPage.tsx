@@ -18,6 +18,7 @@ import type { BotLevel } from '@/engine/humanizedStockfish';
 import { useBoardSize } from '@/hooks/useBoardSize';
 import { parseUciMove, isValidFen } from '@/lib/moveValidation';
 import { playSmartMoveSound } from '@/lib/soundSystem';
+import { logger } from '@/lib/logger';
 
 type Tab = 'play' | 'guess';
 
@@ -115,7 +116,7 @@ export function LegendDetailPage() {
       // Record the game was played
       recordGamePlayed();
       setGameTracked(true);
-      console.log('[LegendDetailPage] Game vs legend completed - recorded!');
+      logger.debug('[LegendDetailPage] Game vs legend completed - recorded!');
     }
   }, [game, activeTab, gameTracked, recordGamePlayed]);
 
@@ -432,7 +433,7 @@ export function LegendDetailPage() {
 
       // Track the completed session (counts as a puzzle/study session)
       recordPuzzleSolved();
-      console.log('[LegendDetailPage] Guess-the-Move session completed - recorded!');
+      logger.debug('[LegendDetailPage] Guess-the-Move session completed - recorded!');
 
       // Mark this game as reviewed
       markGameReviewed({
@@ -443,7 +444,7 @@ export function LegendDetailPage() {
         totalMoves: guessSession.positions.length,
         weaknessTags: summary.detectedWeaknessTags,
       });
-      console.log('[LegendDetailPage] Game marked as reviewed:', selectedGameId);
+      logger.debug('[LegendDetailPage] Game marked as reviewed:', selectedGameId);
 
       // Save to notes
       const noteText = generateStudyNote(summary);

@@ -6,6 +6,7 @@
 import { Chess } from 'chess.js';
 import { stockfish } from './stockfish';
 import { getLegendGame } from './legendEngine';
+import { logger } from '@/lib/logger';
 import type { GuessMoveResult, GuessSessionSummary, LegendId } from '@/lib/legendTypes';
 
 /**
@@ -274,8 +275,8 @@ export async function createGuessSessionFromGame(
     const legendColor = detectLegendColor(legend, game.white, game.black);
     const isLegendWhite = legendColor === 'w';
     
-    console.log(`[GuessTheMove] Legend ${legend} plays ${isLegendWhite ? 'White' : 'Black'} in game ${gameId}`);
-    console.log(`[GuessTheMove] White: "${game.white}", Black: "${game.black}"`);
+    logger.debug(`[GuessTheMove] Legend ${legend} plays ${isLegendWhite ? 'White' : 'Black'} in game ${gameId}`);
+    logger.debug(`[GuessTheMove] White: "${game.white}", Black: "${game.black}"`);
 
     // Reset and replay moves
     const board = new Chess();
@@ -304,7 +305,7 @@ export async function createGuessSessionFromGame(
       return null;
     }
     
-    console.log(`[GuessTheMove] Found ${positions.length} positions for legend to guess`);
+    logger.debug(`[GuessTheMove] Found ${positions.length} positions for legend to guess`);
 
     return { game, positions, legendColor: isLegendWhite ? 'white' : 'black' };
   } catch (error) {
@@ -469,7 +470,7 @@ export async function createGuessSessionFromGame(
       const legendColor = detectLegendColor(legend, game.white, game.black);
       const isLegendWhite = legendColor === 'w';
       
-      console.log(`[GuessTheMove Fallback] Legend ${legend} plays ${isLegendWhite ? 'White' : 'Black'} in game ${gameId}`);
+      logger.debug(`[GuessTheMove Fallback] Legend ${legend} plays ${isLegendWhite ? 'White' : 'Black'} in game ${gameId}`);
 
       const board2 = new Chess();
       for (const move of validMoves) {
@@ -496,7 +497,7 @@ export async function createGuessSessionFromGame(
         return null;
       }
       
-      console.log(`[GuessTheMove Fallback] Found ${positions.length} positions for legend to guess`);
+      logger.debug(`[GuessTheMove Fallback] Found ${positions.length} positions for legend to guess`);
 
       return { game, positions, legendColor: isLegendWhite ? 'white' : 'black' };
     } catch (parseError) {

@@ -33,6 +33,10 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ errorInfo });
     
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/36a72d14-14e6-4dc3-8f08-e0b574ec4f5a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ErrorBoundary.tsx:componentDidCatch',message:'Error caught by boundary',data:{errorMessage:error.message,errorName:error.name,componentStack:errorInfo.componentStack?.slice(0,500)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
+    
     // Log error to console (in production, send to error tracking service)
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     

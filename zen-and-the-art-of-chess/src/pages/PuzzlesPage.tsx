@@ -141,6 +141,44 @@ function getPuzzleDifficulty(puzzle: PuzzleWithMeta): number {
   return 5;
 }
 
+// Get puzzle explanation from themes (Lichess puzzles don't have built-in explanations)
+function getPuzzleExplanation(puzzle: PuzzleWithMeta): string | null {
+  // #region agent log
+  fetch('http://127.0.0.1:7242/ingest/36a72d14-14e6-4dc3-8f08-e0b574ec4f5a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'PuzzlesPage.tsx:getPuzzleExplanation',message:'getPuzzleExplanation called',data:{puzzleId:puzzle?.id,themes:puzzle?.themes},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
+  // #endregion
+  const themes = puzzle.themes || [];
+  if (themes.length === 0) return null;
+  
+  // Generate a helpful explanation based on themes
+  const themeExplanations: Record<string, string> = {
+    'fork': 'Look for a piece that can attack two enemy pieces simultaneously.',
+    'pin': 'Find a way to pin an enemy piece to a more valuable piece behind it.',
+    'skewer': 'Attack a valuable piece that must move, exposing a piece behind it.',
+    'discovery': 'Move a piece to reveal an attack from another piece behind it.',
+    'deflection': 'Force an enemy piece away from a key defensive square.',
+    'decoy': 'Lure an enemy piece to a vulnerable square.',
+    'sacrifice': 'Give up material to gain a decisive advantage.',
+    'back_rank': 'Exploit the weakness of the back rank.',
+    'mate_in_1': 'Deliver checkmate in one move.',
+    'mate_in_2': 'Find the forcing sequence to checkmate in two moves.',
+    'mate_in_3': 'Calculate the three-move checkmate.',
+    'quiet_move': 'Sometimes the best move is a subtle one that improves your position.',
+    'zwischenzug': 'Insert an intermediate move before the expected continuation.',
+    'promotion': 'Push your pawn to promotion.',
+    'exposed_king': 'Take advantage of the poorly protected enemy king.',
+    'double_check': 'Deliver check with two pieces simultaneously.',
+  };
+  
+  for (const theme of themes) {
+    const lowerTheme = theme.toLowerCase().replace(/-/g, '_');
+    if (themeExplanations[lowerTheme]) {
+      return themeExplanations[lowerTheme];
+    }
+  }
+  
+  return null;
+}
+
 // Convert UCI move (e.g., "e2e4") to from/to squares
 function parseUciMove(uci: string): { from: string; to: string; promotion?: string } | null {
   if (uci.length < 4) return null;

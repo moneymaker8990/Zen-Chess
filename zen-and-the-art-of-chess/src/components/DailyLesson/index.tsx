@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChessBoardPanel } from '@/components/ChessBoardPanel';
 import { MeditationPanel } from '@/components/MeditationPanel';
 import { useProgressStore } from '@/state/useStore';
+import { logger } from '@/lib/logger';
 import type { ZenChessDay, SacredText, Tradition } from '@/lib/types';
 
 interface DailyLessonProps {
@@ -243,7 +244,7 @@ export function DailyLesson({ day, onComplete }: DailyLessonProps) {
                   engineStrength={day.exerciseType === 'CALM_PLAY' ? 1 : 5}
                   playerColor="white"
                   onGameOver={(result) => {
-                    console.log('Game completed:', result);
+                    logger.debug('Game completed:', result);
                     setExerciseComplete(true);
                   }}
                 />

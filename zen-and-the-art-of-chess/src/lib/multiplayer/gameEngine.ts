@@ -6,6 +6,7 @@
 import { Chess, Move } from 'chess.js';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { logger } from '@/lib/logger';
 import type { 
   MultiplayerGame, 
   GameMove, 
@@ -120,7 +121,7 @@ export class MultiplayerGameEngine {
       )
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
-          console.log('Subscribed to game updates');
+          logger.debug('Subscribed to game updates');
         }
       });
   }
@@ -763,6 +764,7 @@ function generateInviteCode(): string {
   }
   return result;
 }
+
 
 
 

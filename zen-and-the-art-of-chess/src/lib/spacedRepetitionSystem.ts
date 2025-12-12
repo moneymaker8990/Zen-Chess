@@ -1,7 +1,10 @@
 // ============================================
 // SPACED REPETITION SYSTEM (SRS)
-// Intelligent scheduling for puzzle review
+// For Puzzle Training (SpacedRepetitionPage)
 // Based on SM-2 algorithm with chess-specific modifications
+// 
+// NOTE: This module includes puzzle-specific features (FEN, solutions, themes).
+// For simpler pattern training SRS, see spacedRepetition.ts
 // ============================================
 
 // ============================================

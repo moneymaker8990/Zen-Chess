@@ -6,6 +6,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRegisterSW } from 'virtual:pwa-register/react';
+import { logger } from '@/lib/logger';
 
 export function UpdatePrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
@@ -15,7 +16,7 @@ export function UpdatePrompt() {
     updateServiceWorker,
   } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
-      console.log('SW Registered:', swUrl);
+      logger.debug('SW Registered:', swUrl);
       // Check for updates every 5 minutes
       if (r) {
         setInterval(() => {
@@ -101,6 +102,7 @@ export function UpdatePrompt() {
 }
 
 export default UpdatePrompt;
+
 
 
 

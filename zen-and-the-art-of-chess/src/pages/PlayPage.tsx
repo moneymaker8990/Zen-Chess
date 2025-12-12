@@ -16,6 +16,7 @@ import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
 import { AgentWatching, ContextualAgentTip } from '@/components/AgentPresence';
 import { ChessSounds, playSmartMoveSound } from '@/lib/soundSystem';
 import { parseUciMove } from '@/lib/moveValidation';
+import { logger } from '@/lib/logger';
 import type { GameMode, EngineEvaluation } from '@/lib/types';
 import type { Square } from 'chess.js';
 
@@ -84,7 +85,7 @@ export function PlayPage() {
         setEngineReady(ready);
         if (ready) {
           stockfish.setStrength(progress.settings.engineStrength);
-          console.log('Engine initialized successfully');
+          logger.debug('Engine initialized successfully');
         } else {
           console.error('Engine failed to initialize');
         }

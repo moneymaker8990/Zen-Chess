@@ -7,6 +7,7 @@ import { useBoardStyles } from '@/state/boardSettingsStore';
 import { useBoardSize } from '@/hooks/useBoardSize';
 import { stockfish } from '@/engine/stockfish';
 import { playSmartMoveSound, UISounds } from '@/lib/soundSystem';
+import { logger } from '@/lib/logger';
 import type { MoveInfo, EngineEvaluation } from '@/lib/types';
 
 interface ChessBoardPanelProps {
@@ -63,9 +64,9 @@ export function ChessBoardPanel({
   useEffect(() => {
     if (vsEngine && !engineInitialized.current) {
       engineInitialized.current = true;
-      console.log('Initializing engine for ChessBoardPanel...');
+      logger.debug('Initializing engine for ChessBoardPanel...');
       stockfish.init().then((ready) => {
-        console.log('Engine ready:', ready);
+        logger.debug('Engine ready:', ready);
         setEngineReady(ready);
         if (ready) {
           stockfish.setStrength(engineStrength);
@@ -137,10 +138,10 @@ export function ChessBoardPanel({
     }
 
     setIsThinking(true);
-    console.log('Engine thinking...');
+    logger.debug('Engine thinking...');
     
     stockfish.playMove(currentGame.fen(), (bestMove) => {
-      console.log('Engine plays:', bestMove);
+      logger.debug('Engine plays:', bestMove);
       try {
         const from = bestMove.slice(0, 2) as Square;
         const to = bestMove.slice(2, 4) as Square;

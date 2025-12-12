@@ -63,3 +63,5 @@ GRANT ALL ON public.user_puzzle_ratings TO authenticated;
 -- To add 50K+ Lichess puzzles, run: npx ts-node scripts/import-lichess-puzzles.ts
 
 
+
+
