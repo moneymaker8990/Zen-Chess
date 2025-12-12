@@ -3,7 +3,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { useBoardSize } from '@/hooks/useBoardSize';
-import { openingLines, type OpeningLine } from '@/data/openings';
+import { allOpenings, type OpeningLine } from '@/data/openings';
 import { PageHeader } from '@/components/Tutorial';
 
 type Category = 'all' | 'e4' | 'd4' | 'c4' | 'nf3';
@@ -28,8 +28,8 @@ export function OpeningTrainer() {
 
   // Filter openings by category
   const filteredOpenings = selectedCategory === 'all' 
-    ? openingLines 
-    : openingLines.filter(o => o.category === selectedCategory);
+    ? allOpenings 
+    : allOpenings.filter(o => o.category === selectedCategory);
 
   // Start practicing an opening
   const startOpening = useCallback((opening: OpeningLine, color: 'white' | 'black') => {
