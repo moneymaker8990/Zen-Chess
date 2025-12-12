@@ -335,11 +335,33 @@ export function OpeningTrainer() {
               </div>
             )}
 
-            {/* Feedback */}
+            {/* Line Complete Celebration - Full overlay */}
             {feedback === 'complete' && (
-              <div className="mt-4 p-4 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-center">
-                <p className="text-emerald-400 font-serif">✓ Line Complete!</p>
-                <p className="text-zen-500 text-sm mt-1">You've reached the middlegame position.</p>
+              <div className="absolute inset-0 flex items-center justify-center z-20 rounded-lg" 
+                   style={{ background: 'rgba(0,0,0,0.85)' }}>
+                <div className="text-center p-6 animate-fade-in">
+                  <div className="text-6xl mb-4">🎉</div>
+                  <h3 className="text-2xl font-bold text-emerald-400 mb-2">Line Complete!</h3>
+                  <p className="text-zen-300 mb-1">{selectedOpening?.name}</p>
+                  <p className="text-zen-500 text-sm mb-4">{selectedOpening?.variation}</p>
+                  <p className="text-emerald-300/80 text-sm mb-6">
+                    You've mastered this opening through to the middlegame!
+                  </p>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={resetLine}
+                      className="px-4 py-2 rounded-lg bg-zen-700 text-zen-200 hover:bg-zen-600 transition-colors"
+                    >
+                      Practice Again
+                    </button>
+                    <button
+                      onClick={() => setSelectedOpening(null)}
+                      className="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-500 transition-colors"
+                    >
+                      Next Opening →
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
