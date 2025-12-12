@@ -59,13 +59,13 @@ function CourseCard({ course, progress, onLearn, onReview }: CourseCardProps) {
     : 0;
 
   return (
-    <div className="card p-5 hover:border-[var(--accent-primary)]/30 transition-all">
+    <div className="card p-3 sm:p-5 hover:border-[var(--accent-primary)]/30 transition-all overflow-hidden">
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <h3 className="text-lg font-display font-medium leading-tight pr-4 flex-1" style={{ color: 'var(--text-primary)' }}>
+      <div className="flex items-start justify-between mb-3 sm:mb-4">
+        <h3 className="text-base sm:text-lg font-display font-medium leading-tight pr-2 flex-1 line-clamp-2" style={{ color: 'var(--text-primary)' }}>
           {course.title}
         </h3>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button className="p-1.5 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors" style={{ color: 'var(--text-muted)' }}>
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
@@ -74,27 +74,27 @@ function CourseCard({ course, progress, onLearn, onReview }: CourseCardProps) {
         </div>
       </div>
 
-      {/* Course Content */}
-      <div className="flex gap-4">
-        {/* Cover Image */}
+      {/* Course Content - Stack on mobile, flex on larger screens */}
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        {/* Cover Image - Smaller on mobile */}
         <div 
-          className="w-28 h-36 rounded-lg flex items-center justify-center text-5xl shrink-0 shadow-lg"
+          className="w-full sm:w-28 h-24 sm:h-36 rounded-lg flex items-center justify-center text-4xl sm:text-5xl shrink-0 shadow-lg"
           style={{ backgroundColor: course.coverColor }}
         >
           {course.coverImage}
         </div>
 
         {/* Stats */}
-        <div className="flex-1 flex flex-col justify-between py-1">
-          {/* Time & Variations */}
-          <div className="flex items-center text-sm gap-3" style={{ color: 'var(--text-muted)' }}>
-            <span>{progressData.minutesSpent}/{stats.totalMinutes} mins</span>
-            <span className="w-px h-4" style={{ background: 'var(--border-default)' }}></span>
-            <span>{progressData.completedVariations}/{stats.totalVariations} variations</span>
+        <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
+          {/* Time & Variations - Wrap on mobile */}
+          <div className="flex flex-wrap items-center text-xs sm:text-sm gap-2 sm:gap-3" style={{ color: 'var(--text-muted)' }}>
+            <span className="whitespace-nowrap">{progressData.minutesSpent}/{stats.totalMinutes} mins</span>
+            <span className="hidden sm:block w-px h-4" style={{ background: 'var(--border-default)' }}></span>
+            <span className="whitespace-nowrap">{progressData.completedVariations}/{stats.totalVariations} vars</span>
           </div>
 
           {/* Progress Bar */}
-          <div className="my-3">
+          <div className="my-2 sm:my-3">
             <div className="progress-bar">
               <div 
                 className="progress-bar-fill purple"
@@ -107,18 +107,18 @@ function CourseCard({ course, progress, onLearn, onReview }: CourseCardProps) {
           <div className="flex gap-2">
             <button
               onClick={onReview}
-              className="relative flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all btn-secondary"
+              className="relative flex-1 py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-semibold text-xs sm:text-sm transition-all btn-secondary"
             >
               Review
               {progressData.dueForReview > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[24px]">
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 rounded-full min-w-[20px] sm:min-w-[24px]">
                   {progressData.dueForReview}
                 </span>
               )}
             </button>
             <button
               onClick={onLearn}
-              className="flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all btn-primary"
+              className="flex-1 py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-semibold text-xs sm:text-sm transition-all btn-primary"
             >
               Learn
             </button>
@@ -173,22 +173,22 @@ export default function CoursesPage() {
       </section>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="stat-card">
-          <div className="stat-value text-gradient">{allCourses.length}</div>
-          <div className="stat-label">Courses</div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+        <div className="card p-3 sm:p-4 text-center">
+          <div className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--accent-primary)' }}>{allCourses.length}</div>
+          <div className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>Courses</div>
         </div>
-        <div className="stat-card">
-          <div className="stat-value" style={{ color: 'var(--accent-primary)' }}>{totalVariations}</div>
-          <div className="stat-label">Total Variations</div>
+        <div className="card p-3 sm:p-4 text-center">
+          <div className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--accent-primary)' }}>{totalVariations}</div>
+          <div className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>Variations</div>
         </div>
-        <div className="stat-card">
-          <div className="stat-value" style={{ color: '#4ade80' }}>{completedVariations}</div>
-          <div className="stat-label">Learned</div>
+        <div className="card p-3 sm:p-4 text-center">
+          <div className="text-xl sm:text-2xl font-bold" style={{ color: '#4ade80' }}>{completedVariations}</div>
+          <div className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>Learned</div>
         </div>
-        <div className="stat-card">
-          <div className="stat-value" style={{ color: 'var(--accent-gold)' }}>{totalMinutes}</div>
-          <div className="stat-label">Total Minutes</div>
+        <div className="card p-3 sm:p-4 text-center">
+          <div className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--accent-gold)' }}>{totalMinutes}</div>
+          <div className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>Minutes</div>
         </div>
       </div>
 
@@ -243,40 +243,40 @@ export default function CoursesPage() {
       )}
 
       {/* Tips Section */}
-      <div className="card p-6">
-        <h3 className="text-sm uppercase tracking-wider mb-4" style={{ color: 'var(--text-muted)' }}>
+      <div className="card p-4 sm:p-6">
+        <h3 className="text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4" style={{ color: 'var(--text-muted)' }}>
           How It Works
         </h3>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style={{ background: 'rgba(168, 85, 247, 0.12)' }}>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-lg sm:text-xl shrink-0" style={{ background: 'rgba(168, 85, 247, 0.12)' }}>
               📖
             </div>
-            <div>
-              <h4 className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Learn</h4>
-              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+            <div className="min-w-0">
+              <h4 className="font-medium mb-0.5 sm:mb-1 text-sm sm:text-base" style={{ color: 'var(--text-primary)' }}>Learn</h4>
+              <p className="text-xs sm:text-sm" style={{ color: 'var(--text-tertiary)' }}>
                 Study new variations with interactive boards
               </p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style={{ background: 'rgba(5, 150, 105, 0.12)' }}>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-lg sm:text-xl shrink-0" style={{ background: 'rgba(5, 150, 105, 0.12)' }}>
               🔄
             </div>
-            <div>
-              <h4 className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Review</h4>
-              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+            <div className="min-w-0">
+              <h4 className="font-medium mb-0.5 sm:mb-1 text-sm sm:text-base" style={{ color: 'var(--text-primary)' }}>Review</h4>
+              <p className="text-xs sm:text-sm" style={{ color: 'var(--text-tertiary)' }}>
                 Spaced repetition reinforces your memory
               </p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style={{ background: 'rgba(212, 161, 59, 0.12)' }}>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-lg sm:text-xl shrink-0" style={{ background: 'rgba(212, 161, 59, 0.12)' }}>
               🏆
             </div>
-            <div>
-              <h4 className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Master</h4>
-              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+            <div className="min-w-0">
+              <h4 className="font-medium mb-0.5 sm:mb-1 text-sm sm:text-base" style={{ color: 'var(--text-primary)' }}>Master</h4>
+              <p className="text-xs sm:text-sm" style={{ color: 'var(--text-tertiary)' }}>
                 Achieve mastery with consistent practice
               </p>
             </div>
