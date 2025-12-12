@@ -1,103 +1,724 @@
-// Sicilian Defense Lines - Target: 45+ (Chessreps has 38)
+// ============================================
+// SICILIAN DEFENSE - COMPREHENSIVE LEARNING LINES
+// Extended to 20-30 moves into the middlegame
+// ============================================
+
 import type { OpeningLine } from './index';
 
 export const sicilianLines: OpeningLine[] = [
+  // ==========================================
   // NAJDORF VARIATION
-  { id: 'sic-1', name: 'Sicilian Defense', variation: 'Najdorf, English Attack', eco: 'B90', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','a6','Be3','e5','Nb3','Be6','f3','Be7','Qd2','O-O','O-O-O','Nbd7'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'English Attack - opposite side castling leads to mutual attacks.', keyIdeas: ['g4-g5 attack', 'b5 counter', 'Race to attack'], difficulty: 5, category: 'e4', side: 'black' },
-  { id: 'sic-2', name: 'Sicilian Defense', variation: 'Najdorf, 6.Bg5', eco: 'B96', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','a6','Bg5','e6','f4','Be7','Qf3','Qc7','O-O-O','Nbd7'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Classical Bg5 attack. Sharp and critical.', keyIdeas: ['Kingside attack', 'e5 break', 'Tactical shots'], difficulty: 5, category: 'e4', side: 'black' },
-  { id: 'sic-3', name: 'Sicilian Defense', variation: 'Najdorf, 6.Be2', eco: 'B92', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','a6','Be2','e5','Nb3','Be7','O-O','O-O','Be3','Be6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Quiet Be2 - solid positional play.', keyIdeas: ['f4 ideas', 'Central control', 'Slow buildup'], difficulty: 3, category: 'e4', side: 'black' },
-  { id: 'sic-4', name: 'Sicilian Defense', variation: 'Najdorf, Poisoned Pawn', eco: 'B97', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','a6','Bg5','e6','f4','Qb6','Qd2','Qxb2','Rb1','Qa3'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'The famous Poisoned Pawn. High stakes!', keyIdeas: ['Material vs attack', 'King safety', 'Precise defense'], difficulty: 5, category: 'e4', side: 'black' },
-  { id: 'sic-5', name: 'Sicilian Defense', variation: 'Najdorf, 6.Bc4', eco: 'B90', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','a6','Bc4','e6','Bb3','b5','O-O','Be7','Qf3','Qc7'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Sozin-style Bc4 vs Najdorf.', keyIdeas: ['f4-f5 ideas', 'Kingside attack', 'e6 pressure'], difficulty: 4, category: 'e4', side: 'black' },
-  { id: 'sic-6', name: 'Sicilian Defense', variation: 'Najdorf, Adams Attack', eco: 'B90', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','a6','h3','e5','Nde2','Be7','g4','b5','Bg2'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Adams Attack with h3-g4.', keyIdeas: ['Kingside pawn storm', 'g5 ideas', 'Long-term attack'], difficulty: 4, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-1',
+    name: 'Sicilian Defense',
+    variation: 'Najdorf, English Attack',
+    eco: 'B90',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'a6', 'Be3', 'e5', 'Nb3', 'Be6', 'f3', 'Be7', 'Qd2', 'O-O', 'O-O-O', 'Nbd7', 'g4', 'b5', 'g5', 'Nh5', 'Kb1', 'Nb6', 'Na5', 'Rc8'],
+    fen: 'r1rq1rk1/4bppp/pn1pb3/nPp1p1Pn/4P3/2N1BP2/PPPQ3P/1K1R1B1R w - - 4 16',
+    description: 'English Attack - opposite side castling leads to mutual attacks with g4-g5 vs b5-b4.',
+    keyIdeas: ['g4-g5 pawn storm', 'b5-b4 counter', 'Race to attack kings', 'Piece sacrifices'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-2',
+    name: 'Sicilian Defense',
+    variation: 'Najdorf, 6.Bg5',
+    eco: 'B96',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'a6', 'Bg5', 'e6', 'f4', 'Be7', 'Qf3', 'Qc7', 'O-O-O', 'Nbd7', 'g4', 'b5', 'Bxf6', 'Nxf6', 'g5', 'Nd7', 'f5', 'Nc5', 'f6', 'gxf6'],
+    fen: 'r1b1k2r/2q1bp1p/p2ppP2/1pn3P1/3NP3/2N2Q2/PPP4P/2KR1B1R w kq - 0 16',
+    description: 'Classical Bg5 attack with sharp tactical play. Critical mainline.',
+    keyIdeas: ['Kingside pawn storm', 'e5 break', 'Tactical shots', 'King safety critical'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-3',
+    name: 'Sicilian Defense',
+    variation: 'Najdorf, 6.Be2',
+    eco: 'B92',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'a6', 'Be2', 'e5', 'Nb3', 'Be7', 'O-O', 'O-O', 'Be3', 'Be6', 'Qd2', 'Nbd7', 'a4', 'Rc8', 'a5', 'Qc7', 'Rfd1', 'Rfe8'],
+    fen: 'r1r1r1k1/1pqnbppp/p2pbn2/P3p3/4P3/1NN1B3/1PPQBPPP/R2R2K1 w - - 4 15',
+    description: 'Quiet Be2 system - solid positional play with slow maneuvering.',
+    keyIdeas: ['f4 ideas', 'Central control', 'Slow buildup', 'a4-a5 space'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-4',
+    name: 'Sicilian Defense',
+    variation: 'Najdorf, Poisoned Pawn',
+    eco: 'B97',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'a6', 'Bg5', 'e6', 'f4', 'Qb6', 'Qd2', 'Qxb2', 'Rb1', 'Qa3', 'e5', 'dxe5', 'fxe5', 'Nfd7', 'Ne4', 'h6', 'Bh4', 'Qxa2', 'Rd1'],
+    fen: 'rnb1kb1r/1p1n1pp1/p3p2p/4P3/3NN2B/8/q1PQ2PP/3RKB1R w Kkq - 0 15',
+    description: 'The famous Poisoned Pawn variation. High stakes tactical battle!',
+    keyIdeas: ['Material vs attack', 'King safety critical', 'Precise defense needed', 'Wild complications'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'advanced',
+  },
+  {
+    id: 'sic-5',
+    name: 'Sicilian Defense',
+    variation: 'Najdorf, 6.Bc4',
+    eco: 'B90',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'a6', 'Bc4', 'e6', 'Bb3', 'b5', 'O-O', 'Be7', 'Qf3', 'Qc7', 'Qg3', 'O-O', 'Bh6', 'Ne8', 'Rad1', 'Bd7', 'f4', 'Nc6'],
+    fen: 'r3nrk1/2qbbppp/p1npp2B/1p6/3NPP2/1BN3Q1/PPP3PP/3R1RK1 w - - 6 15',
+    description: 'Sozin-style Bc4 vs Najdorf with kingside attacking ideas.',
+    keyIdeas: ['f4-f5 ideas', 'Kingside attack', 'e6 pressure', 'Bxe6 sac ideas'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+  {
+    id: 'sic-6',
+    name: 'Sicilian Defense',
+    variation: 'Najdorf, Adams Attack',
+    eco: 'B90',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'a6', 'h3', 'e5', 'Nde2', 'Be7', 'g4', 'b5', 'Bg2', 'Bb7', 'Ng3', 'Nbd7', 'O-O', 'Rc8', 'a3', 'O-O', 'Be3', 'Nb6'],
+    fen: 'r1rq1rk1/1b2bppp/pn1p1n2/1p2p3/4P1P1/P1N1B1NP/1PP1BPP1/R2Q1RK1 w - - 2 15',
+    description: 'Adams Attack with h3-g4 - slow kingside buildup.',
+    keyIdeas: ['Kingside pawn storm', 'g5 ideas', 'Long-term attack', 'Ng3-f5'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // DRAGON VARIATION
-  { id: 'sic-7', name: 'Sicilian Defense', variation: 'Dragon, Yugoslav Attack', eco: 'B77', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','g6','Be3','Bg7','f3','O-O','Qd2','Nc6','Bc4','Bd7','O-O-O','Rc8','Bb3','Ne5'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Yugoslav Attack main line. The ultimate battle!', keyIdeas: ['Opposite castling', 'h4-h5 vs Rxc3', 'Race attacks'], difficulty: 5, category: 'e4', side: 'black' },
-  { id: 'sic-8', name: 'Sicilian Defense', variation: 'Dragon, Classical', eco: 'B72', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','g6','Be2','Bg7','O-O','O-O','Be3','Nc6','Nb3','Be6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Classical Dragon - less sharp but solid.', keyIdeas: ['Central play', 'd5 ideas', 'Positional battle'], difficulty: 3, category: 'e4', side: 'black' },
-  { id: 'sic-9', name: 'Sicilian Defense', variation: 'Dragon, Levenfish', eco: 'B71', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','g6','f4','Bg7','Nf3','O-O','Bd3','Nc6','O-O','Bg4'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Levenfish Attack with f4.', keyIdeas: ['e5 push', 'f4-f5', 'Kingside play'], difficulty: 4, category: 'e4', side: 'black' },
-  { id: 'sic-10', name: 'Sicilian Defense', variation: 'Accelerated Dragon', eco: 'B35', moves: ['e4','c5','Nf3','Nc6','d4','cxd4','Nxd4','g6','Nc3','Bg7','Be3','Nf6','Bc4','O-O','Bb3','d6','f3','Bd7'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Accelerated Dragon - skip d6.', keyIdeas: ['d5 ideas', 'Maroczy bind', 'Flexible structure'], difficulty: 4, category: 'e4', side: 'black' },
-  { id: 'sic-11', name: 'Sicilian Defense', variation: 'Hyper-Accelerated Dragon', eco: 'B27', moves: ['e4','c5','Nf3','g6','d4','cxd4','Nxd4','Bg7','Nc3','Nc6','Be3','Nf6','Bc4','O-O','Bb3','d6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Fianchetto before Nc6.', keyIdeas: ['Early Bg7', 'd5 pressure', 'Flexible play'], difficulty: 3, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-7',
+    name: 'Sicilian Defense',
+    variation: 'Dragon, Yugoslav Attack',
+    eco: 'B77',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'g6', 'Be3', 'Bg7', 'f3', 'O-O', 'Qd2', 'Nc6', 'Bc4', 'Bd7', 'O-O-O', 'Rc8', 'Bb3', 'Ne5', 'h4', 'h5', 'Kb1', 'Nc4', 'Bxc4', 'Rxc4'],
+    fen: 'r1q2rk1/pp1bppb1/3p1np1/7p/2rNP2P/2N1BP2/PPPQ2P1/1K1R3R w - - 0 16',
+    description: 'Yugoslav Attack main line - the ultimate theoretical battle!',
+    keyIdeas: ['Opposite castling race', 'h4-h5 vs Rxc3', 'Mutual king attacks', 'Precise calculation'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-8',
+    name: 'Sicilian Defense',
+    variation: 'Dragon, Classical',
+    eco: 'B72',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'g6', 'Be2', 'Bg7', 'O-O', 'O-O', 'Be3', 'Nc6', 'Nb3', 'Be6', 'f4', 'Na5', 'f5', 'Bc4', 'Nxa5', 'Bxe2', 'Qxe2', 'Qxa5'],
+    fen: 'r4rk1/pp2ppbp/3p1np1/q4P2/4P3/2N1B3/PPP1Q1PP/R4RK1 w - - 0 14',
+    description: 'Classical Dragon - less sharp but solid positional battle.',
+    keyIdeas: ['Central play', 'f4-f5 pawn break', 'Positional maneuvering', 'd5 ideas'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-9',
+    name: 'Sicilian Defense',
+    variation: 'Dragon, Levenfish Attack',
+    eco: 'B71',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'g6', 'f4', 'Bg7', 'Nf3', 'O-O', 'Bd3', 'Nc6', 'O-O', 'Bg4', 'h3', 'Bxf3', 'Qxf3', 'Nd7', 'Be3', 'Rc8', 'Rad1', 'Nc5'],
+    fen: 'r1rq1rk1/pp2ppbp/2np2p1/2n5/4PP2/2NBBQ1P/PPP3P1/3R1RK1 w - - 4 14',
+    description: 'Levenfish Attack with f4 - aggressive setup.',
+    keyIdeas: ['e5 push', 'f4-f5 ideas', 'Kingside play', 'Central control'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+  {
+    id: 'sic-10',
+    name: 'Sicilian Defense',
+    variation: 'Accelerated Dragon',
+    eco: 'B35',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'd4', 'cxd4', 'Nxd4', 'g6', 'Nc3', 'Bg7', 'Be3', 'Nf6', 'Bc4', 'O-O', 'Bb3', 'd6', 'f3', 'Bd7', 'Qd2', 'Nxd4', 'Bxd4', 'b5', 'a4', 'b4', 'Nd5', 'Nxd5'],
+    fen: 'r2q1rk1/p2bppbp/3p2p1/3n4/Pp1BP3/1B3P2/1PPQ2PP/R3K2R w KQ - 0 14',
+    description: 'Accelerated Dragon - skip d6 early for flexible play.',
+    keyIdeas: ['d5 counterplay', 'Maroczy bind avoidance', 'Flexible structure', 'Active piece play'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-11',
+    name: 'Sicilian Defense',
+    variation: 'Hyper-Accelerated Dragon',
+    eco: 'B27',
+    moves: ['e4', 'c5', 'Nf3', 'g6', 'd4', 'cxd4', 'Nxd4', 'Bg7', 'Nc3', 'Nc6', 'Be3', 'Nf6', 'Bc4', 'O-O', 'Bb3', 'd6', 'f3', 'Bd7', 'Qd2', 'Rc8', 'O-O-O', 'Ne5', 'Kb1', 'Nc4', 'Bxc4', 'Rxc4'],
+    fen: 'r1q2rk1/pp1bppbp/3p1np1/8/2rNP3/2N1BP2/PPPQ2PP/1K1R3R w - - 0 15',
+    description: 'Fianchetto before Nc6 - maximum flexibility.',
+    keyIdeas: ['Early Bg7 pressure', 'd5 counter ideas', 'Flexible play', 'Maroczy bind avoidance'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // SVESHNIKOV VARIATION
-  { id: 'sic-12', name: 'Sicilian Defense', variation: 'Sveshnikov, Main Line', eco: 'B33', moves: ['e4','c5','Nf3','Nc6','d4','cxd4','Nxd4','Nf6','Nc3','e5','Ndb5','d6','Bg5','a6','Na3','b5','Nd5','Be7','Bxf6','Bxf6','c3'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Critical Sveshnikov mainline.', keyIdeas: ['d5 outpost', 'f5 counter', 'Piece activity'], difficulty: 5, category: 'e4', side: 'black' },
-  { id: 'sic-13', name: 'Sicilian Defense', variation: 'Sveshnikov, Novosibirsk', eco: 'B33', moves: ['e4','c5','Nf3','Nc6','d4','cxd4','Nxd4','Nf6','Nc3','e5','Ndb5','d6','Bg5','a6','Na3','b5','Bxf6','gxf6','Nd5','f5'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Novosibirsk variation with gxf6.', keyIdeas: ['Open g-file', 'f5 break', 'Dynamic play'], difficulty: 5, category: 'e4', side: 'black' },
-  { id: 'sic-14', name: 'Sicilian Defense', variation: 'Sveshnikov, 9.Bxf6', eco: 'B33', moves: ['e4','c5','Nf3','Nc6','d4','cxd4','Nxd4','Nf6','Nc3','e5','Ndb5','d6','Bg5','a6','Na3','b5','Bxf6','Qxf6','Nd5','Qd8','c4'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: '9.Bxf6 and c4 setup.', keyIdeas: ['c4 pressure', 'Nd5 fortress', 'Positional squeeze'], difficulty: 4, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-12',
+    name: 'Sicilian Defense',
+    variation: 'Sveshnikov, Main Line',
+    eco: 'B33',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'e5', 'Ndb5', 'd6', 'Bg5', 'a6', 'Na3', 'b5', 'Nd5', 'Be7', 'Bxf6', 'Bxf6', 'c3', 'O-O', 'Nc2', 'Bg5', 'a4', 'bxa4', 'Rxa4', 'a5'],
+    fen: 'r1bq1rk1/5ppp/2np4/p2Np1b1/R3P3/2P5/1PN2PPP/R2QKB1R w KQ - 0 15',
+    description: 'Critical Sveshnikov mainline - Black accepts weak d5 for piece activity.',
+    keyIdeas: ['d5 outpost for White', 'f5 counter for Black', 'Piece activity over structure', 'a5-a4 counterplay'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-13',
+    name: 'Sicilian Defense',
+    variation: 'Sveshnikov, Novosibirsk',
+    eco: 'B33',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'e5', 'Ndb5', 'd6', 'Bg5', 'a6', 'Na3', 'b5', 'Bxf6', 'gxf6', 'Nd5', 'f5', 'Bd3', 'Be6', 'O-O', 'Bxd5', 'exd5', 'Ne7', 'c3'],
+    fen: 'r2qkb1r/4np1p/p2p4/1p1Ppp2/8/N1PB4/PP3PPP/R2Q1RK1 b kq - 0 15',
+    description: 'Novosibirsk variation with gxf6 - dynamic imbalanced play.',
+    keyIdeas: ['Open g-file for Black', 'f5 pawn break', 'Dynamic play', 'Bishop pair compensation'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+  {
+    id: 'sic-14',
+    name: 'Sicilian Defense',
+    variation: 'Sveshnikov, 9.Bxf6 Qxf6',
+    eco: 'B33',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'e5', 'Ndb5', 'd6', 'Bg5', 'a6', 'Na3', 'b5', 'Bxf6', 'Qxf6', 'Nd5', 'Qd8', 'c4', 'bxc4', 'Nxc4', 'Be7', 'Nce3', 'O-O', 'Bd3'],
+    fen: 'r1bq1rk1/4bppp/p1np4/3Np3/4P3/3BN3/PP3PPP/R2QK2R b KQ - 1 14',
+    description: '9.Bxf6 Qxf6 and c4 setup - positional squeeze attempt.',
+    keyIdeas: ['c4 pressure', 'Nd5 fortress', 'Positional squeeze', 'Black needs f5 break'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // SCHEVENINGEN VARIATION
-  { id: 'sic-15', name: 'Sicilian Defense', variation: 'Scheveningen, Classical', eco: 'B84', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','e6','Be2','Be7','O-O','O-O','f4','Nc6','Be3','a6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Classical Scheveningen setup.', keyIdeas: ['e5 break', 'Keres Attack', 'Central tension'], difficulty: 4, category: 'e4', side: 'black' },
-  { id: 'sic-16', name: 'Sicilian Defense', variation: 'Scheveningen, Keres Attack', eco: 'B81', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','e6','g4','h6','h4','Nc6','Rg1','d5'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Keres Attack - aggressive g4!', keyIdeas: ['Kingside attack', 'g5 push', 'Tactical play'], difficulty: 5, category: 'e4', side: 'black' },
-  { id: 'sic-17', name: 'Sicilian Defense', variation: 'Scheveningen, English Attack', eco: 'B90', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','e6','Be3','Be7','f3','O-O','Qd2','a6','O-O-O','Qc7','g4'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'English Attack vs Scheveningen.', keyIdeas: ['g4-g5 storm', 'h4-h5', 'Opposite castling'], difficulty: 5, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-15',
+    name: 'Sicilian Defense',
+    variation: 'Scheveningen, Classical',
+    eco: 'B84',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'e6', 'Be2', 'Be7', 'O-O', 'O-O', 'f4', 'Nc6', 'Be3', 'a6', 'a4', 'Qc7', 'Kh1', 'Re8', 'Bf3', 'Rb8', 'Qd2', 'Bd7'],
+    fen: '1rbqr1k1/1pqbbppp/p1np1n2/8/P2NPP2/2N1BB2/1PPQ2PP/R4R1K w - - 4 15',
+    description: 'Classical Scheveningen setup with rich middlegame themes.',
+    keyIdeas: ['e5 break ideas', 'Keres Attack prevention', 'Central tension', 'Flexible piece play'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-16',
+    name: 'Sicilian Defense',
+    variation: 'Scheveningen, Keres Attack',
+    eco: 'B81',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'e6', 'g4', 'h6', 'h4', 'Nc6', 'Rg1', 'd5', 'Bb5', 'Bd7', 'exd5', 'Nxd5', 'Nxd5', 'exd5', 'Be3', 'Be7', 'Qd2', 'O-O'],
+    fen: 'r2q1rk1/pp1bbpp1/2n4p/3p4/3N2PP/4B3/PPPQ1P2/R3KBR1 w Q - 2 14',
+    description: 'Keres Attack with aggressive g4! Sharp attacking chess.',
+    keyIdeas: ['Kingside pawn storm', 'g5 push', 'Tactical play', 'King safety critical'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-17',
+    name: 'Sicilian Defense',
+    variation: 'Scheveningen, English Attack',
+    eco: 'B80',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'e6', 'Be3', 'Be7', 'f3', 'O-O', 'Qd2', 'a6', 'O-O-O', 'Qc7', 'g4', 'b5', 'g5', 'Nfd7', 'h4', 'Nb6', 'Kb1', 'Nc6'],
+    fen: 'r1b2rk1/2q1bppp/pnnpp3/1p4P1/3NP2P/2N1BP2/PPPQ4/1K1R1B1R w - - 2 15',
+    description: 'English Attack vs Scheveningen - opposite side castling battle.',
+    keyIdeas: ['g4-g5 pawn storm', 'h4-h5 ideas', 'Opposite castling', 'b5-b4 counter'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // TAIMANOV VARIATION
-  { id: 'sic-18', name: 'Sicilian Defense', variation: 'Taimanov, Main Line', eco: 'B48', moves: ['e4','c5','Nf3','Nc6','d4','cxd4','Nxd4','e6','Nc3','Qc7','Be3','a6','Qd2','Nf6','O-O-O','Bb4','f3','Ne5'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Main Taimanov with Qc7.', keyIdeas: ['b5 expansion', 'Flexible structure', 'Central play'], difficulty: 4, category: 'e4', side: 'black' },
-  { id: 'sic-19', name: 'Sicilian Defense', variation: 'Taimanov, English Attack', eco: 'B48', moves: ['e4','c5','Nf3','Nc6','d4','cxd4','Nxd4','e6','Nc3','Qc7','Be3','a6','Qd2','Nf6','f3','b5','g4','b4','Na4'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'English Attack vs Taimanov.', keyIdeas: ['g4-g5 attack', 'Na4 outpost', 'Kingside storm'], difficulty: 5, category: 'e4', side: 'black' },
-  { id: 'sic-20', name: 'Sicilian Defense', variation: 'Taimanov, 6.Be2', eco: 'B47', moves: ['e4','c5','Nf3','Nc6','d4','cxd4','Nxd4','e6','Nc3','Qc7','Be2','a6','O-O','Nf6','Be3','Be7','f4','d6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Quiet Be2 vs Taimanov.', keyIdeas: ['f4-f5 ideas', 'Central control', 'Slow buildup'], difficulty: 3, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-18',
+    name: 'Sicilian Defense',
+    variation: 'Taimanov, Main Line',
+    eco: 'B48',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'd4', 'cxd4', 'Nxd4', 'e6', 'Nc3', 'Qc7', 'Be3', 'a6', 'Qd2', 'Nf6', 'O-O-O', 'Bb4', 'f3', 'Ne5', 'Nb3', 'b5', 'Kb1', 'Be7', 'Qf2', 'd6', 'g4', 'Bb7'],
+    fen: 'r3k2r/1bq1bppp/p2ppn2/1p2n3/4P1P1/1NN1BP2/PPP2Q1P/1K1R1B1R w kq - 2 15',
+    description: 'Main Taimanov with Qc7 - flexible development.',
+    keyIdeas: ['b5 expansion', 'Flexible structure', 'Central play', 'Queenside counterplay'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-19',
+    name: 'Sicilian Defense',
+    variation: 'Taimanov, English Attack',
+    eco: 'B48',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'd4', 'cxd4', 'Nxd4', 'e6', 'Nc3', 'Qc7', 'Be3', 'a6', 'Qd2', 'Nf6', 'f3', 'b5', 'g4', 'b4', 'Na4', 'd5', 'e5', 'Nd7', 'O-O-O', 'Bb7', 'Kb1', 'Be7'],
+    fen: 'r3k2r/1bqnbppp/p1n1p3/3pP3/Np1N2P1/4BP2/PPPQ3P/1K1R1B1R w kq - 2 15',
+    description: 'English Attack vs Taimanov - aggressive kingside play.',
+    keyIdeas: ['g4-g5 attack', 'Na4 outpost', 'Kingside storm', 'Central tension'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+  {
+    id: 'sic-20',
+    name: 'Sicilian Defense',
+    variation: 'Taimanov, 6.Be2',
+    eco: 'B47',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'd4', 'cxd4', 'Nxd4', 'e6', 'Nc3', 'Qc7', 'Be2', 'a6', 'O-O', 'Nf6', 'Be3', 'Be7', 'f4', 'd6', 'Kh1', 'O-O', 'a4', 'Bd7', 'Bf3', 'b6', 'Qe2', 'Rab8'],
+    fen: '1r3rk1/2qbbppp/ppnppn2/8/P2NPP2/2N1BB2/1PP1Q1PP/R4R1K w - - 2 15',
+    description: 'Quiet Be2 vs Taimanov - solid positional approach.',
+    keyIdeas: ['f4-f5 ideas', 'Central control', 'Slow buildup', 'a4-a5 space'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // KAN VARIATION
-  { id: 'sic-21', name: 'Sicilian Defense', variation: 'Kan, Main Line', eco: 'B42', moves: ['e4','c5','Nf3','e6','d4','cxd4','Nxd4','a6','Bd3','Nf6','O-O','Qc7','Qe2','d6','c4','g6','Nc3','Bg7'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Hedgehog structure from the Kan.', keyIdeas: ['b5 break', 'Flexible pawns', 'Hedgehog setup'], difficulty: 3, category: 'e4', side: 'black' },
-  { id: 'sic-22', name: 'Sicilian Defense', variation: 'Kan, Polugaevsky', eco: 'B43', moves: ['e4','c5','Nf3','e6','d4','cxd4','Nxd4','a6','Nc3','Qc7','Bd3','Nf6','O-O','Bc5','Nb3','Be7','f4'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Polugaevsky variation with f4.', keyIdeas: ['e5 push', 'Kingside attack', 'Central play'], difficulty: 4, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-21',
+    name: 'Sicilian Defense',
+    variation: 'Kan, Hedgehog',
+    eco: 'B42',
+    moves: ['e4', 'c5', 'Nf3', 'e6', 'd4', 'cxd4', 'Nxd4', 'a6', 'Bd3', 'Nf6', 'O-O', 'Qc7', 'Qe2', 'd6', 'c4', 'Be7', 'Nc3', 'O-O', 'b3', 'b6', 'Bb2', 'Bb7', 'Rac1', 'Nbd7', 'f4', 'Rac8'],
+    fen: 'r1r2rk1/1bqnbppp/pp1ppn2/8/2PNP3/1PNB4/PB2QPP1/2R2RK1 w - - 4 15',
+    description: 'Hedgehog structure from the Kan - flexible and solid.',
+    keyIdeas: ['b5 or d5 break', 'Flexible pawns', 'Hedgehog setup', 'Piece coordination'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-22',
+    name: 'Sicilian Defense',
+    variation: 'Kan, Polugaevsky',
+    eco: 'B43',
+    moves: ['e4', 'c5', 'Nf3', 'e6', 'd4', 'cxd4', 'Nxd4', 'a6', 'Nc3', 'Qc7', 'Bd3', 'Nf6', 'O-O', 'Bc5', 'Nb3', 'Be7', 'f4', 'd6', 'Qf3', 'Nbd7', 'Be3', 'b5', 'a3', 'Bb7', 'Rae1', 'O-O'],
+    fen: 'r4rk1/1bqnbppp/p2ppn2/1p6/4PP2/PNNBB2Q/1PP3PP/4RRK1 w - - 2 15',
+    description: 'Polugaevsky variation with f4 - aggressive setup.',
+    keyIdeas: ['e5 push', 'Kingside attack', 'Central play', 'f4-f5 ideas'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // CLASSICAL VARIATION
-  { id: 'sic-23', name: 'Sicilian Defense', variation: 'Classical, Richter-Rauzer', eco: 'B60', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','Nc6','Bg5','e6','Qd2','Be7','O-O-O','O-O','f4','Nxd4','Qxd4','Qa5'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Richter-Rauzer Attack. Sharp!', keyIdeas: ['f4-f5', 'e5 push', 'Opposite castling'], difficulty: 5, category: 'e4', side: 'black' },
-  { id: 'sic-24', name: 'Sicilian Defense', variation: 'Classical, Sozin Attack', eco: 'B57', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','Nc6','Bc4','e6','Be3','Be7','Qe2','O-O','O-O-O','a6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Sozin Attack with Bc4.', keyIdeas: ['Bxe6 ideas', 'f4-f5', 'Kingside attack'], difficulty: 4, category: 'e4', side: 'black' },
-  { id: 'sic-25', name: 'Sicilian Defense', variation: 'Classical, Boleslavsky', eco: 'B58', moves: ['e4','c5','Nf3','d6','d4','cxd4','Nxd4','Nf6','Nc3','Nc6','Be2','e5','Nb3','Be7','O-O','O-O','Bg5','Be6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Boleslavsky variation with e5.', keyIdeas: ['Central control', 'd5 square', 'Piece activity'], difficulty: 3, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-23',
+    name: 'Sicilian Defense',
+    variation: 'Classical, Richter-Rauzer',
+    eco: 'B60',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'Nc6', 'Bg5', 'e6', 'Qd2', 'Be7', 'O-O-O', 'O-O', 'f4', 'Nxd4', 'Qxd4', 'Qa5', 'Bc4', 'Bd7', 'e5', 'dxe5', 'fxe5', 'Bc6'],
+    fen: 'r4rk1/pp2bppp/2b1pn2/q3P1B1/2BQ4/2N5/PPP3PP/2KR3R w - - 2 14',
+    description: 'Richter-Rauzer Attack - sharp theoretical battle.',
+    keyIdeas: ['f4-f5 push', 'e5 break', 'Opposite castling', 'Sharp tactics'],
+    difficulty: 5,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-24',
+    name: 'Sicilian Defense',
+    variation: 'Classical, Sozin Attack',
+    eco: 'B57',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'Nc6', 'Bc4', 'e6', 'Be3', 'Be7', 'Qe2', 'O-O', 'O-O-O', 'a6', 'Bb3', 'Qc7', 'Rhg1', 'Nd7', 'g4', 'Nc5', 'g5', 'b5'],
+    fen: 'r1b2rk1/2q1bppp/p1npp3/1pn3P1/3NP3/1BN1B3/PPP1QP1P/2KR2R1 w - - 0 15',
+    description: 'Sozin Attack with Bc4 - aggressive kingside play.',
+    keyIdeas: ['Bxe6 sacrifice ideas', 'f4-f5', 'Kingside attack', 'g4-g5 push'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+  {
+    id: 'sic-25',
+    name: 'Sicilian Defense',
+    variation: 'Classical, Boleslavsky',
+    eco: 'B58',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'Nc6', 'Be2', 'e5', 'Nb3', 'Be7', 'O-O', 'O-O', 'Bg5', 'Be6', 'Bxf6', 'Bxf6', 'Nd5', 'Bxd5', 'exd5', 'Ne7', 'c4', 'Bg5'],
+    fen: 'r2q1rk1/pp2nppp/3p4/3Pp1b1/2P5/1N6/PP2BPPP/R2Q1RK1 w - - 2 14',
+    description: 'Boleslavsky variation with e5 hole - piece activity.',
+    keyIdeas: ['Central control', 'd5 square', 'Piece activity', 'Bg5 pressure'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // ALAPIN VARIATION
-  { id: 'sic-26', name: 'Sicilian Defense', variation: 'Alapin, Main Line', eco: 'B22', moves: ['e4','c5','c3','Nf6','e5','Nd5','d4','cxd4','Nf3','Nc6','cxd4','d6','Bc4','Nb6','Bb3','dxe5','dxe5','Qxd1+','Kxd1'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Main Alapin leading to endgame.', keyIdeas: ['Pawn structure', 'Piece activity', 'Endgame play'], difficulty: 2, category: 'e4', side: 'black' },
-  { id: 'sic-27', name: 'Sicilian Defense', variation: 'Alapin, 2...d5', eco: 'B22', moves: ['e4','c5','c3','d5','exd5','Qxd5','d4','Nf6','Nf3','e6','Be2','cxd4','cxd4','Nc6','Nc3','Qd6','O-O','Be7'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: '2...d5 counter to the Alapin.', keyIdeas: ['IQP play', 'Development', 'Central tension'], difficulty: 2, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-26',
+    name: 'Sicilian Defense',
+    variation: 'Alapin, Main Line',
+    eco: 'B22',
+    moves: ['e4', 'c5', 'c3', 'Nf6', 'e5', 'Nd5', 'd4', 'cxd4', 'Nf3', 'Nc6', 'cxd4', 'd6', 'Bc4', 'Nb6', 'Bb3', 'dxe5', 'dxe5', 'Qxd1+', 'Kxd1', 'Bg4', 'Nc3', 'e6', 'h3', 'Bxf3+', 'gxf3', 'Nd7'],
+    fen: 'r3kb1r/pp1n1ppp/1nn1p3/4P3/8/1BN2P1P/PP3P2/R1BK3R w kq - 1 14',
+    description: 'Main Alapin leading to favorable endgame for White.',
+    keyIdeas: ['Pawn structure', 'Piece activity', 'Endgame play', 'e5 pawn strong'],
+    difficulty: 2,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-27',
+    name: 'Sicilian Defense',
+    variation: 'Alapin, 2...d5',
+    eco: 'B22',
+    moves: ['e4', 'c5', 'c3', 'd5', 'exd5', 'Qxd5', 'd4', 'Nf6', 'Nf3', 'e6', 'Be2', 'cxd4', 'cxd4', 'Nc6', 'Nc3', 'Qd6', 'O-O', 'Be7', 'Nb5', 'Qd8', 'Bf4', 'O-O', 'Rc1', 'Nd5', 'Bg3', 'a6'],
+    fen: 'r1bq1rk1/1p2bppp/p1n1p3/1N1n4/3P4/5NB1/PP2BPPP/2RQ1RK1 w - - 0 14',
+    description: '2...d5 counter to the Alapin - IQP structures.',
+    keyIdeas: ['IQP play', 'Development', 'Central tension', 'Piece activity'],
+    difficulty: 2,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // GRAND PRIX ATTACK
-  { id: 'sic-28', name: 'Sicilian Defense', variation: 'Grand Prix Attack', eco: 'B23', moves: ['e4','c5','Nc3','Nc6','f4','g6','Nf3','Bg7','Bb5','Nd4','O-O','Nxb5','Nxb5','d6','d3','a6','Na3'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Grand Prix Attack with f4.', keyIdeas: ['Kingside attack', 'f5 push', 'Piece activity'], difficulty: 3, category: 'e4', side: 'black' },
-  { id: 'sic-29', name: 'Sicilian Defense', variation: 'Grand Prix, 3.f4', eco: 'B23', moves: ['e4','c5','f4','d5','exd5','Nf6','Bb5+','Bd7','Bxd7+','Qxd7','c4','e6','Qe2','Bd6','d3','O-O','Nf3'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Early f4 Grand Prix.', keyIdeas: ['Central pawns', 'd4 ideas', 'Piece development'], difficulty: 3, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-28',
+    name: 'Sicilian Defense',
+    variation: 'Grand Prix Attack',
+    eco: 'B23',
+    moves: ['e4', 'c5', 'Nc3', 'Nc6', 'f4', 'g6', 'Nf3', 'Bg7', 'Bb5', 'Nd4', 'O-O', 'Nxb5', 'Nxb5', 'd6', 'd3', 'a6', 'Na3', 'Nf6', 'Qe1', 'O-O', 'Qh4', 'b5', 'f5', 'Bb7', 'Bg5'],
+    fen: 'r2q1rk1/1b2ppbp/p2p1np1/1p3PB1/4P2Q/N2P1N2/PPP3PP/R4RK1 b - - 1 14',
+    description: 'Grand Prix Attack with f4 - kingside focused play.',
+    keyIdeas: ['Kingside attack', 'f5 push', 'Piece activity', 'Direct aggression'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+  {
+    id: 'sic-29',
+    name: 'Sicilian Defense',
+    variation: 'Grand Prix, Early f4',
+    eco: 'B23',
+    moves: ['e4', 'c5', 'f4', 'd5', 'exd5', 'Nf6', 'Bb5+', 'Bd7', 'Bxd7+', 'Qxd7', 'c4', 'e6', 'Qe2', 'Bd6', 'd3', 'O-O', 'Nf3', 'exd5', 'cxd5', 'Re8', 'Be3', 'Nxd5', 'O-O', 'Nc6'],
+    fen: 'r3r1k1/pp1q1ppp/2nb4/2np4/5P2/3PBN2/PP2Q1PP/RN3RK1 w - - 2 14',
+    description: 'Early f4 Grand Prix - central play focus.',
+    keyIdeas: ['Central pawns', 'd4 ideas', 'Piece development', 'Active play'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // CLOSED SICILIAN
-  { id: 'sic-30', name: 'Sicilian Defense', variation: 'Closed Sicilian', eco: 'B25', moves: ['e4','c5','Nc3','Nc6','g3','g6','Bg2','Bg7','d3','d6','Be3','Rb8','Qd2','b5','Nge2','Nd4','O-O','e5'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Closed Sicilian - positional play.', keyIdeas: ['f4 ideas', 'Kingside play', 'Slow buildup'], difficulty: 2, category: 'e4', side: 'black' },
-  { id: 'sic-31', name: 'Sicilian Defense', variation: 'Closed, Spassky', eco: 'B26', moves: ['e4','c5','Nc3','Nc6','g3','g6','Bg2','Bg7','d3','d6','f4','e6','Nf3','Nge7','O-O','O-O','Be3','Nd4'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Spassky system with f4.', keyIdeas: ['Kingside pressure', 'Nd4 outpost', 'Central control'], difficulty: 3, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-30',
+    name: 'Sicilian Defense',
+    variation: 'Closed Sicilian',
+    eco: 'B25',
+    moves: ['e4', 'c5', 'Nc3', 'Nc6', 'g3', 'g6', 'Bg2', 'Bg7', 'd3', 'd6', 'Be3', 'Rb8', 'Qd2', 'b5', 'Nge2', 'Nd4', 'O-O', 'e5', 'Nd1', 'Ne7', 'c3', 'Nec6', 'f4', 'O-O'],
+    fen: 'r1bq1rk1/p4pbp/2np2p1/1pp1p3/3nPP2/2PP2P1/PP1QN1BP/RN1B1RK1 w - - 0 14',
+    description: 'Closed Sicilian - solid positional play.',
+    keyIdeas: ['f4 push', 'Kingside play', 'Slow buildup', 'Central control'],
+    difficulty: 2,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-31',
+    name: 'Sicilian Defense',
+    variation: 'Closed, Spassky System',
+    eco: 'B26',
+    moves: ['e4', 'c5', 'Nc3', 'Nc6', 'g3', 'g6', 'Bg2', 'Bg7', 'd3', 'd6', 'f4', 'e6', 'Nf3', 'Nge7', 'O-O', 'O-O', 'Be3', 'Nd4', 'e5', 'dxe5', 'fxe5', 'Nec6', 'Bf4', 'Nxf3+', 'Bxf3', 'Nxe5'],
+    fen: 'r1bq1rk1/pp3pbp/4p1p1/2p1n3/5B2/2NP1BP1/PPP4P/R2Q1RK1 w - - 0 14',
+    description: 'Spassky system with f4 - kingside pressure.',
+    keyIdeas: ['Kingside pressure', 'e5 break', 'Central control', 'Piece activity'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // ROSSOLIMO VARIATION
-  { id: 'sic-32', name: 'Sicilian Defense', variation: 'Rossolimo, Main Line', eco: 'B31', moves: ['e4','c5','Nf3','Nc6','Bb5','g6','O-O','Bg7','Re1','e5','Bxc6','dxc6','d3','Ne7','a4','O-O','Na3'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Rossolimo with Bxc6.', keyIdeas: ['Pawn structure', 'a4-a5', 'Central play'], difficulty: 3, category: 'e4', side: 'black' },
-  { id: 'sic-33', name: 'Sicilian Defense', variation: 'Rossolimo, 3...e6', eco: 'B30', moves: ['e4','c5','Nf3','Nc6','Bb5','e6','O-O','Nge7','d4','cxd4','Nxd4','a6','Be2','Nxd4','Qxd4','Nc6','Qd1'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Rossolimo with e6 setup.', keyIdeas: ['Development', 'd5 ideas', 'Central play'], difficulty: 2, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-32',
+    name: 'Sicilian Defense',
+    variation: 'Rossolimo, Main Line',
+    eco: 'B31',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'Bb5', 'g6', 'O-O', 'Bg7', 'Re1', 'e5', 'Bxc6', 'dxc6', 'd3', 'Ne7', 'a4', 'O-O', 'Na3', 'Be6', 'Nc4', 'Qc7', 'a5', 'Rad8', 'Be3', 'b6'],
+    fen: '3r1rk1/p1q1npbp/1pppp1p1/P3p3/2N1P3/3PBNN1/1PP2PPP/R2QR1K1 w - - 0 14',
+    description: 'Rossolimo with Bxc6 - doubled pawns but active play.',
+    keyIdeas: ['Pawn structure', 'a4-a5 expansion', 'Central play', 'Piece activity'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'essential',
+  },
+  {
+    id: 'sic-33',
+    name: 'Sicilian Defense',
+    variation: 'Rossolimo, 3...e6',
+    eco: 'B30',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'Bb5', 'e6', 'O-O', 'Nge7', 'd4', 'cxd4', 'Nxd4', 'a6', 'Be2', 'Nxd4', 'Qxd4', 'Nc6', 'Qd1', 'd5', 'exd5', 'Qxd5', 'Qxd5', 'exd5', 'c3', 'Bf5'],
+    fen: 'r3kb1r/1p3ppp/p1n5/3p1b2/8/2P5/PP2BPPP/RNB2RK1 w kq - 2 13',
+    description: 'Rossolimo with e6 setup - solid endgame play.',
+    keyIdeas: ['Development', 'd5 control', 'Central play', 'Endgame focus'],
+    difficulty: 2,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // MOSCOW VARIATION
-  { id: 'sic-34', name: 'Sicilian Defense', variation: 'Moscow, Main Line', eco: 'B52', moves: ['e4','c5','Nf3','d6','Bb5+','Bd7','Bxd7+','Qxd7','O-O','Nc6','c3','Nf6','Re1','e6','d4','cxd4','cxd4','d5'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Moscow variation with Bb5+.', keyIdeas: ['IQP play', 'Central tension', 'Piece activity'], difficulty: 3, category: 'e4', side: 'black' },
-  { id: 'sic-35', name: 'Sicilian Defense', variation: 'Moscow, Nd7', eco: 'B51', moves: ['e4','c5','Nf3','d6','Bb5+','Nd7','d4','Nf6','Nc3','cxd4','Qxd4','e5','Qd3','h6','Be3','Be7','O-O-O'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Moscow with Nd7 block.', keyIdeas: ['Central tension', 'Piece development', 'd5 ideas'], difficulty: 3, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-34',
+    name: 'Sicilian Defense',
+    variation: 'Moscow, Main Line',
+    eco: 'B52',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'Bb5+', 'Bd7', 'Bxd7+', 'Qxd7', 'O-O', 'Nc6', 'c3', 'Nf6', 'Re1', 'e6', 'd4', 'cxd4', 'cxd4', 'd5', 'e5', 'Ne4', 'Nc3', 'Nxc3', 'bxc3', 'Be7', 'Bf4'],
+    fen: 'r3k2r/pp1qbppp/2n1p3/3pP3/3P1B2/2P2N2/P4PPP/R2QR1K1 b kq - 1 13',
+    description: 'Moscow variation with Bb5+ - IQP middlegame.',
+    keyIdeas: ['IQP play', 'Central tension', 'Piece activity', 'e5 pawn'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+  {
+    id: 'sic-35',
+    name: 'Sicilian Defense',
+    variation: 'Moscow, Nd7 Block',
+    eco: 'B51',
+    moves: ['e4', 'c5', 'Nf3', 'd6', 'Bb5+', 'Nd7', 'd4', 'Nf6', 'Nc3', 'cxd4', 'Qxd4', 'e5', 'Qd3', 'h6', 'Be3', 'Be7', 'O-O-O', 'O-O', 'Nd5', 'Nxd5', 'exd5', 'Nc5', 'Qc4', 'a6', 'Bd3'],
+    fen: 'r1bq1rk1/1p2bpp1/p2p3p/2nPp3/2Q5/3BB3/PPP2PPP/2KR3R b - - 2 14',
+    description: 'Moscow with Nd7 block - central tension.',
+    keyIdeas: ['Central tension', 'Piece development', 'd5 pawn', 'Open play'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // KALASHNIKOV VARIATION
-  { id: 'sic-36', name: 'Sicilian Defense', variation: 'Kalashnikov', eco: 'B32', moves: ['e4','c5','Nf3','Nc6','d4','cxd4','Nxd4','e5','Nb5','d6','N1c3','a6','Na3','b5','Nd5','Nge7','c4'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Kalashnikov - Sveshnikov without a6.', keyIdeas: ['d5 control', 'b5 expansion', 'Piece play'], difficulty: 4, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-36',
+    name: 'Sicilian Defense',
+    variation: 'Kalashnikov',
+    eco: 'B32',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'd4', 'cxd4', 'Nxd4', 'e5', 'Nb5', 'd6', 'N1c3', 'a6', 'Na3', 'b5', 'Nd5', 'Nge7', 'c4', 'bxc4', 'Nxc4', 'Nxd5', 'exd5', 'Ne7', 'Be2', 'Ng6', 'O-O'],
+    fen: 'r1bqkb1r/4nppp/p2p2n1/3Pp3/2N5/8/PP2BPPP/R1BQ1RK1 b kq - 1 14',
+    description: 'Kalashnikov - Sveshnikov style without a6.',
+    keyIdeas: ['d5 control', 'b5 expansion', 'Piece play', 'Central control'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // FOUR KNIGHTS VARIATION
-  { id: 'sic-37', name: 'Sicilian Defense', variation: 'Four Knights', eco: 'B45', moves: ['e4','c5','Nf3','e6','d4','cxd4','Nxd4','Nf6','Nc3','Nc6','Ndb5','Bb4','a3','Bxc3+','Nxc3','d5','exd5','exd5'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Four Knights Sicilian.', keyIdeas: ['IQP play', 'Piece activity', 'Central control'], difficulty: 3, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-37',
+    name: 'Sicilian Defense',
+    variation: 'Four Knights',
+    eco: 'B45',
+    moves: ['e4', 'c5', 'Nf3', 'e6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'Nc6', 'Ndb5', 'Bb4', 'a3', 'Bxc3+', 'Nxc3', 'd5', 'exd5', 'exd5', 'Bd3', 'O-O', 'O-O', 'h6', 'Bf4', 'Be6', 'Re1', 'Qb6'],
+    fen: 'r4rk1/pp3pp1/1qnnb2p/3p4/5B2/P1NB4/1PP2PPP/R2QR1K1 w - - 4 14',
+    description: 'Four Knights Sicilian - IQP structure.',
+    keyIdeas: ['IQP play', 'Piece activity', 'Central control', 'd5 weakness'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // PIN VARIATION
-  { id: 'sic-38', name: 'Sicilian Defense', variation: 'Pin Variation', eco: 'B40', moves: ['e4','c5','Nf3','e6','d4','cxd4','Nxd4','Nf6','Nc3','Bb4','e5','Nd5','Bd2','Nxc3','bxc3','Be7','Qg4','O-O','Bd3'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Pin variation with Bb4.', keyIdeas: ['e5 pawn', 'Kingside attack', 'Piece activity'], difficulty: 3, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-38',
+    name: 'Sicilian Defense',
+    variation: 'Pin Variation',
+    eco: 'B40',
+    moves: ['e4', 'c5', 'Nf3', 'e6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'Bb4', 'e5', 'Nd5', 'Bd2', 'Nxc3', 'bxc3', 'Be7', 'Qg4', 'O-O', 'Bd3', 'f5', 'exf6', 'Bxf6', 'Qh5', 'Nc6', 'Nxc6', 'bxc6'],
+    fen: 'r1bq1rk1/p2p2pp/2p1pb2/7Q/8/2PB4/P1PB1PPP/R3K2R w KQ - 0 14',
+    description: 'Pin variation with Bb4 - tactical middlegame.',
+    keyIdeas: ['e5 pawn', 'Kingside attack', 'Piece activity', 'Central control'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // PELIKAN VARIATION
-  { id: 'sic-39', name: 'Sicilian Defense', variation: 'Pelikan, Chelyabinsk', eco: 'B33', moves: ['e4','c5','Nf3','Nc6','d4','cxd4','Nxd4','Nf6','Nc3','e5','Ndb5','d6','Bg5','a6','Na3','Be6','Nc4','Rc8'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Pelikan/Chelyabinsk with Be6.', keyIdeas: ['Nc4 pressure', 'b5 counter', 'Dynamic play'], difficulty: 4, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-39',
+    name: 'Sicilian Defense',
+    variation: 'Pelikan, Chelyabinsk',
+    eco: 'B33',
+    moves: ['e4', 'c5', 'Nf3', 'Nc6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'e5', 'Ndb5', 'd6', 'Bg5', 'a6', 'Na3', 'Be6', 'Nc4', 'Rc8', 'Bxf6', 'gxf6', 'Ne3', 'Ne7', 'Bd3', 'Bg7', 'O-O', 'O-O'],
+    fen: 'r1rq1rk1/1p2npbp/p2ppp2/4p3/4P3/3BN3/PPP2PPP/R2Q1RK1 w - - 2 15',
+    description: 'Pelikan/Chelyabinsk with Be6 - active piece play.',
+    keyIdeas: ['Nc4 pressure', 'b5 counter', 'Dynamic play', 'f5 break'],
+    difficulty: 4,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // O'KELLY VARIATION
-  { id: 'sic-40', name: 'Sicilian Defense', variation: "O'Kelly", eco: 'B28', moves: ['e4','c5','Nf3','a6','c3','d5','exd5','Qxd5','d4','Nf6','Be2','e6','O-O','Nc6','Be3','cxd4','cxd4'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: "O'Kelly with 2...a6.", keyIdeas: ['Flexible setup', 'IQP play', 'Development'], difficulty: 2, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-40',
+    name: 'Sicilian Defense',
+    variation: "O'Kelly Variation",
+    eco: 'B28',
+    moves: ['e4', 'c5', 'Nf3', 'a6', 'c3', 'd5', 'exd5', 'Qxd5', 'd4', 'Nf6', 'Be2', 'e6', 'O-O', 'Nc6', 'Be3', 'cxd4', 'cxd4', 'Be7', 'Nc3', 'Qd6', 'Nb5', 'Qb8', 'Bf4', 'Bd6'],
+    fen: 'rqb1k2r/1p3ppp/p1nbpn2/1N6/3P1B2/5N2/PP2BPPP/R2Q1RK1 w kq - 6 13',
+    description: "O'Kelly with 2...a6 - flexible setup.",
+    keyIdeas: ['Flexible setup', 'IQP play', 'Development', 'Central control'],
+    difficulty: 2,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // WING GAMBIT
-  { id: 'sic-41', name: 'Sicilian Defense', variation: 'Wing Gambit', eco: 'B20', moves: ['e4','c5','b4','cxb4','a3','d5','exd5','Qxd5','Nf3','e5','axb4','Bxb4','c3','Be7','Na3','Nf6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Wing Gambit - pawn sacrifice for initiative.', keyIdeas: ['Development lead', 'Open lines', 'Initiative'], difficulty: 3, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-41',
+    name: 'Sicilian Defense',
+    variation: 'Wing Gambit',
+    eco: 'B20',
+    moves: ['e4', 'c5', 'b4', 'cxb4', 'a3', 'd5', 'exd5', 'Qxd5', 'Nf3', 'e5', 'axb4', 'Bxb4', 'c3', 'Be7', 'Na3', 'Nf6', 'Nc4', 'Qd8', 'Be2', 'O-O', 'O-O', 'Nc6', 'd4', 'exd4', 'Nxd4'],
+    fen: 'r1bq1rk1/pp2bppp/2n2n2/8/2NN4/2P5/4BPPP/R1BQ1RK1 b - - 0 13',
+    description: 'Wing Gambit - pawn sacrifice for initiative.',
+    keyIdeas: ['Development lead', 'Open lines', 'Initiative', 'Central control'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'advanced',
+  },
+
+  // ==========================================
   // SMITH-MORRA GAMBIT
-  { id: 'sic-42', name: 'Sicilian Defense', variation: 'Smith-Morra Gambit', eco: 'B21', moves: ['e4','c5','d4','cxd4','c3','dxc3','Nxc3','Nc6','Nf3','d6','Bc4','e6','O-O','Nf6','Qe2','Be7','Rd1','O-O'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Smith-Morra Gambit accepted.', keyIdeas: ['Development lead', 'Open c-file', 'Piece activity'], difficulty: 3, category: 'e4', side: 'black' },
-  { id: 'sic-43', name: 'Sicilian Defense', variation: 'Smith-Morra Declined', eco: 'B21', moves: ['e4','c5','d4','cxd4','c3','Nf6','e5','Nd5','cxd4','d6','Nf3','Nc6','Bc4','Nb6','Bb3','dxe5','dxe5'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Declining the Morra gambit.', keyIdeas: ['Solid defense', 'e5 pawn', 'Development'], difficulty: 2, category: 'e4', side: 'black' },
-  
-  // FRENCH VARIATION
-  { id: 'sic-44', name: 'Sicilian Defense', variation: 'French Variation', eco: 'B40', moves: ['e4','c5','Nf3','e6','d3','Nc6','g3','d5','Nbd2','Bd6','Bg2','Nge7','O-O','O-O','Re1','b6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'King\'s Indian Attack vs Sicilian.', keyIdeas: ['Slow buildup', 'e4-e5', 'Kingside play'], difficulty: 2, category: 'e4', side: 'black' },
-  
+  // ==========================================
+  {
+    id: 'sic-42',
+    name: 'Sicilian Defense',
+    variation: 'Smith-Morra Gambit Accepted',
+    eco: 'B21',
+    moves: ['e4', 'c5', 'd4', 'cxd4', 'c3', 'dxc3', 'Nxc3', 'Nc6', 'Nf3', 'd6', 'Bc4', 'e6', 'O-O', 'Nf6', 'Qe2', 'Be7', 'Rd1', 'O-O', 'e5', 'dxe5', 'Nxe5', 'Nxe5', 'Qxe5', 'Qc7', 'Qxc7'],
+    fen: 'r1b2rk1/ppQ1bppp/4pn2/8/2B5/2N5/PP3PPP/R1BR2K1 b - - 0 14',
+    description: 'Smith-Morra Gambit accepted - active piece play.',
+    keyIdeas: ['Development lead', 'Open c-file', 'Piece activity', 'Initiative'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+  {
+    id: 'sic-43',
+    name: 'Sicilian Defense',
+    variation: 'Smith-Morra Declined',
+    eco: 'B21',
+    moves: ['e4', 'c5', 'd4', 'cxd4', 'c3', 'Nf6', 'e5', 'Nd5', 'cxd4', 'd6', 'Nf3', 'Nc6', 'Bc4', 'Nb6', 'Bb3', 'dxe5', 'dxe5', 'Qxd1+', 'Kxd1', 'Bg4', 'Nc3', 'e6', 'Bf4', 'Rd8+', 'Ke2'],
+    fen: 'r3kb1r/pp3ppp/1nn1p3/4P3/5Bb1/1BN2N2/PP2KPPP/R6R b kq - 3 13',
+    description: 'Declining the Morra gambit - solid play.',
+    keyIdeas: ['Solid defense', 'e5 pawn', 'Development', 'Endgame play'],
+    difficulty: 2,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
+  // FRENCH VARIATION / KIA
+  // ==========================================
+  {
+    id: 'sic-44',
+    name: 'Sicilian Defense',
+    variation: 'French Variation (KIA)',
+    eco: 'B40',
+    moves: ['e4', 'c5', 'Nf3', 'e6', 'd3', 'Nc6', 'g3', 'd5', 'Nbd2', 'Bd6', 'Bg2', 'Nge7', 'O-O', 'O-O', 'Re1', 'b6', 'e5', 'Bc7', 'Nf1', 'Ba6', 'Bf4', 'Qd7', 'N1h2', 'Rad8'],
+    fen: 'r2r1rk1/p1bnqppp/bpn1p3/2ppP3/5B2/3P1NP1/PPP1BPNP/R2QR1K1 w - - 4 14',
+    description: "King's Indian Attack vs Sicilian - slow buildup.",
+    keyIdeas: ['Slow buildup', 'e4-e5', 'Kingside play', 'Nh2-f1-g3'],
+    difficulty: 2,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
+
+  // ==========================================
   // PAULSEN VARIATION
-  { id: 'sic-45', name: 'Sicilian Defense', variation: 'Paulsen, Main Line', eco: 'B46', moves: ['e4','c5','Nf3','e6','d4','cxd4','Nxd4','a6','Nc3','Qc7','Be2','Nf6','O-O','Bb4','Na4','Be7','Be3','d6'], fen: '8/8/8/8/8/8/8/8 w - - 0 1', description: 'Paulsen variation setup.', keyIdeas: ['b5 expansion', 'Flexible structure', 'Central play'], difficulty: 3, category: 'e4', side: 'black' },
+  // ==========================================
+  {
+    id: 'sic-45',
+    name: 'Sicilian Defense',
+    variation: 'Paulsen, Main Line',
+    eco: 'B46',
+    moves: ['e4', 'c5', 'Nf3', 'e6', 'd4', 'cxd4', 'Nxd4', 'a6', 'Nc3', 'Qc7', 'Be2', 'Nf6', 'O-O', 'Bb4', 'Na4', 'Be7', 'Be3', 'd6', 'f4', 'O-O', 'Kh1', 'Nbd7', 'Bf3', 'b5', 'Nc3', 'Bb7'],
+    fen: 'r4rk1/1bqnbppp/p2ppn2/1p6/3NPP2/2N1BB2/PPP3PP/R2Q1R1K w - - 2 14',
+    description: 'Paulsen variation setup - flexible play.',
+    keyIdeas: ['b5 expansion', 'Flexible structure', 'Central play', 'Piece coordination'],
+    difficulty: 3,
+    category: 'e4',
+    side: 'black',
+    priority: 'recommended',
+  },
 ];
 
 export default sicilianLines;
-
-
-
-
-
-
-
-
-
-

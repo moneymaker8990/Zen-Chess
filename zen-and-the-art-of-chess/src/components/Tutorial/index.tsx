@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -598,14 +598,14 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
   const isLastStep = currentStep === tutorial.steps.length - 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zen-950/90 backdrop-blur-sm animate-fade-in">
-      <div className="glass-card p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm animate-fade-in" style={{ backgroundColor: 'rgba(10, 10, 10, 0.95)' }}>
+      <div className="card p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <span className="text-3xl">{tutorial.icon}</span>
           <div>
-            <h2 className="text-xl font-serif text-zen-100">{tutorial.title}</h2>
-            <p className="text-zen-500 text-sm">{tutorial.subtitle}</p>
+            <h2 className="text-xl font-serif" style={{ color: 'var(--text-primary)' }}>{tutorial.title}</h2>
+            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{tutorial.subtitle}</p>
           </div>
         </div>
 
@@ -614,24 +614,23 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
           {tutorial.steps.map((_, i) => (
             <div
               key={i}
-              className={`flex-1 h-1 rounded-full ${
-                i <= currentStep ? 'bg-gold-500' : 'bg-zen-700'
-              }`}
+              className="flex-1 h-1 rounded-full"
+              style={{ backgroundColor: i <= currentStep ? 'var(--accent-gold)' : 'var(--bg-tertiary)' }}
             />
           ))}
         </div>
 
         {/* Current step */}
         <div className="mb-6">
-          <h3 className="text-lg text-zen-200 font-medium mb-3">
+          <h3 className="text-lg font-medium mb-3" style={{ color: 'var(--text-secondary)' }}>
             {tutorial.steps[currentStep].title}
           </h3>
-          <p className="text-zen-400 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4" style={{ color: 'var(--text-tertiary)' }}>
             {tutorial.steps[currentStep].content}
           </p>
           {tutorial.steps[currentStep].tip && (
-            <div className="bg-gold-500/10 border border-gold-500/20 rounded-lg p-3">
-              <p className="text-gold-400 text-sm">
+            <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(251, 191, 36, 0.1)', border: '1px solid rgba(251, 191, 36, 0.2)' }}>
+              <p className="text-sm" style={{ color: 'var(--accent-gold)' }}>
                 💡 <span className="font-medium">Tip:</span> {tutorial.steps[currentStep].tip}
               </p>
             </div>
@@ -642,14 +641,14 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
         {isLastStep && (
           <>
             <div className="mb-6">
-              <h4 className="text-sm text-zen-500 uppercase tracking-wider mb-3">
+              <h4 className="text-sm uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
                 How This Connects
               </h4>
               <div className="space-y-2">
                 {tutorial.connections.map((conn, i) => (
                   <div key={i} className="flex items-start gap-2 text-sm">
-                    <span className="text-gold-500">→</span>
-                    <span className="text-zen-300">
+                    <span style={{ color: 'var(--accent-gold)' }}>→</span>
+                    <span style={{ color: 'var(--text-secondary)' }}>
                       <strong>{conn.page}:</strong> {conn.description}
                     </span>
                   </div>
@@ -658,13 +657,13 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
             </div>
 
             <div className="mb-6">
-              <h4 className="text-sm text-zen-500 uppercase tracking-wider mb-3">
+              <h4 className="text-sm uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
                 Quick Start
               </h4>
               <ol className="space-y-2">
                 {tutorial.quickStart.map((step, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-zen-400">
-                    <span className="text-gold-400 font-mono">{i + 1}.</span>
+                  <li key={i} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                    <span className="font-mono" style={{ color: 'var(--accent-gold)' }}>{i + 1}.</span>
                     <span>{step}</span>
                   </li>
                 ))}
@@ -674,10 +673,13 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
         )}
 
         {/* Navigation */}
-        <div className="flex justify-between items-center pt-4 border-t border-zen-700/30">
+        <div className="flex justify-between items-center pt-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
           <button
             onClick={handleClose}
-            className="text-zen-500 hover:text-zen-300 text-sm"
+            className="text-sm transition-colors"
+            style={{ color: 'var(--text-muted)' }}
+            onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
           >
             Skip tutorial
           </button>
@@ -686,7 +688,7 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
             {currentStep > 0 && (
               <button
                 onClick={() => setCurrentStep(currentStep - 1)}
-                className="zen-button-ghost"
+                className="btn-secondary"
               >
                 Back
               </button>
@@ -694,14 +696,14 @@ export function TutorialModal({ tutorialId, isOpen, onClose }: TutorialModalProp
             {!isLastStep ? (
               <button
                 onClick={() => setCurrentStep(currentStep + 1)}
-                className="zen-button-primary"
+                className="btn-primary"
               >
                 Next
               </button>
             ) : (
               <button
                 onClick={handleClose}
-                className="zen-button-primary"
+                className="btn-primary"
               >
                 Get Started
               </button>
@@ -723,12 +725,16 @@ interface TutorialButtonProps {
 
 export function TutorialButton({ tutorialId }: TutorialButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-zen-500 hover:text-gold-400 text-sm flex items-center gap-1 transition-colors"
+        className="text-sm flex items-center gap-1 transition-colors"
+        style={{ color: isHovered ? 'var(--accent-gold)' : 'var(--text-muted)' }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         title="How to use this page"
       >
         <span>?</span>
@@ -750,17 +756,33 @@ export function TutorialButton({ tutorialId }: TutorialButtonProps) {
 export function useAutoTutorial(tutorialId: string) {
   const [showTutorial, setShowTutorial] = useState(false);
   const { seenTutorials, markSeen } = useTutorialStore();
+  // Track if we've already attempted to show this tutorial in this session
+  const hasChecked = useRef(false);
+  // Track if the tutorial has been closed this session (prevents re-showing)
+  const closedThisSession = useRef(false);
 
   useEffect(() => {
+    // Only check once per mount, and only if not already closed this session
+    if (hasChecked.current || closedThisSession.current) {
+      return;
+    }
+    hasChecked.current = true;
+
     // Show tutorial if not seen before
     if (!seenTutorials[tutorialId]) {
       // Small delay to let page render first
-      const timer = setTimeout(() => setShowTutorial(true), 500);
+      const timer = setTimeout(() => {
+        // Double-check it wasn't closed while waiting
+        if (!closedThisSession.current) {
+          setShowTutorial(true);
+        }
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [tutorialId, seenTutorials]);
 
   const closeTutorial = () => {
+    closedThisSession.current = true;
     setShowTutorial(false);
     markSeen(tutorialId);
   };
@@ -787,11 +809,11 @@ export function PageHeader({ tutorialId, title, subtitle, children }: PageHeader
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-serif text-zen-100">{title}</h1>
+            <h1 className="text-2xl font-serif" style={{ color: 'var(--text-primary)' }}>{title}</h1>
             <TutorialButton tutorialId={tutorialId} />
           </div>
           {subtitle && (
-            <p className="text-zen-500 text-sm mt-1">{subtitle}</p>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>{subtitle}</p>
           )}
         </div>
         {children}
@@ -818,12 +840,12 @@ interface IntegrationHintProps {
 
 export function IntegrationHint({ from, to, action }: IntegrationHintProps) {
   return (
-    <div className="bg-gold-500/5 border border-gold-500/20 rounded-lg p-3 flex items-start gap-3">
-      <span className="text-gold-400">🔗</span>
+    <div className="rounded-lg p-3 flex items-start gap-3" style={{ backgroundColor: 'rgba(251, 191, 36, 0.05)', border: '1px solid rgba(251, 191, 36, 0.2)' }}>
+      <span style={{ color: 'var(--accent-gold)' }}>🔗</span>
       <div className="text-sm">
-        <p className="text-gold-400 font-medium">Integration Tip</p>
-        <p className="text-zen-400">
-          {action} <span className="text-zen-300">{from}</span> → <span className="text-zen-300">{to}</span>
+        <p className="font-medium" style={{ color: 'var(--accent-gold)' }}>Integration Tip</p>
+        <p style={{ color: 'var(--text-tertiary)' }}>
+          {action} <span style={{ color: 'var(--text-secondary)' }}>{from}</span> → <span style={{ color: 'var(--text-secondary)' }}>{to}</span>
         </p>
       </div>
     </div>

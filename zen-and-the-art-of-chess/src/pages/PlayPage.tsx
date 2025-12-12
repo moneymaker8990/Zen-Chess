@@ -17,8 +17,21 @@ import { AgentWatching, ContextualAgentTip } from '@/components/AgentPresence';
 import { ChessSounds, playSmartMoveSound } from '@/lib/soundSystem';
 import { parseUciMove } from '@/lib/moveValidation';
 import { logger } from '@/lib/logger';
+import { useMistakeLibraryStore } from '@/state/trainingStore';
 import type { GameMode, EngineEvaluation } from '@/lib/types';
+import type { MistakeType, RootCause } from '@/lib/trainingTypes';
 import type { Square } from 'chess.js';
+
+// Interface for tracking detected mistakes during game
+interface DetectedMistake {
+  fen: string;
+  playedMove: string;
+  bestMove: string;
+  evalBefore: number;
+  evalAfter: number;
+  evalDrop: number;
+  moveNumber: number;
+}
 
 // Blunder threshold in centipawns (e.g., losing 150+ cp is a blunder)
 const BLUNDER_THRESHOLD = 150;
@@ -47,8 +60,16 @@ export function PlayPage() {
   const moveTimes = useRef<number[]>([]);
   const blunderCount = useRef<number>(0);
   const mistakeCount = useRef<number>(0);
+  // Track position before player's move for mistake detection
+  const positionBeforeMove = useRef<string>('');
+  const lastPlayedMove = useRef<string>('');
+  const moveNumberRef = useRef<number>(1);
+  // Store detected mistakes during game for saving at game end
+  const detectedMistakes = useRef<DetectedMistake[]>([]);
+  
   const { progress } = useProgressStore();
   const { recordEvent, recordGame } = useCoachStore();
+  const { addMistake } = useMistakeLibraryStore();
   const boardStyles = useBoardStyles();
   const triggerAgent = useAgentTrigger();
 
@@ -102,9 +123,9 @@ export function PlayPage() {
     };
   }, [progress.settings.engineStrength]);
 
-  // Auto-analyze when in analysis mode
+  // Auto-analyze when in analysis mode or vs engine mode (for mistake detection)
   useEffect(() => {
-    if (selectedMode === 'ANALYSIS' && engineReady) {
+    if ((selectedMode === 'ANALYSIS' || selectedMode === 'VS_ENGINE') && engineReady) {
       stockfish.analyzePosition(game.fen(), (eval_) => {
         setEvaluation(eval_);
       });
@@ -120,22 +141,42 @@ export function PlayPage() {
 
   // Check for blunders when evaluation changes
   useEffect(() => {
-    if (evaluation && prevEvaluation !== null) {
+    if (evaluation && prevEvaluation !== null && selectedMode === 'VS_ENGINE') {
       const playerColor = orientation === 'white' ? 1 : -1;
       const evalChange = (evaluation.score - prevEvaluation) * playerColor;
       
-      // Significant drop in evaluation for the player = blunder
-      if (evalChange < -BLUNDER_THRESHOLD && moveHistory.length > 0) {
+      // Significant drop in evaluation for the player = blunder/mistake
+      if (evalChange < -50 && moveHistory.length > 0 && lastPlayedMove.current && positionBeforeMove.current) {
+        const evalDrop = Math.abs(evalChange);
         const moveTime = Date.now() - moveStartTime.current;
-        recordMove(moveTime, true); // Record as blunder
-        blunderCount.current += 1;
-      } else if (evalChange < -50 && moveHistory.length > 0) {
-        // Track mistakes (less severe than blunders)
-        mistakeCount.current += 1;
+        
+        // Create mistake entry for tracking
+        const mistake: DetectedMistake = {
+          fen: positionBeforeMove.current,
+          playedMove: lastPlayedMove.current,
+          bestMove: evaluation.bestMove || 'unknown',
+          evalBefore: prevEvaluation,
+          evalAfter: evaluation.score,
+          evalDrop,
+          moveNumber: moveNumberRef.current,
+        };
+        
+        if (evalDrop >= BLUNDER_THRESHOLD) {
+          // Blunder
+          recordMove(moveTime, true);
+          blunderCount.current += 1;
+          detectedMistakes.current.push(mistake);
+          logger.debug('Blunder detected:', mistake);
+        } else if (evalDrop >= 50) {
+          // Mistake (less severe)
+          mistakeCount.current += 1;
+          detectedMistakes.current.push(mistake);
+          logger.debug('Mistake detected:', mistake);
+        }
       }
     }
     setPrevEvaluation(evaluation?.score ?? null);
-  }, [evaluation, prevEvaluation, orientation, moveHistory.length, recordMove]);
+  }, [evaluation, prevEvaluation, orientation, moveHistory.length, recordMove, selectedMode]);
 
   // Detect game end and record to coach
   useEffect(() => {
@@ -161,6 +202,46 @@ export function PlayPage() {
       const avgMoveTime = moveTimes.current.length > 0
         ? moveTimes.current.reduce((a, b) => a + b, 0) / moveTimes.current.length
         : 0;
+      
+      // Save all detected mistakes to the Mistake Library
+      if (detectedMistakes.current.length > 0) {
+        detectedMistakes.current.forEach(mistake => {
+          // Determine mistake type based on eval drop
+          let mistakeType: MistakeType = 'INACCURACY';
+          if (mistake.evalDrop >= BLUNDER_THRESHOLD) {
+            mistakeType = 'BLUNDER';
+          } else if (mistake.evalDrop >= 100) {
+            mistakeType = 'MISTAKE';
+          }
+          
+          // Determine root cause (simplified - could be enhanced with more analysis)
+          let rootCause: RootCause = 'CALCULATION';
+          const moveTime = moveTimes.current[mistake.moveNumber - 1] || 0;
+          if (moveTime < 3000) {
+            rootCause = 'IMPATIENCE'; // Very fast move
+          } else if (moveTime > 60000) {
+            rootCause = 'FATIGUE'; // Very slow move
+          }
+          
+          // Save to mistake library
+          addMistake({
+            gameId: `game_${gameStartTime.current}`,
+            fen: mistake.fen,
+            playedMove: mistake.playedMove,
+            bestMove: mistake.bestMove,
+            evaluation: mistake.evalBefore,
+            evalAfter: mistake.evalAfter,
+            evalDrop: mistake.evalDrop,
+            moveNumber: mistake.moveNumber,
+            playerColor: orientation,
+            mistakeType,
+            rootCause,
+            timeSpentSeconds: moveTime > 0 ? Math.floor(moveTime / 1000) : undefined,
+          });
+        });
+        
+        logger.info(`Saved ${detectedMistakes.current.length} mistakes to library`);
+      }
       
       // Record the game with full metrics
       const metrics = createSimpleGameMetrics({
@@ -210,7 +291,7 @@ export function PlayPage() {
         triggerAgent({ type: 'ACCURACY_HIGH', accuracy });
       }
     }
-  }, [game, selectedMode, orientation, moveHistory.length, recordGame, recordEvent, triggerAgent]);
+  }, [game, selectedMode, orientation, moveHistory.length, recordGame, recordEvent, triggerAgent, addMistake]);
 
   // Get possible moves for a square
   const getMoveOptions = useCallback((square: Square) => {
@@ -273,6 +354,10 @@ export function PlayPage() {
     try {
       const moveTime = Date.now() - moveStartTime.current;
       const isCapture = !!game.get(square);
+      
+      // Capture position before move for mistake tracking
+      const fenBeforeMove = game.fen();
+      
       const move = game.move({
         from: moveFrom,
         to: square,
@@ -285,6 +370,13 @@ export function PlayPage() {
         
         // Play the appropriate sound
         playSmartMoveSound(game, move, { isCapture });
+        
+        // Store position and move for mistake detection
+        if (selectedMode === 'VS_ENGINE') {
+          positionBeforeMove.current = fenBeforeMove;
+          lastPlayedMove.current = move.san;
+          moveNumberRef.current = Math.floor(moveHistory.length / 2) + 1;
+        }
         
         setGame(new Chess(game.fen()));
         setLastMove({ from: moveFrom, to: square });
@@ -341,6 +433,10 @@ export function PlayPage() {
     try {
       const moveTime = Date.now() - moveStartTime.current;
       const isCapture = !!game.get(targetSquare);
+      
+      // Capture position before move for mistake tracking
+      const fenBeforeMove = game.fen();
+      
       const move = game.move({
         from: sourceSquare,
         to: targetSquare,
@@ -353,6 +449,13 @@ export function PlayPage() {
         
         // Play the appropriate sound
         playSmartMoveSound(game, move, { isCapture });
+        
+        // Store position and move for mistake detection
+        if (selectedMode === 'VS_ENGINE') {
+          positionBeforeMove.current = fenBeforeMove;
+          lastPlayedMove.current = move.san;
+          moveNumberRef.current = Math.floor(moveHistory.length / 2) + 1;
+        }
         
         setGame(new Chess(game.fen()));
         setLastMove({ from: sourceSquare, to: targetSquare });
@@ -488,6 +591,12 @@ export function PlayPage() {
     moveTimes.current = [];
     blunderCount.current = 0;
     mistakeCount.current = 0;
+    
+    // Reset mistake tracking
+    positionBeforeMove.current = '';
+    lastPlayedMove.current = '';
+    moveNumberRef.current = 1;
+    detectedMistakes.current = [];
   }, [resetSession, selectedMode, moveHistory.length, game, recordGame, recordEvent]);
 
   const handleLoadFen = useCallback(() => {

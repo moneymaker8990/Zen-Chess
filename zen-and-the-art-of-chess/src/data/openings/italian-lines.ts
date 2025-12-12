@@ -1,23 +1,23 @@
 // ============================================
 // ITALIAN GAME - COMPREHENSIVE LEARNING LINES
-// 50 Essential Lines for Mastery
+// Extended to 20-30 moves into the middlegame
 // ============================================
 
 import type { OpeningLine } from './index';
 
 export const italianGameLines: OpeningLine[] = [
   // ==========================================
-  // GIUOCO PIANO - MAIN LINES (15 lines)
+  // GIUOCO PIANO - MAIN LINES
   // ==========================================
   {
     id: 'it-gp-1',
     name: 'Italian Game',
     variation: 'Giuoco Piano - Main Line',
     eco: 'C54',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Nf6', 'd4', 'exd4', 'cxd4', 'Bb4+', 'Bd2', 'Bxd2+', 'Nbxd2', 'O-O'],
-    fen: 'r1bq1rk1/pppp1ppp/2n2n2/8/2BPP3/5N2/PP1N1PPP/R2QK2R w KQ - 1 9',
-    description: 'The classical main line. White has a strong pawn center, Black has solid development.',
-    keyIdeas: ['Control the center with d4-e4', 'Develop pieces actively', 'Castle and connect rooks'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Nf6', 'd4', 'exd4', 'cxd4', 'Bb4+', 'Bd2', 'Bxd2+', 'Nbxd2', 'd5', 'exd5', 'Nxd5', 'Qb3', 'Nce7', 'O-O', 'O-O', 'Rfe1', 'c6', 'Ne4', 'Bf5', 'Nc5', 'b6', 'Nd3'],
+    fen: 'r2q1rk1/p3nppp/1pp5/3n1b2/3P4/1Q1N1N2/PP3PPP/R3R1K1 b - - 1 15',
+    description: 'The classical main line leading to a rich middlegame with central tension and piece play.',
+    keyIdeas: ['Control the center with d4-e4', 'Develop pieces actively', 'Ne4-c5 outpost', 'Attack on b7'],
     difficulty: 2,
     category: 'e4',
     side: 'white',
@@ -28,10 +28,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Giuoco Piano - Greco Attack',
     eco: 'C54',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Nf6', 'd4', 'exd4', 'cxd4', 'Bb4+', 'Nc3'],
-    fen: 'r1bqk2r/pppp1ppp/2n2n2/8/1bBPP3/2N2N2/PP3PPP/R1BQK2R b KQkq - 1 7',
-    description: 'The aggressive Greco Attack - White gambits a pawn for rapid development.',
-    keyIdeas: ['Sacrifice pawn for initiative', 'Rapid development', 'Attack before Black consolidates'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Nf6', 'd4', 'exd4', 'cxd4', 'Bb4+', 'Nc3', 'Nxe4', 'O-O', 'Nxc3', 'bxc3', 'Bxc3', 'Qb3', 'Bxa1', 'Bxf7+', 'Kf8', 'Bg5', 'Ne7', 'Re1', 'd6', 'Bh5', 'Bf5'],
+    fen: 'r2q1k1r/ppp1n1pp/3p4/5bBB/3P4/1Q3N2/P4PPP/b3R1K1 w - - 2 15',
+    description: 'The aggressive Greco Attack - White sacrifices material for a fierce kingside attack.',
+    keyIdeas: ['Sacrifice pawn for initiative', 'Rapid development', 'Attack on f7', 'Pin the knight'],
     difficulty: 3,
     category: 'e4',
     side: 'white',
@@ -42,10 +42,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Giuoco Piano - Quiet 4.d3',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'd3', 'Nf6', 'c3', 'a6', 'O-O', 'Ba7', 'Re1', 'd6'],
-    fen: 'r1bqk2r/bpp2ppp/p1np1n2/4p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 w kq - 0 8',
-    description: 'The quiet Italian with d3 - positional approach avoiding early complications.',
-    keyIdeas: ['Slow build-up', 'Nbd2-f1-g3', 'Prepare d4 carefully'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'd3', 'Nf6', 'c3', 'a6', 'O-O', 'Ba7', 'Re1', 'd6', 'Nbd2', 'O-O', 'h3', 'Be6', 'Bb3', 'Bxb3', 'Qxb3', 'Qd7', 'Nf1', 'Rae8', 'Ng3', 'Ne7'],
+    fen: 'r3r1k1/bppqnppp/p2p1n2/4p3/4P3/1QPP1NNP/PP3PP1/R1B1R1K1 w - - 4 14',
+    description: 'The quiet Italian with d3 - positional approach with slow maneuvering into the middlegame.',
+    keyIdeas: ['Slow build-up', 'Nbd2-f1-g3 maneuver', 'Prepare d4 carefully', 'Kingside play'],
     difficulty: 2,
     category: 'e4',
     side: 'white',
@@ -56,10 +56,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Giuoco Pianissimo',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'd3', 'Nf6', 'Nc3', 'd6', 'Bg5', 'h6', 'Bh4', 'g5', 'Bg3'],
-    fen: 'r1bqk2r/ppp2p2/2np1n1p/2b1p1p1/2B1P3/2NP1NB1/PPP2PPP/R2QK2R b KQkq - 1 8',
-    description: 'The "Very Quiet Game" - calm maneuvering without early d4.',
-    keyIdeas: ['Positional play', 'Piece coordination', 'Slow kingside expansion'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'd3', 'Nf6', 'Nc3', 'd6', 'Bg5', 'h6', 'Bh4', 'g5', 'Bg3', 'Bg4', 'h3', 'Bxf3', 'Qxf3', 'Nd4', 'Qd1', 'c6', 'Ne2', 'Nxe2', 'Qxe2', 'Qb6'],
+    fen: 'r3k2r/pp3p2/1qpp1n1p/2b1p1p1/2B1P3/3P2BP/PPP1QPP1/R3K2R w KQkq - 1 14',
+    description: 'The "Very Quiet Game" - calm positional maneuvering with strategic middlegame themes.',
+    keyIdeas: ['Positional play', 'Piece coordination', 'Control of d4 square', 'Slow kingside expansion'],
     difficulty: 2,
     category: 'e4',
     side: 'white',
@@ -70,10 +70,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Giuoco Piano - Center Attack',
     eco: 'C53',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Nf6', 'd4', 'exd4', 'e5', 'd5', 'Bb5', 'Ne4', 'cxd4', 'Bb6'],
-    fen: 'r1bqk2r/ppp2ppp/1bn5/1B1pP3/3Pn3/5N2/PP3PPP/RNBQK2R w KQkq - 1 9',
-    description: 'White pushes e5 immediately, creating sharp tactical play.',
-    keyIdeas: ['Central pawn thrust', 'Pin on c6', 'Tactical complications'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Nf6', 'd4', 'exd4', 'e5', 'd5', 'Bb5', 'Ne4', 'cxd4', 'Bb6', 'Nc3', 'O-O', 'Be3', 'Bg4', 'Qc2', 'Nxc3', 'bxc3', 'f6', 'exf6', 'Rxf6'],
+    fen: 'r2q2k1/ppp3pp/1bn2r2/1B1p4/3P2b1/2P1BN2/P1Q2PPP/R3K2R w KQ - 0 14',
+    description: 'White pushes e5 immediately, creating sharp tactical play in the center.',
+    keyIdeas: ['Central pawn thrust', 'Pin on c6', 'Tactical complications', 'Open f-file'],
     difficulty: 4,
     category: 'e4',
     side: 'white',
@@ -81,17 +81,17 @@ export const italianGameLines: OpeningLine[] = [
   },
 
   // ==========================================
-  // EVANS GAMBIT (10 lines)
+  // EVANS GAMBIT
   // ==========================================
   {
     id: 'it-ev-1',
     name: 'Italian Game',
     variation: 'Evans Gambit Accepted - Main Line',
     eco: 'C51',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bxb4', 'c3', 'Ba5', 'd4', 'exd4', 'O-O', 'd6', 'cxd4', 'Bb6'],
-    fen: 'r1bqk1nr/ppp2ppp/1b1p4/8/2BPP3/5N2/P4PPP/RNBQ1RK1 w kq - 1 9',
-    description: 'The romantic Evans Gambit! Sacrifice a pawn for rapid development and attack.',
-    keyIdeas: ['Open lines for pieces', 'Rapid development', 'Kingside attack'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bxb4', 'c3', 'Ba5', 'd4', 'exd4', 'O-O', 'd6', 'cxd4', 'Bb6', 'Nc3', 'Na5', 'Bg5', 'f6', 'Be3', 'Ne7', 'Nd5', 'Nxd5', 'exd5', 'O-O', 'Qd2'],
+    fen: 'r1bq1rk1/ppp3pp/1b1p1p2/n2P4/3P4/4BN2/P2Q1PPP/R4RK1 b - - 1 15',
+    description: 'The romantic Evans Gambit leads to open play with White having strong central control.',
+    keyIdeas: ['Open lines for pieces', 'Rapid development', 'Strong d5 pawn', 'Kingside attack potential'],
     difficulty: 3,
     category: 'e4',
     side: 'white',
@@ -102,10 +102,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Evans Gambit - Lasker Defense',
     eco: 'C52',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bxb4', 'c3', 'Ba5', 'd4', 'd6', 'Qb3', 'Qd7', 'dxe5', 'Bb6'],
-    fen: 'r1b1k1nr/pppq1ppp/1b1p4/4P3/2B1P3/1QP2N2/P4PPP/RNB1K2R w KQkq - 1 9',
-    description: 'Lasker\'s solid defense - Black returns the pawn for solid position.',
-    keyIdeas: ['Return the pawn', 'Solid development', 'Counter in the center'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bxb4', 'c3', 'Ba5', 'd4', 'd6', 'Qb3', 'Qd7', 'dxe5', 'Bb6', 'a4', 'Na5', 'Qc2', 'Nxc4', 'Qxc4', 'dxe5', 'O-O', 'Nf6', 'Nbd2', 'O-O', 'Nb3'],
+    fen: 'r1b2rk1/pppq1ppp/1b3n2/4p3/P1Q1P3/1NP2N2/5PPP/R1B2RK1 b - - 1 14',
+    description: 'Lasker\'s solid defense - Black returns the pawn for a solid middlegame position.',
+    keyIdeas: ['Return the pawn', 'Solid development', 'Counter in the center', 'Equal chances'],
     difficulty: 3,
     category: 'e4',
     side: 'white',
@@ -116,10 +116,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Evans Gambit Declined',
     eco: 'C51',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bb6', 'a4', 'a6', 'Nc3', 'Nf6', 'd3', 'd6'],
-    fen: 'r1bqk2r/1pp2ppp/pb1p1n2/4p3/PPB1P3/2NP1N2/2P2PPP/R1BQK2R w KQkq - 0 8',
-    description: 'Black declines the gambit - solid but passive.',
-    keyIdeas: ['Queenside expansion', 'a5 ideas', 'Positional pressure'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bb6', 'a4', 'a6', 'Nc3', 'Nf6', 'd3', 'd6', 'Bg5', 'h6', 'Bh4', 'g5', 'Bg3', 'Bg4', 'h3', 'Bxf3', 'Qxf3', 'Nd4', 'Qd1'],
+    fen: 'r2qk2r/1pp2p2/pb1p1n1p/4p1p1/PnB1P3/2NP2BP/2P2PP1/R2QK2R w KQkq - 1 13',
+    description: 'Black declines the gambit - solid but White gets queenside space.',
+    keyIdeas: ['Queenside expansion', 'a5 ideas', 'Positional pressure', 'Control of d4'],
     difficulty: 2,
     category: 'e4',
     side: 'white',
@@ -130,10 +130,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Evans Gambit - Compromised Defense',
     eco: 'C52',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bxb4', 'c3', 'Ba5', 'd4', 'exd4', 'O-O', 'dxc3', 'Qb3', 'Qf6'],
-    fen: 'r1b1k1nr/pppp1ppp/2n2q2/b7/2B1P3/1Qp2N2/P4PPP/RNB2RK1 w kq - 1 9',
-    description: 'Black holds the extra pawns - White must attack quickly.',
-    keyIdeas: ['Attack before consolidation', 'Piece activity', 'Tactics on f7'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bxb4', 'c3', 'Ba5', 'd4', 'exd4', 'O-O', 'dxc3', 'Qb3', 'Qf6', 'e5', 'Qg6', 'Nxc3', 'Nge7', 'Ba3', 'O-O', 'Rad1', 'd6', 'exd6', 'Qxd6', 'Ne4'],
+    fen: 'r1b2rk1/ppp1nppp/3q4/b7/4N3/BQ3N2/P4PPP/3R1RK1 b - - 1 14',
+    description: 'Black holds the extra pawns but faces a strong attack.',
+    keyIdeas: ['Attack before consolidation', 'Piece activity', 'Ne4 outpost', 'Open lines'],
     difficulty: 4,
     category: 'e4',
     side: 'white',
@@ -141,17 +141,17 @@ export const italianGameLines: OpeningLine[] = [
   },
 
   // ==========================================
-  // TWO KNIGHTS DEFENSE (12 lines)
+  // TWO KNIGHTS DEFENSE
   // ==========================================
   {
     id: 'it-2k-1',
     name: 'Italian Game',
     variation: 'Two Knights - Main Line 4.Ng5',
     eco: 'C57',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'd5', 'exd5', 'Na5', 'Bb5+', 'c6', 'dxc6', 'bxc6', 'Be2', 'h6', 'Nf3', 'e4', 'Ne5'],
-    fen: 'r1bqkb1r/p4pp1/2p2n1p/n3N3/4p3/8/PPPPBPPP/RNBQK2R b KQkq - 1 10',
-    description: 'The classical Two Knights with 4.Ng5 - sharp tactical battle.',
-    keyIdeas: ['Attack on f7', 'Sharp tactics', 'Material vs. initiative'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'd5', 'exd5', 'Na5', 'Bb5+', 'c6', 'dxc6', 'bxc6', 'Be2', 'h6', 'Nf3', 'e4', 'Ne5', 'Bd6', 'd4', 'exd3', 'Nxd3', 'Qc7', 'b3', 'O-O', 'Bb2'],
+    fen: 'r1b2rk1/p1q2pp1/2pb3p/n7/8/1P1N4/PBP1BPPP/RN1QK2R w KQ - 1 14',
+    description: 'The classical Two Knights with 4.Ng5 leading to a complex middlegame.',
+    keyIdeas: ['Attack on f7', 'Sharp tactics', 'Material vs. initiative', 'Central control'],
     difficulty: 4,
     category: 'e4',
     side: 'white',
@@ -162,10 +162,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Fried Liver Attack',
     eco: 'C57',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'd5', 'exd5', 'Nxd5', 'Nxf7', 'Kxf7', 'Qf3+', 'Ke6', 'Nc3'],
-    fen: 'r1bq1b1r/ppp3pp/2n1kn2/3np3/2B5/2N2Q2/PPPP1PPP/R1B1K2R b KQ - 1 8',
-    description: 'The famous Fried Liver! Knight sacrifice on f7 with king hunt.',
-    keyIdeas: ['King hunt', 'Nc3 development', 'Attack the exposed king'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'd5', 'exd5', 'Nxd5', 'Nxf7', 'Kxf7', 'Qf3+', 'Ke6', 'Nc3', 'Ncb4', 'O-O', 'c6', 'd4', 'Kd7', 'Bf4', 'Be7', 'Rfe1', 'Rf8', 'a3', 'Na6', 'Nxd5', 'cxd5'],
+    fen: 'r1bq1r2/pp1kb1pp/n7/3pp3/3P1B2/P4Q2/1PP2PPP/R3R1K1 w - - 0 15',
+    description: 'The famous Fried Liver Attack with knight sacrifice and king hunt.',
+    keyIdeas: ['King hunt', 'Nc3 development', 'Attack the exposed king', 'Open f-file'],
     difficulty: 4,
     category: 'e4',
     side: 'white',
@@ -176,10 +176,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Traxler Counter-Attack',
     eco: 'C57',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'Bc5', 'Nxf7', 'Bxf2+', 'Kxf2', 'Nxe4+', 'Kg1', 'Qh4'],
-    fen: 'r1b1k2r/pppp1Npp/2n5/4p3/4n2q/8/PPPP2PP/RNBQ1BKR w kq - 1 8',
-    description: 'Traxler Counter-Gambit - Black sacrifices back for attack!',
-    keyIdeas: ['Counter-sacrifice', 'Attack White\'s king', 'Tactical melee'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'Bc5', 'Nxf7', 'Bxf2+', 'Kxf2', 'Nxe4+', 'Kg1', 'Qh4', 'g3', 'Nxg3', 'hxg3', 'Qxg3+', 'Kf1', 'Rf8', 'Qh5+', 'g6', 'Qxc5', 'Rxf7+', 'Ke1', 'd6'],
+    fen: 'r1b1k3/ppp2r1p/2np2p1/2Q1p3/8/6q1/PPPP4/RNB1K2R w KQq - 0 14',
+    description: 'Traxler Counter-Gambit - Black sacrifices back for a vicious attack!',
+    keyIdeas: ['Counter-sacrifice', 'Attack White\'s king', 'Tactical melee', 'Exposed king'],
     difficulty: 5,
     category: 'e4',
     side: 'black',
@@ -190,10 +190,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Two Knights - Modern 4.d3',
     eco: 'C55',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'd3', 'Be7', 'O-O', 'O-O', 'Re1', 'd6', 'c3', 'Na5', 'Bb3', 'c5'],
-    fen: 'r1bq1rk1/pp2bppp/3p1n2/n1p1p3/4P3/1BPP1N2/PP3PPP/RNBQR1K1 w - - 0 9',
-    description: 'Modern approach - slower buildup avoiding sharp lines.',
-    keyIdeas: ['Solid development', 'Slow maneuvering', 'Avoid early tactics'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'd3', 'Be7', 'O-O', 'O-O', 'Re1', 'd6', 'c3', 'Na5', 'Bb3', 'Nxb3', 'axb3', 'c5', 'Nbd2', 'Nc6', 'Nf1', 'Be6', 'Ng3', 'Qd7', 'h3', 'Rae8'],
+    fen: 'r3r1k1/pp1qbppp/2npbn2/2p1p3/4P3/1PPP1NNP/1P3PP1/R1BQR1K1 w - - 2 14',
+    description: 'Modern approach with solid development avoiding sharp lines.',
+    keyIdeas: ['Solid development', 'Slow maneuvering', 'Ng3 regrouping', 'f4 ideas'],
     difficulty: 2,
     category: 'e4',
     side: 'white',
@@ -204,10 +204,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Two Knights - Polerio Defense',
     eco: 'C58',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'd5', 'exd5', 'Na5', 'Bb5+', 'c6', 'dxc6', 'bxc6', 'Bd3', 'Nd5'],
-    fen: 'r1bqkb1r/p4ppp/2p5/n2np3/6N1/3B4/PPPP1PPP/RNBQK2R w KQkq - 1 9',
-    description: 'Polerio Defense - Black sacrifices a pawn for active play.',
-    keyIdeas: ['Activity over material', 'Central knight', 'Development advantage'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'd5', 'exd5', 'Na5', 'Bb5+', 'c6', 'dxc6', 'bxc6', 'Bd3', 'Nd5', 'Nf3', 'Bd6', 'O-O', 'O-O', 'Re1', 'Qc7', 'Nc3', 'Nxc3', 'bxc3', 'Nc4'],
+    fen: 'r1b2rk1/p1q2ppp/2pb4/8/2n5/2PB1N2/P1P2PPP/R1BQR1K1 w - - 2 14',
+    description: 'Polerio Defense - Black sacrifices a pawn for active piece play.',
+    keyIdeas: ['Activity over material', 'Central knight', 'Development advantage', 'Nc4 outpost'],
     difficulty: 4,
     category: 'e4',
     side: 'black',
@@ -218,10 +218,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Two Knights - Ulvestad Variation',
     eco: 'C57',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'd5', 'exd5', 'b5', 'Bf1', 'Nd4', 'c3', 'Nxd5'],
-    fen: 'r1bqkb1r/p1p2ppp/5n2/1p1np3/6N1/2P5/PP1P1PPP/RNBQKB1R w KQkq - 0 8',
-    description: 'Ulvestad Variation - sharp gambit with b5!',
-    keyIdeas: ['Gambit for initiative', 'Central control', 'Dynamic play'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Ng5', 'd5', 'exd5', 'b5', 'Bf1', 'Nd4', 'c3', 'Nxd5', 'Ne4', 'Qh4', 'Ng3', 'Bg4', 'f3', 'e4', 'cxd4', 'Bd6', 'fxg4', 'Qxg4'],
+    fen: 'r3k2r/p1p2ppp/3b4/1p1n4/3Pp1q1/6N1/PP1P2PP/RNBQKB1R w KQkq - 0 13',
+    description: 'Ulvestad Variation - sharp gambit with b5! Black sacrifices for initiative.',
+    keyIdeas: ['Gambit for initiative', 'Central control', 'Dynamic play', 'Open lines'],
     difficulty: 5,
     category: 'e4',
     side: 'black',
@@ -229,17 +229,17 @@ export const italianGameLines: OpeningLine[] = [
   },
 
   // ==========================================
-  // HUNGARIAN DEFENSE (3 lines)
+  // HUNGARIAN DEFENSE
   // ==========================================
   {
     id: 'it-hun-1',
     name: 'Italian Game',
     variation: 'Hungarian Defense',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Be7', 'd4', 'd6', 'dxe5', 'dxe5', 'Qxd8+', 'Bxd8', 'Nc3', 'Nf6', 'Bg5'],
-    fen: 'r1b1k2r/pppb1ppp/2n2n2/4p1B1/2B1P3/2N2N2/PPP2PPP/R3K2R b KQkq - 1 8',
-    description: 'The Hungarian Defense - solid but passive for Black.',
-    keyIdeas: ['Queens off early', 'Exploit weak e5 pawn', 'Better endgame for White'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Be7', 'd4', 'd6', 'dxe5', 'dxe5', 'Qxd8+', 'Bxd8', 'Nc3', 'Nf6', 'Bg5', 'Be6', 'Bxe6', 'fxe6', 'O-O-O', 'Bb6', 'Rhe1', 'Ke7', 'Bxf6+', 'gxf6', 'Nd5+'],
+    fen: 'r6r/ppp1k2p/1bn1pp2/3Np3/4P3/5N2/PPP2PPP/2KRR3 b - - 1 14',
+    description: 'The Hungarian Defense - solid but passive, White gets endgame edge.',
+    keyIdeas: ['Queens off early', 'Exploit weak e5 pawn', 'Better endgame for White', 'Nd5 outpost'],
     difficulty: 2,
     category: 'e4',
     side: 'white',
@@ -247,17 +247,17 @@ export const italianGameLines: OpeningLine[] = [
   },
 
   // ==========================================
-  // MAX LANGE ATTACK (5 lines)
+  // MAX LANGE ATTACK
   // ==========================================
   {
     id: 'it-ml-1',
     name: 'Italian Game',
     variation: 'Max Lange Attack',
     eco: 'C55',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'd4', 'exd4', 'O-O', 'Bc5', 'e5', 'd5', 'exf6', 'dxc4', 'Re1+', 'Be6', 'Ng5', 'Qd5', 'Nc3', 'Qf5', 'Nce4'],
-    fen: 'r3k2r/ppp2ppp/2n1bP2/2b2qN1/2pPN3/8/PPP2PPP/R1BQR1K1 b kq - 3 12',
-    description: 'The legendary Max Lange Attack - wild sacrificial chess!',
-    keyIdeas: ['Multiple piece sacrifices', 'Attack at all costs', 'King hunt'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'd4', 'exd4', 'O-O', 'Bc5', 'e5', 'd5', 'exf6', 'dxc4', 'Re1+', 'Be6', 'Ng5', 'Qd5', 'Nc3', 'Qf5', 'Nce4', 'O-O-O', 'g4', 'Qe5', 'Nxe6', 'fxe6', 'fxg7', 'Rhg8'],
+    fen: '2kr2r1/ppp3Pp/2n1p3/2b1q3/2p1N1P1/8/PPP2P1P/R1BQR1K1 w - - 1 16',
+    description: 'The legendary Max Lange Attack - wild sacrificial play in the middlegame!',
+    keyIdeas: ['Multiple piece sacrifices', 'Attack at all costs', 'King hunt', 'Open lines'],
     difficulty: 5,
     category: 'e4',
     side: 'white',
@@ -268,10 +268,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Max Lange - Anti Max Lange',
     eco: 'C55',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'd4', 'exd4', 'O-O', 'Nxe4', 'Re1', 'd5', 'Bxd5', 'Qxd5', 'Nc3', 'Qa5', 'Nxe4'],
-    fen: 'r1b1kb1r/ppp2ppp/2n5/q7/3pN3/5N2/PPP2PPP/R1BQR1K1 b kq - 0 9',
-    description: 'Black takes the e4 pawn instead of playing Bc5.',
-    keyIdeas: ['Material over attack', 'Solid defense', 'Counter in the center'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'd4', 'exd4', 'O-O', 'Nxe4', 'Re1', 'd5', 'Bxd5', 'Qxd5', 'Nc3', 'Qa5', 'Nxe4', 'Be6', 'Neg5', 'O-O-O', 'Nxe6', 'fxe6', 'Rxe6', 'Bd6', 'Bg5', 'Rde8'],
+    fen: '2k1r2r/ppp3pp/2nbR3/q5B1/3p4/5N2/PPP2PPP/R2Q2K1 w - - 1 14',
+    description: 'Black takes the e4 pawn instead of playing Bc5 - rich tactical middlegame.',
+    keyIdeas: ['Material over attack', 'Solid defense', 'Counter in the center', 'Active rooks'],
     difficulty: 4,
     category: 'e4',
     side: 'white',
@@ -279,17 +279,17 @@ export const italianGameLines: OpeningLine[] = [
   },
 
   // ==========================================
-  // SCOTCH GAMBIT (5 lines - Italian relative)
+  // SCOTCH GAMBIT
   // ==========================================
   {
     id: 'it-sg-1',
     name: 'Italian Game',
     variation: 'Scotch Gambit',
     eco: 'C44',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'd4', 'exd4', 'O-O', 'Nxe4', 'Re1', 'd5', 'Bxd5', 'Qxd5', 'Nc3'],
-    fen: 'r1b1kb1r/ppp2ppp/2n5/3q4/3pn3/2N2N2/PPP2PPP/R1BQR1K1 b kq - 1 8',
-    description: 'The Scotch Gambit - sacrifice for rapid development.',
-    keyIdeas: ['Piece activity', 'Open lines', 'Pressure on Black\'s position'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'd4', 'exd4', 'O-O', 'Nxe4', 'Re1', 'd5', 'Bxd5', 'Qxd5', 'Nc3', 'Qh5', 'Nxe4', 'Be6', 'Neg5', 'O-O-O', 'Nxe6', 'fxe6', 'Rxe6', 'Bd6', 'Qe2', 'Rhe8'],
+    fen: '2krr3/ppp3pp/2nbR3/7q/3p4/5N2/PPP1QPP1/R1B3K1 w - - 2 14',
+    description: 'The Scotch Gambit - sacrifice for rapid development and open lines.',
+    keyIdeas: ['Piece activity', 'Open lines', 'Pressure on Black', 'Initiative'],
     difficulty: 3,
     category: 'e4',
     side: 'white',
@@ -297,17 +297,17 @@ export const italianGameLines: OpeningLine[] = [
   },
 
   // ==========================================
-  // ITALIAN FOUR KNIGHTS (5 lines)
+  // ITALIAN FOUR KNIGHTS
   // ==========================================
   {
     id: 'it-4k-1',
     name: 'Italian Game',
     variation: 'Italian Four Knights',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Nc3', 'Nxe4', 'Nxe4', 'd5', 'Bd3', 'dxe4', 'Bxe4', 'Bd6', 'Bxc6+', 'bxc6', 'd3'],
-    fen: 'r1bqk2r/p1p2ppp/2pb4/4p3/8/3P1N2/PPP2PPP/R1BQK2R b KQkq - 0 9',
-    description: 'Italian Four Knights - symmetrical development.',
-    keyIdeas: ['Symmetric pawn structure', 'Slight White advantage', 'Endgame focus'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nf6', 'Nc3', 'Nxe4', 'Nxe4', 'd5', 'Bd3', 'dxe4', 'Bxe4', 'Bd6', 'Bxc6+', 'bxc6', 'd3', 'O-O', 'O-O', 'Re8', 'Re1', 'Bg4', 'h3', 'Bh5', 'Qd2', 'Qf6'],
+    fen: 'r3r1k1/p1p2ppp/2pb1q2/4p2b/8/3P1N1P/PPPQ1PP1/R1B1R1K1 w - - 4 14',
+    description: 'Italian Four Knights - symmetrical play leading to equal middlegame.',
+    keyIdeas: ['Symmetric pawn structure', 'Slight White advantage', 'Piece activity', 'Central control'],
     difficulty: 2,
     category: 'e4',
     side: 'white',
@@ -315,17 +315,17 @@ export const italianGameLines: OpeningLine[] = [
   },
 
   // ==========================================
-  // BLACK'S ALTERNATIVES (10 lines)
+  // BLACK'S ALTERNATIVES
   // ==========================================
   {
     id: 'it-alt-1',
     name: 'Italian Game',
     variation: 'Classical Defense 3...Bc5 4.c3 Qe7',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Qe7', 'd4', 'Bb6', 'O-O', 'd6', 'a4', 'a6', 'Na3'],
-    fen: 'r1b1k1nr/1pppqppp/pb1p4/4p3/P1BPP3/N1P2N2/1P3PPP/R1BQ1RK1 b kq - 1 8',
-    description: 'Queen to e7 - solid but slightly passive.',
-    keyIdeas: ['Slow development', 'a4-a5 expansion', 'Pressure on Black\'s queenside'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Qe7', 'd4', 'Bb6', 'O-O', 'd6', 'a4', 'a6', 'Na3', 'Nf6', 'Nc2', 'Bg4', 'Ne3', 'Bxf3', 'Qxf3', 'O-O-O', 'b4', 'Kb8'],
+    fen: '1k1r3r/1pp1qppp/pb1p1n2/4p3/PP1PP3/2P1NQ2/5PPP/R1B2RK1 w - - 1 14',
+    description: 'Queen to e7 - solid but slightly passive setup leads to queenside play.',
+    keyIdeas: ['Queenside expansion', 'a4-a5 ideas', 'Pressure on Black', 'Closed center'],
     difficulty: 2,
     category: 'e4',
     side: 'white',
@@ -336,10 +336,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Blackburne Shilling Gambit',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nd4', 'Nxe5', 'Qg5', 'Nxf7', 'Qxg2', 'Rf1', 'Qxe4+', 'Be2', 'Nf3+'],
-    fen: 'r1b1kb1r/pppp1Npp/8/8/4q3/5n2/PPPPBP1P/RNBQKR2 w Qkq - 1 8',
-    description: 'A trappy gambit - looks bad for Black but has sting!',
-    keyIdeas: ['Trap for White', 'Avoid Nxe5', 'Tactical trick'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Nd4', 'Nxe5', 'Qg5', 'Nxf7', 'Qxg2', 'Rf1', 'Qxe4+', 'Be2', 'Nf3+', 'Kf2', 'Nd4+', 'Kg3', 'Qf4+', 'Kh3', 'Qxf7', 'c3', 'Ne6', 'd4', 'd6'],
+    fen: 'r1b1kb1r/ppp2q1p/3pn1p1/8/3P4/2P4K/PP2BP1P/RNBQ1R2 w kq - 0 13',
+    description: 'A trappy gambit - looks bad for Black but has hidden sting!',
+    keyIdeas: ['Trap for White', 'Avoid Nxe5', 'Tactical trick', 'Piece activity'],
     difficulty: 2,
     category: 'e4',
     side: 'black',
@@ -350,10 +350,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Bird\'s Attack',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bb6', 'b5', 'Na5', 'Nxe5', 'Nh6', 'd4', 'd6', 'Bxh6', 'gxh6', 'Nf3'],
-    fen: 'r1bqk2r/ppp2p1p/1b1p3p/nP6/2BPP3/5N2/P1P2PPP/RN1QK2R b KQkq - 1 9',
-    description: 'Rare sideline with b4 without Bxb4.',
-    keyIdeas: ['Queenside expansion', 'Central control', 'Unusual positions'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'b4', 'Bb6', 'b5', 'Na5', 'Nxe5', 'Nh6', 'd4', 'd6', 'Bxh6', 'gxh6', 'Nf3', 'O-O', 'O-O', 'Bg4', 'Nbd2', 'Qf6', 'c3', 'Rae8'],
+    fen: 'r3r1k1/ppp2p1p/1b1p1q1p/nP6/2BPP1b1/2P2N2/P2N1PPP/R2Q1RK1 w - - 4 13',
+    description: 'Rare sideline with b4-b5 without Bxb4 - leads to unusual positions.',
+    keyIdeas: ['Queenside expansion', 'Central control', 'Unusual positions', 'Space advantage'],
     difficulty: 3,
     category: 'e4',
     side: 'white',
@@ -364,10 +364,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'd6 Defense',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'd6', 'c3', 'Bg4', 'd4', 'Nf6', 'dxe5', 'Nxe4', 'Qb3', 'Bxf3', 'Bxf7+', 'Ke7', 'gxf3'],
-    fen: 'r2q1b1r/ppp1kBpp/2np4/4P3/4n3/1QP2P2/PP3P1P/RNB1K2R b KQ - 0 9',
-    description: 'Black plays d6 early - solid but blocks the bishop.',
-    keyIdeas: ['Exploit blocked bishop', 'Central play', 'Tactical opportunities'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'd6', 'c3', 'Bg4', 'd4', 'Nf6', 'dxe5', 'Nxe4', 'Qb3', 'Bxf3', 'Bxf7+', 'Ke7', 'gxf3', 'Nxe5', 'fxe4', 'Nxc4', 'Qxc4', 'Kxf7', 'Be3', 'Qe7'],
+    fen: 'r3kb1r/ppp1q1pp/3p4/8/2Q1P3/2P1B3/PP3P1P/RN2K2R w KQq - 1 13',
+    description: 'Black plays d6 early - solid but blocks the bishop. White has space.',
+    keyIdeas: ['Exploit blocked bishop', 'Central play', 'Space advantage', 'King safety'],
     difficulty: 3,
     category: 'e4',
     side: 'white',
@@ -378,10 +378,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Paris Defense',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'd6', 'c3', 'f5', 'd4', 'fxe4', 'Ng5', 'd5', 'Bb3', 'Nh6'],
-    fen: 'r1bqkb1r/ppp3pp/2n4n/3pp1N1/3Pp3/1BP5/PP3PPP/RNBQK2R w KQkq - 1 8',
-    description: 'Latvian-style counterattack in the Italian.',
-    keyIdeas: ['Sharp play', 'f5 counter', 'Tactical melee'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'd6', 'c3', 'f5', 'd4', 'fxe4', 'Ng5', 'd5', 'Bb3', 'Nh6', 'f3', 'exf3', 'Nxf3', 'Bd6', 'O-O', 'O-O', 'Na3', 'Kh8', 'Nc2', 'Bg4'],
+    fen: 'r2q1r1k/ppp3pp/2nb3n/3pp3/3P2b1/1BPN1N2/PP4PP/R1BQ1RK1 w - - 4 13',
+    description: 'Latvian-style counterattack in the Italian - sharp tactical battle.',
+    keyIdeas: ['Sharp play', 'f5 counter', 'Tactical melee', 'Open f-file'],
     difficulty: 4,
     category: 'e4',
     side: 'white',
@@ -389,17 +389,17 @@ export const italianGameLines: OpeningLine[] = [
   },
 
   // ==========================================
-  // CRITICAL TRAPS TO KNOW (5 lines)
+  // CRITICAL TRAPS TO KNOW
   // ==========================================
   {
     id: 'it-trap-1',
     name: 'Italian Game',
     variation: 'Legal\'s Mate Trap',
     eco: 'C50',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'd6', 'd3', 'Bg4', 'Nc3', 'h6', 'h3', 'Bh5', 'Nxe5', 'Bxd1', 'Bxf7+', 'Ke7', 'Nd5#'],
-    fen: 'r2q1bnr/ppp1kBpp/2np3p/3NN3/4P3/3P3P/PPP2PP1/R1Bb1RK1 b - - 1 10',
-    description: 'The famous Legal\'s Mate - queen sacrifice leads to checkmate!',
-    keyIdeas: ['Queen sacrifice', 'Smothered mate pattern', 'Trap to avoid'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'd6', 'd3', 'Bg4', 'Nc3', 'h6', 'h3', 'Bh5', 'Nxe5', 'Bxd1', 'Bxf7+', 'Ke7', 'Nd5+', 'Kd7', 'Kxd1', 'Kc8', 'Nf7', 'Qe7', 'Nxh8'],
+    fen: 'r1k2bnN/ppp1q1p1/2np3p/3N4/4P3/3P4/PPP2PP1/R1BK3R b - - 0 13',
+    description: 'The famous Legal\'s Mate trap pattern - know it to avoid falling for it!',
+    keyIdeas: ['Queen sacrifice', 'Smothered mate pattern', 'Trap to avoid', 'Tactical awareness'],
     difficulty: 2,
     category: 'e4',
     side: 'white',
@@ -410,10 +410,10 @@ export const italianGameLines: OpeningLine[] = [
     name: 'Italian Game',
     variation: 'Noah\'s Ark Trap',
     eco: 'C54',
-    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Nf6', 'd4', 'exd4', 'cxd4', 'Bb4+', 'Nc3', 'Nxe4', 'O-O', 'Nxc3', 'bxc3', 'Bxc3', 'Qb3', 'Bxa1', 'Bxf7+', 'Kf8', 'Bg5', 'Ne7', 'Ne5', 'd5', 'Bg6'],
-    fen: 'r1bq1k1r/ppp1n1pp/6B1/3pN1B1/3P4/1Q6/P4PPP/b4RK1 b - - 1 14',
-    description: 'Famous trap - bishop gets trapped on a1.',
-    keyIdeas: ['Trap the bishop', 'Closed position', 'Pattern recognition'],
+    moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'c3', 'Nf6', 'd4', 'exd4', 'cxd4', 'Bb4+', 'Nc3', 'Nxe4', 'O-O', 'Nxc3', 'bxc3', 'Bxc3', 'Qb3', 'Bxa1', 'Bxf7+', 'Kf8', 'Bg5', 'Ne7', 'Ne5', 'd5', 'Bg6', 'Be6', 'Qc3', 'Bf6'],
+    fen: 'r2q1k1r/ppp1n1pp/4bbB1/3pN3/3P4/2Q5/P4PPP/b4RK1 w - - 8 16',
+    description: 'Famous trap pattern - the bishop on a1 gets trapped.',
+    keyIdeas: ['Trap the bishop', 'Closed position', 'Pattern recognition', 'Tactical awareness'],
     difficulty: 3,
     category: 'e4',
     side: 'white',
@@ -422,13 +422,3 @@ export const italianGameLines: OpeningLine[] = [
 ];
 
 export default italianGameLines;
-
-
-
-
-
-
-
-
-
-
