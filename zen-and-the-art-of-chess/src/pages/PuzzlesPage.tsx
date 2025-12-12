@@ -89,6 +89,57 @@ const DEFAULT_STATS: PuzzleStats = {
 };
 
 // ============================================
+// LEVEL SYSTEM - Chess.com style progress
+// ============================================
+
+// XP needed per level (increases each level)
+const getXpForLevel = (level: number): number => {
+  // Level 1-5: 50 XP each, Level 6-10: 75 XP each, etc.
+  if (level <= 5) return 50;
+  if (level <= 10) return 75;
+  if (level <= 20) return 100;
+  if (level <= 30) return 150;
+  return 200;
+};
+
+// Calculate total XP needed to reach a level
+const getTotalXpForLevel = (level: number): number => {
+  let total = 0;
+  for (let i = 1; i < level; i++) {
+    total += getXpForLevel(i);
+  }
+  return total;
+};
+
+// Calculate level from total XP
+const getLevelFromXp = (totalXp: number): { level: number; currentXp: number; xpForNextLevel: number } => {
+  let level = 1;
+  let remainingXp = totalXp;
+  
+  while (remainingXp >= getXpForLevel(level)) {
+    remainingXp -= getXpForLevel(level);
+    level++;
+  }
+  
+  return {
+    level,
+    currentXp: remainingXp,
+    xpForNextLevel: getXpForLevel(level),
+  };
+};
+
+// XP reward for solving a puzzle
+const getXpReward = (puzzleRating: number, userRating: number, solved: boolean): number => {
+  if (!solved) return 0;
+  const ratingDiff = puzzleRating - userRating;
+  // Base 10 XP, bonus for harder puzzles
+  if (ratingDiff > 200) return 20;
+  if (ratingDiff > 100) return 15;
+  if (ratingDiff > 0) return 12;
+  return 10;
+};
+
+// ============================================
 // UTILITY FUNCTIONS
 // ============================================
 
@@ -300,6 +351,48 @@ export function PuzzlesPage() {
       tier: getTierFromRating(newData.rating || legacy.rating || DEFAULT_STATS.rating),
     };
   });
+
+  // Level/XP System
+  const [totalXp, setTotalXp] = useState<number>(() => {
+    const saved = localStorage.getItem('zenChessPuzzleXp');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  
+  // Save XP when it changes
+  useEffect(() => {
+    localStorage.setItem('zenChessPuzzleXp', String(totalXp));
+  }, [totalXp]);
+  
+  // Calculate current level info
+  const levelInfo = getLevelFromXp(totalXp);
+  const progressPercent = (levelInfo.currentXp / levelInfo.xpForNextLevel) * 100;
+  
+  // Track if we just leveled up for animation
+  const [justLeveledUp, setJustLeveledUp] = useState(false);
+  const [xpGained, setXpGained] = useState<number | null>(null);
+  
+  // Puzzle solve timer for display
+  const [solveTimer, setSolveTimer] = useState(0);
+  const solveTimerInterval = useRef<ReturnType<typeof setInterval>>();
+  
+  // Start/stop timer based on puzzle state
+  useEffect(() => {
+    if (currentPuzzle && !feedback && !isAnimatingSetup) {
+      setSolveTimer(0);
+      solveTimerInterval.current = setInterval(() => {
+        setSolveTimer(prev => prev + 1);
+      }, 1000);
+    } else {
+      if (solveTimerInterval.current) {
+        clearInterval(solveTimerInterval.current);
+      }
+    }
+    return () => {
+      if (solveTimerInterval.current) {
+        clearInterval(solveTimerInterval.current);
+      }
+    };
+  }, [currentPuzzle, feedback, isAnimatingSetup]);
 
   // Save stats to both legacy and new storage
   useEffect(() => {
@@ -525,6 +618,22 @@ export function PuzzlesPage() {
       : calculateEloChange(stats.rating, puzzleRating, true);
     const points = 10 + puzzleDifficulty * 5 + (mode === 'rush' ? 5 : 0);
     const timeToSolve = Date.now() - puzzleStartTime.current;
+    
+    // Award XP
+    const xpEarned = getXpReward(puzzleRating, stats.rating, true);
+    const prevLevel = getLevelFromXp(totalXp).level;
+    setTotalXp(prev => prev + xpEarned);
+    setXpGained(xpEarned);
+    
+    // Check for level up
+    const newLevel = getLevelFromXp(totalXp + xpEarned).level;
+    if (newLevel > prevLevel) {
+      setJustLeveledUp(true);
+      setTimeout(() => setJustLeveledUp(false), 3000);
+    }
+    
+    // Clear XP animation after delay
+    setTimeout(() => setXpGained(null), 1500);
     
     // Store rating change for chess.com style display
     setLastRatingChange(ratingChange);
@@ -1021,23 +1130,27 @@ export function PuzzlesPage() {
           <ContextualAgentTip currentPage="/train" />
         </div>
 
-        {/* Rating & Tier Card */}
+        {/* Rating & Level Card */}
         <div className="card p-3 sm:p-6">
-          <div className="flex items-center justify-between mb-3 sm:mb-6">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
             <div className="flex items-center gap-2 sm:gap-4">
+              {/* Level Badge - Chess.com style */}
               <div 
-                className="w-11 h-11 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center text-2xl sm:text-3xl shrink-0"
-                style={{ background: `${tierConfig.color}22` }}
+                className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center font-bold text-xl sm:text-2xl shrink-0"
+                style={{ 
+                  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                  boxShadow: '0 4px 15px rgba(99, 102, 241, 0.3)'
+                }}
               >
-                {tierConfig.icon}
+                <span className="text-white">{levelInfo.level}</span>
               </div>
               <div>
                 <div className="text-[10px] sm:text-sm" style={{ color: 'var(--text-muted)' }}>Rating</div>
                 <div className="text-xl sm:text-3xl font-display font-bold" style={{ color: tierConfig.color }}>
-                  {stats.rating}
+                  {stats.rating.toLocaleString()}
                 </div>
                 <div className="text-[10px] sm:text-sm" style={{ color: tierConfig.color }}>
-                  {tierConfig.name}
+                  {tierConfig.name} • Level {levelInfo.level}
                 </div>
               </div>
             </div>
@@ -1047,10 +1160,30 @@ export function PuzzlesPage() {
             </div>
           </div>
 
+          {/* XP Progress to next level - Chess.com style */}
+          <div className="mb-3">
+            <div className="flex justify-between text-xs mb-1.5" style={{ color: 'var(--text-muted)' }}>
+              <span>Level {levelInfo.level}</span>
+              <span>{levelInfo.currentXp}/{levelInfo.xpForNextLevel} XP</span>
+            </div>
+            <div className="relative h-3 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
+              <div 
+                className="h-full rounded-full transition-all duration-500"
+                style={{ 
+                  width: `${progressPercent}%`,
+                  background: 'linear-gradient(to right, #4ade80, #22c55e)'
+                }}
+              />
+            </div>
+            <div className="text-right text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+              {levelInfo.xpForNextLevel - levelInfo.currentXp} XP to Level {levelInfo.level + 1}
+            </div>
+          </div>
+
           {/* Progress to next tier */}
           {nextTierConfig && (
-            <div>
-              <div className="flex justify-between text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
+            <div className="pt-3 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+              <div className="flex justify-between text-xs mb-1.5" style={{ color: 'var(--text-muted)' }}>
                 <span>{tierConfig.name}</span>
                 <span>{nextTierConfig.name} ({nextTierConfig.minRating})</span>
               </div>
@@ -1370,397 +1503,332 @@ export function PuzzlesPage() {
   }
 
   // ============================================
-  // RENDER: PUZZLE SOLVING VIEW
+  // RENDER: PUZZLE SOLVING VIEW - Chess.com Style Compact Layout
   // ============================================
   if (currentPuzzle) {
     const isRushOver = mode === 'rush' && (!rushActive || rushStrikes >= 3);
+    const isStreakOver = mode === 'streak' && !streakActive && streakCount > 0;
     
-    return (
-      <div className="space-y-6 animate-fade-in">
-        {/* Breadcrumb */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm">
-            <button
-              onClick={() => { setMode('menu'); setCurrentPuzzle(null); setRushActive(false); }}
-              className="hover:text-white transition-colors"
-              style={{ color: 'var(--text-muted)' }}
-            >
-              Puzzles
-            </button>
-            <span style={{ color: 'var(--text-muted)' }}>/</span>
-            <span style={{ color: 'var(--text-secondary)' }}>
-              {mode === 'rated' && 'Rated Puzzles'}
-              {mode === 'rush' && 'Puzzle Rush'}
-              {mode === 'streak' && 'Puzzle Streak'}
-              {mode === 'daily' && 'Daily Puzzle'}
-              {mode === 'custom' && 'Custom Puzzles'}
-            </span>
-          </div>
-
-          {/* Rush Timer/Score */}
-          {mode === 'rush' && rushActive && (
-            <div className="flex items-center gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-mono font-bold" style={{ color: rushTimer < 30 ? '#ef4444' : 'var(--text-primary)' }}>
-                  {Math.floor(rushTimer / 60)}:{(rushTimer % 60).toString().padStart(2, '0')}
-                </div>
-                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Time</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-mono font-bold" style={{ color: '#4ade80' }}>
-                  {rushScore}
-                </div>
-                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Score</div>
-              </div>
-              <div className="flex gap-1">
-                {[0, 1, 2].map(i => (
-                  <div
-                    key={i}
-                    className="w-4 h-4 rounded-full"
-                    style={{ background: i < rushStrikes ? '#ef4444' : 'var(--bg-hover)' }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Streak Counter */}
-          {mode === 'streak' && streakActive && (
-            <div className="flex items-center gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-mono font-bold" style={{ color: '#ec4899' }}>
-                  {streakCount}
-                </div>
-                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Streak</div>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map(d => (
-                    <div
-                      key={d}
-                      className="w-3 h-3 rounded-full"
-                      style={{ background: d <= streakDifficulty ? '#ec4899' : 'var(--bg-hover)' }}
-                    />
-                  ))}
-                </div>
-                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Difficulty</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-bold" style={{ color: '#f59e0b' }}>
-                  🏆 {stats.bestStreak}
-                </div>
-                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Best</div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Rush Over Screen */}
-        {isRushOver && mode === 'rush' && (
-          <div className="card p-8 text-center">
-            <div className="text-5xl mb-4">🏆</div>
+    // Game over screens for Rush/Streak
+    if (isRushOver || isStreakOver) {
+      return (
+        <div className="h-[calc(100vh-120px)] flex items-center justify-center animate-fade-in">
+          <div className="card p-8 text-center max-w-md">
+            <div className="text-5xl mb-4">{isRushOver ? '🏆' : '⚡'}</div>
             <h2 className="text-2xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>
-              {rushStrikes >= 3 ? 'Game Over!' : "Time's Up!"}
+              {isRushOver ? (rushStrikes >= 3 ? 'Game Over!' : "Time's Up!") : 'Streak Ended!'}
             </h2>
-            <div className="text-4xl font-display font-bold mb-4" style={{ color: '#4ade80' }}>
-              {rushScore} Puzzles
+            <div className="text-4xl font-display font-bold mb-4" style={{ color: isRushOver ? '#4ade80' : '#ec4899' }}>
+              {isRushOver ? `${rushScore} Puzzles` : `${streakCount} in a row`}
             </div>
-            {rushScore > stats.rushHighScore - rushScore && rushScore === stats.rushHighScore && (
+            {isRushOver && rushScore === stats.rushHighScore && rushScore > 0 && (
               <p className="text-lg mb-4" style={{ color: '#f59e0b' }}>🎉 New High Score!</p>
             )}
-            <div className="flex gap-4 justify-center">
-              <button onClick={() => startMode('rush')} className="btn-primary">
-                Play Again
-              </button>
-              <button onClick={() => { setMode('menu'); setCurrentPuzzle(null); }} className="btn-ghost">
-                Back to Menu
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Streak Over Screen */}
-        {mode === 'streak' && !streakActive && streakCount > 0 && (
-          <div className="card p-8 text-center">
-            <div className="text-5xl mb-4">⚡</div>
-            <h2 className="text-2xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>
-              Streak Ended!
-            </h2>
-            <div className="text-4xl font-display font-bold mb-4" style={{ color: '#ec4899' }}>
-              {streakCount} in a row
-            </div>
-            <p className="mb-2" style={{ color: 'var(--text-tertiary)' }}>
-              Reached difficulty level {streakDifficulty}
-            </p>
-            {streakCount >= stats.bestStreak && (
+            {isStreakOver && streakCount >= stats.bestStreak && (
               <p className="text-lg mb-4" style={{ color: '#f59e0b' }}>🎉 New Best Streak!</p>
             )}
-            <div className="flex gap-4 justify-center mt-6">
-              <button onClick={() => startMode('streak')} className="btn-primary">
-                Try Again
+            <div className="flex gap-4 justify-center">
+              <button onClick={() => isRushOver ? startMode('rush') : startMode('streak')} className="btn-primary">
+                Play Again
               </button>
-              <button onClick={() => { setMode('menu'); setCurrentPuzzle(null); setStreakCount(0); }} className="btn-ghost">
-                Back to Menu
+              <button onClick={() => { setMode('menu'); setCurrentPuzzle(null); setRushActive(false); setStreakCount(0); }} className="btn-ghost">
+                Back
               </button>
             </div>
           </div>
-        )}
+        </div>
+      );
+    }
+    
+    return (
+      <div className="h-[calc(100dvh-80px)] sm:h-[calc(100vh-100px)] flex flex-col animate-fade-in overflow-hidden">
+        {/* Compact Header - Chess.com style */}
+        <div className="flex items-center justify-between px-2 py-2 shrink-0" style={{ background: 'var(--bg-card)' }}>
+          <button
+            onClick={() => { setMode('menu'); setCurrentPuzzle(null); setRushActive(false); }}
+            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🧩</span>
+            <span className="font-display font-medium" style={{ color: 'var(--text-primary)' }}>Puzzles</span>
+          </div>
+          
+          <button
+            onClick={() => setShowGeniusPanel(true)}
+            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+        
+        {/* Turn Indicator - Chess.com style banner */}
+        <div 
+          className="px-4 py-2 text-center shrink-0"
+          style={{ 
+            background: playerColor === 'white' 
+              ? 'linear-gradient(to right, #f0f0f0, #e0e0e0)' 
+              : 'linear-gradient(to right, #2d2d2d, #1a1a1a)',
+            color: playerColor === 'white' ? '#1a1a1a' : '#f0f0f0'
+          }}
+        >
+          <div className="flex items-center justify-center gap-2">
+            <div 
+              className="w-4 h-4 rounded-sm border"
+              style={{ 
+                background: game.turn() === 'w' ? '#fff' : '#000',
+                borderColor: game.turn() === 'w' ? '#ccc' : '#444'
+              }}
+            />
+            <span className="font-medium text-sm">
+              {game.turn() === 'w' ? 'White' : 'Black'} to Move
+            </span>
+          </div>
+        </div>
+        
+        {/* Board Area - takes remaining space */}
+        <div className="flex-1 flex items-center justify-center px-2 py-2 overflow-hidden min-h-0">
+          <div className="relative w-full h-full flex items-center justify-center">
+            <div 
+              className="relative"
+              style={{ 
+                width: `min(100%, ${Math.min(boardSize, 500)}px)`,
+                maxHeight: '100%',
+                aspectRatio: '1'
+              }}
+            >
+              <Chessboard
+                position={game.fen()}
+                onSquareClick={isAnimatingSetup ? undefined : onSquareClick}
+                onPieceDrop={isAnimatingSetup ? () => false : onDrop}
+                boardOrientation={boardOrientation}
+                customSquareStyles={customSquareStyles}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
+                animationDuration={boardStyles.animationDuration}
+                arePiecesDraggable={!isAnimatingSetup && feedback !== 'complete' && !(feedback === 'incorrect' && mode === 'streak')}
+              />
 
-        {/* Main Puzzle Area */}
-        {!isRushOver && (
-          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,520px)_1fr] gap-4 lg:gap-8 items-start">
-            {/* Board */}
-            <div className="space-y-4 w-full flex flex-col items-center lg:items-start overflow-hidden px-2 sm:px-0">
-              <div className="relative w-full max-w-full" style={{ maxWidth: `min(${boardSize}px, calc(100vw - 2rem))` }}>
-                <Chessboard
-                  position={game.fen()}
-                  onSquareClick={isAnimatingSetup ? undefined : onSquareClick}
-                  onPieceDrop={isAnimatingSetup ? () => false : onDrop}
-                  boardOrientation={boardOrientation}
-                  customSquareStyles={customSquareStyles}
-                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                  customLightSquareStyle={boardStyles.customLightSquareStyle}
-                  animationDuration={boardStyles.animationDuration}
-                  arePiecesDraggable={!isAnimatingSetup && feedback !== 'complete' && !(feedback === 'incorrect' && mode === 'streak')}
-                  boardWidth={boardSize}
-                />
-
-                {/* Feedback Overlay - clean success screen */}
-                {feedback === 'complete' && !showGeniusPanel && (
-                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.75)' }}>
-                    <div className="text-center p-8">
-                      <div className="text-6xl mb-4">🎉</div>
-                      <h3 className="text-2xl font-display mb-2" style={{ color: '#4ade80' }}>Excellent!</h3>
-                      <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
-                        +{10 + getPuzzleDifficulty(currentPuzzle) * 5} points
-                      </p>
-                      <div className="flex flex-col gap-2">
-                        {aiAnalysisEnabled && (
-                          <button 
-                            onClick={() => setShowGeniusPanel(true)} 
-                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold"
-                          >
-                            🧠 See AI Analysis
-                          </button>
-                        )}
-                        <button onClick={nextPuzzle} className={aiAnalysisEnabled ? "btn-ghost text-sm" : "px-6 py-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold"}>
-                          {aiAnalysisEnabled ? 'Skip to Next →' : 'Next Puzzle →'}
-                        </button>
-                      </div>
-                    </div>
+              {/* Feedback Overlay - simplified */}
+              {feedback === 'complete' && !showGeniusPanel && (
+                <div className="absolute inset-0 flex items-center justify-center rounded-lg" style={{ background: 'rgba(0,0,0,0.8)' }}>
+                  <div className="text-center p-4">
+                    <div className="text-4xl mb-2">✓</div>
+                    <h3 className="text-xl font-display mb-1" style={{ color: '#4ade80' }}>Correct!</h3>
+                    {xpGained && (
+                      <p className="text-sm mb-3 animate-fade-in" style={{ color: '#fbbf24' }}>+{xpGained} XP</p>
+                    )}
+                    <button onClick={nextPuzzle} className="px-6 py-2 rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold">
+                      Next →
+                    </button>
                   </div>
-                )}
-
-                {/* Only show blocking overlay for streak mode where game ends */}
-                {feedback === 'incorrect' && mode === 'streak' && !streakActive && (
-                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.75)' }}>
-                    <div className="text-center p-8">
-                      <div className="text-5xl mb-4">⚡</div>
-                      <h3 className="text-xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>Streak Ended</h3>
-                      <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
-                        You reached <span className="font-bold" style={{ color: '#ec4899' }}>{streakCount}</span> in a row!
-                      </p>
-                      <div className="flex gap-3 justify-center">
-                        <button onClick={() => startMode('streak')} className="btn-primary">
-                          Try Again
-                        </button>
-                        <button onClick={() => { setMode('menu'); setCurrentPuzzle(null); setStreakCount(0); }} className="btn-ghost">
-                          Back to Menu
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Subtle feedback message - gentle and encouraging */}
-              {showIncorrectFeedback && (
-                <div className="text-center py-2 text-sm animate-fade-in" style={{ color: 'var(--text-muted)' }}>
-                  <span style={{ opacity: 0.8 }}>Not quite — have another go</span>
                 </div>
               )}
               
               {/* Setup animation indicator */}
               {isAnimatingSetup && (
-                <div className="text-center py-2 text-sm animate-pulse" style={{ color: 'var(--text-muted)' }}>
-                  Opponent plays...
+                <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)' }}>
+                  <div className="px-4 py-2 rounded-lg" style={{ background: 'var(--bg-card)' }}>
+                    <span className="text-sm animate-pulse" style={{ color: 'var(--text-secondary)' }}>Opponent plays...</span>
+                  </div>
                 </div>
               )}
-              
-              {/* Controls */}
-              <div className="flex gap-3">
-                {hintLevel < 2 ? (
-                  <button
-                    onClick={handleHint}
-                    disabled={feedback === 'complete'}
-                    className="btn-secondary flex-1"
-                  >
-                    💡 {hintLevel === 0 ? 'Hint' : 'More Hint'}
-                  </button>
-                ) : (
-                  <button
-                    onClick={showCorrectMove}
-                    disabled={feedback === 'complete'}
-                    className="flex-1 py-2 px-4 rounded-lg font-medium transition-all hover:scale-[1.02]"
-                    style={{ 
-                      background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.3), rgba(34, 197, 94, 0.2))',
-                      border: '1px solid rgba(74, 222, 128, 0.5)',
-                      color: '#4ade80',
-                    }}
-                  >
-                    ▶️ Show Move
-                  </button>
-                )}
-                <button 
-                  onClick={() => startPuzzle(currentPuzzle)} 
-                  className="btn-ghost flex-1"
-                >
-                  🔄 Reset
-                </button>
-              </div>
-              
-              {/* Move Hint Style Selector */}
-              <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
-                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Move hints</span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Bottom Stats Bar - Mode-specific */}
+        <div className="px-4 py-3 shrink-0" style={{ background: 'var(--bg-card)' }}>
+          {/* Rush Mode Stats */}
+          {mode === 'rush' && rushActive && (
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3">
+                <div className="text-center">
+                  <div className="text-2xl font-mono font-bold" style={{ color: rushTimer < 30 ? '#ef4444' : 'var(--text-primary)' }}>
+                    {Math.floor(rushTimer / 60)}:{(rushTimer % 60).toString().padStart(2, '0')}
+                  </div>
+                </div>
                 <div className="flex gap-1">
-                  {(Object.entries(MOVE_HINT_STYLES) as [MoveHintStyle, typeof MOVE_HINT_STYLES[MoveHintStyle]][]).map(([key, style]) => (
-                    <button
-                      key={key}
-                      onClick={() => setMoveHintStyle(key)}
-                      className={`px-3 py-1 text-xs rounded transition-all ${boardSettings.moveHintStyle === key ? 'bg-white/20' : 'hover:bg-white/10'}`}
-                      style={{ color: boardSettings.moveHintStyle === key ? 'var(--text-primary)' : 'var(--text-muted)' }}
-                    >
-                      {style.name}
-                    </button>
+                  {[0, 1, 2].map(i => (
+                    <div
+                      key={i}
+                      className="w-4 h-4 rounded-full"
+                      style={{ background: i < rushStrikes ? '#ef4444' : 'var(--bg-hover)' }}
+                    />
                   ))}
                 </div>
               </div>
-              
-              {/* AI Analysis Toggle */}
-              <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
-                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI Analysis</span>
-                <button
-                  onClick={() => setAiAnalysisEnabled(!aiAnalysisEnabled)}
-                  className={`relative w-12 h-6 rounded-full transition-colors ${aiAnalysisEnabled ? 'bg-purple-600' : 'bg-gray-600'}`}
-                >
-                  <span 
-                    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${aiAnalysisEnabled ? 'left-7' : 'left-1'}`}
-                  />
-                </button>
+              <div className="text-center">
+                <div className="text-3xl font-mono font-bold" style={{ color: '#4ade80' }}>
+                  {rushScore}
+                </div>
+                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Score</div>
               </div>
             </div>
-
-            {/* Info Panel - Condensed on mobile */}
-            <div className="space-y-3 lg:space-y-4">
-              {/* Puzzle Info - Compact on mobile */}
-              <div className="card p-4 lg:p-6">
-                <div className="flex items-center justify-between mb-2 lg:mb-4">
-                  <div className="flex-1 min-w-0">
-                    <h2 className="text-base lg:text-xl font-display truncate" style={{ color: 'var(--text-primary)' }}>
-                      {getPuzzleTitle(currentPuzzle)}
-                    </h2>
-                    <p className="text-xs lg:text-sm" style={{ color: 'var(--text-muted)' }}>
-                      {game.turn() === 'w' ? '⬜ White' : '⬛ Black'} to move
-                    </p>
-                  </div>
-                  <span className="text-xs ml-2 shrink-0" style={{ color: 'var(--accent-gold)' }}>
-                    {'★'.repeat(getPuzzleDifficulty(currentPuzzle))}{'☆'.repeat(5 - getPuzzleDifficulty(currentPuzzle))}
+          )}
+          
+          {/* Streak Mode Stats */}
+          {mode === 'streak' && streakActive && (
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3">
+                <div className="text-2xl font-mono font-bold" style={{ color: '#ec4899' }}>
+                  ⚡ {streakCount}
+                </div>
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map(d => (
+                    <div
+                      key={d}
+                      className="w-2.5 h-2.5 rounded-full"
+                      style={{ background: d <= streakDifficulty ? '#ec4899' : 'var(--bg-hover)' }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-sm" style={{ color: '#f59e0b' }}>Best: {stats.bestStreak}</span>
+              </div>
+            </div>
+          )}
+          
+          {/* Standard Mode Stats (Rated/Daily/Custom) */}
+          {mode !== 'rush' && mode !== 'streak' && (
+            <>
+              <div className="flex items-center justify-between mb-2">
+                {/* Rating */}
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-display font-bold" style={{ color: 'var(--text-primary)' }}>
+                    {stats.rating.toLocaleString()}
+                  </span>
+                  {lastRatingChange !== null && lastRatingChange !== 0 && (
+                    <span 
+                      className="text-sm font-bold animate-fade-in"
+                      style={{ color: lastRatingChange > 0 ? '#4ade80' : '#ef4444' }}
+                    >
+                      {lastRatingChange > 0 ? '+' : ''}{lastRatingChange}
+                    </span>
+                  )}
+                </div>
+                
+                {/* Timer */}
+                <div className="flex items-center gap-1.5" style={{ color: 'var(--text-muted)' }}>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-mono text-sm">
+                    {Math.floor(solveTimer / 60)}:{(solveTimer % 60).toString().padStart(2, '0')}
                   </span>
                 </div>
-
-                {/* Themes - horizontal scroll on mobile */}
-                <div className="flex flex-wrap gap-1.5 lg:gap-2 mb-3 lg:mb-4">
-                  {getThemes(currentPuzzle).map(theme => (
-                    <span 
-                      key={theme}
-                      className="badge text-xs"
-                    >
-                      {getThemeLabel(theme)}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Hint - Progressive hints */}
-                {hintLevel >= 1 && (
-                  <div className="p-2 lg:p-3 rounded-lg space-y-2" style={{ background: 'var(--bg-elevated)' }}>
-                    {hintLevel === 1 && (
-                      <p className="text-xs lg:text-sm" style={{ color: '#fbbf24' }}>
-                        💡 <span className="font-medium">The highlighted piece should move.</span>
-                        {getPuzzleExplanation(currentPuzzle) && (
-                          <span className="block mt-1 opacity-80 line-clamp-2">
-                            {getPuzzleExplanation(currentPuzzle)!.split('.')[0]}
-                          </span>
-                        )}
-                      </p>
-                    )}
-                    {hintLevel >= 2 && (
-                      <p className="text-xs lg:text-sm" style={{ color: '#4ade80' }}>
-                        ✨ <span className="font-medium">Move to the highlighted square.</span>
-                        {getPuzzleExplanation(currentPuzzle) && (
-                          <span className="block mt-1 opacity-80 line-clamp-3">
-                            {getPuzzleExplanation(currentPuzzle)}
-                          </span>
-                        )}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Rating & Streak - Combined row on mobile */}
-              <div className="flex gap-3 lg:flex-col">
-                {/* Rating Info (Rated Mode) - Chess.com style */}
-                {mode === 'rated' && (
-                  <div className="card p-3 lg:p-6 flex-1">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-xs lg:text-sm" style={{ color: 'var(--text-muted)' }}>Rating</div>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-lg lg:text-2xl font-display font-bold" style={{ color: tierConfig.color }}>
-                            {stats.rating}
-                          </span>
-                          {/* Chess.com style rating change display */}
-                          {lastRatingChange !== null && lastRatingChange !== 0 && (
-                            <span 
-                              className="text-sm lg:text-base font-bold animate-fade-in"
-                              style={{ 
-                                color: lastRatingChange > 0 ? '#4ade80' : '#ef4444',
-                              }}
-                            >
-                              ({lastRatingChange > 0 ? '+' : ''}{lastRatingChange})
-                            </span>
-                          )}
-                        </div>
+                
+                {/* Level Badge */}
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="relative w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg"
+                    style={{ 
+                      background: justLeveledUp 
+                        ? 'linear-gradient(135deg, #fbbf24, #f59e0b)' 
+                        : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                      boxShadow: justLeveledUp ? '0 0 20px rgba(251, 191, 36, 0.5)' : 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    <span className="text-white">{levelInfo.level}</span>
+                    {justLeveledUp && (
+                      <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-xs animate-bounce">
+                        ↑
                       </div>
-                      <div className="text-right hidden lg:block">
-                        <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Puzzle</div>
-                        <div className="text-2xl font-display font-bold" style={{ color: 'var(--text-secondary)' }}>
-                          {getPuzzleRating(currentPuzzle)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Streak */}
-                <div className="card p-3 lg:p-4 flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs lg:text-sm" style={{ color: 'var(--text-muted)' }}>Streak</span>
-                    <span className="text-base lg:text-lg font-mono font-bold" style={{ color: stats.currentStreak > 0 ? '#f59e0b' : 'var(--text-tertiary)' }}>
-                      🔥 {stats.currentStreak}
-                    </span>
+                    )}
                   </div>
                 </div>
               </div>
-
-              {/* Back Button - Hidden on mobile (use breadcrumb instead) */}
-              <button
-                onClick={() => { setMode('menu'); setCurrentPuzzle(null); setRushActive(false); }}
-                className="w-full btn-ghost hidden lg:block"
-              >
-                ← Back to Menu
-              </button>
-            </div>
+              
+              {/* XP Progress Bar - Chess.com style */}
+              <div className="relative h-2 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
+                <div 
+                  className="h-full rounded-full transition-all duration-500 ease-out"
+                  style={{ 
+                    width: `${progressPercent}%`,
+                    background: 'linear-gradient(to right, #4ade80, #22c55e)'
+                  }}
+                />
+                {xpGained && (
+                  <div 
+                    className="absolute top-0 h-full rounded-full animate-pulse"
+                    style={{ 
+                      width: `${(xpGained / levelInfo.xpForNextLevel) * 100}%`,
+                      left: `${Math.max(0, progressPercent - (xpGained / levelInfo.xpForNextLevel) * 100)}%`,
+                      background: 'rgba(251, 191, 36, 0.5)'
+                    }}
+                  />
+                )}
+              </div>
+              
+              {/* XP Text */}
+              <div className="flex justify-between mt-1">
+                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  {levelInfo.currentXp}/{levelInfo.xpForNextLevel} XP
+                </span>
+                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  Level {levelInfo.level + 1}
+                </span>
+              </div>
+            </>
+          )}
+        </div>
+        
+        {/* Control Buttons - Compact row at bottom */}
+        <div className="flex items-center justify-around py-3 border-t shrink-0" style={{ borderColor: 'var(--border-subtle)', background: 'var(--bg-primary)' }}>
+          {/* Hint Button */}
+          <button
+            onClick={handleHint}
+            disabled={feedback === 'complete'}
+            className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white/5 transition-colors disabled:opacity-50"
+            style={{ color: hintLevel > 0 ? '#fbbf24' : 'var(--text-secondary)' }}
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <span className="text-xs">Hint</span>
+          </button>
+          
+          {/* Back/Reset Button */}
+          <button
+            onClick={() => startPuzzle(currentPuzzle)}
+            disabled={feedback === 'complete'}
+            className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white/5 transition-colors disabled:opacity-50"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span className="text-xs">Back</span>
+          </button>
+          
+          {/* Forward/Next Button */}
+          <button
+            onClick={feedback === 'complete' ? nextPuzzle : showCorrectMove}
+            className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white/5 transition-colors"
+            style={{ color: feedback === 'complete' ? '#4ade80' : 'var(--text-secondary)' }}
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            <span className="text-xs">{feedback === 'complete' ? 'Next' : 'Forward'}</span>
+          </button>
+        </div>
+        
+        {/* Subtle incorrect feedback toast */}
+        {showIncorrectFeedback && (
+          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg animate-fade-in" style={{ background: 'rgba(239, 68, 68, 0.9)' }}>
+            <span className="text-sm text-white">Not quite — try again</span>
           </div>
         )}
 
@@ -1782,6 +1850,18 @@ export function PuzzlesPage() {
             />
           )}
         </AnimatePresence>
+        
+        {/* Level Up Celebration */}
+        {justLeveledUp && (
+          <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
+            <div className="text-center animate-bounce">
+              <div className="text-6xl mb-2">🎉</div>
+              <div className="text-2xl font-display font-bold" style={{ color: '#fbbf24' }}>
+                Level {levelInfo.level}!
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
