@@ -174,7 +174,6 @@ const navSections = [
     items: [
       { path: '/beginner', label: 'New to Chess?', icon: Icons.lotus, highlight: true },
       { path: '/journey', label: 'Learning Path', icon: Icons.map },
-      { path: '/day', label: 'Daily Practice', icon: Icons.book },
     ],
   },
   {

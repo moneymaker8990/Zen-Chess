@@ -444,7 +444,7 @@ export function HomePage() {
                   </div>
                 </div>
                 <button
-                  onClick={() => navigate('/day')}
+                  onClick={() => navigate('/mind')}
                   className="btn-secondary text-xs sm:text-sm w-full sm:w-auto"
                 >
                   Continue
