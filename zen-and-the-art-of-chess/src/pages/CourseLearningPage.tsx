@@ -23,7 +23,7 @@ import {
 import { explainMove, getQuickInsight, type MoveExplanation } from '@/lib/chessGenius';
 
 // ============================================
-// MOVE NORMALIZATION
+// MOVE NORMALIZATION & MATCHING
 // ============================================
 
 // Normalize castling notation: 0-0 -> O-O, 0-0-0 -> O-O-O
@@ -34,6 +34,51 @@ function normalizeMove(move: string): string {
     .replace(/0-0/g, 'O-O')      // Kingside castling with zeros
     .replace(/[!?]+/g, '')       // Strip annotations (!!, !, ?, ??, !?, ?!)
     .trim();
+}
+
+// Normalize SAN for comparison: remove +, #, x, promotion, AND disambiguation
+function normalizeSanForComparison(m: string): string {
+  let n = m.replace(/[+#x!?]/g, '').replace(/=.*$/, '');
+  // For piece moves (N, B, R, Q, K), remove file/rank disambiguation
+  // Nde5 -> Ne5, N1e5 -> Ne5, Rae1 -> Re1
+  if (/^[NBRQK]/.test(n) && n.length > 3) {
+    n = n[0] + n.slice(-2); // Keep piece + destination square
+  }
+  return n;
+}
+
+// Try to make a move on the game, handling notation variations
+// Returns the move result or null if no matching move found
+function tryMakeMove(game: Chess, expectedMove: string): ReturnType<Chess['move']> | null {
+  const normalized = normalizeMove(expectedMove);
+  
+  // Try direct move first
+  try {
+    const result = game.move(normalized);
+    if (result) return result;
+  } catch {
+    // Continue to fallback
+  }
+  
+  // Fallback: find matching legal move
+  const legalMoves = game.moves({ verbose: true });
+  const normalizedExpected = normalizeSanForComparison(normalized);
+  
+  for (const legalMove of legalMoves) {
+    const normalizedLegal = normalizeSanForComparison(legalMove.san);
+    
+    // Compare normalized versions
+    if (normalizedLegal === normalizedExpected) {
+      return game.move(legalMove.san);
+    }
+    
+    // For castling, also check the notation directly
+    if ((normalized === 'O-O' || normalized === 'O-O-O') && legalMove.san === normalized) {
+      return game.move(legalMove.san);
+    }
+  }
+  
+  return null;
 }
 
 // ============================================
@@ -374,55 +419,48 @@ export default function CourseLearningPage() {
     
     const move = currentVariation.moves[moveIndex];
     const newGame = new Chess(gameState.fen());
-    const normalizedMove = normalizeMove(move.move);
     
-    try {
-      const isCapture = normalizedMove.includes('x');
-      const result = newGame.move(normalizedMove);
-      
-      if (result) {
-        setTimeout(() => {
-          playSmartMoveSound(newGame, result, { isCapture });
-          setGame(newGame);
-          
-          const nextIndex = moveIndex + 1;
-          setCurrentMoveIndex(nextIndex);
-          setFeedback({ type: 'info', message: `Opponent plays ${normalizedMove}` });
-          
-          // Check if variation is complete
-          if (nextIndex >= currentVariation.moves.length) {
-            markVariationComplete();
-            setTimeout(() => {
-              setFeedback({ type: 'correct', message: '🎉 Variation Complete!' });
-            }, 500);
-            return;
-          }
-          
-          // Check if the NEXT move is also an opponent's move (check whose turn it is now)
-          const isNextMoveOpponent = isOpponentTurn(newGame);
-          
-          if (isNextMoveOpponent) {
-            // Chain to the next opponent move after a brief delay
-            setTimeout(() => {
-              playOpponentMove(newGame, nextIndex);
-            }, 600);
-          } else {
-            // It's now the user's turn - clear feedback and let them play
-            setTimeout(() => {
-              setFeedback(null);
-              setShowHint(false);
-            }, 1000);
-          }
-        }, 500);
-      } else {
-        // Move parsing returned null - try to recover by advancing
-        console.error('Opponent move returned null:', move.move);
-        setCurrentMoveIndex(moveIndex + 1);
-        setFeedback({ type: 'info', message: 'Advancing to next move...' });
-      }
-    } catch (e) {
-      // Move failed - advance anyway to prevent getting stuck
-      console.error('Invalid opponent move:', move.move, e);
+    // Use robust move matching
+    const result = tryMakeMove(newGame, move.move);
+    
+    if (result) {
+      const isCapture = result.captured !== undefined;
+      setTimeout(() => {
+        playSmartMoveSound(newGame, result, { isCapture });
+        setGame(newGame);
+        
+        const nextIndex = moveIndex + 1;
+        setCurrentMoveIndex(nextIndex);
+        setFeedback({ type: 'info', message: `Opponent plays ${result.san}` });
+        
+        // Check if variation is complete
+        if (nextIndex >= currentVariation.moves.length) {
+          markVariationComplete();
+          setTimeout(() => {
+            setFeedback({ type: 'correct', message: '🎉 Variation Complete!' });
+          }, 500);
+          return;
+        }
+        
+        // Check if the NEXT move is also an opponent's move (check whose turn it is now)
+        const isNextMoveOpponent = isOpponentTurn(newGame);
+        
+        if (isNextMoveOpponent) {
+          // Chain to the next opponent move after a brief delay
+          setTimeout(() => {
+            playOpponentMove(newGame, nextIndex);
+          }, 600);
+        } else {
+          // It's now the user's turn - clear feedback and let them play
+          setTimeout(() => {
+            setFeedback(null);
+            setShowHint(false);
+          }, 1000);
+        }
+      }, 500);
+    } else {
+      // Move failed - log error and advance to prevent getting stuck
+      console.error('Could not play opponent move:', move.move, 'FEN:', newGame.fen());
       setCurrentMoveIndex(moveIndex + 1);
       setFeedback({ type: 'info', message: 'Skipped invalid move, continuing...' });
     }
@@ -458,36 +496,36 @@ export default function CourseLearningPage() {
     if (currentMoveIndex < currentVariation.moves.length) {
       // Make the current move on the board
       const move = currentVariation.moves[currentMoveIndex];
-      const normalizedMove = normalizeMove(move.move);
       const newGame = new Chess(game.fen());
-      try {
-        const isCapture = normalizedMove.includes('x');
-        const result = newGame.move(normalizedMove);
-        if (result) {
-          // Preserve scroll position
-          const scrollY = window.scrollY;
-          
-          playSmartMoveSound(newGame, result, { isCapture });
-          setGame(newGame);
-          const nextIndex = currentMoveIndex + 1;
-          setCurrentMoveIndex(nextIndex);
-          setShowHint(false);
-          setSelectedSquare(null);
-          setMoveOptions({});
-          
-          // Check if variation is complete
-          if (nextIndex >= currentVariation.moves.length) {
-            markVariationComplete();
-            setFeedback({ type: 'correct', message: '✓ Variation Complete!' });
-          } else {
-            setFeedback(null);
-          }
-          
-          // Restore scroll position
-          requestAnimationFrame(() => window.scrollTo(0, scrollY));
+      
+      // Use robust move matching
+      const result = tryMakeMove(newGame, move.move);
+      
+      if (result) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
+        
+        const isCapture = result.captured !== undefined;
+        playSmartMoveSound(newGame, result, { isCapture });
+        setGame(newGame);
+        const nextIndex = currentMoveIndex + 1;
+        setCurrentMoveIndex(nextIndex);
+        setShowHint(false);
+        setSelectedSquare(null);
+        setMoveOptions({});
+        
+        // Check if variation is complete
+        if (nextIndex >= currentVariation.moves.length) {
+          markVariationComplete();
+          setFeedback({ type: 'correct', message: '✓ Variation Complete!' });
+        } else {
+          setFeedback(null);
         }
-      } catch (e) {
-        console.error('Invalid move:', move.move, e);
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
+      } else {
+        console.error('Invalid move:', move.move, 'FEN:', newGame.fen());
       }
     } else {
       // Already at the end - variation complete!
@@ -505,9 +543,8 @@ export default function CourseLearningPage() {
     const newGame = new Chess(currentVariation.fen);
     
     for (let i = 0; i < targetIndex; i++) {
-      try {
-        newGame.move(normalizeMove(currentVariation.moves[i].move));
-      } catch {
+      const result = tryMakeMove(newGame, currentVariation.moves[i].move);
+      if (!result) {
         console.error('Failed to replay move:', currentVariation.moves[i].move);
         break;
       }
@@ -538,11 +575,8 @@ export default function CourseLearningPage() {
     
     const newGame = new Chess(currentVariation.fen);
     for (const move of currentVariation.moves) {
-      try {
-        newGame.move(normalizeMove(move.move));
-      } catch {
-        break;
-      }
+      const result = tryMakeMove(newGame, move.move);
+      if (!result) break;
     }
     
     setGame(newGame);
@@ -600,9 +634,9 @@ export default function CourseLearningPage() {
       if (currentMove && currentMoveIndex < currentVariation.moves.length) {
         // Check if it matches the expected move (normalize notation for comparison)
         const expectedMove = normalizeMove(currentMove.move); // Normalize castling first
-        const normalizeSan = (m: string) => m.replace(/[+#x]/g, '').replace(/=.*$/, '');
+        
         const moveMatches = move.san === expectedMove || 
-                            normalizeSan(move.san) === normalizeSan(expectedMove);
+                            normalizeSanForComparison(move.san) === normalizeSanForComparison(expectedMove);
 
         if (moveMatches) {
           // Preserve scroll position
@@ -1028,9 +1062,8 @@ export default function CourseLearningPage() {
                       // Navigate to that move
                       const newGame = new Chess(currentVariation.fen);
                       for (let j = 0; j < i; j++) {
-                        try {
-                          newGame.move(normalizeMove(currentVariation.moves[j].move));
-                        } catch { break; }
+                        const result = tryMakeMove(newGame, currentVariation.moves[j].move);
+                        if (!result) break;
                       }
                       setGame(newGame);
                       setCurrentMoveIndex(i);
