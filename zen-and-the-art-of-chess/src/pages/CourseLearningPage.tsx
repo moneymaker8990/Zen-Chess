@@ -23,6 +23,19 @@ import {
 import { explainMove, getQuickInsight, type MoveExplanation } from '@/lib/chessGenius';
 
 // ============================================
+// MOVE NORMALIZATION
+// ============================================
+
+// Normalize castling notation: 0-0 -> O-O, 0-0-0 -> O-O-O
+// Also handles other common notation variations
+function normalizeMove(move: string): string {
+  return move
+    .replace(/0-0-0/g, 'O-O-O')  // Queenside castling with zeros
+    .replace(/0-0/g, 'O-O')      // Kingside castling with zeros
+    .trim();
+}
+
+// ============================================
 // STORAGE
 // ============================================
 
@@ -360,10 +373,11 @@ export default function CourseLearningPage() {
     
     const move = currentVariation.moves[moveIndex];
     const newGame = new Chess(gameState.fen());
+    const normalizedMove = normalizeMove(move.move);
     
     try {
-      const isCapture = move.move.includes('x');
-      const result = newGame.move(move.move);
+      const isCapture = normalizedMove.includes('x');
+      const result = newGame.move(normalizedMove);
       
       if (result) {
         setTimeout(() => {
@@ -372,7 +386,7 @@ export default function CourseLearningPage() {
           
           const nextIndex = moveIndex + 1;
           setCurrentMoveIndex(nextIndex);
-          setFeedback({ type: 'info', message: `Opponent plays ${move.move}` });
+          setFeedback({ type: 'info', message: `Opponent plays ${normalizedMove}` });
           
           // Check if variation is complete
           if (nextIndex >= currentVariation.moves.length) {
@@ -443,10 +457,11 @@ export default function CourseLearningPage() {
     if (currentMoveIndex < currentVariation.moves.length) {
       // Make the current move on the board
       const move = currentVariation.moves[currentMoveIndex];
+      const normalizedMove = normalizeMove(move.move);
       const newGame = new Chess(game.fen());
       try {
-        const isCapture = move.move.includes('x');
-        const result = newGame.move(move.move);
+        const isCapture = normalizedMove.includes('x');
+        const result = newGame.move(normalizedMove);
         if (result) {
           // Preserve scroll position
           const scrollY = window.scrollY;
@@ -490,7 +505,7 @@ export default function CourseLearningPage() {
     
     for (let i = 0; i < targetIndex; i++) {
       try {
-        newGame.move(currentVariation.moves[i].move);
+        newGame.move(normalizeMove(currentVariation.moves[i].move));
       } catch {
         console.error('Failed to replay move:', currentVariation.moves[i].move);
         break;
@@ -523,7 +538,7 @@ export default function CourseLearningPage() {
     const newGame = new Chess(currentVariation.fen);
     for (const move of currentVariation.moves) {
       try {
-        newGame.move(move.move);
+        newGame.move(normalizeMove(move.move));
       } catch {
         break;
       }
@@ -583,10 +598,10 @@ export default function CourseLearningPage() {
       // Check if we're in learning mode (have an expected move)
       if (currentMove && currentMoveIndex < currentVariation.moves.length) {
         // Check if it matches the expected move (normalize notation for comparison)
-        const expectedMove = currentMove.move;
-        const normalizeMove = (m: string) => m.replace(/[+#x]/g, '').replace(/=.*$/, '');
+        const expectedMove = normalizeMove(currentMove.move); // Normalize castling first
+        const normalizeSan = (m: string) => m.replace(/[+#x]/g, '').replace(/=.*$/, '');
         const moveMatches = move.san === expectedMove || 
-                            normalizeMove(move.san) === normalizeMove(expectedMove);
+                            normalizeSan(move.san) === normalizeSan(expectedMove);
 
         if (moveMatches) {
           // Preserve scroll position
@@ -1012,7 +1027,9 @@ export default function CourseLearningPage() {
                       // Navigate to that move
                       const newGame = new Chess(currentVariation.fen);
                       for (let j = 0; j < i; j++) {
-                        newGame.move(currentVariation.moves[j].move);
+                        try {
+                          newGame.move(normalizeMove(currentVariation.moves[j].move));
+                        } catch { break; }
                       }
                       setGame(newGame);
                       setCurrentMoveIndex(i);
