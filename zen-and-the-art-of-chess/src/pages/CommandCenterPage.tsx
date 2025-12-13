@@ -500,7 +500,7 @@ export function CommandCenterPage() {
             <QuickLink icon="❌" label="Mistake Library" count={mistakes.length} onClick={() => navigate('/mistakes')} />
             <QuickLink icon="⚔️" label="Sparring Positions" count={sparringPositions.length} onClick={() => navigate('/spar')} />
             <QuickLink icon="📖" label="Openings" onClick={() => navigate('/openings')} />
-            <QuickLink icon="🎮" label="Daily Lesson" onClick={() => navigate('/day/1')} />
+            <QuickLink icon="🎮" label="Daily Lesson" onClick={() => navigate('/mind')} />
           </div>
         </div>
       </div>

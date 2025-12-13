@@ -87,7 +87,7 @@ export function createJourneyAgent(): Agent {
               priority: 'low',
               primaryAction: {
                 label: 'Begin Today',
-                route: '/day',
+                route: '/mind',
               },
               showAsToast: false,
             });
@@ -121,7 +121,7 @@ export function createJourneyAgent(): Agent {
               priority: 'high',
               primaryAction: {
                 label: 'Start Phase',
-                route: '/day',
+                route: '/mind',
               },
             });
           }
@@ -206,7 +206,7 @@ export function createJourneyAgent(): Agent {
             priority: 'normal',
             primaryAction: {
               label: 'Complete Day',
-              route: '/day',
+              route: '/mind',
             },
           });
         }

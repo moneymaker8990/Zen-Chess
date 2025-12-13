@@ -14,7 +14,7 @@ export const deepOutpostVariations: CourseVariation[] = [
   {
     id: 'outpost-creation-1',
     title: 'Creating and Occupying an Outpost',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 9',
+    fen: 'r2q1rk1/pp1bppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 9',
     toMove: 'white',
     concept: 'Systematic outpost creation through pawn exchanges',
     keyTakeaway: 'First create the outpost, then transfer a piece to occupy it.',

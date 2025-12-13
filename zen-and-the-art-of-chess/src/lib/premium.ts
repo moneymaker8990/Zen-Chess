@@ -247,10 +247,9 @@ export const PREMIUM_ROUTES: Record<string, PremiumFeature | null> = {
   '/': null,
   '/train': null, // Limited puzzles for free
   '/play': null, // Limited games for free
-  '/day': null, // Limited to day 7 for free
+  '/mind': null, // Mind training (limited to day 7 for free)
   '/journey': null,
   '/coach': null, // Limited agent access
-  '/mind': null, // Basic meditation free
   '/calm-play': null,
   
   // Premium routes

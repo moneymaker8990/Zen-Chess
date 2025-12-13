@@ -32,7 +32,6 @@ import { HomePage } from '@/pages/HomePage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 
 // Lazy-loaded pages (loaded on demand)
-const DayPage = lazy(() => import('@/pages/DayPage'));
 const PlayPage = lazy(() => import('@/pages/PlayPage'));
 const PuzzlesPage = lazy(() => import('@/pages/PuzzlesPage'));
 const OpeningsPage = lazy(() => import('@/pages/OpeningsPage'));
@@ -109,7 +108,6 @@ function AnimatedRoutes() {
         <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
         
         {/* Core Training Routes */}
-        <Route path="/day" element={<LazyPage><DayPage /></LazyPage>} />
         <Route path="/play" element={<LazyPage><PlayPage /></LazyPage>} />
         <Route path="/train" element={<LazyPage><PuzzlesPage /></LazyPage>} />
         <Route path="/patterns" element={<LazyPage><PatternsManualPage /></LazyPage>} />
