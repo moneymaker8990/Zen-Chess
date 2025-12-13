@@ -27,11 +27,12 @@ import { explainMove, getQuickInsight, type MoveExplanation } from '@/lib/chessG
 // ============================================
 
 // Normalize castling notation: 0-0 -> O-O, 0-0-0 -> O-O-O
-// Also handles other common notation variations
+// Also strips annotation characters (!?!!) that chess.js can't parse
 function normalizeMove(move: string): string {
   return move
     .replace(/0-0-0/g, 'O-O-O')  // Queenside castling with zeros
     .replace(/0-0/g, 'O-O')      // Kingside castling with zeros
+    .replace(/[!?]+/g, '')       // Strip annotations (!!, !, ?, ??, !?, ?!)
     .trim();
 }
 
