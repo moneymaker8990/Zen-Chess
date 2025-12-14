@@ -1,25 +1,19 @@
 // ============================================
 // COURSES PAGE
-// Chessable-style course list with progress
-// Integrated with app layout and styling
+// Main courses listing with progress tracking
 // ============================================
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { BackButton } from '@/components/BackButton';
-import { 
-  allCourses, 
-  calculateCourseStats, 
-  calculateProgress,
-  type Course,
-  type CourseProgress 
-} from '../data/courses';
+import { allCourses, calculateCourseStats, type Course, type CourseProgress } from '../data/courses';
 
 // ============================================
 // STORAGE HELPERS
 // ============================================
 
-function loadAllProgress(): Record<string, CourseProgress> {
+function getAllProgress(): Record<string, CourseProgress> {
   try {
     const stored = localStorage.getItem('courseProgress');
     return stored ? JSON.parse(stored) : {};
@@ -28,264 +22,204 @@ function loadAllProgress(): Record<string, CourseProgress> {
   }
 }
 
-function getTotalDueForReview(allProgress: Record<string, CourseProgress>): number {
+function getCourseProgress(courseId: string): CourseProgress | undefined {
+  const all = getAllProgress();
+  return all[courseId];
+}
+
+function getDueForReview(): number {
+  const all = getAllProgress();
+  let due = 0;
   const now = Date.now();
-  let total = 0;
   
-  Object.values(allProgress).forEach(progress => {
-    Object.values(progress.variationScores).forEach(score => {
-      if (score.nextReview <= now) total++;
-    });
+  Object.values(all).forEach(progress => {
+    if (progress.variationScores) {
+      Object.values(progress.variationScores).forEach(score => {
+        if (score.nextReview && score.nextReview <= now) {
+          due++;
+        }
+      });
+    }
   });
   
-  return total;
+  return due;
 }
 
 // ============================================
-// COURSE CARD COMPONENT
+// COURSE CARD
 // ============================================
 
 interface CourseCardProps {
   course: Course;
   progress: CourseProgress | undefined;
-  onLearn: () => void;
-  onReview: () => void;
+  onNavigate: (id: string) => void;
 }
 
-function CourseCard({ course, progress, onLearn, onReview }: CourseCardProps) {
+function CourseCard({ course, progress, onNavigate }: CourseCardProps) {
   const stats = calculateCourseStats(course);
-  const progressData = calculateProgress(course, progress);
-  const progressPercent = progressData.totalVariations > 0 
-    ? (progressData.completedVariations / progressData.totalVariations) * 100 
+  const completedCount = progress?.completedVariations?.length || 0;
+  const percentComplete = stats.totalVariations > 0 
+    ? Math.round((completedCount / stats.totalVariations) * 100)
     : 0;
+  
+  // Calculate due for review
+  let dueForReview = 0;
+  if (progress?.variationScores) {
+    const now = Date.now();
+    Object.values(progress.variationScores).forEach(score => {
+      if (score.nextReview && score.nextReview <= now) {
+        dueForReview++;
+      }
+    });
+  }
 
   return (
-    <div className="card p-3 sm:p-5 hover:border-[var(--accent-primary)]/30 transition-all overflow-hidden">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-3 sm:mb-4">
-        <h3 className="text-base sm:text-lg font-display font-medium leading-tight pr-2 flex-1 line-clamp-2" style={{ color: 'var(--text-primary)' }}>
-          {course.title}
-        </h3>
-        <div className="flex items-center gap-2 shrink-0">
-          <button className="p-1.5 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors" style={{ color: 'var(--text-muted)' }}>
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-            </svg>
-          </button>
-        </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
+      className={`p-6 rounded-xl bg-gradient-to-br ${course.coverColor} shadow-lg cursor-pointer`}
+      onClick={() => onNavigate(course.id)}
+    >
+      <div className="flex items-start justify-between mb-4">
+        <div className="text-4xl">{course.coverImage}</div>
+        {dueForReview > 0 && (
+          <span className="px-2 py-1 text-xs font-bold bg-yellow-500 text-black rounded-full">
+            {dueForReview} due
+          </span>
+        )}
       </div>
-
-      {/* Course Content - Stack on mobile, flex on larger screens */}
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-        {/* Cover Image - Smaller on mobile */}
+      
+      <h3 className="text-xl font-bold text-white mb-2">{course.title}</h3>
+      <p className="text-white/80 text-sm mb-4 line-clamp-2">{course.description}</p>
+      
+      <div className="flex items-center gap-4 text-white/70 text-sm mb-4">
+        <span>{stats.totalChapters} chapters</span>
+        <span>•</span>
+        <span>{stats.totalVariations} puzzles</span>
+        <span>•</span>
+        <span>{stats.totalMinutes} min</span>
+      </div>
+      
+      {/* Progress bar */}
+      <div className="w-full bg-black/20 rounded-full h-2 mb-2">
         <div 
-          className="w-full sm:w-28 h-24 sm:h-36 rounded-lg flex items-center justify-center text-4xl sm:text-5xl shrink-0 shadow-lg"
-          style={{ backgroundColor: course.coverColor }}
-        >
-          {course.coverImage}
-        </div>
-
-        {/* Stats */}
-        <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
-          {/* Time & Variations - Wrap on mobile */}
-          <div className="flex flex-wrap items-center text-xs sm:text-sm gap-2 sm:gap-3" style={{ color: 'var(--text-muted)' }}>
-            <span className="whitespace-nowrap">{progressData.minutesSpent}/{stats.totalMinutes} mins</span>
-            <span className="hidden sm:block w-px h-4" style={{ background: 'var(--border-default)' }}></span>
-            <span className="whitespace-nowrap">{progressData.completedVariations}/{stats.totalVariations} vars</span>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="my-2 sm:my-3">
-            <div className="progress-bar">
-              <div 
-                className="progress-bar-fill purple"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Buttons */}
-          <div className="flex gap-2">
-            <button
-              onClick={onReview}
-              className="relative flex-1 py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-semibold text-xs sm:text-sm transition-all btn-secondary"
-            >
-              Review
-              {progressData.dueForReview > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 rounded-full min-w-[20px] sm:min-w-[24px]">
-                  {progressData.dueForReview}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={onLearn}
-              className="flex-1 py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-semibold text-xs sm:text-sm transition-all btn-primary"
-            >
-              Learn
-            </button>
-          </div>
-        </div>
+          className="bg-white rounded-full h-2 transition-all"
+          style={{ width: `${percentComplete}%` }}
+        />
       </div>
-    </div>
+      <div className="text-white/80 text-xs">
+        {completedCount} / {stats.totalVariations} completed ({percentComplete}%)
+      </div>
+      
+      <div className="mt-4 flex gap-2">
+        {completedCount > 0 ? (
+          <button className="flex-1 py-2 px-4 bg-white/20 hover:bg-white/30 rounded-lg text-white font-medium transition">
+            Continue
+          </button>
+        ) : (
+          <button className="flex-1 py-2 px-4 bg-white text-gray-900 rounded-lg font-medium hover:bg-white/90 transition">
+            Start Learning
+          </button>
+        )}
+        {dueForReview > 0 && (
+          <button className="py-2 px-4 bg-yellow-500 text-black rounded-lg font-medium hover:bg-yellow-400 transition">
+            Review
+          </button>
+        )}
+      </div>
+    </motion.div>
   );
 }
 
 // ============================================
-// MAIN COURSES PAGE
+// MAIN PAGE
 // ============================================
 
 export default function CoursesPage() {
   const navigate = useNavigate();
-  const [allProgress, setAllProgress] = useState<Record<string, CourseProgress>>({});
-  const totalDue = getTotalDueForReview(allProgress);
+  const [progress, setProgress] = useState<Record<string, CourseProgress>>({});
+  const [totalDue, setTotalDue] = useState(0);
 
   useEffect(() => {
-    setAllProgress(loadAllProgress());
+    setProgress(getAllProgress());
+    setTotalDue(getDueForReview());
   }, []);
 
-  const handleLearn = (courseId: string) => {
+  const handleNavigate = (courseId: string) => {
     navigate(`/courses/${courseId}`);
   };
 
-  const handleReview = (courseId: string) => {
-    navigate(`/courses/${courseId}/review`);
-  };
-
-  const handleReviewAll = () => {
-    // Navigate to a global review page
-    navigate('/courses/review-all');
-  };
-
-  // Calculate total stats
-  const totalVariations = allCourses.reduce((sum, c) => sum + calculateCourseStats(c).totalVariations, 0);
-  const completedVariations = Object.values(allProgress).reduce((sum, p) => sum + p.completedVariations.length, 0);
-  const totalMinutes = allCourses.reduce((sum, c) => sum + calculateCourseStats(c).totalMinutes, 0);
-
   return (
-    <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
-      {/* Back Button */}
-      <BackButton fallback="/" />
-
-      {/* Header */}
-      <section className="text-center lg:text-left">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
-          Courses
-        </h1>
-        <p className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
-          Master chess through structured learning with spaced repetition
-        </p>
-      </section>
-
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
-        <div className="card p-3 sm:p-4 text-center">
-          <div className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--accent-primary)' }}>{allCourses.length}</div>
-          <div className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>Courses</div>
-        </div>
-        <div className="card p-3 sm:p-4 text-center">
-          <div className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--accent-primary)' }}>{totalVariations}</div>
-          <div className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>Variations</div>
-        </div>
-        <div className="card p-3 sm:p-4 text-center">
-          <div className="text-xl sm:text-2xl font-bold" style={{ color: '#4ade80' }}>{completedVariations}</div>
-          <div className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>Learned</div>
-        </div>
-        <div className="card p-3 sm:p-4 text-center">
-          <div className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--accent-gold)' }}>{totalMinutes}</div>
-          <div className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>Minutes</div>
-        </div>
-      </div>
-
-      {/* Review All Button */}
-      {totalDue > 0 && (
-        <button
-          onClick={handleReviewAll}
-          className="w-full relative py-4 px-6 rounded-xl font-bold text-lg transition-all text-white"
-          style={{ 
-            background: 'linear-gradient(135deg, #059669 0%, #0d9488 100%)',
-            boxShadow: '0 4px 16px rgba(5, 150, 105, 0.25)'
-          }}
-        >
-          <span className="flex items-center justify-center gap-3">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Review All Courses
-          </span>
-          <span 
-            className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/20 backdrop-blur-sm text-white text-sm font-bold px-3 py-1 rounded-full"
-          >
-            {totalDue} due
-          </span>
-        </button>
-      )}
-
-      {/* Course Cards */}
-      <div className="space-y-4">
-        {allCourses.map((course) => (
-          <CourseCard
-            key={course.id}
-            course={course}
-            progress={allProgress[course.id]}
-            onLearn={() => handleLearn(course.id)}
-            onReview={() => handleReview(course.id)}
-          />
-        ))}
-      </div>
-
-      {/* Empty State */}
-      {allCourses.length === 0 && (
-        <div className="empty-state card p-12">
-          <div className="empty-state-icon">📚</div>
-          <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
-            No courses available yet
-          </h3>
-          <p style={{ color: 'var(--text-muted)' }}>
-            Check back soon for new learning content!
-          </p>
-        </div>
-      )}
-
-      {/* Tips Section */}
-      <div className="card p-4 sm:p-6">
-        <h3 className="text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4" style={{ color: 'var(--text-muted)' }}>
-          How It Works
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-lg sm:text-xl shrink-0" style={{ background: 'rgba(168, 85, 247, 0.12)' }}>
-              📖
-            </div>
-            <div className="min-w-0">
-              <h4 className="font-medium mb-0.5 sm:mb-1 text-sm sm:text-base" style={{ color: 'var(--text-primary)' }}>Learn</h4>
-              <p className="text-xs sm:text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                Study new variations with interactive boards
-              </p>
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <BackButton />
+            <div>
+              <h1 className="text-3xl font-bold">Courses</h1>
+              <p className="text-gray-400">Master chess through structured learning</p>
             </div>
           </div>
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-lg sm:text-xl shrink-0" style={{ background: 'rgba(5, 150, 105, 0.12)' }}>
-              🔄
-            </div>
-            <div className="min-w-0">
-              <h4 className="font-medium mb-0.5 sm:mb-1 text-sm sm:text-base" style={{ color: 'var(--text-primary)' }}>Review</h4>
-              <p className="text-xs sm:text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                Spaced repetition reinforces your memory
-              </p>
-            </div>
+          
+          {totalDue > 0 && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-3 bg-yellow-500 text-black font-bold rounded-xl shadow-lg"
+            >
+              Review All ({totalDue} due)
+            </motion.button>
+          )}
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-gray-800 rounded-xl p-4 text-center">
+            <div className="text-3xl font-bold text-white">{allCourses.length}</div>
+            <div className="text-gray-400 text-sm">Courses</div>
           </div>
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-lg sm:text-xl shrink-0" style={{ background: 'rgba(212, 161, 59, 0.12)' }}>
-              🏆
+          <div className="bg-gray-800 rounded-xl p-4 text-center">
+            <div className="text-3xl font-bold text-white">
+              {allCourses.reduce((sum, c) => sum + calculateCourseStats(c).totalVariations, 0)}
             </div>
-            <div className="min-w-0">
-              <h4 className="font-medium mb-0.5 sm:mb-1 text-sm sm:text-base" style={{ color: 'var(--text-primary)' }}>Master</h4>
-              <p className="text-xs sm:text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                Achieve mastery with consistent practice
-              </p>
+            <div className="text-gray-400 text-sm">Puzzles</div>
+          </div>
+          <div className="bg-gray-800 rounded-xl p-4 text-center">
+            <div className="text-3xl font-bold text-white">
+              {allCourses.reduce((sum, c) => sum + calculateCourseStats(c).totalMinutes, 0)}
             </div>
+            <div className="text-gray-400 text-sm">Minutes</div>
           </div>
         </div>
+
+        {/* Course Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {allCourses.map((course, index) => (
+            <motion.div
+              key={course.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <CourseCard
+                course={course}
+                progress={progress[course.id]}
+                onNavigate={handleNavigate}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Empty state if no courses */}
+        {allCourses.length === 0 && (
+          <div className="text-center py-20">
+            <div className="text-6xl mb-4">📚</div>
+            <h2 className="text-2xl font-bold mb-2">No Courses Yet</h2>
+            <p className="text-gray-400">Check back soon for new courses!</p>
+          </div>
+        )}
       </div>
     </div>
   );

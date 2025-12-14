@@ -4,11 +4,14 @@
 // ============================================
 
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAgentStore, useAgentMessages } from '@/lib/agents/agentOrchestrator';
 import { AGENT_PERSONALITIES } from '@/lib/agents/agentTypes';
 import type { AgentId } from '@/lib/agents/agentTypes';
+
+// Pages where the status bar should be hidden (they have their own AI controls)
+const HIDDEN_PAGES = ['/learn'];
 
 // ============================================
 // AGENT STATUS BAR
@@ -16,10 +19,14 @@ import type { AgentId } from '@/lib/agents/agentTypes';
 // ============================================
 
 export function AgentStatusBar() {
+  const location = useLocation();
   const state = useAgentStore((s) => s.state);
   const activeAgents = state.enabledAgents;
   
   const [showDetails, setShowDetails] = useState(false);
+  
+  // Hide on certain pages that have their own AI controls
+  const shouldHide = HIDDEN_PAGES.some(page => location.pathname.includes(page));
   
   // Calculate session stats
   const sessionMinutes = Math.floor((Date.now() - state.sessionStartTime) / 60000);
@@ -32,6 +39,9 @@ export function AgentStatusBar() {
   }, [state.recentMessages]);
 
   // Hide completely on mobile to not interfere with gameplay
+  // Also hide on pages that have their own AI controls
+  if (shouldHide) return null;
+  
   return (
     <div 
       className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none hidden lg:block"

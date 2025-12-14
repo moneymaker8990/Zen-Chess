@@ -24,7 +24,8 @@
     "mobile:ios": "npm run build && npx cap sync ios && npx cap open ios",
     "legends:download": "node scripts/downloadLegendGames.mjs",
     "legends:parse": "tsx scripts/parseLegendPGNs.ts",
-    "legends:setup": "node scripts/setupCompleteDatabases.ps1 || bash scripts/setupCompleteDatabases.sh"
+    "legends:setup": "node scripts/setupCompleteDatabases.ps1 || bash scripts/setupCompleteDatabases.sh",
+    "download-puzzles": "npx tsx scripts/downloadLichessPuzzles.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.0",

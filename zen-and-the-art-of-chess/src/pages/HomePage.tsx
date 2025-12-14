@@ -259,29 +259,7 @@ export function HomePage() {
             
             {/* Core Learning Features */}
             <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-4">
-              {/* Courses */}
-              <button
-                onClick={() => navigate('/courses')}
-                className="p-3 sm:p-4 rounded-xl text-left transition-all hover:scale-[1.02] group"
-                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-subtle)' }}
-              >
-                <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl sm:text-2xl shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' }}>
-                    📖
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm sm:text-base" style={{ color: 'var(--text-primary)' }}>Courses</h3>
-                    <p className="text-[10px] sm:text-xs hidden sm:block" style={{ color: '#a855f7' }}>Chessable-style</p>
-                  </div>
-                </div>
-                <div className="hidden sm:flex flex-wrap gap-1.5">
-                  <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--text-tertiary)' }}>Tactics</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--text-tertiary)' }}>Positional</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(139, 92, 246, 0.15)', color: 'var(--text-tertiary)' }}>Endgames</span>
-                </div>
-              </button>
-
+              {/* Courses - temporarily removed */}
               {/* Thinking System */}
               <button
                 onClick={() => navigate('/thinking-system')}

@@ -50,9 +50,10 @@ const LegendDetailPage = lazy(() => import('@/pages/LegendDetailPage'));
 const CommandCenterPage = lazy(() => import('@/pages/CommandCenterPage'));
 const PatternsManualPage = lazy(() => import('@/pages/PatternsManualPage'));
 const CoachPage = lazy(() => import('@/pages/CoachPage'));
-const CoursesPage = lazy(() => import('@/pages/CoursesPage'));
-const CourseDetailPage = lazy(() => import('@/pages/CourseDetailPage'));
-const CourseLearningPage = lazy(() => import('@/pages/CourseLearningPage'));
+// Courses pages - temporarily removed from UI
+// const CoursesPage = lazy(() => import('@/pages/CoursesPage'));
+// const CourseDetailPage = lazy(() => import('@/pages/CourseDetailPage'));
+// const CourseLearningPage = lazy(() => import('@/pages/CourseLearningPage'));
 const SocialPage = lazy(() => import('@/pages/SocialPage'));
 const StudyPlanPage = lazy(() => import('@/pages/StudyPlanPage'));
 const TournamentPrepPage = lazy(() => import('@/pages/TournamentPrepPage'));
@@ -126,11 +127,12 @@ function AnimatedRoutes() {
         <Route path="/learn/:lessonId" element={<LazyPage><LearnPage /></LazyPage>} />
         <Route path="/greats" element={<LazyPage><PlayTheGreatsPage /></LazyPage>} />
         <Route path="/greats/:legendId" element={<LazyPage><LegendDetailPage /></LazyPage>} />
-        <Route path="/courses" element={<LazyPage><CoursesPage /></LazyPage>} />
-        <Route path="/courses/:courseId" element={<LazyPage><CourseDetailPage /></LazyPage>} />
-        <Route path="/courses/:courseId/learn" element={<LazyPage><CourseLearningPage /></LazyPage>} />
-        <Route path="/courses/:courseId/chapter/:chapterId" element={<LazyPage><CourseLearningPage /></LazyPage>} />
-        <Route path="/courses/:courseId/review" element={<LazyPage><CourseLearningPage /></LazyPage>} />
+        {/* Courses routes - temporarily removed from UI */}
+        {/* <Route path="/courses" element={<LazyPage><CoursesPage /></LazyPage>} /> */}
+        {/* <Route path="/courses/:courseId" element={<LazyPage><CourseDetailPage /></LazyPage>} /> */}
+        {/* <Route path="/courses/:courseId/learn" element={<LazyPage><CourseLearningPage /></LazyPage>} /> */}
+        {/* <Route path="/courses/:courseId/chapter/:chapterId" element={<LazyPage><CourseLearningPage /></LazyPage>} /> */}
+        {/* <Route path="/courses/:courseId/review" element={<LazyPage><CourseLearningPage /></LazyPage>} /> */}
         
         {/* New Feature Routes */}
         <Route path="/social" element={<LazyPage><SocialPage /></LazyPage>} />
@@ -196,7 +198,7 @@ function AppContent() {
     if (path.includes('train') || path.includes('puzzle')) return 'puzzle';
     if (path.includes('play') || path.includes('sparring') || path.includes('calm-play')) return 'game';
     if (path.includes('opening')) return 'opening';
-    if (path.includes('study') || path.includes('course') || path.includes('learn')) return 'study';
+    if (path.includes('study') || path.includes('learn')) return 'study';
     return 'general';
   }, [location.pathname]);
   

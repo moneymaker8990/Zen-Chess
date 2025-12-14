@@ -1,8 +1,9 @@
-// ============================================
-// COURSES INDEX
-// All courses in one place - using bulk variations
-// ============================================
+/**
+ * COURSES INDEX
+ * Rebuilt with verified Lichess puzzles
+ */
 
+// Types
 export type { 
   Course, 
   CourseChapter, 
@@ -16,26 +17,35 @@ export {
   calculateProgress 
 } from './courseTypes';
 
-// Import the bulk-generated courses with 2000+ variations
+// All Courses
 export { 
   allCourses,
-  positionalMasterclass,
-  amateursMind,
-  endgameEssentials,
-  woodpeckerTactics,
-  // NEW COURSES
-  attackMasterclass,
-  defenseArtCourse,
-  calculationDojo,
   getCourseById,
   getTotalVariations,
+  getTotalMinutes,
+  getCourseStats,
 } from './allCourses';
 
-// Aliases for backwards compatibility
-export { positionalMasterclass as positionalPatternsCourse } from './allCourses';
-export { amateursMind as amateurMindCourse } from './allCourses';
-export { endgameEssentials as endgameCourse } from './allCourses';
-export { woodpeckerTactics as woodpeckerCourse } from './allCourses';
+// Individual Courses
+export { tacticalPatternTraining } from './tacticalPatternsCourse';
+export { artOfAttack } from './artOfAttackCourse';
+export { positionalMasterclass } from './positionalMasterclassCourse';
+export { strategicMastery } from './strategicMasteryCourse';
+export { endgameMastery } from './endgameMasteryCourse';
+export { attackMasterclass } from './attackMasterclassCourse';
+export { artOfDefense } from './artOfDefenseCourse';
+export { calculationDojo } from './calculationDojoCourse';
+export { positionalPatterns } from './positionalPatternsCourse';
+export { strategicMind } from './strategicMindCourse';
+
+// Converter utilities (for extending courses)
+export {
+  puzzleToCourseVariation,
+  puzzlesToVariations,
+  puzzlesByThemeToVariations,
+  validatePuzzle,
+  getThemeDescription,
+} from './courseConverter';
 
 // Helper to count all variations in a course
 export function countCourseVariations(course: { chapters: { variations: unknown[] }[] }) {

@@ -666,22 +666,7 @@ export function WeaknessDetectorPage() {
           </div>
         </button>
         
-        <button
-          onClick={() => navigate('/courses')}
-          className="card-interactive p-5 text-left"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl" style={{ background: 'rgba(74, 222, 128, 0.15)' }}>
-              📚
-            </div>
-            <div>
-              <h3 className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Study Courses</h3>
-              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                Deep learning
-              </p>
-            </div>
-          </div>
-        </button>
+        {/* Courses button - temporarily removed */}
         
         <button
           onClick={() => navigate('/flash-training')}

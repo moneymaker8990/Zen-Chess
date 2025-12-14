@@ -23,65 +23,6 @@ import {
 import { explainMove, getQuickInsight, type MoveExplanation } from '@/lib/chessGenius';
 
 // ============================================
-// MOVE NORMALIZATION & MATCHING
-// ============================================
-
-// Normalize castling notation: 0-0 -> O-O, 0-0-0 -> O-O-O
-// Also strips annotation characters (!?!!) that chess.js can't parse
-function normalizeMove(move: string): string {
-  return move
-    .replace(/0-0-0/g, 'O-O-O')  // Queenside castling with zeros
-    .replace(/0-0/g, 'O-O')      // Kingside castling with zeros
-    .replace(/[!?]+/g, '')       // Strip annotations (!!, !, ?, ??, !?, ?!)
-    .trim();
-}
-
-// Normalize SAN for comparison: remove +, #, x, promotion, AND disambiguation
-function normalizeSanForComparison(m: string): string {
-  let n = m.replace(/[+#x!?]/g, '').replace(/=.*$/, '');
-  // For piece moves (N, B, R, Q, K), remove file/rank disambiguation
-  // Nde5 -> Ne5, N1e5 -> Ne5, Rae1 -> Re1
-  if (/^[NBRQK]/.test(n) && n.length > 3) {
-    n = n[0] + n.slice(-2); // Keep piece + destination square
-  }
-  return n;
-}
-
-// Try to make a move on the game, handling notation variations
-// Returns the move result or null if no matching move found
-function tryMakeMove(game: Chess, expectedMove: string): ReturnType<Chess['move']> | null {
-  const normalized = normalizeMove(expectedMove);
-  
-  // Try direct move first
-  try {
-    const result = game.move(normalized);
-    if (result) return result;
-  } catch {
-    // Continue to fallback
-  }
-  
-  // Fallback: find matching legal move
-  const legalMoves = game.moves({ verbose: true });
-  const normalizedExpected = normalizeSanForComparison(normalized);
-  
-  for (const legalMove of legalMoves) {
-    const normalizedLegal = normalizeSanForComparison(legalMove.san);
-    
-    // Compare normalized versions
-    if (normalizedLegal === normalizedExpected) {
-      return game.move(legalMove.san);
-    }
-    
-    // For castling, also check the notation directly
-    if ((normalized === 'O-O' || normalized === 'O-O-O') && legalMove.san === normalized) {
-      return game.move(legalMove.san);
-    }
-  }
-  
-  return null;
-}
-
-// ============================================
 // STORAGE
 // ============================================
 
@@ -341,10 +282,7 @@ export default function CourseLearningPage() {
   const [game, setGame] = useState(new Chess());
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'incorrect' | 'info'; message: string } | null>(null);
-  
-  // Click-to-move state
   const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
-  const [moveOptions, setMoveOptions] = useState<Record<string, React.CSSProperties>>({});
   
   // Progress
   const [progress, setProgress] = useState<CourseProgress | null>(null);
@@ -367,9 +305,6 @@ export default function CourseLearningPage() {
   const currentVariation = variations[currentVariationIndex];
   const currentMove = currentVariation?.moves[currentMoveIndex];
   const isLastMove = currentMoveIndex >= (currentVariation?.moves.length || 0) - 1;
-  
-  // Determine which color the user is playing (based on first move's turn)
-  const userColor = currentVariation?.toMove || 'white';
 
   // Initialize
   useEffect(() => {
@@ -381,6 +316,17 @@ export default function CourseLearningPage() {
       }
     }
   }, [courseId]);
+
+  // Setup position when variation changes
+  useEffect(() => {
+    if (currentVariation) {
+      const newGame = new Chess(currentVariation.fen);
+      setGame(newGame);
+      setCurrentMoveIndex(0);
+      setShowHint(false);
+      setFeedback(null);
+    }
+  }, [currentVariation]);
 
   // Mark variation as complete
   const markVariationComplete = useCallback(() => {
@@ -403,218 +349,44 @@ export default function CourseLearningPage() {
     setVariationsCompleted(prev => prev + 1);
   }, [progress, currentVariation, courseId]);
 
-  // Check if it's the opponent's turn to move
-  const isOpponentTurn = useCallback((gameState: Chess): boolean => {
-    const turn = gameState.turn(); // 'w' or 'b'
-    const isUserWhite = userColor === 'white';
-    return (turn === 'w' && !isUserWhite) || (turn === 'b' && isUserWhite);
-  }, [userColor]);
-
-  // Auto-play opponent moves (with chaining for multiple opponent moves in a row)
-  const playOpponentMove = useCallback((gameState: Chess, moveIndex: number) => {
-    if (!currentVariation || moveIndex >= currentVariation.moves.length) {
-      // Variation complete or no more moves
-      return;
-    }
-    
-    const move = currentVariation.moves[moveIndex];
-    const newGame = new Chess(gameState.fen());
-    
-    // Use robust move matching
-    const result = tryMakeMove(newGame, move.move);
-    
-    if (result) {
-      const isCapture = result.captured !== undefined;
-      setTimeout(() => {
-        playSmartMoveSound(newGame, result, { isCapture });
-        setGame(newGame);
-        
-        const nextIndex = moveIndex + 1;
-        setCurrentMoveIndex(nextIndex);
-        setFeedback({ type: 'info', message: `Opponent plays ${result.san}` });
-        
-        // Check if variation is complete
-        if (nextIndex >= currentVariation.moves.length) {
-          markVariationComplete();
-          setTimeout(() => {
-            setFeedback({ type: 'correct', message: '🎉 Variation Complete!' });
-          }, 500);
-          return;
-        }
-        
-        // Check if the NEXT move is also an opponent's move (check whose turn it is now)
-        const isNextMoveOpponent = isOpponentTurn(newGame);
-        
-        if (isNextMoveOpponent) {
-          // Chain to the next opponent move after a brief delay
-          setTimeout(() => {
-            playOpponentMove(newGame, nextIndex);
-          }, 600);
-        } else {
-          // It's now the user's turn - clear feedback and let them play
-          setTimeout(() => {
-            setFeedback(null);
-            setShowHint(false);
-          }, 1000);
-        }
-      }, 500);
-    } else {
-      // Move failed - log error and advance to prevent getting stuck
-      console.error('Could not play opponent move:', move.move, 'FEN:', newGame.fen());
-      setCurrentMoveIndex(moveIndex + 1);
-      setFeedback({ type: 'info', message: 'Skipped invalid move, continuing...' });
-    }
-  }, [currentVariation, isOpponentTurn, markVariationComplete]);
-
-  // Setup position when variation changes
-  useEffect(() => {
-    if (currentVariation) {
-      const newGame = new Chess(currentVariation.fen);
-      setGame(newGame);
-      setCurrentMoveIndex(0);
-      setShowHint(false);
-      setFeedback(null);
-      
-      // Check if first move is opponent's turn - auto-play it (and chain if needed)
-      const turn = newGame.turn();
-      const isUserWhite = currentVariation.toMove === 'white';
-      const isFirstMoveOpponents = (turn === 'w' && !isUserWhite) || (turn === 'b' && isUserWhite);
-      
-      if (isFirstMoveOpponents && currentVariation.moves.length > 0) {
-        // Auto-play opponent moves starting from index 0 (will chain if multiple)
-        setTimeout(() => {
-          playOpponentMove(newGame, 0);
-        }, 600);
-      }
-    }
-  }, [currentVariation, playOpponentMove]);
-
-  // Handle advancing to next move - plays through ALL moves including opponent's
+  // Handle advancing to next move
   const advanceMove = useCallback(() => {
     if (!currentVariation) return;
 
-    if (currentMoveIndex < currentVariation.moves.length) {
-      // Make the current move on the board
+    if (currentMoveIndex < currentVariation.moves.length - 1) {
+      // Make the move on the board
       const move = currentVariation.moves[currentMoveIndex];
       const newGame = new Chess(game.fen());
-      
-      // Use robust move matching
-      const result = tryMakeMove(newGame, move.move);
-      
-      if (result) {
-        // Preserve scroll position
-        const scrollY = window.scrollY;
-        
-        const isCapture = result.captured !== undefined;
-        playSmartMoveSound(newGame, result, { isCapture });
-        setGame(newGame);
-        const nextIndex = currentMoveIndex + 1;
-        setCurrentMoveIndex(nextIndex);
-        setShowHint(false);
-        setSelectedSquare(null);
-        setMoveOptions({});
-        
-        // Check if variation is complete
-        if (nextIndex >= currentVariation.moves.length) {
-          markVariationComplete();
-          setFeedback({ type: 'correct', message: '✓ Variation Complete!' });
-        } else {
+      try {
+        const isCapture = move.move.includes('x');
+        const result = newGame.move(move.move);
+        if (result) {
+          // Preserve scroll position
+          const scrollY = window.scrollY;
+          
+          playSmartMoveSound(newGame, result, { isCapture });
+          setGame(newGame);
+          setCurrentMoveIndex(prev => prev + 1);
+          setShowHint(false);
           setFeedback(null);
+          
+          // Restore scroll position
+          requestAnimationFrame(() => window.scrollTo(0, scrollY));
         }
-        
-        // Restore scroll position
-        requestAnimationFrame(() => window.scrollTo(0, scrollY));
-      } else {
-        console.error('Invalid move:', move.move, 'FEN:', newGame.fen());
+      } catch {
+        console.error('Invalid move:', move.move);
       }
     } else {
-      // Already at the end - variation complete!
+      // Variation complete!
       markVariationComplete();
       setFeedback({ type: 'correct', message: '✓ Variation Complete!' });
     }
   }, [currentVariation, currentMoveIndex, game, markVariationComplete]);
 
-  // Go back to previous move
-  const goToPreviousMove = useCallback(() => {
-    if (!currentVariation || currentMoveIndex <= 0) return;
-    
-    // Rebuild the position up to the previous move
-    const targetIndex = currentMoveIndex - 1;
-    const newGame = new Chess(currentVariation.fen);
-    
-    for (let i = 0; i < targetIndex; i++) {
-      const result = tryMakeMove(newGame, currentVariation.moves[i].move);
-      if (!result) {
-        console.error('Failed to replay move:', currentVariation.moves[i].move);
-        break;
-      }
-    }
-    
-    setGame(newGame);
-    setCurrentMoveIndex(targetIndex);
-    setShowHint(false);
-    setFeedback(null);
-    setSelectedSquare(null);
-    setMoveOptions({});
-  }, [currentVariation, currentMoveIndex]);
+  // Handle user move attempt
+  const handleMove = useCallback((sourceSquare: string, targetSquare: string) => {
+    if (!currentMove) return false;
 
-  // Go to first move (reset to starting position)
-  const goToFirstMove = useCallback(() => {
-    if (!currentVariation) return;
-    setGame(new Chess(currentVariation.fen));
-    setCurrentMoveIndex(0);
-    setShowHint(false);
-    setFeedback(null);
-    setSelectedSquare(null);
-    setMoveOptions({});
-  }, [currentVariation]);
-
-  // Go to last move
-  const goToLastMove = useCallback(() => {
-    if (!currentVariation) return;
-    
-    const newGame = new Chess(currentVariation.fen);
-    for (const move of currentVariation.moves) {
-      const result = tryMakeMove(newGame, move.move);
-      if (!result) break;
-    }
-    
-    setGame(newGame);
-    setCurrentMoveIndex(currentVariation.moves.length);
-    markVariationComplete();
-    setFeedback({ type: 'correct', message: '✓ Variation Complete!' });
-    setSelectedSquare(null);
-    setMoveOptions({});
-  }, [currentVariation, markVariationComplete]);
-
-  // Get legal moves for a square (for click-to-move highlighting)
-  const getMoveOptions = useCallback((square: Square) => {
-    const moves = game.moves({ square, verbose: true });
-    if (moves.length === 0) {
-      setMoveOptions({});
-      return false;
-    }
-    
-    const newSquares: Record<string, React.CSSProperties> = {};
-    moves.forEach((move) => {
-      const isCapture = move.captured;
-      newSquares[move.to] = {
-        background: isCapture
-          ? 'radial-gradient(circle, rgba(255,0,0,0.4) 85%, transparent 85%)'
-          : 'radial-gradient(circle, rgba(0,0,0,0.2) 25%, transparent 25%)',
-        borderRadius: '50%',
-      };
-    });
-    newSquares[square] = { backgroundColor: 'rgba(129, 182, 76, 0.4)' };
-    setMoveOptions(newSquares);
-    return true;
-  }, [game]);
-
-  // Handle user move attempt (drag-drop or click-to-move)
-  const handleMove = useCallback((sourceSquare: string, targetSquare: string): boolean => {
-    if (!currentVariation) return false;
-    
-    // Allow moves even if we're past the expected move index (exploration mode)
     const newGame = new Chess(game.fen());
     try {
       const isCapture = !!newGame.get(targetSquare as Square);
@@ -625,84 +397,93 @@ export default function CourseLearningPage() {
       });
 
       if (!move) return false;
-      
-      // Clear selection
-      setSelectedSquare(null);
-      setMoveOptions({});
 
-      // Check if we're in learning mode (have an expected move)
-      if (currentMove && currentMoveIndex < currentVariation.moves.length) {
-        // Check if it matches the expected move (normalize notation for comparison)
-        const expectedMove = normalizeMove(currentMove.move); // Normalize castling first
+      // Check if it matches the expected move
+      const expectedMove = currentMove.move;
+      const moveMatches = move.san === expectedMove || 
+                          move.san.replace(/[+#]/, '') === expectedMove.replace(/[+#]/, '');
+
+      if (moveMatches) {
+        // Preserve scroll position
+        const scrollY = window.scrollY;
         
-        const moveMatches = move.san === expectedMove || 
-                            normalizeSanForComparison(move.san) === normalizeSanForComparison(expectedMove);
-
-        if (moveMatches) {
-          // Preserve scroll position
-          const scrollY = window.scrollY;
-          
-          playSmartMoveSound(newGame, move, { isCapture });
-          setGame(newGame);
-          setFeedback({ type: 'correct', message: '✓ Correct!' });
-          
-          // Restore scroll position
-          requestAnimationFrame(() => window.scrollTo(0, scrollY));
-          
-          const nextMoveIndex = currentMoveIndex + 1;
-          
-          // Check if variation is complete
-          if (nextMoveIndex >= currentVariation.moves.length) {
-            setTimeout(() => {
-              markVariationComplete();
-              setCurrentMoveIndex(nextMoveIndex);
-              setFeedback({ type: 'correct', message: '🎉 Variation Complete!' });
-            }, 800);
-            return true;
-          }
-          
-          // Check if next move is opponent's turn - if so, auto-play it
-          setTimeout(() => {
-            if (isOpponentTurn(newGame)) {
-              // Auto-play opponent's move
-              playOpponentMove(newGame, nextMoveIndex);
-            } else {
-              // It's still user's turn, just advance the index
-              setCurrentMoveIndex(nextMoveIndex);
-              setFeedback(null);
-              setShowHint(false);
-            }
-          }, 800);
-
-          return true;
-        } else {
-          // Wrong move - show clear feedback with the expected move
-          const hint = currentMove.explanation || currentMove.annotation || '';
-          setFeedback({ 
-            type: 'incorrect', 
-            message: `Not quite! The expected move is ${expectedMove}. ${hint ? '(' + hint + ')' : ''}`
-          });
-          return false;
-        }
-      } else {
-        // No expected move - just allow the move (exploration mode)
         playSmartMoveSound(newGame, move, { isCapture });
         setGame(newGame);
+        setFeedback({ type: 'correct', message: currentMove.explanation });
+        setSelectedSquare(null);
+        
+        // Restore scroll position
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
+        
+        // Move to next move index
+        const nextMoveIndex = currentMoveIndex + 1;
+        
+        if (nextMoveIndex < (currentVariation?.moves.length || 0)) {
+          setCurrentMoveIndex(nextMoveIndex);
+          setShowHint(false);
+          
+          // Check if next move is computer's turn (opponent response)
+          // User plays even moves (0, 2, 4...), computer plays odd moves (1, 3, 5...)
+          const isComputerNext = nextMoveIndex % 2 === 1;
+          
+          if (isComputerNext) {
+            // Auto-play computer's response after a short delay
+            setTimeout(() => {
+              const computerMove = currentVariation?.moves[nextMoveIndex];
+              if (computerMove) {
+                const gameAfterUser = new Chess(newGame.fen());
+                try {
+                  const compResult = gameAfterUser.move(computerMove.move);
+                  if (compResult) {
+                    const compIsCapture = computerMove.move.includes('x');
+                    playSmartMoveSound(gameAfterUser, compResult, { isCapture: compIsCapture });
+                    setGame(gameAfterUser);
+                    setFeedback({ type: 'info', message: computerMove.explanation || 'Your turn...' });
+                    setCurrentMoveIndex(nextMoveIndex + 1);
+                    
+                    // Check if puzzle is complete
+                    if (nextMoveIndex + 1 >= (currentVariation?.moves.length || 0)) {
+                      setTimeout(() => {
+                        markVariationComplete();
+                        setFeedback({ type: 'correct', message: '✓ Puzzle Complete!' });
+                      }, 500);
+                    } else {
+                      setTimeout(() => setFeedback(null), 1500);
+                    }
+                  }
+                } catch {
+                  console.error('Computer move failed');
+                }
+              }
+            }, 600);
+          }
+        } else {
+          // This was the last move
+          markVariationComplete();
+          setFeedback({ type: 'correct', message: '✓ Puzzle Complete!' });
+        }
+
         return true;
+      } else {
+        setFeedback({ type: 'incorrect', message: 'Try again! Hint: ' + currentMove.annotation });
+        return false;
       }
     } catch {
       return false;
     }
-  }, [currentMove, currentVariation, game, currentMoveIndex, markVariationComplete, isOpponentTurn, playOpponentMove]);
+  }, [currentMove, game, currentMoveIndex, currentVariation, markVariationComplete]);
 
-  // Handle square click (for click-to-move)
-  const onSquareClick = useCallback((square: Square) => {
-    // If no square selected, try to select this one
+  // Handle square click for click-to-move
+  const handleSquareClick = useCallback((square: Square) => {
+    if (!currentMove) return;
+    
+    const piece = game.get(square);
+    const playerColor = currentVariation?.toMove === 'white' ? 'w' : 'b';
+    
+    // If no square is selected, select this one if it has our piece
     if (!selectedSquare) {
-      const piece = game.get(square);
-      if (piece && piece.color === game.turn()) {
+      if (piece && piece.color === playerColor) {
         setSelectedSquare(square);
-        getMoveOptions(square);
       }
       return;
     }
@@ -710,35 +491,29 @@ export default function CourseLearningPage() {
     // If clicking the same square, deselect
     if (selectedSquare === square) {
       setSelectedSquare(null);
-      setMoveOptions({});
+      return;
+    }
+    
+    // If clicking another of our pieces, select that instead
+    if (piece && piece.color === playerColor) {
+      setSelectedSquare(square);
       return;
     }
     
     // Try to make the move
-    const moveResult = handleMove(selectedSquare, square);
+    const success = handleMove(selectedSquare, square);
+    setSelectedSquare(null);
     
-    // If move failed, try selecting the new square instead
-    if (!moveResult) {
-      const piece = game.get(square);
-      if (piece && piece.color === game.turn()) {
-        setSelectedSquare(square);
-        getMoveOptions(square);
-      } else {
-        setSelectedSquare(null);
-        setMoveOptions({});
-      }
-    } else {
-      setSelectedSquare(null);
-      setMoveOptions({});
+    // If move failed and it's a valid square with an opponent piece or empty, keep selected
+    if (!success && piece && piece.color !== playerColor) {
+      // Invalid move to opponent piece - could show feedback
     }
-  }, [selectedSquare, game, getMoveOptions, handleMove]);
+  }, [currentMove, game, selectedSquare, handleMove, currentVariation?.toMove]);
 
-  // Previous variation (go to previous lesson)
-  const previousVariation = useCallback(() => {
-    if (currentVariationIndex > 0) {
-      setCurrentVariationIndex(prev => prev - 1);
-    }
-  }, [currentVariationIndex]);
+  // Clear selection when variation changes
+  useEffect(() => {
+    setSelectedSquare(null);
+  }, [currentVariationIndex, currentMoveIndex]);
 
   // Next variation
   const nextVariation = useCallback(() => {
@@ -750,67 +525,151 @@ export default function CourseLearningPage() {
     }
   }, [currentVariationIndex, variations.length]);
 
+  // Previous variation
+  const prevVariation = useCallback(() => {
+    if (currentVariationIndex > 0) {
+      setCurrentVariationIndex(prev => prev - 1);
+    }
+  }, [currentVariationIndex]);
+
+  // Go back one move
+  const goBackMove = useCallback(() => {
+    if (!currentVariation) return;
+    
+    if (currentMoveIndex > 0) {
+      // Rebuild the position up to the previous move
+      const newGame = new Chess(currentVariation.fen);
+      for (let i = 0; i < currentMoveIndex - 1; i++) {
+        try {
+          newGame.move(currentVariation.moves[i].move);
+        } catch {
+          // Skip invalid moves
+        }
+      }
+      setGame(newGame);
+      setCurrentMoveIndex(prev => prev - 1);
+      setFeedback(null);
+      setShowHint(false);
+    } else {
+      // At the start of this variation, go to previous variation
+      if (currentVariationIndex > 0) {
+        prevVariation();
+      }
+    }
+  }, [currentVariation, currentMoveIndex, currentVariationIndex, prevVariation]);
+
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') {
         advanceMove();
       } else if (e.key === 'ArrowLeft') {
-        goToPreviousMove();
-      } else if (e.key === 'ArrowUp' || e.key === 'Home') {
-        goToFirstMove();
-      } else if (e.key === 'ArrowDown' || e.key === 'End') {
-        goToLastMove();
+        goBackMove();
       } else if (e.key === 'h') {
         setShowHint(true);
       } else if (e.key === 'n') {
         nextVariation();
-      } else if (e.key === 'p') {
-        previousVariation();
+      } else if (e.key === 'p' || e.key === 'b') {
+        prevVariation();
       } else if (e.key === 'a') {
         setShowAICoach(prev => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [advanceMove, goToPreviousMove, goToFirstMove, goToLastMove, nextVariation, previousVariation]);
+  }, [advanceMove, goBackMove, nextVariation, prevVariation]);
 
-  // Build arrows from current move
+  // Build arrows from current move (and hint if showing)
   const customArrows = useMemo((): [Square, Square, string][] => {
-    if (!currentMove?.arrows) return [];
-    return currentMove.arrows.map(arrow => [
-      arrow.from as Square,
-      arrow.to as Square,
-      getArrowColor(arrow.color)
-    ]);
-  }, [currentMove]);
+    const arrows: [Square, Square, string][] = [];
+    
+    // Add arrows from move annotations
+    if (currentMove?.arrows) {
+      currentMove.arrows.forEach(arrow => {
+        arrows.push([
+          arrow.from as Square,
+          arrow.to as Square,
+          getArrowColor(arrow.color)
+        ]);
+      });
+    }
+    
+    // Add hint arrow if showing
+    if (showHint && currentMove) {
+      // Parse the move to get from/to squares
+      const tempGame = new Chess(game.fen());
+      try {
+        const move = tempGame.move(currentMove.move);
+        if (move) {
+          arrows.push([
+            move.from as Square,
+            move.to as Square,
+            'rgba(255, 200, 0, 0.8)' // Yellow/gold hint arrow
+          ]);
+        }
+      } catch {
+        // Move parsing failed, skip hint arrow
+      }
+    }
+    
+    return arrows;
+  }, [currentMove, showHint, game]);
 
-  // Build highlights - merge move highlights with click-to-move options
+  // Build highlights including selected square and hint
   const customSquareStyles = useMemo(() => {
     const styles: Record<string, React.CSSProperties> = {};
     
-    // Add move hints/highlights from course data
+    // Highlight from current move annotations
     if (currentMove?.highlights) {
       currentMove.highlights.forEach(sq => {
         styles[sq] = { backgroundColor: 'rgba(255, 200, 0, 0.4)' };
       });
     }
     
-    // Merge with click-to-move options
-    Object.entries(moveOptions).forEach(([sq, style]) => {
-      styles[sq] = { ...styles[sq], ...style };
-    });
+    // Highlight hint squares when showing
+    if (showHint && currentMove) {
+      const tempGame = new Chess(game.fen());
+      try {
+        const move = tempGame.move(currentMove.move);
+        if (move) {
+          // Highlight source square
+          styles[move.from] = { 
+            backgroundColor: 'rgba(255, 200, 0, 0.5)',
+            boxShadow: 'inset 0 0 0 3px rgba(255, 200, 0, 0.8)'
+          };
+          // Highlight target square
+          styles[move.to] = { 
+            backgroundColor: 'rgba(255, 200, 0, 0.5)',
+            boxShadow: 'inset 0 0 0 3px rgba(255, 200, 0, 0.8)'
+          };
+        }
+      } catch {
+        // Move parsing failed
+      }
+    }
     
-    // Highlight selected square
+    // Highlight selected square for click-to-move
     if (selectedSquare) {
       styles[selectedSquare] = { 
-        ...styles[selectedSquare], 
-        backgroundColor: 'rgba(129, 182, 76, 0.6)' 
+        backgroundColor: 'rgba(100, 200, 100, 0.6)',
+        boxShadow: 'inset 0 0 0 3px rgba(100, 200, 100, 0.8)'
       };
+      
+      // Also highlight legal moves from selected square
+      const moves = game.moves({ square: selectedSquare, verbose: true });
+      moves.forEach(move => {
+        if (!styles[move.to]) {
+          styles[move.to] = {
+            backgroundColor: 'rgba(100, 200, 100, 0.3)',
+            borderRadius: '50%'
+          };
+        }
+      });
     }
     
     return styles;
-  }, [currentMove, moveOptions, selectedSquare]);
+  }, [currentMove, selectedSquare, game, showHint]);
 
   if (!course || !currentVariation) {
     return (
@@ -863,9 +722,7 @@ export default function CourseLearningPage() {
             }`}
             title="Toggle AI Coach (A)"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
+            <span className="text-xl">🧠</span>
           </button>
         </div>
       </div>
@@ -941,83 +798,75 @@ export default function CourseLearningPage() {
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3 sm:py-6 w-full">
-        <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_320px] gap-4 lg:gap-6 w-full max-w-full">
+        <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_320px] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
           {/* Board + Controls */}
-          <div className="w-full max-w-full">
+          <div className="w-full max-w-full overflow-hidden">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex justify-center shadow-2xl"
+              className="flex justify-center overflow-hidden shadow-2xl"
             >
               <div style={{ width: boardSize, maxWidth: '100%' }}>
               <Chessboard
                 position={game.fen()}
                 onPieceDrop={handleMove}
-                onSquareClick={onSquareClick}
+                onSquareClick={handleSquareClick}
                 boardOrientation={currentVariation.toMove === 'white' ? 'white' : 'black'}
                 boardWidth={boardSize}
                 customArrows={customArrows}
                 customSquareStyles={customSquareStyles}
                 customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
-                arePiecesDraggable={true}
               />
               </div>
             </motion.div>
 
-            {/* Move Controls - Full navigation */}
-            <div className="flex justify-center gap-1 sm:gap-1.5 mt-3 sm:mt-4">
-              {/* Previous Lesson */}
+            {/* Move Controls */}
+            <div className="flex justify-center gap-1.5 sm:gap-2 mt-3 sm:mt-4">
+              {/* Previous Puzzle */}
               <button
-                onClick={previousVariation}
+                onClick={prevVariation}
                 disabled={currentVariationIndex === 0}
-                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                title="Previous Lesson (P)"
+                className={`p-2 sm:p-3 rounded-lg transition-colors ${
+                  currentVariationIndex === 0
+                    ? 'bg-slate-800/50 text-slate-600 cursor-not-allowed'
+                    : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                }`}
+                title="Previous Puzzle (P)"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />
                 </svg>
               </button>
-              
-              {/* Previous Move */}
+              {/* Back One Move */}
               <button
-                onClick={goToPreviousMove}
-                disabled={currentMoveIndex === 0}
-                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                title="Previous Move (←)"
+                onClick={goBackMove}
+                disabled={currentMoveIndex === 0 && currentVariationIndex === 0}
+                className={`p-2 sm:p-3 rounded-lg transition-colors ${
+                  currentMoveIndex === 0 && currentVariationIndex === 0
+                    ? 'bg-slate-800/50 text-slate-600 cursor-not-allowed'
+                    : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                }`}
+                title="Back One Move (←)"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
-              
-              {/* Next Move */}
+              {/* Reset */}
               <button
-                onClick={advanceMove}
-                disabled={currentMoveIndex >= (currentVariation?.moves.length || 0)}
-                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                title="Next Move (→)"
+                onClick={() => {
+                  setGame(new Chess(currentVariation.fen));
+                  setCurrentMoveIndex(0);
+                  setFeedback(null);
+                }}
+                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+                title="Reset Puzzle"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
               </button>
-              
-              {/* Last Move */}
-              <button
-                onClick={goToLastMove}
-                disabled={currentMoveIndex >= (currentVariation?.moves.length || 0)}
-                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                title="Last Move (End)"
-              >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                </svg>
-              </button>
-              
-              {/* Separator */}
-              <div className="w-px bg-slate-600 mx-1 sm:mx-2" />
-              
               {/* Hint */}
               <button
                 onClick={() => setShowHint(!showHint)}
@@ -1032,14 +881,25 @@ export default function CourseLearningPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </button>
-              
-              {/* Next Variation */}
+              {/* Forward One Move */}
+              <button
+                onClick={advanceMove}
+                className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+                title="Next Move (→)"
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+              {/* Next Puzzle */}
               <button
                 onClick={nextVariation}
                 className="p-2 sm:p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors"
-                title="Next Variation (N)"
+                title="Next Puzzle (N)"
               >
-                <span className="text-xs sm:text-sm font-semibold">Next</span>
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                </svg>
               </button>
             </div>
 
@@ -1071,8 +931,7 @@ export default function CourseLearningPage() {
                       // Navigate to that move
                       const newGame = new Chess(currentVariation.fen);
                       for (let j = 0; j < i; j++) {
-                        const result = tryMakeMove(newGame, currentVariation.moves[j].move);
-                        if (!result) break;
+                        newGame.move(currentVariation.moves[j].move);
                       }
                       setGame(newGame);
                       setCurrentMoveIndex(i);
@@ -1137,18 +996,6 @@ export default function CourseLearningPage() {
         )}
       </AnimatePresence>
 
-      {/* Mobile: Floating AI Coach Button */}
-      {!showAICoach && (
-        <button
-          onClick={() => setShowAICoach(true)}
-          className="lg:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 text-white shadow-xl shadow-purple-500/30 flex items-center justify-center z-40"
-          title="AI Coach"
-        >
-          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
-        </button>
-      )}
     </div>
   );
 }

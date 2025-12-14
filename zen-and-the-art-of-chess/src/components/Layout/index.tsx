@@ -151,7 +151,6 @@ const navSections = [
   {
     title: '🎓 Academy',
     items: [
-      { path: '/courses', label: 'Courses', icon: Icons.courses, badge: '2400+' },
       { path: '/thinking-system', label: 'Thinking System', icon: Icons.mind },
       { path: '/flash-training', label: 'Flash Training', icon: Icons.lightning },
       { path: '/spaced-repetition', label: 'Spaced Review', icon: Icons.target },
