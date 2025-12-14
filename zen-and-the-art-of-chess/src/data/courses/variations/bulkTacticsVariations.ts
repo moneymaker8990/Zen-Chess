@@ -15,8 +15,8 @@ function generatePinVariations(): CourseVariation[] {
     { fen: 'r1bq1rk1/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQ1RK1 w - - 0 6', title: 'Castled Pin' },
     { fen: 'r2qkb1r/ppp2ppp/2n1bn2/3pp3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 0 5', title: 'Double Bishops' },
     { fen: 'r1bqk2r/pppp1ppp/2n2n2/4p1B1/2B1P3/2N2N2/PPPP1PPP/R2QK2R w KQkq - 0 5', title: 'Bg5 Pin' },
-    { fen: 'r1bqkb1r/pppp1ppp/2n5/4p2n/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 0 5', title: 'Knight Retreat Pin' },
-  ];
+    { fen: 'r1bqkb1r/pppp1ppp/2n5/4p2n/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 0 5', title: 'Knight Retreat Pin' }
+];
   
   const concepts = [
     { concept: 'Absolute pin to king', takeaway: 'Piece cannot legally move.' },
@@ -26,8 +26,8 @@ function generatePinVariations(): CourseVariation[] {
     { concept: 'Pin and win', takeaway: 'Pins can win material.' },
     { concept: 'Cross pin', takeaway: 'Intersecting pins are deadly.' },
     { concept: 'Skewer', takeaway: 'Reverse pin attacks behind.' },
-    { concept: 'X-ray attack', takeaway: 'Attack through pieces.' },
-  ];
+    { concept: 'X-ray attack', takeaway: 'Attack through pieces.' }
+];
   
   const variations: CourseVariation[] = [];
   let id = 1;
@@ -43,19 +43,15 @@ function generatePinVariations(): CourseVariation[] {
         keyTakeaway: con.takeaway,
         difficulty: (Math.floor(Math.random() * 3) + 2) as 1|2|3|4|5,
         moves: [
-          { move: 'Bg5', annotation: '!', explanation: `Creating a pin. ${con.takeaway}`, arrows: [{ from: 'c1', to: 'g5', color: 'red' }] },
-        ],
+          { move: 'Bg5', annotation: '!', explanation: `Creating a pin. ${con.takeaway}`, arrows: [{ from: 'c1', to: 'g5', color: 'red' }] }
+],
       });
     }
   }
   
   // Add more specific pin patterns
-  const specificPins = [
-    { id: 'pin-spec-1', fen: 'r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2NP1N2/PPP2PPP/R1BQK2R w KQkq - 0 5', title: 'Pinned Knight c3', concept: 'Knight pinned to queen', takeaway: 'The knight cannot move without losing the queen.' },
-    { id: 'pin-spec-2', fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P1B1/2N2N2/PPPP1PPP/R2QK2R w KQkq - 0 5', title: 'Double Pin Threat', concept: 'Two pins at once', takeaway: 'Multiple pins overwhelm defense.' },
-    { id: 'pin-spec-3', fen: 'r1bqk2r/pppp1ppp/2n2n2/4p1B1/2B1P3/2N2N2/PPPP1PPP/R2QK2R w KQkq - 0 5', title: 'Pin to Win Material', concept: 'Win the pinned piece', takeaway: 'Add attackers to win the pin.' },
-    { id: 'pin-spec-4', fen: 'r2qkb1r/ppp2ppp/2n1bn2/3pp1B1/2B1P3/2N2N2/PPPP1PPP/R2QK2R w KQkq - 0 6', title: 'Pin Breaking', concept: 'How to break a pin', takeaway: 'Interpose or counterattack.' },
-    { id: 'pin-spec-5', fen: 'r1bq1rk1/pppp1ppp/2n2n2/4p1B1/2B1P3/2N2N2/PPPP1PPP/R2Q1RK1 w - - 0 7', title: 'Pin Against Castled King', concept: 'Pinning near the king', takeaway: 'Pins near the king create threats.' },
+  const specificPins: { id: string; fen: string; title: string; concept: string; takeaway: string }[] = [
+    // Removed pin-spec-3, pin-spec-4, pin-spec-5 - FENs already have bishop on g5
   ];
   
   for (const pin of specificPins) {
@@ -81,8 +77,8 @@ function generateForkVariations(): CourseVariation[] {
     'r1bqk2r/pppp1ppp/2n2n2/4N3/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 4',
     'r2qk2r/ppp2ppp/2n1bn2/3Np3/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 6',
     'r1b1kb1r/pppp1ppp/2n2n2/4N2q/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 5',
-    'r1bqk2r/pppp1Npp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 5',
-  ];
+    'r1bqk2r/pppp1Npp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 5'
+];
   
   const variations: CourseVariation[] = [];
   let id = 1;
@@ -99,8 +95,8 @@ function generateForkVariations(): CourseVariation[] {
         keyTakeaway: 'Knights can attack up to 8 squares simultaneously!',
         difficulty: (Math.min(5, Math.floor(j / 2) + 2)) as 1|2|3|4|5,
         moves: [
-          { move: 'Nf7', annotation: '!', explanation: 'Fork! Attacking king and rook.', arrows: [{ from: 'e5', to: 'f7', color: 'green' }], highlights: ['f7'] },
-        ],
+          { move: 'Nf7', annotation: '!', explanation: 'Fork! Attacking king and rook.', arrows: [{ from: 'e5', to: 'f7', color: 'green' }], highlights: ['f7'] }
+],
       });
     }
   }
@@ -109,8 +105,8 @@ function generateForkVariations(): CourseVariation[] {
   const queenForkPositions = [
     'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4',
     'rnbqkbnr/ppp2ppp/8/3pp3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3',
-    'r1bqkb1r/pppp1ppp/2n5/4p2n/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4',
-  ];
+    'r1bqkb1r/pppp1ppp/2n5/4p2n/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4'
+];
   
   for (let i = 0; i < queenForkPositions.length; i++) {
     for (let j = 1; j <= 6; j++) {
@@ -123,8 +119,8 @@ function generateForkVariations(): CourseVariation[] {
         keyTakeaway: 'The queen is the best forking piece.',
         difficulty: 2,
         moves: [
-          { move: 'Qb3', annotation: '!', explanation: 'Attacking b7 and f7!', arrows: [{ from: 'd1', to: 'b3', color: 'green' }] },
-        ],
+          { move: 'Qb3', annotation: '!', explanation: 'Attacking b7 and f7!', arrows: [{ from: 'd1', to: 'b3', color: 'green' }] }
+],
       });
     }
   }
@@ -140,8 +136,8 @@ function generateForkVariations(): CourseVariation[] {
       keyTakeaway: 'Pawn forks are the best because the pawn is worth the least!',
       difficulty: 2,
       moves: [
-        { move: 'exd4', explanation: 'Taking and threatening!' },
-      ],
+        { move: 'exd4', explanation: 'Taking and threatening!' }
+],
     });
   }
   
@@ -156,8 +152,8 @@ function generateForkVariations(): CourseVariation[] {
       keyTakeaway: 'Bishops fork on diagonals.',
       difficulty: 2,
       moves: [
-        { move: 'Bc3', annotation: '!', explanation: 'Forking both knights!' },
-      ],
+        { move: 'Bc3', annotation: '!', explanation: 'Forking both knights!' }
+],
     });
   }
   
@@ -173,8 +169,8 @@ function generateDiscoveredVariations(): CourseVariation[] {
     { fen: 'r1bqk2r/pppp1Bpp/2n2n2/4p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 5', move: 'Kxf7' },
     { fen: 'r1bqkb1r/pppp1Npp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNBQK2R b KQkq - 0 5', move: 'Qe7' },
     { fen: '6k1/5ppp/8/8/8/8/2R5/B5K1 w - - 0 1', move: 'Rc8+' },
-    { fen: 'r1b1kb1r/pppp1ppp/2n2n2/4N3/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 4', move: 'Nxf7' },
-  ];
+    { fen: 'r1b1kb1r/pppp1ppp/2n2n2/4N3/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 4', move: 'Nxf7' }
+];
   
   for (let i = 0; i < positions.length; i++) {
     for (let j = 1; j <= 12; j++) {
@@ -187,8 +183,8 @@ function generateDiscoveredVariations(): CourseVariation[] {
         keyTakeaway: j <= 4 ? 'Moving one piece reveals attack by another.' : j <= 8 ? 'Discovered check is very powerful.' : 'Double check can only be met by king move.',
         difficulty: (Math.min(5, Math.floor(j / 3) + 2)) as 1|2|3|4|5,
         moves: [
-          { move: positions[i].move, annotation: '!', explanation: 'Discovered attack!' },
-        ],
+          { move: positions[i].move, annotation: '!', explanation: 'Discovered attack!' }
+],
       });
     }
   }
@@ -208,8 +204,8 @@ function generateCheckmateVariations(): CourseVariation[] {
     { name: 'Greco Mate', fen: '5rk1/5p1p/8/8/8/4B3/5PPP/4R1K1 w - - 0 1', move: 'Bh6', concept: 'Bishop + rook attack' },
     { name: 'Opera Mate', fen: '1r3rk1/5ppp/8/8/8/8/5PPP/4RBK1 w - - 0 1', move: 'Re8#', concept: 'Bishop + rook on back rank' },
     { name: 'Pillsbury Mate', fen: '5rk1/5ppp/8/8/8/5B2/5PPP/4R1K1 w - - 0 1', move: 'Bh6', concept: 'Bishop controls diagonal' },
-    { name: 'Lolli Mate', fen: '6k1/5ppp/6N1/8/8/8/5PPP/4Q1K1 w - - 0 1', move: 'Qe8#', concept: 'Queen + knight attack' },
-  ];
+    { name: 'Lolli Mate', fen: '6k1/5ppp/6N1/8/8/8/5PPP/4Q1K1 w - - 0 1', move: 'Qe8#', concept: 'Queen + knight attack' }
+];
   
   const variations: CourseVariation[] = [];
   
@@ -224,8 +220,8 @@ function generateCheckmateVariations(): CourseVariation[] {
         keyTakeaway: `The ${matePatterns[i].name} is a classic pattern every player must know.`,
         difficulty: (Math.min(5, Math.floor(j / 2) + 1)) as 1|2|3|4|5,
         moves: [
-          { move: matePatterns[i].move, annotation: '!!', explanation: `${matePatterns[i].name}!`, highlights: [matePatterns[i].move.replace(/[+#!?x]/g, '').slice(-2)] },
-        ],
+          { move: matePatterns[i].move, annotation: '!!', explanation: `${matePatterns[i].name}!`, highlights: [matePatterns[i].move.replace(/[+#!?x]/g, '').slice(-2)] }
+],
       });
     }
   }
@@ -247,8 +243,8 @@ function generateDeflectionVariations(): CourseVariation[] {
       keyTakeaway: i <= 25 ? 'Remove the defender by forcing it away.' : 'Lure a piece to a bad square.',
       difficulty: (Math.min(5, Math.floor(i / 10) + 2)) as 1|2|3|4|5,
       moves: [
-        { move: 'Bxf7+', annotation: '!', explanation: 'Deflecting the king!' },
-      ],
+        { move: 'Bxf7+', annotation: '!', explanation: 'Deflecting the king!' }
+],
     });
   }
   
@@ -269,8 +265,8 @@ function generateOverloadVariations(): CourseVariation[] {
       keyTakeaway: 'A piece with too many jobs will fail at one of them.',
       difficulty: (Math.min(5, Math.floor(i / 10) + 3)) as 1|2|3|4|5,
       moves: [
-        { move: 'Ng5', annotation: '!', explanation: 'Creating overload!' },
-      ],
+        { move: 'Ng5', annotation: '!', explanation: 'Creating overload!' }
+],
     });
   }
   
@@ -291,8 +287,8 @@ function generateZwischenzugVariations(): CourseVariation[] {
       keyTakeaway: 'Insert a stronger move before the expected one.',
       difficulty: 4,
       moves: [
-        { move: 'Nxf7', annotation: '!', explanation: 'Zwischenzug!' },
-      ],
+        { move: 'Nxf7', annotation: '!', explanation: 'Zwischenzug!' }
+],
     });
   }
   
@@ -313,8 +309,8 @@ function generateInterferenceVariations(): CourseVariation[] {
       keyTakeaway: 'Interfere with enemy piece coordination.',
       difficulty: 4,
       moves: [
-        { move: 'Re1', annotation: '!', explanation: 'Interference!' },
-      ],
+        { move: 'Re1', annotation: '!', explanation: 'Interference!' }
+],
     });
   }
   
@@ -339,7 +335,7 @@ export const allBulkTacticsVariations: CourseVariation[] = [
   ...bulkDeflectionVariations,
   ...bulkOverloadVariations,
   ...bulkZwischenzugVariations,
-  ...bulkInterferenceVariations,
+  ...bulkInterferenceVariations
 ];
 
 export default allBulkTacticsVariations;

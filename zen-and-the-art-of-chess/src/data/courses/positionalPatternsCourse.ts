@@ -67,21 +67,7 @@ const openFilesChapter: CourseChapter =;
 const bishopPairChapter: CourseChapter =;
 
 // Placeholder chapters with fewer variations (to be expanded)
-const goodBadBishopChapter: CourseChapter = {
-  id: 'ch6-good-bad-bishop',
-  title: 'Good vs Bad Bishop',
-  subtitle: 'Bishop Quality Assessment',
-  description: 'A bishop blocked by its own pawns is "bad". Learn to identify, improve, and exploit bishop quality.',
-  estimatedMinutes: 40,
-  keyLessons: ['A "bad" bishop is blocked by its own pawns', 'Get bad bishops outside the pawn chain', 'Sometimes bad bishops defend good pawns'],
-  variations: [
-    { id: 'gb-1', title: 'Identifying a Bad Bishop', fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 8', toMove: 'white', concept: 'Recognizing bad bishops', keyTakeaway: 'Black\'s light-squared bishop is blocked by pawns on e6 and d5.', difficulty: 2, moves: [{ move: 'd5', annotation: '!', explanation: 'Fixing Black\'s pawns on light squares!' }] },
-    { id: 'gb-2', title: 'Activating a Bad Bishop', fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 b - - 0 8', toMove: 'black', concept: 'Getting the bishop outside', keyTakeaway: 'Place the bishop outside the pawn chain before locking in.', difficulty: 3, moves: [{ move: 'Bg4', annotation: '!', explanation: 'Getting the bishop out before e6!' }] },
-    { id: 'gb-3', title: 'Trading the Bad Bishop', fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3PP3/2N1BN2/PPP1BPPP/R2Q1RK1 w - - 0 9', toMove: 'white', concept: 'Trade your bad for their good', keyTakeaway: 'Exchange your bad bishop for an active enemy piece.', difficulty: 3, moves: [{ move: 'Bh6', annotation: '!', explanation: 'Trading Black\'s active bishop!' }] },
-    { id: 'gb-4', title: 'Bad Bishop Defends', fen: 'r1bq1rk1/pp3pbp/2nppnp1/8/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 9', toMove: 'white', concept: 'Bad bishops can defend', keyTakeaway: 'Sometimes a bad bishop protects key pawns.', difficulty: 4, moves: [{ move: 'e5', annotation: '!', explanation: 'Testing the defense!' }] },
-    { id: 'gb-5', title: 'French Defense Bad Bishop', fen: 'r1bqkb1r/pp3ppp/2n1pn2/2ppP3/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 5', toMove: 'white', concept: 'The classic French bad bishop', keyTakeaway: 'In the French, Black\'s c8 bishop is often bad.', difficulty: 3, moves: [{ move: 'Bd3', annotation: '!', explanation: 'White\'s light bishop is excellent!' }] }
-]
-};
+const goodBadBishopChapter: CourseChapter =;
 
 const knightPlacementChapter: CourseChapter =;
 

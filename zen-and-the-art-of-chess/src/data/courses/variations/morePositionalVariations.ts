@@ -156,36 +156,10 @@ export const coordinationVariations: CourseVariation[] = [{
       { move: 'Qxf6', explanation: 'Queen recaptures.' },
       { move: 'Nd5', annotation: '!', explanation: 'Knight joins!' }
 ]
-  },{
-    id: 'coord-8',
-    title: 'Piece Repositioning',
-    fen: 'r1bq1rk1/ppp2ppp/2np1n2/4p3/4P3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 7',
-    toMove: 'white',
-    concept: 'Moving pieces to better squares',
-    keyTakeaway: 'Reposition poorly placed pieces to improve coordination.',
-    difficulty: 2,
-    moves: [
-      { move: 'Nd2', annotation: '!', explanation: 'Repositioning for c4!' },
-      { move: 'Be6', explanation: 'Black develops.' },
-      { move: 'Nc4', annotation: '!', explanation: 'Knight reaches an excellent square!', arrows: [{ from: 'd2', to: 'c4', color: 'green' }] }
-]
-  }
-];
+  }];
 
 // SPACE ADVANTAGE (71-90)
-export const spaceVariations: CourseVariation[] = [
-  {
-    id: 'space-1',
-    title: 'Gaining Space',
-    fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1',
-    toMove: 'white',
-    concept: 'Central space advantage',
-    keyTakeaway: 'Control the center to restrict the opponent.',
-    difficulty: 1,
-    moves: [
-      { move: 'd4', annotation: '!', explanation: 'Claiming central space!', highlights: ['d4', 'e4'] }
-]
-  },{
+export const spaceVariations: CourseVariation[] = [{
     id: 'space-5',
     title: 'Cramped Position',
     fen: 'r1bqkb1r/pp1n1ppp/2p1pn2/3pP3/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 6',
@@ -214,22 +188,7 @@ export const spaceVariations: CourseVariation[] = [
       { move: 'O-O', explanation: 'Black castles.' },
       { move: 'Re1', annotation: '!', explanation: 'Connecting rooks!' }
 ]
-  },
-  {
-    id: 'space-7',
-    title: 'Space and Attack',
-    fen: 'r1bqkb1r/pp1n1ppp/2p1pn2/3pP3/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 6',
-    toMove: 'white',
-    concept: 'Using space to attack',
-    keyTakeaway: 'Space advantage enables kingside attacks.',
-    difficulty: 4,
-    moves: [
-      { move: 'Ng5', annotation: '!', explanation: 'Starting the attack!' },
-      { move: 'h6', explanation: 'Black kicks.' },
-      { move: 'Qh5', annotation: '!', explanation: 'Queen joins!', arrows: [{ from: 'd1', to: 'h5', color: 'green' }] }
-]
-  },
-  {
+  }{
     id: 'space-8',
     title: 'Space Advantage in Endgame',
     fen: '4r1k1/pp3ppp/2p1pn2/3pP3/3P4/2N5/PPP2PPP/4R1K1 w - - 0 15',

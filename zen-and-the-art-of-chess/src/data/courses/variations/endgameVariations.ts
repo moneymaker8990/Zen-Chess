@@ -6,46 +6,7 @@
 import type { CourseVariation } from '../courseTypes';
 
 // KING AND PAWN ENDGAMES (1-40)
-const kingPawnVariations: CourseVariation[] = [
-  {
-    id: 'kp-1',
-    title: 'The Square Rule',
-    fen: '8/8/8/8/3P4/8/6k1/4K3 w - - 0 1',
-    toMove: 'white',
-    concept: 'Can the king catch the pawn?',
-    keyTakeaway: 'The "square" of a pawn is an imaginary square from the pawn to the promotion square. If the defending king can step INTO this square on their turn, they can catch the pawn. If not, the pawn queens. This is the most fundamental endgame calculation.',
-    introduction: 'The Square Rule is perhaps the most important tactical concept in king and pawn endgames. Imagine drawing a square from the pawn to its promotion square (for a pawn on d5, the square has corners d5-d8-h8-h5). If the opposing king can step INTO this square on their move, they will catch the pawn. If they cannot, the pawn promotes. This simple geometric rule saves countless minutes of calculation.',
-    difficulty: 1,
-    moves: [
-      { move: 'd5', annotation: '!', explanation: 'Now apply the Square Rule: draw an imaginary square from d5 to d8 (the promotion square), extending to h8 and h5. This "square" has corners at d5, d8, h8, and h5. The Black king on g2 is OUTSIDE this square and cannot enter it in one move—therefore, the pawn will promote. This geometric shortcut tells you the result instantly without calculating move by move.', arrows: [{ from: 'd4', to: 'd5', color: 'green' }] },
-      { move: 'Kf3', explanation: 'Black tries desperately to catch the pawn, but it\'s too late. The king needed to be on f4 or closer to enter the square. Being one square outside is fatal in pawn races.' },
-      { move: 'd6', annotation: '!', explanation: 'The pawn advances, and the square shrinks: now it\'s d6-d8-h8-h6. The Black king on f3 is STILL outside—it would need to be on f4, g4, or h4 to catch up. This is why the Square Rule works: each time the pawn advances, the square shrinks, and the king must keep up.', arrows: [{ from: 'd5', to: 'd6', color: 'green' }] },
-      { move: 'Ke4', explanation: 'The king tries to enter the shrinking square, but mathematics is cruel—there are simply not enough moves available. The king is always one step behind.' },
-      { move: 'd7', annotation: '!', explanation: 'The pawn advances again. The square is now d7-d8-e8-e7—tiny. The Black king on e4 cannot reach e7 or e8 before the pawn promotes. The race is over. Moral: Check the square BEFORE starting a pawn race—if you can\'t enter it, don\'t waste moves trying.' }
-],
-    commonMistakes: ['Forgetting to apply the Square Rule and calculating move by move', 'Miscounting the square when the pawn is on its starting square (it can move two squares!)', 'Not realizing that diagonal moves also count—the king can approach diagonally while staying in/entering the square'],
-    deeperPrinciple: 'The Square Rule is about GEOMETRY, not calculation. Once you internalize this concept, you\'ll instantly see whether a pawn can be caught. But remember: if the enemy king can ENTER the square (not just be in it), they catch the pawn. One square outside = lost race.',
-  },
-  {
-    id: 'kp-2',
-    title: 'Opposition Basics',
-    fen: '4k3/8/4K3/4P3/8/8/8/8 w - - 0 1',
-    toMove: 'white',
-    concept: 'The opposition wins king & pawn endgames',
-    keyTakeaway: 'Opposition means the kings face each other with one square between them, and the player NOT to move has the opposition. Having the opposition forces your opponent to "give way"—they must step aside, letting your king advance.',
-    introduction: 'The opposition is the single most important concept in king and pawn endgames. When kings face each other with one square between them, whoever must move is at a DISADVANTAGE because they must step aside. The player who does NOT have to move "has the opposition." In this position, if White keeps the opposition, they win; if they lose it, the game is drawn. This concept underlies virtually every king and pawn endgame.',
-    difficulty: 2,
-    moves: [
-      { move: 'Kd6', annotation: '?', explanation: 'This natural-looking move is a MISTAKE that throws away the win! Why? Because White has given up the opposition. After Kd6, when Black plays Kd8, the kings will face each other with one square between them, AND IT WILL BE WHITE\'S TURN TO MOVE. White will have to step aside. The correct move was Kf6! (keeping the opposition) or advancing the pawn first in some positions.', arrows: [{ from: 'e6', to: 'd6', color: 'red' }] },
-      { move: 'Kd8', annotation: '!', explanation: 'NOW Black has the opposition! The kings face each other on the d-file, one square apart, and it\'s WHITE\'S turn. This means White must move their king—and any king move allows Black to mirror and maintain the opposition. This is the geometrical dance of king and pawn endings.' },
-      { move: 'e6', explanation: 'White pushes the pawn in desperation. But without the opposition, the pawn cannot be escorted to the 8th rank safely.' },
-      { move: 'Ke8', annotation: '!', explanation: 'Black maintains the opposition! The kings are again face-to-face, one square apart, and it\'s White\'s turn. Black simply "shadows" the White king, always maintaining the opposition. This is the drawing technique in action.' },
-      { move: 'e7', explanation: 'The pawn advances to the 7th rank—normally decisive. But without the opposition, White cannot queen.' },
-      { move: 'Kf7', annotation: '!', explanation: 'This is the ONLY move that draws, and it exploits a tactical resource: STALEMATE! If White plays Kd7??, then Kf7 and the pawn queens but Black has the f7 square. But if White tries Kf5, Black has Ke8 and will pick up the pawn. The position is drawn. Lesson: the opposition, lost early, cannot be recovered. White\'s one careless move (Kd6? instead of Kf6!) threw away a won position.', arrows: [{ from: 'e8', to: 'f7', color: 'green' }] }
-],
-    commonMistakes: ['Moving your king without considering whether you\'re keeping or losing the opposition', 'Pushing the pawn too early instead of first gaining the opposition with your king', 'Not understanding that losing the opposition often means drawing instead of winning (or losing instead of drawing)'],
-    deeperPrinciple: 'The opposition is about ZUGZWANG—forcing your opponent to make a move they don\'t want to make. When you have the opposition, your opponent MUST step aside, giving your king access to key squares. Master the opposition, and you\'ll save and win countless endgames that look equal on the surface.',
-  },{
+const kingPawnVariations: CourseVariation[] = [{
     id: 'kp-4',
     title: 'Distant Opposition',
     fen: '8/8/8/8/8/k7/8/K7 w - - 0 1',
@@ -216,24 +177,6 @@ const kingPawnVariations: CourseVariation[] = [
 
 // ROOK ENDGAMES (21-60)
 const rookEndgameVariations: CourseVariation[] = [{
-    id: 'rook-2',
-    title: 'Philidor Position',
-    fen: '4k3/R7/8/4PK2/8/8/r7/8 w - - 0 1',
-    toMove: 'white',
-    concept: 'The drawing technique',
-    keyTakeaway: 'The Philidor Position is the DRAWING counterpart to the Lucena. The defender keeps their rook on the 3rd rank (or 6th from White\'s view), preventing the enemy king from advancing. Once the pawn reaches the 6th rank, the defender switches to checking from behind. This creates an impenetrable fortress.',
-    introduction: 'The Philidor Position (named after François-André Philidor, the 18th-century chess legend) is equally important as the Lucena—but for DEFENSE. It shows how to DRAW a rook vs rook+pawn endgame. The key principle: keep your rook on the 3rd rank (cutting off the enemy king) until the pawn advances to the 6th rank, then retreat and check from behind. This "third rank defense" is a fortress that cannot be broken.',
-    difficulty: 3,
-    moves: [
-      { move: 'e6', annotation: '?', explanation: 'This is actually the MISTAKE that allows the Philidor defense to work! White pushes the pawn too early. The problem: once the pawn reaches the 6th rank, Black switches from passive defense (rook on 3rd rank) to ACTIVE defense (checking from behind). The correct approach for White was to improve the king\'s position first, not push the pawn. But this example shows the defensive technique.', arrows: [{ from: 'e5', to: 'e6', color: 'red' }] },
-      { move: 'Rf2+', annotation: '!', explanation: 'HERE is the Philidor technique in action! When the pawn reaches the 6th rank, the defender IMMEDIATELY goes behind the pawn and starts checking. Why does this work? Because the pawn blocks the king from escaping the checks! If the king goes forward, it\'s checked. If it goes sideways, it\'s checked. The pawn, ironically, is in the way. This "checking from behind" creates a fortress.', arrows: [{ from: 'a2', to: 'f2', color: 'green' }] },
-      { move: 'Ke5', explanation: 'White tries to approach the checking rook, but this doesn\'t help—the rook simply keeps checking from a distance.' },
-      { move: 'Re2+', annotation: '!', explanation: 'Another check! The rook stays behind the pawn and keeps checking. As long as Black\'s rook has DISTANCE (many squares behind the pawn), the checks never stop. White cannot make progress: if Kd6, then Rd2+; if Kf6, then Rf2+. The pawn cannot advance (it\'s blocked by Black\'s king\'s presence), and White\'s king cannot escape the checks. This is a PERPETUAL harassment that draws the game.', arrows: [{ from: 'f2', to: 'e2', color: 'green' }] }
-],
-    commonMistakes: ['Not knowing to keep the rook on the 3rd rank initially—this is the SETUP for the Philidor', 'Switching to checking from behind TOO EARLY (before the pawn reaches the 6th rank)', 'Letting the enemy king reach the 6th rank before you start your defense—then it\'s too late'],
-    deeperPrinciple: 'The Philidor defense shows that in rook endgames, ACTIVITY beats material. Black\'s rook is actively checking, while White\'s extra pawn becomes a HINDRANCE (it blocks the king). The drawing mechanism relies on the pawn\'s position creating a "shelter" for the defender\'s checks. Know Philidor, and you\'ll save countless endgames.',
-  },
-  {
     id: 'rook-3',
     title: 'Rook Behind Passed Pawn',
     fen: '8/8/4k3/4p3/8/4K3/R7/3r4 w - - 0 1',

@@ -6,24 +6,7 @@
 import type { CourseVariation } from '../courseTypes';
 
 // PIN TACTICS (1-40)
-const pinVariations: CourseVariation[] = [
-  {
-    id: 'pin-1',
-    title: 'Basic Pin',
-    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
-    toMove: 'white',
-    concept: 'Pinning pieces to more valuable pieces',
-    keyTakeaway: 'A pin restricts a piece\'s movement.',
-    difficulty: 1,
-    moves: [
-      { move: 'Ng5', annotation: '!', explanation: 'Attacking f7 and creating threats.', arrows: [{ from: 'f3', to: 'g5', color: 'green' }] },
-      { move: 'd5', explanation: 'Black tries to defend.' },
-      { move: 'exd5', explanation: 'Taking.' },
-      { move: 'Na5', explanation: 'Black attacks the bishop.' },
-      { move: 'Bb5+', annotation: '!', explanation: 'The pin! The king must block.', arrows: [{ from: 'c4', to: 'b5', color: 'red' }] }
-]
-  },
-  {
+const pinVariations: CourseVariation[] = [{
     id: 'pin-2',
     title: 'Absolute Pin',
     fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
@@ -70,39 +53,7 @@ const pinVariations: CourseVariation[] = [
       { move: 'g6', explanation: 'Black prepares to fianchetto.' },
       { move: 'Nc3', annotation: '!', explanation: 'Development and central control.' }
 ]
-  },{
-    id: 'pin-6',
-    title: 'Skewer',
-    fen: 'r1b1k2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 0 5',
-    toMove: 'white',
-    concept: 'Reverse pin (skewer)',
-    keyTakeaway: 'A skewer attacks a valuable piece through another.',
-    difficulty: 2,
-    moves: [
-      { move: 'O-O', explanation: 'Castling.' },
-      { move: 'Bxc3', explanation: 'Black takes.' },
-      { move: 'bxc3', explanation: 'Recapturing.' },
-      { move: 'd6', explanation: 'Black develops.' },
-      { move: 'Ba3', annotation: '!', explanation: 'Preventing castling and attacking d6!', arrows: [{ from: 'c1', to: 'a3', color: 'green' }] }
-]
-  },
-  {
-    id: 'pin-7',
-    title: 'Pin on the Diagonal',
-    fen: 'r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 4 4',
-    toMove: 'white',
-    concept: 'Diagonal pin',
-    keyTakeaway: 'Bishops excel at creating diagonal pins.',
-    difficulty: 2,
-    moves: [
-      { move: 'O-O', explanation: 'Castling.' },
-      { move: 'O-O', explanation: 'Black castles.' },
-      { move: 'd3', explanation: 'Developing.' },
-      { move: 'd6', explanation: 'Black develops.' },
-      { move: 'Bg5', annotation: '!', explanation: 'Pinning the knight!', arrows: [{ from: 'c1', to: 'g5', color: 'red' }] }
-]
-  },
-  {
+  }{
     id: 'pin-8',
     title: 'Pin on the File',
     fen: 'r2qkb1r/ppp2ppp/2n1bn2/4p3/4P3/3P1N2/PPP1BPPP/RNBQK2R w KQkq - 0 6',
@@ -226,36 +177,7 @@ const pinVariations: CourseVariation[] = [
 ];
 
 // FORK TACTICS (21-60)
-const forkVariations: CourseVariation[] = [
-  {
-    id: 'fork-1',
-    title: 'The Knight Fork',
-    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
-    toMove: 'white',
-    concept: 'Knight forks attack multiple pieces',
-    keyTakeaway: 'Knights can fork up to 8 pieces at once!',
-    difficulty: 2,
-    moves: [
-      { move: 'Ng5', annotation: '!', explanation: 'Threatening Nf7 fork!' },
-      { move: 'd5', explanation: 'Black blocks.' },
-      { move: 'exd5', explanation: 'Taking.' },
-      { move: 'Na5', explanation: 'Knight attacks bishop.' },
-      { move: 'Nxf7', annotation: '!', explanation: 'The fork wins the queen!', arrows: [{ from: 'f7', to: 'h8', color: 'red' }, { from: 'f7', to: 'd8', color: 'red' }] }
-]
-  },{
-    id: 'fork-6',
-    title: 'Pawn Fork',
-    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
-    toMove: 'white',
-    concept: 'Pawns can fork too',
-    keyTakeaway: 'Pawn forks are often the most devastating.',
-    difficulty: 2,
-    moves: [
-      { move: 'd4', annotation: '!', explanation: 'Opening the center!' },
-      { move: 'exd4', explanation: 'Black takes.' },
-      { move: 'e5', annotation: '!', explanation: 'Pawn fork! Attacks both knights!', arrows: [{ from: 'e5', to: 'f6', color: 'red' }, { from: 'e5', to: 'd6', color: 'yellow' }] }
-]
-  },{
+const forkVariations: CourseVariation[] = [{
     id: 'fork-8',
     title: 'Double Attack',
     fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
@@ -500,19 +422,7 @@ const discoveredAttackVariations: CourseVariation[] = [
 ];
 
 // BACK RANK & CHECKMATE PATTERNS (61-100)
-const checkmateVariations: CourseVariation[] = [
-  {
-    id: 'mate-1',
-    title: 'Back Rank Mate',
-    fen: '6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1',
-    toMove: 'white',
-    concept: 'Mating on the back rank',
-    keyTakeaway: 'The back rank is weak without escape squares.',
-    difficulty: 1,
-    moves: [
-      { move: 'Re8#', annotation: '!!', explanation: 'Checkmate! The king has no escape.', highlights: ['e8'] }
-]
-  },{
+const checkmateVariations: CourseVariation[] = [{
     id: 'mate-3',
     title: 'Arabian Mate',
     fen: '5rk1/5ppp/8/8/8/5N2/5PPP/4R1K1 w - - 0 1',
@@ -538,18 +448,7 @@ const checkmateVariations: CourseVariation[] = [
       { move: 'f6', explanation: 'Black defends.' },
       { move: 'Re8', annotation: '!', explanation: 'Attacking the rook!' }
 ]
-  },{
-    id: 'mate-8',
-    title: 'Epaulette Mate',
-    fen: '3rkr2/8/8/8/8/8/8/4Q1K1 w - - 0 1',
-    toMove: 'white',
-    concept: 'Rooks block king escape',
-    keyTakeaway: 'The rooks act like epaulettes blocking the king.',
-    difficulty: 2,
-    moves: [
-      { move: 'Qe6#', annotation: '!!', explanation: 'Epaulette Mate! The rooks block escape.', highlights: ['e6', 'd8', 'f8'] }
-]
-  },{
+  }{
     id: 'mate-10',
     title: 'Pillsbury\'s Mate',
     fen: '5rk1/5ppp/8/8/8/5B2/5PPP/4R1K1 w - - 0 1',

@@ -6,38 +6,7 @@
 import type { CourseVariation } from '../courseTypes';
 
 export const pawnStructureVariations: CourseVariation[] = [
-  // CARLSBAD STRUCTURE (1-10){
-    id: 'ps-2',
-    title: 'Minority Attack Execution',
-    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/1PPP4/2N1PN2/P1Q2PPP/R1B1KB1R w KQ - 0 9',
-    toMove: 'white',
-    concept: 'Completing the minority attack',
-    keyTakeaway: 'After b5, target the resulting weak c-pawn.',
-    difficulty: 4,
-    moves: [
-      { move: 'b5', annotation: '!', explanation: 'Breaking through!' },
-      { move: 'Na5', explanation: 'Black tries to blockade.' },
-      { move: 'Bd2', annotation: '!', explanation: 'Preparing to trade the knight.' },
-      { move: 'Bd7', explanation: 'Black develops.' },
-      { move: 'Na4', annotation: '!', explanation: 'Heading to c5!', arrows: [{ from: 'a4', to: 'c5', color: 'yellow' }] }
-]
-  },
-  {
-    id: 'ps-3',
-    title: 'Black\'s Carlsbad Counter',
-    fen: 'r1bq1rk1/pp2bppp/2n1pn2/2pp4/2PP4/2N1PN2/PPQ2PPP/R1B1KB1R b KQ - 0 8',
-    toMove: 'black',
-    concept: 'Black\'s kingside attack',
-    keyTakeaway: 'Black counters the minority attack with kingside play.',
-    difficulty: 4,
-    moves: [
-      { move: 'Ne4', annotation: '!', explanation: 'Centralizing and preparing f5.' },
-      { move: 'Nxe4', explanation: 'White trades.' },
-      { move: 'dxe4', explanation: 'Opening the d-file.' },
-      { move: 'Nd2', explanation: 'Attacking e4.' },
-      { move: 'f5', annotation: '!', explanation: 'Black starts the kingside attack!', arrows: [{ from: 'f7', to: 'f5', color: 'green' }] }
-]
-  },// FRENCH STRUCTURE (6-15)
+  // CARLSBAD STRUCTURE (1-10)// FRENCH STRUCTURE (6-15)
   {
     id: 'ps-6',
     title: 'The French Structure',
@@ -53,39 +22,7 @@ export const pawnStructureVariations: CourseVariation[] = [
       { move: 'Bc5', explanation: 'Black develops actively.' },
       { move: 'Be3', explanation: 'Challenging the bishop.' }
 ]
-  },
-  {
-    id: 'ps-7',
-    title: 'French Pawn Chain',
-    fen: 'r1bqkb1r/pp3ppp/2n1pn2/2ppP3/3P4/2PB1N2/PP3PPP/R1BQK2R w KQkq - 0 6',
-    toMove: 'white',
-    concept: 'Attack the base of the pawn chain',
-    keyTakeaway: 'The base pawn (d4) is the weakest link in a chain.',
-    difficulty: 4,
-    moves: [
-      { move: 'O-O', explanation: 'Castling.' },
-      { move: 'cxd4', explanation: 'Black attacks the chain\'s base!' },
-      { move: 'cxd4', explanation: 'Recapturing.' },
-      { move: 'Qb6', annotation: '!', explanation: 'Black attacks d4 and b2!', arrows: [{ from: 'b6', to: 'd4', color: 'red' }, { from: 'b6', to: 'b2', color: 'red' }] },
-      { move: 'Be3', explanation: 'Defending.' }
-]
-  },
-  {
-    id: 'ps-8',
-    title: 'French Advance Variation',
-    fen: 'r1bqkb1r/pp3ppp/2n1pn2/2ppP3/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 5',
-    toMove: 'white',
-    concept: 'Maintaining the e5 pawn',
-    keyTakeaway: 'The e5 pawn restricts Black\'s kingside.',
-    difficulty: 3,
-    moves: [
-      { move: 'Bb5', annotation: '!', explanation: 'Pinning and pressuring.' },
-      { move: 'Bd7', explanation: 'Black breaks the pin.' },
-      { move: 'O-O', explanation: 'Castling.' },
-      { move: 'Be7', explanation: 'Black develops.' },
-      { move: 'Bxc6', annotation: '!', explanation: 'Doubling pawns and maintaining e5.', highlights: ['c6', 'e5'] }
-]
-  },{
+  }{
     id: 'ps-10',
     title: 'French Wing Attack',
     fen: 'r1bq1rk1/pp2bppp/2n1pn2/2ppP3/3P4/2N2N2/PPPBBPPP/R2Q1RK1 w - - 0 8',
@@ -101,58 +38,7 @@ export const pawnStructureVariations: CourseVariation[] = [
       { move: 'h5', annotation: '!', explanation: 'The attack continues!' }
 ]
   },
-  // SICILIAN STRUCTURES (11-20)
-  {
-    id: 'ps-11',
-    title: 'The Sicilian Structure',
-    fen: 'r1bqkb1r/pp1ppppp/2n2n2/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 0 4',
-    toMove: 'white',
-    concept: 'Open Sicilian pawn structures',
-    keyTakeaway: 'White has a central majority; Black has a queenside majority.',
-    difficulty: 3,
-    moves: [
-      { move: 'Nc3', explanation: 'Developing and supporting e4.' },
-      { move: 'g6', explanation: 'Black prepares the Dragon setup.' },
-      { move: 'Be3', explanation: 'Developing.' },
-      { move: 'Bg7', explanation: 'The Dragon bishop.' },
-      { move: 'f3', annotation: '!', explanation: 'Preparing the Yugoslav Attack!', arrows: [{ from: 'f2', to: 'f3', color: 'green' }] }
-]
-  },
-  {
-    id: 'ps-12',
-    title: 'Maroczy Bind',
-    fen: 'r1bqkb1r/pp1ppp1p/2n3pn/8/2P1P3/2N5/PP2BPPP/R1BQK1NR w KQkq - 0 6',
-    toMove: 'white',
-    concept: 'Controlling d5 with pawns',
-    keyTakeaway: 'The Maroczy Bind (c4+e4) controls d5 but gives Black chances for ...d5.',
-    difficulty: 4,
-    moves: [
-      { move: 'Nf3', explanation: 'Developing.' },
-      { move: 'Bg7', explanation: 'Black fianchettoes.' },
-      { move: 'O-O', explanation: 'Castling.' },
-      { move: 'O-O', explanation: 'Black castles.' },
-      { move: 'Be3', explanation: 'Developing.' },
-      { move: 'd6', explanation: 'Black prepares ...Nd7-c5.' },
-      { move: 'Nd5', annotation: '!', explanation: 'Occupying the hole!', highlights: ['d5'] }
-]
-  },
-  {
-    id: 'ps-13',
-    title: 'Sicilian Scheveningen',
-    fen: 'r1bqkb1r/pp3ppp/2nppn2/8/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 6',
-    toMove: 'white',
-    concept: 'The small center',
-    keyTakeaway: 'Black\'s e6+d6 creates a solid but passive setup.',
-    difficulty: 3,
-    moves: [
-      { move: 'Be2', explanation: 'Solid development.' },
-      { move: 'Be7', explanation: 'Black develops.' },
-      { move: 'O-O', explanation: 'Castling.' },
-      { move: 'O-O', explanation: 'Black castles.' },
-      { move: 'f4', annotation: '!', explanation: 'English Attack! Preparing kingside expansion.', arrows: [{ from: 'f4', to: 'f5', color: 'yellow' }] }
-]
-  },
-  {
+  // SICILIAN STRUCTURES (11-20){
     id: 'ps-14',
     title: 'Sicilian Najdorf Structure',
     fen: 'r1bqkb1r/1p1npppp/p2p1n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 6',
@@ -214,41 +100,7 @@ export const pawnStructureVariations: CourseVariation[] = [
       { move: 'e6', explanation: 'Black solidifies.' },
       { move: 'Bd3', annotation: '!', explanation: 'Offering the trade to gain the bishop pair!' }
 ]
-  },
-  {
-    id: 'ps-22',
-    title: 'Central Tension',
-    fen: 'rnbqkb1r/ppp1pppp/5n2/3p4/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 3',
-    toMove: 'white',
-    concept: 'Maintaining vs releasing tension',
-    keyTakeaway: 'Keep tension when it favors you; release it to clarify the position.',
-    difficulty: 2,
-    moves: [
-      { move: 'e5', annotation: '!', explanation: 'Gaining space and restricting Black.', arrows: [{ from: 'e4', to: 'e5', color: 'green' }] },
-      { move: 'Nfd7', explanation: 'The knight retreats.' },
-      { move: 'Nf3', explanation: 'Developing.' },
-      { move: 'e6', explanation: 'Black supports d5.' },
-      { move: 'Bd3', explanation: 'Developing with an eye on h7.' }
-]
-  },
-  {
-    id: 'ps-23',
-    title: 'The Stonewall',
-    fen: 'rnbqkb1r/ppp2ppp/4pn2/3p4/3P1P2/2N2N2/PPP1P1PP/R1BQKB1R w KQkq - 0 5',
-    toMove: 'white',
-    concept: 'White Stonewall setup',
-    keyTakeaway: 'The Stonewall gives a strong e5 square but weakens e4.',
-    difficulty: 4,
-    moves: [
-      { move: 'e3', explanation: 'Building the Stonewall.' },
-      { move: 'c5', explanation: 'Black challenges.' },
-      { move: 'Bd3', explanation: 'Developing.' },
-      { move: 'Nc6', explanation: 'Black develops.' },
-      { move: 'O-O', explanation: 'Castling.' },
-      { move: 'Bd6', explanation: 'Black develops.' },
-      { move: 'Ne5', annotation: '!', explanation: 'The knight lands on the Stonewall outpost!', highlights: ['e5'] }
-]
-  },{
+  }{
     id: 'ps-25',
     title: 'Pawn Breaks: e4-e5',
     fen: 'r1bq1rk1/ppp1bppp/2n1pn2/3p4/3PP3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 7',
@@ -263,23 +115,7 @@ export const pawnStructureVariations: CourseVariation[] = [
       { move: 'dxe4', explanation: 'Black recaptures.' },
       { move: 'Nd2', annotation: '!', explanation: 'Attacking the weak e4 pawn.' }
 ]
-  },
-  {
-    id: 'ps-26',
-    title: 'Pawn Breaks: c4-c5',
-    fen: 'r1bq1rk1/pp2bppp/2nppn2/8/2P1P3/2N2N2/PP2BPPP/R1BQ1RK1 w - - 0 8',
-    toMove: 'white',
-    concept: 'The c5 break',
-    keyTakeaway: 'c5 undermines Black\'s center and opens lines.',
-    difficulty: 3,
-    moves: [
-      { move: 'c5', annotation: '!', explanation: 'Undermining d6!' },
-      { move: 'd5', explanation: 'Black advances.' },
-      { move: 'Na4', annotation: '!', explanation: 'Knight heads to b6!' },
-      { move: 'Ne8', explanation: 'Defending.' },
-      { move: 'Nb6', annotation: '!', explanation: 'Dominating position!', highlights: ['b6'] }
-]
-  },{
+  }{
     id: 'ps-29',
     title: 'Hedgehog d5 Break',
     fen: 'r1bq1rk1/1p2bppp/p1nppn2/8/2PPP3/2N1BN2/PP2BPPP/R2Q1RK1 b - - 0 9',
@@ -310,23 +146,7 @@ export const pawnStructureVariations: CourseVariation[] = [
       { move: 'O-O', explanation: 'Black castles.' },
       { move: 'e4', annotation: '!', explanation: 'Breaking in the center!' }
 ]
-  },{
-    id: 'ps-32',
-    title: 'Catalan Structure',
-    fen: 'rnbqk2r/ppp1bppp/4pn2/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R w KQkq - 0 5',
-    toMove: 'white',
-    concept: 'Catalan bishop',
-    keyTakeaway: 'The fianchettoed bishop dominates the long diagonal.',
-    difficulty: 4,
-    moves: [
-      { move: 'O-O', explanation: 'Castling.' },
-      { move: 'O-O', explanation: 'Black castles.' },
-      { move: 'Qc2', annotation: '!', explanation: 'Preparing e4!' },
-      { move: 'c6', explanation: 'Black supports d5.' },
-      { move: 'Nbd2', annotation: '!', explanation: 'Heading to e5 via f3.', arrows: [{ from: 'd2', to: 'f3', color: 'yellow' }, { from: 'f3', to: 'e5', color: 'yellow' }] }
-]
-  },
-  {
+  }{
     id: 'ps-33',
     title: 'English Opening Structure',
     fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2P5/2N2N2/PP1PPPPP/R1BQKB1R w KQkq - 0 4',
