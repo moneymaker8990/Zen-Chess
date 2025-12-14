@@ -1,0 +1,542 @@
+[
+  {
+    "file": "attackMasterclass.ts",
+    "id": "knight-sac-f7",
+    "error": "Invalid move at 12: f3"
+  },
+  {
+    "file": "attackMasterclass.ts",
+    "id": "pattern-piece-storm",
+    "error": "Invalid move at 13: Rdg1"
+  },
+  {
+    "file": "attackMasterclass.ts",
+    "id": "practical-h-file-attack",
+    "error": "Invalid move at 12: h2"
+  },
+  {
+    "file": "calculationDojo.ts",
+    "id": "vis-5-moves",
+    "error": "Invalid move at 11: d3"
+  },
+  {
+    "file": "calculationDojo.ts",
+    "id": "deep-6-move-combo",
+    "error": "Invalid move at 14: c3"
+  },
+  {
+    "file": "calculationDojo.ts",
+    "id": "prac-time-pressure",
+    "error": "Invalid move at 10: e1"
+  },
+  {
+    "file": "defenseArtCourse.ts",
+    "id": "mindset-stay-calm",
+    "error": "Invalid move at 8: h7"
+  },
+  {
+    "file": "defenseArtCourse.ts",
+    "id": "mindset-counterattack",
+    "error": "Invalid move at 8: f6"
+  },
+  {
+    "file": "defenseArtCourse.ts",
+    "id": "prophy-restrict-pieces",
+    "error": "Invalid move at 10: h2"
+  },
+  {
+    "file": "defenseArtCourse.ts",
+    "id": "petro-restriction",
+    "error": "Invalid move at 12: c1"
+  },
+  {
+    "file": "positionalPatternsCourse.ts",
+    "id": "ch6-good-bad-bishop",
+    "error": "Invalid move at 6: gb-2"
+  },
+  {
+    "file": "bulkTacticsVariations.ts",
+    "id": "pin-spec-1",
+    "error": "Invalid move at 1: Bg5"
+  },
+  {
+    "file": "deepEndgameVariations.ts",
+    "id": "queen-vs-pawn-7th-1",
+    "error": "Invalid move at 12: h1"
+  },
+  {
+    "file": "deepEndgameVariations.ts",
+    "id": "fortress-draw-1",
+    "error": "Invalid move at 10: g2"
+  },
+  {
+    "file": "deepPositionalVariations.ts",
+    "id": "outpost-bishop-vs-knight",
+    "error": "Invalid move at 12: b2"
+  },
+  {
+    "file": "deepPositionalVariations.ts",
+    "id": "backward-pawn-1",
+    "error": "Invalid move at 12: d4"
+  },
+  {
+    "file": "deepPositionalVariations.ts",
+    "id": "french-advance-1",
+    "error": "Invalid move at 12: f1"
+  },
+  {
+    "file": "deepPositionalVariations.ts",
+    "id": "sicilian-maroczy-1",
+    "error": "Invalid move at 12: g1"
+  },
+  {
+    "file": "deepPositionalVariations.ts",
+    "id": "prophylaxis-karpov-1",
+    "error": "Invalid move at 12: h2"
+  },
+  {
+    "file": "deepTacticalVariations.ts",
+    "id": "queen-fork-1",
+    "error": "Invalid move at 10: b1"
+  },
+  {
+    "file": "deepTacticalVariations.ts",
+    "id": "pawn-fork-1",
+    "error": "Invalid move at 9: d4"
+  },
+  {
+    "file": "deepTacticalVariations.ts",
+    "id": "battery-discovered-1",
+    "error": "Invalid move at 12: b1"
+  },
+  {
+    "file": "deepTacticalVariations.ts",
+    "id": "corridor-mate-1",
+    "error": "Invalid move at 2: c8"
+  },
+  {
+    "file": "endgameVariations.ts",
+    "id": "kp-1",
+    "error": "Invalid move at 6: d4"
+  },
+  {
+    "file": "endgameVariations.ts",
+    "id": "kp-2",
+    "error": "Invalid move at 7: d6"
+  },
+  {
+    "file": "endgameVariations.ts",
+    "id": "rook-2",
+    "error": "Invalid move at 5: e5"
+  },
+  {
+    "file": "massiveEndgameVariations.ts",
+    "id": "ekp-2",
+    "error": "Invalid move at 2: f6"
+  },
+  {
+    "file": "massiveTacticsVariations.ts",
+    "id": "pin-b2",
+    "error": "Invalid move at 2: f3"
+  },
+  {
+    "file": "massiveTacticsVariations.ts",
+    "id": "pin-b4",
+    "error": "Invalid move at 2: g2"
+  },
+  {
+    "file": "massiveTacticsVariations.ts",
+    "id": "pin-b8",
+    "error": "Invalid move at 2: c1"
+  },
+  {
+    "file": "massiveTacticsVariations.ts",
+    "id": "fork-n1",
+    "error": "Invalid move at 2: f7"
+  },
+  {
+    "file": "massiveTacticsVariations.ts",
+    "id": "fork-n2",
+    "error": "Invalid move at 2: f7"
+  },
+  {
+    "file": "massiveTacticsVariations.ts",
+    "id": "fork-n3",
+    "error": "Invalid move at 2: c6"
+  },
+  {
+    "file": "massiveTacticsVariations.ts",
+    "id": "fork-n4",
+    "error": "Invalid move at 2: g5"
+  },
+  {
+    "file": "morePositionalVariations.ts",
+    "id": "coord-8",
+    "error": "Invalid move at 4: d2"
+  },
+  {
+    "file": "morePositionalVariations.ts",
+    "id": "space-1",
+    "error": "Invalid move at 2: e4"
+  },
+  {
+    "file": "morePositionalVariations.ts",
+    "id": "space-7",
+    "error": "Invalid move at 4: d1"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-1",
+    "error": "Invalid move at 4: c3"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-2",
+    "error": "Invalid move at 5: e4"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-4",
+    "error": "Invalid move at 4: c3"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-5",
+    "error": "Invalid move at 6: c3"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-7",
+    "error": "Invalid move at 6: e2"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-8",
+    "error": "Invalid move at 10: d5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-9",
+    "error": "Invalid move at 4: c1"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-10",
+    "error": "Invalid move at 6: e1"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-11",
+    "error": "Invalid move at 6: b5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-12",
+    "error": "Invalid move at 6: d4"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-13",
+    "error": "Invalid move at 6: c6"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-15",
+    "error": "Invalid move at 6: c3"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-16",
+    "error": "Invalid move at 6: f3"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-17",
+    "error": "Invalid move at 6: d5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-18",
+    "error": "Invalid move at 6: d2"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-19",
+    "error": "Invalid move at 6: d5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-20",
+    "error": "Invalid move at 10: c6"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-23",
+    "error": "Invalid move at 6: c6"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-27",
+    "error": "Invalid move at 6: d5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-30",
+    "error": "Invalid move at 6: c6"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-31",
+    "error": "Invalid move at 1: Nb5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-32",
+    "error": "Invalid move at 6: c6"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-34",
+    "error": "Invalid move at 6: c6"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-36",
+    "error": "Invalid move at 6: f5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-37",
+    "error": "Invalid move at 6: d5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-38",
+    "error": "Invalid move at 6: e5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-40",
+    "error": "Invalid move at 6: e6"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-41",
+    "error": "Invalid move at 6: f5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-43",
+    "error": "Invalid move at 8: d5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-45",
+    "error": "Invalid move at 4: a5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-46",
+    "error": "Invalid move at 4: f5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-47",
+    "error": "Invalid move at 6: d5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-48",
+    "error": "Invalid move at 4: f5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-49",
+    "error": "Invalid move at 4: c6"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-51",
+    "error": "Invalid move at 5: c6"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-52",
+    "error": "Invalid move at 4: b4"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-53",
+    "error": "Invalid move at 4: d4"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-55",
+    "error": "Invalid move at 4: e5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-56",
+    "error": "Invalid move at 6: d5"
+  },
+  {
+    "file": "outpostsVariations.ts",
+    "id": "out-58",
+    "error": "Invalid move at 6: d5"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-2",
+    "error": "Invalid move at 6: a4"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-3",
+    "error": "Invalid move at 6: f7"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-7",
+    "error": "Invalid move at 6: b6"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-8",
+    "error": "Invalid move at 6: c6"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-11",
+    "error": "Invalid move at 6: f2"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-12",
+    "error": "Invalid move at 8: d5"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-13",
+    "error": "Invalid move at 6: f5"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-22",
+    "error": "Invalid move at 6: e4"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-23",
+    "error": "Invalid move at 8: e5"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-26",
+    "error": "Invalid move at 6: b6"
+  },
+  {
+    "file": "pawnStructureVariations.ts",
+    "id": "ps-32",
+    "error": "Invalid move at 6: d2"
+  },
+  {
+    "file": "tacticsVariations.ts",
+    "id": "pin-1",
+    "error": "Invalid move at 6: f3"
+  },
+  {
+    "file": "tacticsVariations.ts",
+    "id": "pin-6",
+    "error": "Invalid move at 6: c1"
+  },
+  {
+    "file": "tacticsVariations.ts",
+    "id": "pin-7",
+    "error": "Invalid move at 6: c1"
+  },
+  {
+    "file": "tacticsVariations.ts",
+    "id": "fork-1",
+    "error": "Invalid move at 6: f7"
+  },
+  {
+    "file": "tacticsVariations.ts",
+    "id": "fork-6",
+    "error": "Invalid move at 4: f6"
+  },
+  {
+    "file": "tacticsVariations.ts",
+    "id": "mate-1",
+    "error": "Invalid move at 2: e8"
+  },
+  {
+    "file": "tacticsVariations.ts",
+    "id": "mate-8",
+    "error": "Invalid move at 2: e6"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-2",
+    "error": "Invalid move at 6: d6"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-4",
+    "error": "Invalid move at 6: d2"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-11",
+    "error": "Invalid move at 4: d4"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-14",
+    "error": "Invalid move at 6: f3"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-21",
+    "error": "Invalid move at 6: c6"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-23",
+    "error": "Invalid move at 6: d2"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-25",
+    "error": "Invalid move at 6: c6"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-32",
+    "error": "Invalid move at 6: e5"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-33",
+    "error": "Invalid move at 6: c5"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-36",
+    "error": "Invalid move at 8: e7"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-37",
+    "error": "Invalid move at 6: a7"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-42",
+    "error": "Invalid move at 4: d5"
+  },
+  {
+    "file": "weakPawnsVariations.ts",
+    "id": "wp-46",
+    "error": "Invalid move at 4: a4"
+  }
+]

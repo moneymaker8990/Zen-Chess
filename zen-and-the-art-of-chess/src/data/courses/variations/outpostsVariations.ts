@@ -19,8 +19,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'Nd5', annotation: '!', explanation: 'The knight lands on the "dream square." Why is d5 so powerful? First, NO PAWN CAN EVER ATTACK IT—Black\'s c-pawn is stuck behind the d6 pawn, and the e-pawn already moved. Second, the knight controls EIGHT squares from here, including the critical c7 and e7 squares near Black\'s king. Third, this knight cannot be ignored—it will dominate every phase of the game.', arrows: [{ from: 'c3', to: 'd5', color: 'green' }], highlights: ['d5'] },
       { move: 'Nxd5', explanation: 'Black is essentially forced to trade. Leaving the knight on d5 would be positional suicide—it would paralyze Black\'s entire position. But this trade comes at a cost: White gets a powerful pawn wedge.' },
-      { move: 'exd5', annotation: '!', explanation: 'The pawn recapture is thematic and powerful. This pawn wedge on d5 does three things: (1) It restricts Black\'s knight on f6 from using e4 or d7, (2) It creates a permanent weakness on c6 that White can target later, (3) It gives White a space advantage that cramps Black\'s pieces. The principle: When your opponent trades your outpost knight, the resulting pawn structure should ALSO be in your favor.', highlights: ['d5'] },
-    ],
+      { move: 'exd5', annotation: '!', explanation: 'The pawn recapture is thematic and powerful. This pawn wedge on d5 does three things: (1) It restricts Black\'s knight on f6 from using e4 or d7, (2) It creates a permanent weakness on c6 that White can target later, (3) It gives White a space advantage that cramps Black\'s pieces. The principle: When your opponent trades your outpost knight, the resulting pawn structure should ALSO be in your favor.', highlights: ['d5'] }
+],
     commonMistakes: ['Occupying an outpost before it\'s secure—make sure no pawn can kick your piece', 'Rushing to place a knight on an outpost without first controlling supporting squares', 'Trading your outpost knight for a passive piece instead of keeping the pressure'],
     deeperPrinciple: 'Outposts are not just about where your knight sits—they\'re about permanent control. The value of an outpost is measured by how many squares it controls, how safe it is, and how much it restricts the opponent. A knight on d5 is often worth more than a rook on an open file.',
   },
@@ -37,31 +37,11 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'e5', annotation: '!', explanation: 'This pawn advance accomplishes THREE strategic goals simultaneously: (1) It gains central space, pushing Black back, (2) It kicks the f6 knight from its ideal defensive post, (3) Most importantly, it creates the d4 square as a PERMANENT outpost—Black\'s e-pawn cannot attack d4, and the c-pawn is blocked. This is the "hole-creation" principle in action.', arrows: [{ from: 'e4', to: 'e5', color: 'green' }], highlights: ['d4'] },
       { move: 'Ne4', explanation: 'Black retreats to the only reasonable square. Notice the knight now blocks the d-pawn—this is called "self-blocking." The knight interferes with Black\'s own piece coordination, a common side effect of being displaced from natural squares.' },
       { move: 'Nxe4', explanation: 'White trades knights. Why trade here? Because the resulting pawn structure GUARANTEES the d4 outpost. The trade also simplifies White\'s task—fewer pieces means the outpost becomes even more dominant.' },
-      { move: 'dxe4', explanation: 'Now observe the transformation: d4 is a PERMANENT outpost because Black\'s e-pawn is on e4 (can\'t attack d4) and the c-pawn would need to come to c5 first. White will maneuver a knight to d4 via b3-d4 or f3-d4, creating an unassailable position. The principle: "First create the outpost, then transfer a piece to occupy it."', highlights: ['d4', 'e4'] },
-    ],
+      { move: 'dxe4', explanation: 'Now observe the transformation: d4 is a PERMANENT outpost because Black\'s e-pawn is on e4 (can\'t attack d4) and the c-pawn would need to come to c5 first. White will maneuver a knight to d4 via b3-d4 or f3-d4, creating an unassailable position. The principle: "First create the outpost, then transfer a piece to occupy it."', highlights: ['d4', 'e4'] }
+],
     commonMistakes: ['Pushing e5 when Black can easily challenge it with ...f6', 'Creating an outpost but never actually occupying it with a piece', 'Advancing pawns without a clear plan for the squares left behind'],
     deeperPrinciple: 'Every pawn move is permanent and creates both strengths AND weaknesses. When you push e4-e5, you control more space but surrender control of d4 and f4 forever. The art is making sure YOUR pieces benefit from these squares before your opponent does.',
-  },
-  {
-    id: 'out-3',
-    title: 'Supporting the Outpost',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/2BNP3/2N1B3/PPP2PPP/R2QK2R w KQ - 0 8',
-    toMove: 'white',
-    concept: 'Maintaining pieces on outposts',
-    keyTakeaway: 'Support your outpost knight with pawns and pieces to make it permanent. An unsupported outpost knight can be traded off, wasting your strategic investment.',
-    introduction: 'Finding an outpost is only half the battle—you must also SECURE it. A knight on d5 that can be traded for a bishop is less valuable than one that forces your opponent to accept permanent positional damage. This variation teaches the art of preparation: before occupying the outpost, control the surrounding squares so your piece becomes untouchable.',
-    difficulty: 3,
-    moves: [
-      { move: 'f3', annotation: '!', explanation: 'This is PROPHYLACTIC THINKING at its finest. Why f3? Three reasons: (1) It prevents ...Ng4, which would harass the Be3 and potentially force exchanges, (2) It prepares e4-e5 with pawn support, (3) Most subtly, it takes away the g4 square so that when our knight lands on d5, Black cannot play ...Bg4 to pin and trade it. Karpov called this "taking away your opponent\'s air." Great chess is about seeing what your opponent WANTS to do, and stopping it before they can.', arrows: [{ from: 'f2', to: 'f3', color: 'green' }] },
-      { move: 'Nc5', explanation: 'Black activates the knight, attacking the bishop. This is a reasonable response, but it doesn\'t address White\'s fundamental plan. The bishop will simply retreat to a better diagonal.' },
-      { move: 'Bb3', explanation: 'The bishop retreats to b3—but this isn\'t a retreat in spirit. From b3, the bishop STILL targets f7 (the perennial weakness), and it\'s now completely safe. The principle: retreating pieces should go to ACTIVE squares, not passive ones.' },
-      { move: 'a5', explanation: 'Black gains queenside space. This is a typical counterplay idea—when your opponent dominates the center, expand on the wings. But here it doesn\'t address White\'s main threat.' },
-      { move: 'Nd5', annotation: '!!', explanation: 'NOW the knight lands, and it\'s TRULY permanent. Look at what supports it: the e4 pawn guards d5 from c6 or f6 attacks, the Be3 can recapture if necessary, and we\'ve already prevented ...Bg4. This knight now controls: c7 (fork threat), e7 (near the king), b6 (queenside), f6 (kingside defense), b4, and f4. Black\'s position is strategically lost—the knight radiates power across the entire board.', highlights: ['d5'] },
-    ],
-    commonMistakes: ['Jumping to the outpost before securing it—your opponent might trade it off for a minor piece', 'Ignoring prophylaxis and allowing your opponent to undermine the outpost', 'Placing a knight on an outpost without first considering how it will be supported after trades'],
-    deeperPrinciple: 'The greatest outposts are those that cannot be challenged. Before occupying d5, ask: "Can my opponent trade this knight? Can they kick it with a pawn?" If the answer to both is NO, you have a true strategic advantage that will persist throughout the game.',
-  },
-  {
+  },{
     id: 'out-4',
     title: 'Outpost on the Rim',
     fen: 'r2q1rk1/pp2ppbp/2npbnp1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 10',
@@ -73,8 +53,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'Na4', annotation: '!', explanation: 'This looks like the knight is going to the rim, but it\'s actually a MANEUVER—a multi-move plan to reach an ideal square. The route Nc3-a4-c5 is a classic technique. Why not go directly? Because from c3, the knight cannot reach c5 in one move. Na4 threatens Nc5 immediately. This teaches us that getting pieces to outposts often requires PATIENCE and PLANNING—the best square isn\'t always reachable directly.', arrows: [{ from: 'c3', to: 'a4', color: 'green' }, { from: 'a4', to: 'c5', color: 'yellow' }] },
       { move: 'Qc7', explanation: 'Black prepares to defend the c5 square, but it\'s too late. The queen on c7 defends c5, but after Nc5, it will be awkwardly placed—defending but not doing anything active. This is the problem with PASSIVE defense: you react to your opponent\'s plans instead of creating your own.' },
-      { move: 'Nc5', annotation: '!', explanation: 'The knight arrives on its dream square. Why is c5 so powerful here? (1) It CANNOT be attacked by any pawn—Black\'s b-pawn would need to come to b6, which takes two moves and weakens a6, (2) It attacks BOTH b7 and e6 simultaneously—these are permanent weaknesses in Black\'s structure, (3) It controls d7, preventing Black\'s knight or bishop from using that square, (4) It cannot easily be traded—Black would have to give up the Be6 or play ...b6 Bxc5 bxc5, ruining their pawn structure. This knight might be on the "rim" but it dominates the position.', highlights: ['c5'] },
-    ],
+      { move: 'Nc5', annotation: '!', explanation: 'The knight arrives on its dream square. Why is c5 so powerful here? (1) It CANNOT be attacked by any pawn—Black\'s b-pawn would need to come to b6, which takes two moves and weakens a6, (2) It attacks BOTH b7 and e6 simultaneously—these are permanent weaknesses in Black\'s structure, (3) It controls d7, preventing Black\'s knight or bishop from using that square, (4) It cannot easily be traded—Black would have to give up the Be6 or play ...b6 Bxc5 bxc5, ruining their pawn structure. This knight might be on the "rim" but it dominates the position.', highlights: ['c5'] }
+],
     commonMistakes: ['Dismissing rim squares automatically—evaluate each position individually', 'Moving a knight to the rim without a clear outpost plan', 'Allowing your opponent to easily trade off your rim knight with a minor piece'],
     deeperPrinciple: '"A knight on the rim is dim" is a guideline, not a law. The question is not WHERE the knight is, but WHAT IT CONTROLS. A knight on c5 that attacks b7, controls d7, and cannot be challenged is worth more than a knight on d4 that can be kicked away by ...c5 or ...e5.',
   },
@@ -92,31 +72,11 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Black trades because leaving the knight on d5 is unbearable. But this trade is exactly what White wanted—it transforms one outpost into a passed pawn that creates a SECOND outpost.' },
       { move: 'exd5', explanation: 'The pawn recaptures, and suddenly e6 becomes available! Why? Because Black\'s f-pawn cannot reach f5 easily (the g6 pawn structure makes ...f5 weakening), and the d-pawn has left e4. The d5 pawn ALSO becomes a powerful wedge—it controls c6 and e6, restricting Black\'s pieces.', highlights: ['d5', 'e6'] },
       { move: 'Ne5', explanation: 'Black desperately tries to find counterplay by centralizing. But it\'s too late—the strategic damage is done.' },
-      { move: 'Ne6', annotation: '!!', explanation: 'TOTAL DOMINATION. Two outposts working together are devastating because: (1) The Nd5+Ne6 pair controls c4, c7, d7, f7, g7, and many other squares, (2) Black cannot challenge EITHER knight with pawns, (3) Trading one knight doesn\'t solve the problem—the other remains, (4) The knights support each other—if one is attacked, the other can defend or create a diversion. This position is strategically won for White.', highlights: ['d5', 'e6'] },
-    ],
+      { move: 'Ne6', annotation: '!!', explanation: 'TOTAL DOMINATION. Two outposts working together are devastating because: (1) The Nd5+Ne6 pair controls c4, c7, d7, f7, g7, and many other squares, (2) Black cannot challenge EITHER knight with pawns, (3) Trading one knight doesn\'t solve the problem—the other remains, (4) The knights support each other—if one is attacked, the other can defend or create a diversion. This position is strategically won for White.', highlights: ['d5', 'e6'] }
+],
     commonMistakes: ['Occupying one outpost without looking for a second', 'Trading your outpost knight when the recapture creates ANOTHER outpost for your opponent', 'Not recognizing that double outposts often lead to a won position'],
     deeperPrinciple: 'Pawn structure weaknesses tend to cluster. If your opponent has a hole on d5, they often have a hole on e6 or c6 as well. Master strategists look for these connected weaknesses and exploit them systematically. One outpost is an advantage; two outposts are often checkmate.',
-  },
-  {
-    id: 'out-6',
-    title: 'The e5 Outpost',
-    fen: 'r1bqk2r/ppp2ppp/2n1pn2/3pP3/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 6',
-    toMove: 'white',
-    concept: 'Central outposts are most powerful',
-    keyTakeaway: 'A knight on e5 controls 8 squares and eyes f7—the weakest point in Black\'s position. Central outposts are strongest because they influence BOTH wings of the board.',
-    introduction: 'The e5 square is one of the most coveted outposts in chess. A knight here attacks f7 (eternally weak in Black\'s position), controls d7 (blocking coordination), and radiates influence across the entire board. Unlike a knight on the rim, an e5 knight cannot be ignored—it affects every part of the position. The French Defense often creates this structure, and understanding e5 is essential for both sides.',
-    difficulty: 2,
-    moves: [
-      { move: 'Bd3', explanation: 'Before occupying the outpost, White develops harmoniously. The Bd3 aims at h7 (a classic attacking diagonal) and supports a potential e4 push. Notice how development and outpost preparation go hand in hand—you can\'t occupy an outpost if your other pieces aren\'t ready to support the attack.' },
-      { move: 'Be7', explanation: 'Black develops modestly. This is a common choice when under spatial pressure—solid, waiting moves that don\'t create new weaknesses.' },
-      { move: 'O-O', explanation: 'Castling brings the king to safety and connects the rooks. White is in no hurry to jump to e5—proper preparation makes the outpost even more powerful.' },
-      { move: 'O-O', explanation: 'Black castles as well. Both sides have completed basic development. Now the strategic battle begins.' },
-      { move: 'Ne5', annotation: '!!', explanation: 'NOW the knight lands on its dream square. Why is e5 so dominant here? (1) It attacks f7—the point defended only by the king, (2) It controls d7, preventing Black\'s pieces from coordinating (the c8 bishop is stuck, the Nc6 cannot reroute via d7), (3) No pawn can challenge it—Black\'s f-pawn is on f7 and cannot reach f6 without major concessions, (4) It works with Bd3 to create kingside pressure. A knight on e5 in the French Defense often leads to a crushing attack.', arrows: [{ from: 'f3', to: 'e5', color: 'green' }], highlights: ['e5'] },
-    ],
-    commonMistakes: ['Jumping to e5 before castling and developing—the outpost is only strong if your other pieces can support the attack', 'Allowing Black to play ...f6 before you can establish the outpost', 'Not following up the Ne5 with concrete threats—an outpost must lead to something'],
-    deeperPrinciple: 'Central outposts are strongest because they influence the entire board. A knight on e5 affects BOTH the kingside (attacking f7, g4) AND the queenside (controlling c4, d7). This is why the center is so important—control the center, and you control the destiny of pieces on both flanks.',
-  },
-  {
+  },{
     id: 'out-7',
     title: 'Trading for an Outpost',
     fen: 'r1bqkb1r/pp1npppp/2p2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 5',
@@ -129,8 +89,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'cxd5', explanation: 'Black recaptures.' },
       { move: 'e4', annotation: '!', explanation: 'Now e5 becomes available for the knight!', arrows: [{ from: 'e2', to: 'e4', color: 'green' }] },
       { move: 'dxe4', explanation: 'Black captures.' },
-      { move: 'Nxe4', explanation: 'Knight recaptures with a strong position.' },
-    ]
+      { move: 'Nxe4', explanation: 'Knight recaptures with a strong position.' }
+]
   },
   {
     id: 'out-8',
@@ -149,8 +109,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'e6', explanation: 'Black solidifies.' },
       { move: 'O-O', explanation: 'Castling.' },
       { move: 'Be7', explanation: 'Black develops.' },
-      { move: 'e5', annotation: '!', explanation: 'Creating an outpost on d5 for the bishop!', highlights: ['d5'] },
-    ]
+      { move: 'e5', annotation: '!', explanation: 'Creating an outpost on d5 for the bishop!', highlights: ['d5'] }
+]
   },
   {
     id: 'out-9',
@@ -163,8 +123,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'd3', explanation: 'Supporting e4 and preventing ...Nd4.' },
       { move: 'Bc5', explanation: 'Black develops actively.' },
-      { move: 'Be3', annotation: '!', explanation: 'Challenging the bishop and preventing ...Nd4.', arrows: [{ from: 'c1', to: 'e3', color: 'green' }] },
-    ]
+      { move: 'Be3', annotation: '!', explanation: 'Challenging the bishop and preventing ...Nd4.', arrows: [{ from: 'c1', to: 'e3', color: 'green' }] }
+]
   },
   {
     id: 'out-10',
@@ -180,8 +140,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'e5', explanation: 'Black tries to gain counterplay in the center. This is the right idea in principle—don\'t let your opponent attack without creating your own threats. But it has a critical flaw: it weakens the f5 square irreparably.' },
       { move: 'Nf5', annotation: '!!', explanation: 'Behold the ETERNAL KNIGHT. Why is this knight truly eternal? Because Black played ...e5, the f-pawn CANNOT advance to f6 to challenge it (the e5 pawn blocks it). And Black\'s g-pawn is on g6, so it cannot reach g4 to attack f5 either. This knight will sit on f5 until the end of the game or until Black gives up material to remove it. From f5, it attacks: g7 (near the king), h6 (potential sacrifice square), d6 (Black\'s weak pawn), e7 (key defensive square). The eternal knight often decides games single-handedly.', highlights: ['f5'] },
       { move: 'Bxf5', explanation: 'Black has no choice but to trade the fianchettoed bishop—their best defensive piece. This is the tragic choice that eternal knights force: either live with the monster forever, or give up material/piece quality to remove it. The bishop was Black\'s best piece; now it\'s gone.' },
-      { move: 'exf5', explanation: 'The pawn recapture opens the e-file for White\'s rook and creates a passed pawn storm possibility with f5-f6 or g4-g5-g6. Even after the knight is gone, its ghost remains—the pawn on f5 is a permanent weakness in Black\'s camp. This is the lasting impact of an eternal outpost: even when traded, it leaves behind damage.', highlights: ['f5'] },
-    ],
+      { move: 'exf5', explanation: 'The pawn recapture opens the e-file for White\'s rook and creates a passed pawn storm possibility with f5-f6 or g4-g5-g6. Even after the knight is gone, its ghost remains—the pawn on f5 is a permanent weakness in Black\'s camp. This is the lasting impact of an eternal outpost: even when traded, it leaves behind damage.', highlights: ['f5'] }
+],
     commonMistakes: ['Not recognizing when an outpost becomes "eternal"—always analyze if ANY pawn can ever attack it', 'Trading an eternal knight for a bishop when you don\'t have to', 'Playing ...e5 or ...g6 without realizing you\'re creating an eternal outpost for your opponent'],
     deeperPrinciple: 'An eternal knight is worth more than a rook in many positions. Nimzowitsch called this a "super-piece"—a knight so powerfully placed that it dominates everything. When you have an eternal outpost, you don\'t need to hurry. The advantage is permanent. Build up slowly, and your opponent will eventually collapse.',
   },
@@ -198,8 +158,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'cxd4', explanation: 'Black captures.' },
       { move: 'Nxd4', explanation: 'Recapturing with the knight.' },
       { move: 'e6', explanation: 'Black prepares development.' },
-      { move: 'Ndb5', annotation: '!', explanation: 'Heading to d6, a powerful outpost!', arrows: [{ from: 'd4', to: 'b5', color: 'green' }, { from: 'b5', to: 'd6', color: 'yellow' }] },
-    ]
+      { move: 'Ndb5', annotation: '!', explanation: 'Heading to d6, a powerful outpost!', arrows: [{ from: 'd4', to: 'b5', color: 'green' }, { from: 'b5', to: 'd6', color: 'yellow' }] }
+]
   },
   {
     id: 'out-12',
@@ -214,8 +174,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Black recaptures.' },
       { move: 'e4', annotation: '!', explanation: 'Attacking the knight and seizing space.' },
       { move: 'Nxc3', explanation: 'Black trades.' },
-      { move: 'bxc3', annotation: '!', explanation: 'Now d4 is a permanent outpost!', highlights: ['d4'] },
-    ]
+      { move: 'bxc3', annotation: '!', explanation: 'Now d4 is a permanent outpost!', highlights: ['d4'] }
+]
   },
   {
     id: 'out-13',
@@ -230,26 +190,9 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'e6', explanation: 'Trying to kick it.' },
       { move: 'Nxf6+', annotation: '!', explanation: 'Trading for the key defender.' },
       { move: 'Bxf6', explanation: 'Black recaptures.' },
-      { move: 'Nc6', annotation: '!!', explanation: 'Now the other knight has a powerful outpost!', highlights: ['c6'] },
-    ]
-  },
-  {
-    id: 'out-14',
-    title: 'Outpost with Rook Support',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/1R2KB1R w K - 0 10',
-    toMove: 'white',
-    concept: 'Support outposts with rooks',
-    keyTakeaway: 'A rook behind a knight on an outpost provides powerful support.',
-    difficulty: 4,
-    moves: [
-      { move: 'Nd5', annotation: '!', explanation: 'Knight to the outpost.' },
-      { move: 'Nxd5', explanation: 'Black trades.' },
-      { move: 'exd5', explanation: 'The pawn advances.' },
-      { move: 'Ne5', explanation: 'Black counterattacks.' },
-      { move: 'Rb5', annotation: '!', explanation: 'The rook supports from behind!', arrows: [{ from: 'b1', to: 'b5', color: 'green' }] },
-    ]
-  },
-  {
+      { move: 'Nc6', annotation: '!!', explanation: 'Now the other knight has a powerful outpost!', highlights: ['c6'] }
+]
+  },{
     id: 'out-15',
     title: 'Creating Outposts via Piece Exchange',
     fen: 'r1bqkb1r/pp1n1ppp/2n1p3/2ppP3/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 6',
@@ -262,8 +205,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Qb6', explanation: 'Black attacks.' },
       { move: 'Bxc6', annotation: '!', explanation: 'Trading to secure d5.' },
       { move: 'bxc6', explanation: 'Black recaptures.' },
-      { move: 'Na4', annotation: '!', explanation: 'Now Nc5 will create a monster knight!', arrows: [{ from: 'c3', to: 'a4', color: 'green' }, { from: 'a4', to: 'c5', color: 'yellow' }] },
-    ]
+      { move: 'Na4', annotation: '!', explanation: 'Now Nc5 will create a monster knight!', arrows: [{ from: 'c3', to: 'a4', color: 'green' }, { from: 'a4', to: 'c5', color: 'yellow' }] }
+]
   },
   // INTERMEDIATE OUTPOST CONCEPTS (16-35)
   {
@@ -279,8 +222,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'h6', explanation: 'Black prevents Bg5.' },
       { move: 'Nh4', annotation: '!', explanation: 'Heading to f5!', arrows: [{ from: 'f3', to: 'h4', color: 'green' }, { from: 'h4', to: 'f5', color: 'yellow' }] },
       { move: 'Nd4', explanation: 'Black centralizes.' },
-      { move: 'Nf5', annotation: '!', explanation: 'The knight reaches its ideal square!', highlights: ['f5'] },
-    ]
+      { move: 'Nf5', annotation: '!', explanation: 'The knight reaches its ideal square!', highlights: ['f5'] }
+]
   },
   {
     id: 'out-17',
@@ -295,8 +238,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'a6', explanation: 'Black prepares b5.' },
       { move: 'Qd2', explanation: 'Connecting rooks.' },
       { move: 'b5', explanation: 'Black expands.' },
-      { move: 'Nd5', annotation: '!', explanation: 'Perfect! The knight sits on a light square while pawns are on dark squares.', highlights: ['d5', 'e4', 'f3'] },
-    ]
+      { move: 'Nd5', annotation: '!', explanation: 'Perfect! The knight sits on a light square while pawns are on dark squares.', highlights: ['d5', 'e4', 'f3'] }
+]
   },
   {
     id: 'out-18',
@@ -312,8 +255,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'exd4', explanation: 'Black takes the pawn. This is objectively fine, but now Black must be very careful—White is about to offer ANOTHER pawn, and taking it will worsen Black\'s structure further.' },
       { move: 'c3', annotation: '!', explanation: 'The second pawn sacrifice! This is not reckless—it\'s deeply strategic. If Black takes, White recaptures with the knight, and suddenly: (1) The Nc3 controls d5—a dream outpost square, (2) The bishop on c4 eyes f7, (3) White is fully developed while Black has moved the e-pawn multiple times. The principle: TEMPO and STRUCTURE can be worth more than material.' },
       { move: 'dxc3', explanation: 'Black takes the second pawn. This is risky but testable. The alternative 3...d3 is more solid but cedes the center entirely.' },
-      { move: 'Nxc3', annotation: '!', explanation: 'Now examine what White has achieved for two pawns: (1) The d5 square is a PERMANENT outpost—no Black pawn can ever challenge it, (2) White has three pieces developed (Bc4, Nf3, Nc3) vs Black\'s zero, (3) The center is open for White\'s pieces to attack, (4) Black\'s extra pawns on c3 was taken—they don\'t have extra material. This is the gambit ideal: temporary material investment for permanent positional returns.', highlights: ['d5'] },
-    ],
+      { move: 'Nxc3', annotation: '!', explanation: 'Now examine what White has achieved for two pawns: (1) The d5 square is a PERMANENT outpost—no Black pawn can ever challenge it, (2) White has three pieces developed (Bc4, Nf3, Nc3) vs Black\'s zero, (3) The center is open for White\'s pieces to attack, (4) Black\'s extra pawns on c3 was taken—they don\'t have extra material. This is the gambit ideal: temporary material investment for permanent positional returns.', highlights: ['d5'] }
+],
     commonMistakes: ['Gambling pawns without a concrete plan—sacrifices need purpose', 'Accepting gambited pawns without understanding the positional cost', 'Thinking you\'re "winning" with extra material when your opponent has crushing development and outposts'],
     deeperPrinciple: 'Material can be regained; structure cannot. When you sacrifice a pawn for an outpost, you\'re essentially saying: "I trust that this permanent advantage will outlast your temporary material." Great players understand that a pawn is worth about 3 tempi—so if your gambit gives you 4+ tempi or a permanent outpost, it\'s likely sound.',
   },
@@ -330,8 +273,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'e5', explanation: 'Black challenges.' },
       { move: 'dxe5', explanation: 'Taking.' },
       { move: 'dxe5', explanation: 'Black recaptures.' },
-      { move: 'Nd5', annotation: '!', explanation: 'Now the outpost is secure!', highlights: ['d5'] },
-    ]
+      { move: 'Nd5', annotation: '!', explanation: 'Now the outpost is secure!', highlights: ['d5'] }
+]
   },
   {
     id: 'out-20',
@@ -350,8 +293,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Black trades.' },
       { move: 'exd5', explanation: 'The pawn supports the other knight.' },
       { move: 'Nb8', explanation: 'Knight retreats.' },
-      { move: 'Nc6', annotation: '!!', explanation: 'Second knight to an outpost! Devastating.', highlights: ['c6', 'd5'] },
-    ]
+      { move: 'Nc6', annotation: '!!', explanation: 'Second knight to an outpost! Devastating.', highlights: ['c6', 'd5'] }
+]
   },
   {
     id: 'out-21',
@@ -366,8 +309,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'dxe4', explanation: 'Black captures.' },
       { move: 'Nxe4', annotation: '!', explanation: 'Knight centralizes with power.' },
       { move: 'Nxe4', explanation: 'Black trades.' },
-      { move: 'Bxe4', explanation: 'Bishop takes over the diagonal.' },
-    ]
+      { move: 'Bxe4', explanation: 'Bishop takes over the diagonal.' }
+]
   },
   {
     id: 'out-22',
@@ -382,8 +325,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Black trades.' },
       { move: 'exd5', explanation: 'Pawn recaptures.' },
       { move: 'Bxd4', explanation: 'Black wins the knight!' },
-      { move: 'Bxd4', annotation: '!', explanation: 'But White has the bishop pair and the passed d-pawn!' },
-    ]
+      { move: 'Bxd4', annotation: '!', explanation: 'But White has the bishop pair and the passed d-pawn!' }
+]
   },
   {
     id: 'out-23',
@@ -398,26 +341,9 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'bxc6', explanation: 'Black must take.' },
       { move: 'Nd5', annotation: '!', explanation: 'Now d5 is completely secure!' },
       { move: 'Nxd5', explanation: 'Black has to trade.' },
-      { move: 'exd5', annotation: '!', explanation: 'The pawn wedge paralyzes Black\'s position.', highlights: ['c6', 'd5'] },
-    ]
-  },
-  {
-    id: 'out-24',
-    title: 'Queenside Outpost Attack',
-    fen: 'r1bq1rk1/1pp1ppbp/p1np1np1/8/3NP3/2N1BP2/PPPQ2PP/2KR1B1R w - - 0 11',
-    toMove: 'white',
-    concept: 'Use outpost to launch queenside attack',
-    keyTakeaway: 'An outpost can serve as a launching point for an attack.',
-    difficulty: 4,
-    moves: [
-      { move: 'Nc6', annotation: '!', explanation: 'Knight invades!' },
-      { move: 'Qc8', explanation: 'Queen defends.' },
-      { move: 'e5', annotation: '!', explanation: 'Opening lines while the knight dominates.' },
-      { move: 'dxe5', explanation: 'Black takes.' },
-      { move: 'Nd5', annotation: '!!', explanation: 'Two knights on outposts! Crushing position.', highlights: ['c6', 'd5'] },
-    ]
-  },
-  {
+      { move: 'exd5', annotation: '!', explanation: 'The pawn wedge paralyzes Black\'s position.', highlights: ['c6', 'd5'] }
+]
+  },{
     id: 'out-25',
     title: 'Outpost in the King\'s Indian',
     fen: 'r1bq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N2N2/PP2BPPP/R1BQ1RK1 w - - 0 7',
@@ -430,26 +356,9 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Ne5', explanation: 'Black seeks counterplay.' },
       { move: 'Nxe5', explanation: 'Trading.' },
       { move: 'dxe5', explanation: 'Black recaptures.' },
-      { move: 'c5', annotation: '!', explanation: 'Fixing the structure. White has a permanent space advantage.', highlights: ['c5', 'd5'] },
-    ]
-  },
-  {
-    id: 'out-26',
-    title: 'Outpost Against Isolated Pawn',
-    fen: 'r1bq1rk1/pp3ppp/2n2n2/3p4/3P4/2N2N2/PP2BPPP/R1BQ1RK1 w - - 0 10',
-    toMove: 'white',
-    concept: 'Use outpost to blockade isolated pawn',
-    keyTakeaway: 'The square in front of an isolated pawn is a natural outpost.',
-    difficulty: 3,
-    moves: [
-      { move: 'Ne5', annotation: '!', explanation: 'Knight blockades the isolated pawn!' },
-      { move: 'Nxe5', explanation: 'Black trades.' },
-      { move: 'dxe5', explanation: 'Recapturing.' },
-      { move: 'Be6', explanation: 'Black develops.' },
-      { move: 'Nd4', annotation: '!', explanation: 'Another knight to blockade! The d5 pawn is paralyzed.', highlights: ['d4', 'd5'] },
-    ]
-  },
-  {
+      { move: 'c5', annotation: '!', explanation: 'Fixing the structure. White has a permanent space advantage.', highlights: ['c5', 'd5'] }
+]
+  },{
     id: 'out-27',
     title: 'Outpost Transformation',
     fen: 'r2q1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/2KR1B1R w - - 0 11',
@@ -462,42 +371,9 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Ne5', explanation: 'Black centralizes.' },
       { move: 'g5', annotation: '!', explanation: 'Driving away defenders.' },
       { move: 'Nh5', explanation: 'Knight retreats.' },
-      { move: 'Nd5', annotation: '!!', explanation: 'The knight lands with crushing effect!', highlights: ['d5'] },
-    ]
-  },
-  {
-    id: 'out-28',
-    title: 'Rook Lift to Support Outpost',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/1R2KB1R w K - 0 10',
-    toMove: 'white',
-    concept: 'Use rook lift to support outpost operations',
-    keyTakeaway: 'Rook lifts can add power to outpost-based attacks.',
-    difficulty: 4,
-    moves: [
-      { move: 'Rb3', annotation: '!', explanation: 'The rook prepares to swing to the kingside!' },
-      { move: 'a5', explanation: 'Black attacks.' },
-      { move: 'Rg3', annotation: '!', explanation: 'Rook joins the attack!' },
-      { move: 'Nh5', explanation: 'Black defends.' },
-      { move: 'Nd5', annotation: '!', explanation: 'Knight to outpost while rook supports!', arrows: [{ from: 'g3', to: 'g7', color: 'red' }], highlights: ['d5'] },
-    ]
-  },
-  {
-    id: 'out-29',
-    title: 'Queen + Knight Outpost',
-    fen: 'r1b2rk1/pp2ppbp/2np1np1/q7/3NP3/2N1BP2/PPPQ2PP/2KR1B1R w - - 0 11',
-    toMove: 'white',
-    concept: 'Queen supports knight on outpost',
-    keyTakeaway: 'Queen + knight is the most dangerous attacking duo.',
-    difficulty: 4,
-    moves: [
-      { move: 'Nd5', annotation: '!', explanation: 'Knight to outpost!' },
-      { move: 'Nxd5', explanation: 'Black trades.' },
-      { move: 'exd5', explanation: 'Pawn wedge.' },
-      { move: 'Ne5', explanation: 'Black centralizes.' },
-      { move: 'Qc2', annotation: '!', explanation: 'Queen prepares to join the attack via h7!', arrows: [{ from: 'c2', to: 'h7', color: 'red' }] },
-    ]
-  },
-  {
+      { move: 'Nd5', annotation: '!!', explanation: 'The knight lands with crushing effect!', highlights: ['d5'] }
+]
+  },{
     id: 'out-30',
     title: 'Strategic Outpost Trade',
     fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/2KR1B1R w - - 0 11',
@@ -510,8 +386,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'bxc6', explanation: 'Black recaptures with doubled pawns.' },
       { move: 'Nd5', annotation: '!', explanation: 'Now the other knight has an even better outpost!', highlights: ['c6', 'd5'] },
       { move: 'Nxd5', explanation: 'Black must trade again.' },
-      { move: 'exd5', annotation: '!!', explanation: 'The pawn structure is permanently weakened. White will target c6.', highlights: ['c6'] },
-    ]
+      { move: 'exd5', annotation: '!!', explanation: 'The pawn structure is permanently weakened. White will target c6.', highlights: ['c6'] }
+]
   },
   // ADVANCED & MASTER-LEVEL OUTPOST CONCEPTS (31-60)
   {
@@ -525,8 +401,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'Nb5', annotation: '!', explanation: 'Heading to d6!' },
       { move: 'O-O', explanation: 'Black castles.' },
-      { move: 'Nd6', annotation: '!!', explanation: 'The knight is a monster here!', highlights: ['d6'] },
-    ]
+      { move: 'Nd6', annotation: '!!', explanation: 'The knight is a monster here!', highlights: ['d6'] }
+]
   },
   {
     id: 'out-32',
@@ -541,8 +417,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'a6', explanation: 'Black plays.' },
       { move: 'Nc6', annotation: '!', explanation: 'First outpost.' },
       { move: 'bxc6', explanation: 'Black takes.' },
-      { move: 'Nd5', annotation: '!', explanation: 'Second outpost, supported by the weakened c6.', highlights: ['c6', 'd5'] },
-    ]
+      { move: 'Nd5', annotation: '!', explanation: 'Second outpost, supported by the weakened c6.', highlights: ['c6', 'd5'] }
+]
   },
   {
     id: 'out-33',
@@ -557,8 +433,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'e5', explanation: 'Black challenges.' },
       { move: 'Nf5', annotation: '!', explanation: 'Knight to outpost!' },
       { move: 'Bxf5', explanation: 'Black trades.' },
-      { move: 'exf5', annotation: '!', explanation: 'The bishops dominate the open position!' },
-    ]
+      { move: 'exf5', annotation: '!', explanation: 'The bishops dominate the open position!' }
+]
   },
   {
     id: 'out-34',
@@ -573,26 +449,9 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Black trades.' },
       { move: 'exd5', explanation: 'Passed pawn appears.' },
       { move: 'Rfe8', explanation: 'Black activates.' },
-      { move: 'Nc6', annotation: '!', explanation: 'Second knight to outpost!', highlights: ['c6', 'd5'] },
-    ]
-  },
-  {
-    id: 'out-35',
-    title: 'Outpost vs Two Bishops',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 9',
-    toMove: 'white',
-    concept: 'Knight outpost neutralizes bishop pair',
-    keyTakeaway: 'A strong knight can be worth more than two bishops.',
-    difficulty: 5,
-    moves: [
-      { move: 'Nd5', annotation: '!', explanation: 'The knight dominates despite Black\'s bishops.' },
-      { move: 'Bxd4', explanation: 'Black trades.' },
-      { move: 'Bxd4', explanation: 'Recapturing.' },
-      { move: 'e6', explanation: 'Attacking the knight.' },
-      { move: 'Nxf6+', annotation: '!', explanation: 'Trading for the key defender!' },
-    ]
-  },
-  {
+      { move: 'Nc6', annotation: '!', explanation: 'Second knight to outpost!', highlights: ['c6', 'd5'] }
+]
+  },{
     id: 'out-36',
     title: 'The Octopus Knight',
     fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPP2QPP/R3KB1R w KQ - 0 10',
@@ -605,8 +464,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Black trades.' },
       { move: 'exd5', explanation: 'Pawn advances.' },
       { move: 'Nb8', explanation: 'Knight retreats.' },
-      { move: 'Nf5', annotation: '!!', explanation: 'The other knight becomes the octopus!', highlights: ['f5'] },
-    ]
+      { move: 'Nf5', annotation: '!!', explanation: 'The other knight becomes the octopus!', highlights: ['f5'] }
+]
   },
   {
     id: 'out-37',
@@ -621,8 +480,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'a6', explanation: 'Black prepares b5.' },
       { move: 'Be3', explanation: 'Developing.' },
       { move: 'b5', explanation: 'Black expands.' },
-      { move: 'Nd5', annotation: '!', explanation: 'Now the outpost is secure!', highlights: ['d5'] },
-    ]
+      { move: 'Nd5', annotation: '!', explanation: 'Now the outpost is secure!', highlights: ['d5'] }
+]
   },
   {
     id: 'out-38',
@@ -637,26 +496,9 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'exd5', explanation: 'Black recaptures.' },
       { move: 'Bd3', explanation: 'Developing.' },
       { move: 'Bd6', explanation: 'Black develops.' },
-      { move: 'e4', annotation: '!', explanation: 'Creating the e5 outpost!', highlights: ['e5'] },
-    ]
-  },
-  {
-    id: 'out-39',
-    title: 'Outpost with Rook Behind',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/3RKB1R w K - 0 10',
-    toMove: 'white',
-    concept: 'Rook supports outpost from behind',
-    keyTakeaway: 'Rooks behind outpost pieces add tremendous power.',
-    difficulty: 4,
-    moves: [
-      { move: 'O-O-O', annotation: '!', explanation: 'Completing development.' },
-      { move: 'e5', explanation: 'Black challenges.' },
-      { move: 'Nf5', annotation: '!', explanation: 'Knight to outpost!' },
-      { move: 'Bxf5', explanation: 'Black trades.' },
-      { move: 'exf5', explanation: 'Rook is now behind the pawn!', highlights: ['f5'] },
-    ]
-  },
-  {
+      { move: 'e4', annotation: '!', explanation: 'Creating the e5 outpost!', highlights: ['e5'] }
+]
+  },{
     id: 'out-40',
     title: 'The e6 Outpost',
     fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 9',
@@ -669,8 +511,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Black trades.' },
       { move: 'exd5', explanation: 'Pawn advances.' },
       { move: 'Ne5', explanation: 'Black centralizes.' },
-      { move: 'Ne6', annotation: '!!', explanation: 'The knight on e6 is crushing!', highlights: ['e6'] },
-    ]
+      { move: 'Ne6', annotation: '!!', explanation: 'The knight on e6 is crushing!', highlights: ['e6'] }
+]
   },
   {
     id: 'out-41',
@@ -685,8 +527,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'e6', explanation: 'Black tries to kick it.' },
       { move: 'Nxf6+', annotation: '!', explanation: 'Trading for a key piece!' },
       { move: 'Bxf6', explanation: 'Black recaptures.' },
-      { move: 'Nf5', annotation: '!', explanation: 'The other knight takes over!', highlights: ['f5'] },
-    ]
+      { move: 'Nf5', annotation: '!', explanation: 'The other knight takes over!', highlights: ['f5'] }
+]
   },
   {
     id: 'out-42',
@@ -701,8 +543,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'a6', explanation: 'Black plays.' },
       { move: 'Nd5', annotation: '!', explanation: 'Central coordination point.' },
       { move: 'e6', explanation: 'Black challenges.' },
-      { move: 'Nxf6+', annotation: '!', explanation: 'The outpost has done its job!' },
-    ]
+      { move: 'Nxf6+', annotation: '!', explanation: 'The outpost has done its job!' }
+]
   },
   {
     id: 'out-43',
@@ -719,26 +561,9 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Black trades.' },
       { move: 'exd5', explanation: 'Pawn wedge.' },
       { move: 'Nd7', explanation: 'Knight retreats.' },
-      { move: 'g5', annotation: '!', explanation: 'Storm continues!' },
-    ]
-  },
-  {
-    id: 'out-44',
-    title: 'Blockade Outpost',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/3P4/4P3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 10',
-    toMove: 'white',
-    concept: 'Outpost to blockade passed pawn',
-    keyTakeaway: 'Place knights on blockade squares.',
-    difficulty: 3,
-    moves: [
-      { move: 'Nd4', annotation: '!', explanation: 'The knight blockades and controls.' },
-      { move: 'e6', explanation: 'Black challenges the center.' },
-      { move: 'dxe6', explanation: 'Taking en passant.' },
-      { move: 'Bxe6', explanation: 'Black recaptures.' },
-      { move: 'Nc6', annotation: '!', explanation: 'Now this becomes an outpost!', highlights: ['c6'] },
-    ]
-  },
-  {
+      { move: 'g5', annotation: '!', explanation: 'Storm continues!' }
+]
+  },{
     id: 'out-45',
     title: 'Outpost on the 6th Rank',
     fen: 'r1bq1rk1/pp2ppbp/2Np1np1/8/4P3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 11',
@@ -749,8 +574,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'O-O-O', annotation: '!', explanation: 'The knight on c6 dominates!' },
       { move: 'b6', explanation: 'Trying to challenge.' },
-      { move: 'Na5', annotation: '!', explanation: 'Keeping the outpost effect.', highlights: ['a5'] },
-    ]
+      { move: 'Na5', annotation: '!', explanation: 'Keeping the outpost effect.', highlights: ['a5'] }
+]
   },
   {
     id: 'out-46',
@@ -763,8 +588,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'f4', annotation: '!', explanation: 'Securing the e5 square permanently.' },
       { move: 'e5', explanation: 'Black challenges.' },
-      { move: 'Nf5', annotation: '!', explanation: 'This outpost is permanent!', highlights: ['f5'] },
-    ]
+      { move: 'Nf5', annotation: '!', explanation: 'This outpost is permanent!', highlights: ['f5'] }
+]
   },
   {
     id: 'out-47',
@@ -779,8 +604,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Bxf5', explanation: 'Black must trade.' },
       { move: 'exf5', explanation: 'Opening lines!' },
       { move: 'Kh8', explanation: 'Black hides.' },
-      { move: 'Nd5', annotation: '!', explanation: 'Another knight joins!', highlights: ['d5'] },
-    ]
+      { move: 'Nd5', annotation: '!', explanation: 'Another knight joins!', highlights: ['d5'] }
+]
   },
   {
     id: 'out-48',
@@ -793,8 +618,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'Ng3', annotation: '!', explanation: 'Repositioning for Nf5.' },
       { move: 'e5', explanation: 'Black challenges.' },
-      { move: 'Nf5', annotation: '!', explanation: 'The knight lands!', highlights: ['f5'] },
-    ]
+      { move: 'Nf5', annotation: '!', explanation: 'The knight lands!', highlights: ['f5'] }
+]
   },
   {
     id: 'out-49',
@@ -807,8 +632,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'b5', annotation: '!', explanation: 'Minority attack begins!' },
       { move: 'Na5', explanation: 'Black challenges.' },
-      { move: 'Nc6', annotation: '!', explanation: 'Knight invades!', highlights: ['c6'] },
-    ]
+      { move: 'Nc6', annotation: '!', explanation: 'Knight invades!', highlights: ['c6'] }
+]
   },
   {
     id: 'out-50',
@@ -823,8 +648,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Bxf5', explanation: 'Black trades.' },
       { move: 'exf5', explanation: 'Opening lines toward the king.' },
       { move: 'Kh8', explanation: 'Black hides.' },
-      { move: 'g4', annotation: '!', explanation: 'Storm continues!' },
-    ]
+      { move: 'g4', annotation: '!', explanation: 'Storm continues!' }
+]
   },
   {
     id: 'out-51',
@@ -837,8 +662,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'Nxc6', annotation: '!', explanation: 'Trading to damage structure.' },
       { move: 'bxc6', explanation: 'Doubled pawns!' },
-      { move: 'Na4', annotation: '!', explanation: 'Targeting the weak c5 square.', highlights: ['c5', 'c6'] },
-    ]
+      { move: 'Na4', annotation: '!', explanation: 'Targeting the weak c5 square.', highlights: ['c5', 'c6'] }
+]
   },
   {
     id: 'out-52',
@@ -851,8 +676,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'Nxd5', annotation: '!', explanation: 'Trading the monster!' },
       { move: 'exd5', explanation: 'White recaptures.' },
-      { move: 'Nb4', annotation: '!', explanation: 'Now Black attacks the structure.', highlights: ['b4'] },
-    ]
+      { move: 'Nb4', annotation: '!', explanation: 'Now Black attacks the structure.', highlights: ['b4'] }
+]
   },
   {
     id: 'out-53',
@@ -865,8 +690,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'e5', annotation: '!', explanation: 'Challenging the center!' },
       { move: 'dxe5', explanation: 'White takes.' },
-      { move: 'dxe5', annotation: '!', explanation: 'Now d4 is not an outpost for White.', highlights: ['d4'] },
-    ]
+      { move: 'dxe5', annotation: '!', explanation: 'Now d4 is not an outpost for White.', highlights: ['d4'] }
+]
   },
   {
     id: 'out-54',
@@ -879,8 +704,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'O-O-O', annotation: '!', explanation: 'Activity over outpost!' },
       { move: 'e5', explanation: 'Black challenges.' },
-      { move: 'Nf5', annotation: '!', explanation: 'Now the outpost AND activity!' },
-    ]
+      { move: 'Nf5', annotation: '!', explanation: 'Now the outpost AND activity!' }
+]
   },
   {
     id: 'out-55',
@@ -893,8 +718,8 @@ export const outpostsVariations: CourseVariation[] = [
     moves: [
       { move: 'd5', annotation: '!', explanation: 'Immediate outpost creation!' },
       { move: 'Nb8', explanation: 'Knight retreats.' },
-      { move: 'Nf3', annotation: '!', explanation: 'Developing and eyeing e5.', highlights: ['e5'] },
-    ]
+      { move: 'Nf3', annotation: '!', explanation: 'Developing and eyeing e5.', highlights: ['e5'] }
+]
   },
   {
     id: 'out-56',
@@ -909,8 +734,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'dxc5', explanation: 'Black takes.' },
       { move: 'Nd5', annotation: '!', explanation: 'Now d5 is permanent!' },
       { move: 'Nxd5', explanation: 'Black trades.' },
-      { move: 'exd5', annotation: '!', explanation: 'The pawn wedge dominates.', highlights: ['c5', 'd5'] },
-    ]
+      { move: 'exd5', annotation: '!', explanation: 'The pawn wedge dominates.', highlights: ['c5', 'd5'] }
+]
   },
   {
     id: 'out-57',
@@ -925,8 +750,8 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Black trades.' },
       { move: 'exd5', explanation: 'Pawn advances.' },
       { move: 'Nb4', explanation: 'Black attacks c2.' },
-      { move: 'Nc6', annotation: '!!', explanation: 'But this is even stronger!' },
-    ]
+      { move: 'Nc6', annotation: '!!', explanation: 'But this is even stronger!' }
+]
   },
   {
     id: 'out-58',
@@ -941,46 +766,9 @@ export const outpostsVariations: CourseVariation[] = [
       { move: 'a6', explanation: 'Black plays.' },
       { move: 'g4', annotation: '!', explanation: 'Gaining even more space!' },
       { move: 'b5', explanation: 'Black counterattacks.' },
-      { move: 'Nd5', annotation: '!', explanation: 'Outpost secures the space.', highlights: ['d5'] },
-    ]
-  },
-  {
-    id: 'out-59',
-    title: 'Outpost in IQP Positions',
-    fen: 'r1bq1rk1/pp3ppp/2n2n2/3p4/3P4/2N2N2/PP2BPPP/R1BQ1RK1 w - - 0 10',
-    toMove: 'white',
-    concept: 'Outpost in front of isolated pawn',
-    keyTakeaway: 'The square in front of IQP is a natural outpost.',
-    difficulty: 3,
-    moves: [
-      { move: 'Ne5', annotation: '!', explanation: 'Blockading the IQP!' },
-      { move: 'Nxe5', explanation: 'Black trades.' },
-      { move: 'dxe5', explanation: 'Recapturing.' },
-      { move: 'Be6', explanation: 'Black develops.' },
-      { move: 'Nd4', annotation: '!', explanation: 'Another blockading outpost!', highlights: ['d4', 'd5'] },
-    ]
-  },
-  {
-    id: 'out-60',
-    title: 'The Ultimate Outpost',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/2KR1B1R w - - 0 11',
-    toMove: 'white',
-    concept: 'Multiple outposts working together',
-    keyTakeaway: 'The ultimate position has knights on d5, e6, and f5. When you can establish a NETWORK of outposts, your opponent\'s position becomes unplayable—they cannot defend all the weak squares simultaneously.',
-    introduction: 'This is the culmination of outpost mastery: creating not just one dominant square, but an entire NETWORK of outposts that strangle your opponent. When you control d5, e6, and f5 simultaneously, Black\'s position becomes uncoordinated and passive. Every piece is either tied down to defense or has no good squares. This is what Karpov called "positional suffocation"—winning without dramatic tactics, simply by controlling all the important squares.',
-    difficulty: 5,
-    moves: [
-      { move: 'Nd5', annotation: '!', explanation: 'The first outpost is established. But White is already thinking ahead: when Black trades (which they must), the exd5 recapture will create a pawn wedge that opens up ANOTHER outpost on e6 or f5. Master strategists think in terms of CHAINS of outposts, not individual squares. The question is always: "When this knight is traded, what new advantage do I gain?"', arrows: [{ from: 'c3', to: 'd5', color: 'green' }], highlights: ['d5'] },
-      { move: 'Nxd5', explanation: 'Black trades. They have no choice—leaving the knight on d5 would be slow positional death. But the trade, while necessary, plays into White\'s hands by creating new outposts.' },
-      { move: 'exd5', explanation: 'The pawn recapture creates a "pawn wedge"—a protected passer that restricts Black\'s pieces. More importantly, look at what squares are now available: the e6 square is now a potential outpost (Black\'s f-pawn is stuck on f7), and the f5 square will become available once the knight maneuvers there.', highlights: ['d5', 'e6', 'f5'] },
-      { move: 'Nb4', explanation: 'Black desperately tries to create counterplay by attacking c2. This is understandable—when being suffocated, you must try to complicate. But White has a crushing response.' },
-      { move: 'Nf5', annotation: '!!', explanation: 'THE SECOND OUTPOST! This knight on f5 attacks g7 (threatening the king), e7 (key defensive square), d6 (weak pawn), and h6. Combined with the d5 pawn wedge, White now controls the ENTIRE central-kingside complex. Black\'s position is strategically lost: the g7 bishop is paralyzed, the queen must defend, and there are no counterattacking prospects. This is the ULTIMATE outpost network.', highlights: ['d5', 'f5'] },
-      { move: 'Bxf5', explanation: 'Black is forced to trade their fianchettoed bishop—the only piece defending the king. This is the cruel choice outposts force: either live with the dominant piece, or give up your best defender to remove it.' },
-      { move: 'Bxf5', explanation: 'White recaptures with the bishop, achieving: (1) The bishop pair in an open position—a significant advantage, (2) A protected passed pawn on d5 that ties down Black\'s pieces, (3) Complete control of the light squares (d5, f5, e6), (4) An exposed Black king with the g7 bishop gone. This is what happens when you master outposts: you don\'t need brilliant tactics because your positional advantage converts itself.', highlights: ['d5', 'f5'] },
-    ],
-    commonMistakes: ['Settling for one outpost when you could create multiple', 'Not seeing how pawn recaptures create new outposts', 'Letting your opponent trade out of their problems instead of maximizing outpost control'],
-    deeperPrinciple: 'The ultimate goal of outpost play is not just ONE dominant knight, but a NETWORK of controlled squares that paralyzes your opponent. When you control d5, e6, and f5, you control the center and kingside. Your opponent\'s pieces have no safe squares, no coordination, and no prospects. This is how Karpov won hundreds of games—not through brilliant sacrifices, but through inexorable positional pressure from dominant pieces on dominant squares.',
-  },
+      { move: 'Nd5', annotation: '!', explanation: 'Outpost secures the space.', highlights: ['d5'] }
+]
+  }
 ];
 
 export default outpostsVariations;

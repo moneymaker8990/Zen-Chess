@@ -28,8 +28,8 @@ In chess, material (pieces) isn't everything. A king stuck in the center, unable
     commonMistakes: [
       'Playing safe moves like d3 when a tactical opportunity exists',
       'Not checking if the king will be exposed enough after the sacrifice',
-      'Forgetting to have a follow-up move ready (here it\'s Ng5+)',
-    ],
+      'Forgetting to have a follow-up move ready (here it\'s Ng5+)'
+],
     deeperPrinciple: 'In the opening and early middlegame, DEVELOPMENT and KING SAFETY are often worth more than material. A piece sacrifice that exposes the enemy king and gives you attacking chances is often objectively winning.',
     moves: [
       { 
@@ -83,8 +83,8 @@ A sacrifice is only as good as its follow-up. Here Ng5+ is perfect because:
 - Kg8? White plays Qf3 with a devastating attack
 
 This is the power of piece activity over material - Black has an extra bishop but is getting mated!`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'im-2',
@@ -106,8 +106,8 @@ A piece in the center can reach both wings quickly. A knight on d4 influences sq
     commonMistakes: [
       'Moving the same piece twice in the opening instead of controlling center',
       'Allowing the opponent to build a massive pawn center unchallenged',
-      'Not understanding that space is a TEMPORARY advantage if not used',
-    ],
+      'Not understanding that space is a TEMPORARY advantage if not used'
+],
     deeperPrinciple: 'Central control is the foundation of chess strategy. Before launching wing attacks or piece maneuvers, establish your central presence. Whoever controls the center controls the game.',
     moves: [
       { 
@@ -163,8 +163,8 @@ The knight recaptures, landing on a dominant central square.
 - Black: Has no center pawns, needs to develop pieces to counterattack
 
 This is the space imbalance in action. White has MORE central control. Black must play accurately to compensate with piece activity.`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'im-3',
@@ -194,8 +194,8 @@ Imagine a battle where one army is ready and the other is still gathering. The r
       'Moving the same piece twice before developing others',
       'Going pawn-grabbing when you\'re behind in development',
       'Not realizing that castling counts as development (it activates the rook!)',
-      'Developing pieces to passive squares where they don\'t control anything',
-    ],
+      'Developing pieces to passive squares where they don\'t control anything'
+],
     deeperPrinciple: 'In the opening, EVERY MOVE should either develop a piece, support development, or control the center. Wasting moves on pawn pushes or piece shuffling hands the initiative to your opponent.',
     moves: [
       { 
@@ -254,8 +254,8 @@ O-O is also good! But d3 is slightly more flexible. We might want to develop the
 - Black: 2 pieces + is about to castle
 
 The race is tight! Both sides must continue developing quickly. The player who wastes moves will fall behind and get attacked.`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'im-4',
@@ -285,8 +285,8 @@ Pawns are the soul of chess (as Philidor said). Here's why:
     commonMistakes: [
       'Moving pawns without considering the permanent weaknesses created',
       'Ignoring your pawn structure when choosing a plan',
-      'Not understanding that pawn moves are the most permanent decisions in chess',
-    ],
+      'Not understanding that pawn moves are the most permanent decisions in chess'
+],
     deeperPrinciple: 'Every pawn move weakens some squares and strengthens others. Masters plan their pawn moves far in advance because these decisions shape the entire game.',
     moves: [
       { 
@@ -345,8 +345,8 @@ Now look at White's pawn structure: Just e4 and c4, but look at how dominant the
 - Black: Will try to break out with ...d5 or ...b5
 
 The pawn structure has determined the battle lines! This is why understanding structure is so important.`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'im-5',
@@ -378,8 +378,8 @@ Look at White's pieces. The rooks are on a1 and f1, but are they doing anything?
     commonMistakes: [
       'Moving pieces to "safe" squares where they do nothing',
       'Not trading a passive piece for an active one',
-      'Ignoring piece activity when counting material',
-    ],
+      'Ignoring piece activity when counting material'
+],
     deeperPrinciple: 'Before making a move, ask: "Is this making my pieces more active, or more passive?" Always strive to improve the activity of your least active piece.',
     moves: [
       { 
@@ -467,8 +467,8 @@ The knight moves to d2, aiming for e4 (or c4).
 - The pieces work together with a PURPOSE
 
 This is what "piece activity" means in practice - not just having active pieces, but using them together to attack weaknesses!`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'im-6',
@@ -495,8 +495,8 @@ Both kings are unsafe (in the center). The race is on - who will castle first? W
     commonMistakes: [
       'Delaying castling to "win a pawn" or attack prematurely',
       'Creating weaknesses in front of your castled king (h3/g3 pawn moves without reason)',
-      'Not recognizing when an attack on your king is coming',
-    ],
+      'Not recognizing when an attack on your king is coming'
+],
     deeperPrinciple: 'Castle early, castle often. A king tucked behind three pawns (after castling) is vastly safer than a king in the center.',
     moves: [
       { 
@@ -553,8 +553,8 @@ Because both kings are safe, neither side needs to rush. White can calmly improv
 If Black's king was still on e8, White would be looking for ways to EXPLODE the position - sacrifices, pawn breaks, anything to attack!
 
 King safety changes the entire character of the game.`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'im-7',
@@ -587,8 +587,8 @@ Both sides have a bishop and two knights. The question is: what kind of position
       'Trading bishops for knights in open positions',
       'Keeping knights in open positions where bishops dominate',
       'Not creating outposts for your knights',
-      'Blocking your own bishops with pawns',
-    ],
+      'Blocking your own bishops with pawns'
+],
     deeperPrinciple: 'The value of pieces is not fixed - it depends on the position. Learn to recognize which piece is "better" and try to trade the unfavorable one.',
     moves: [
       { 
@@ -650,97 +650,9 @@ After ...Bxf6, Black would have:
 Black might play ...g5, trapping the bishop! White must watch for this.
 
 This is strategic chess - weighing options, making plans, understanding piece dynamics. The bishop is worth the same as a knight... but in THIS position, where is it more useful?`,
-      },
-    ]
-  },
-  {
-    id: 'im-8',
-    title: 'Control Imbalance: Dominating Key Squares',
-    fen: 'r1bq1rk1/ppp1bppp/2n2n2/3p4/3PP3/2N2N2/PPP2PPP/R1BQ1RK1 w - - 0 7',
-    toMove: 'white',
-    concept: 'Controlling files, diagonals, and key squares gives your pieces purpose',
-    keyTakeaway: 'Files (vertical lines) are highways for rooks; diagonals are highways for bishops. Control them!',
-    difficulty: 3,
-    introduction: `Chess is about control. Every piece fight is ultimately about WHO controls the key squares, files, and diagonals.
-
-**What are "key" squares, files, and diagonals?**
-
-**Key squares:** Typically in the center (d4, d5, e4, e5) or near the enemy king
-**Key files:** Open files (no pawns) where rooks can penetrate
-**Key diagonals:** Long diagonals that aim at the enemy king or key squares
-
-**Why does control matter?**
-- Rooks on open files can reach the 7th or 8th rank (devastating!)
-- Bishops on long diagonals can attack from far away
-- Knights on outposts can dominate central squares
-
-**In this position:**
-The e-file is potentially open (if dxe4). The d-file has the d4 and d5 pawns blocking it. Who will control these files?`,
-    commonMistakes: [
-      'Not doubling rooks on open files',
-      'Not fighting for control of key squares',
-      'Allowing opponent\'s pieces to dominate key lines',
-    ],
-    deeperPrinciple: 'Ask yourself: "What are the key squares and files in this position?" Then fight for control of them with your pieces.',
-    moves: [
-      { 
-        move: 'Re1', 
-        annotation: '!', 
-        explanation: `**Taking control of the e-file!**
-
-This prophylactic move prepares for the future:
-
-1. **If dxe4 happens:** The rook is already on the e-file, controlling it
-2. **The rook is active:** It now sees e7 (a potential target if things open up)
-3. **The e4 pawn is supported:** It's harder for Black to challenge e4 now
-
-**Why is the e-file important here?**
-The e7 square is Black's weak point. If the e-file opens and White gets a rook to e7, it attacks:
-- The f7 and b7 pawns (from the 7th rank!)
-- Black's back rank (potential back-rank mate themes)
-
-**This is proactive play:** White isn't waiting for things to happen. White is preparing for them!`,
-      },
-      { 
-        move: 'c6', 
-        explanation: `Black solidifies the center.
-
-**Why ...c6?**
-- Supports the d5 pawn (makes it harder for White to attack it)
-- Prepares ...Qc7, connecting the queen to the c-file
-- Creates a solid pawn chain (c6-d5)
-
-**But notice:**
-By playing ...c6, Black's pieces have fewer squares. The knight on c6 must find a new home (maybe d7 or a5). The c-file is now closed.
-
-This is a common trade-off: solidity vs activity. Black is "buying time" by solidifying, but White's control of the e-file remains.`,
-      },
-      { 
-        move: 'Bd3', 
-        annotation: '!', 
-        explanation: `**The bishop takes the long diagonal!**
-
-Look at what this bishop does from d3:
-- Aims at h7 (near the Black king!)
-- Supports e4
-- Works harmoniously with the Re1
-
-**This is piece coordination:**
-- Rook on e1: Controls the e-file
-- Bishop on d3: Controls the b1-h7 diagonal
-- Together: They create pressure on Black's kingside
-
-**The control imbalance:**
-White now controls:
-- The e-file (Re1)
-- The b1-h7 diagonal (Bd3)
-- The center (pawns on d4 and e4)
-
-Black must find ways to challenge this control or create counterplay elsewhere!`,
-      },
-    ]
-  },
-  {
+      }
+]
+  },{
     id: 'im-9',
     title: 'Initiative Imbalance: Making Threats',
     fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
@@ -769,8 +681,8 @@ It's a quiet Italian Game. Who will seize the initiative? The player who makes t
     commonMistakes: [
       'Playing passive moves when you have initiative',
       'Not recognizing when opponent has initiative (and failing to neutralize it)',
-      'Making threats that are easily ignored',
-    ],
+      'Making threats that are easily ignored'
+],
     deeperPrinciple: 'A game of chess is a battle for initiative. When you have it, press forward. When opponent has it, defend accurately and try to wrest it back.',
     moves: [
       { 
@@ -832,8 +744,8 @@ Black would have ...dxe4, and White's initiative would be GONE. Black would be f
 When you have initiative, DON'T give it up voluntarily! Keep making threats. Force your opponent to keep reacting.
 
 After exd5, Black must again find the best defensive move. The pressure continues!`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'im-10',
@@ -867,8 +779,8 @@ This is why chess is so fascinating - it's not about who has MORE imbalances, bu
     commonMistakes: [
       'Focusing on only one imbalance and ignoring others',
       'Not having a plan that utilizes your advantages',
-      'Trading off your advantages (like exchanging an active piece for no reason)',
-    ],
+      'Trading off your advantages (like exchanging an active piece for no reason)'
+],
     deeperPrinciple: 'In complex positions, identify ALL the imbalances on BOTH sides. Then create a plan that maximizes YOUR imbalances while minimizing your opponent\'s.',
     moves: [
       { 
@@ -930,9 +842,9 @@ Too hasty! After g4, Black plays ...Rc8 and ...b5 with counterplay. By playing K
 Before launching an attack, make sure your position is SECURE. Eliminate weaknesses. Then attack with confidence.
 
 Multiple imbalances (space, attack, structure) are being combined into one devastating assault!`,
-      },
-    ]
-  },
+      }
+]
+  }
 ];
 
 // CHAPTER 2: PLAN MAKING
@@ -969,8 +881,8 @@ Control the dark squares! Put a bishop on g5, pressure the knight on f6, maybe c
     commonMistakes: [
       'Playing moves without a purpose ("I don\'t know, it looked good")',
       'Changing plans every move based on whim',
-      'Not considering what the opponent wants to do',
-    ],
+      'Not considering what the opponent wants to do'
+],
     deeperPrinciple: 'Chess is about executing plans, not making pretty individual moves. Your moves should work together like a team, not as random individuals.',
     moves: [
       { 
@@ -1027,8 +939,8 @@ Now White might threaten Nd5 (attacking the pinned knight), or Re1 + e5, or even
 **ALL these ideas flow from the PLAN.**
 
 Compare this to random play: "I'll put my bishop here... now I'll move this pawn... maybe attack over there?" That's how amateurs play. Masters have plans, and every move serves the plan.`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'pm-2',
@@ -1062,8 +974,8 @@ White could play for a quick pawn break (e5), but should consider the long-term 
     commonMistakes: [
       'Grabbing pawns that compromise your position',
       'Trading active pieces for material',
-      'Not thinking about what happens AFTER the immediate tactic',
-    ],
+      'Not thinking about what happens AFTER the immediate tactic'
+],
     deeperPrinciple: 'Strong players think in terms of RESULTING positions, not just immediate gains. Ask: "If I do this, what will the position look like in 5 moves?"',
     moves: [
       { 
@@ -1110,8 +1022,8 @@ White doesn't need to DO anything dramatic. The position is slightly better. By 
 **Short-term players:** Would be tempted to play e5 "to attack!" but that might be premature.
 
 **Long-term players:** Improve all pieces first, THEN attack when everything is ready.`,
-      },
-    ]
+      }
+]
   },
   // Continue with remaining variations...
   {
@@ -1141,8 +1053,8 @@ Weak players are stubborn. Strong players are flexible. They adjust to what the 
     commonMistakes: [
       'Stubbornly sticking to a plan that no longer works',
       'Not reconsidering after opponent\'s reply',
-      'Getting "married" to an idea you fell in love with',
-    ],
+      'Getting "married" to an idea you fell in love with'
+],
     deeperPrinciple: 'Your plan should be based on the CURRENT position, not the position you wished for. Evaluate afresh after each move.',
     moves: [
       { 
@@ -1192,93 +1104,9 @@ Look at this position now. The knight on d4 is fantastic!
 This plan didn't exist 2 moves ago! It emerged from the changing position. This is how strong players think - always adapting, always re-evaluating.
 
 **Flexibility in action:** White didn't stubbornly play d3 because "that was my plan." White saw d4 was better and CHANGED.`,
-      },
-    ]
-  },
-  {
-    id: 'pm-4',
-    title: 'Planning with Pieces: Where Should They Go?',
-    fen: 'r1bq1rk1/ppp1bppp/2n2n2/3p4/3PP3/2N2N2/PPP2PPP/R1BQ1RK1 w - - 0 7',
-    toMove: 'white',
-    concept: 'Each piece should have an ideal square - find it!',
-    keyTakeaway: 'Ask yourself: "Where would each of my pieces be happiest?" Then work toward that setup.',
-    difficulty: 3,
-    introduction: `A key part of planning is piece placement.
-
-**For each piece, ask:**
-- Where is its IDEAL square?
-- What path does it take to get there?
-- What pieces need to move out of the way?
-
-**Example:**
-Your knight is on c3. Its ideal square might be d5 (controlling the center). But there's no path yet! You need to support d5 with pieces or pawns first.
-
-**Piece placement principles:**
-- **Knights:** Want outposts (squares protected by pawns, not attackable by enemy pawns)
-- **Bishops:** Want open diagonals aiming at weaknesses
-- **Rooks:** Want open files or to support passed pawns
-- **Queen:** Want flexibility, not too early commitment
-
-**In this position:**
-White's pieces are reasonably placed, but can they be IMPROVED?`,
-    commonMistakes: [
-      'Moving pieces without knowing where they ultimately belong',
-      'Putting pieces on squares that block other pieces',
-      'Not coordinating pieces toward a common goal',
-    ],
-    deeperPrinciple: 'Think of piece placement like solving a puzzle. Each piece has an ideal square, and your job is to get them all there harmoniously.',
-    moves: [
-      { 
-        move: 'Bd3', 
-        annotation: '!', 
-        explanation: `**The bishop finds its ideal diagonal!**
-
-From d3, the bishop:
-1. Aims at the kingside (b1-h7 diagonal!)
-2. Supports e4 (solid center)
-3. Can later relocate to c2 if needed
-
-**Why is b1-h7 the ideal diagonal?**
-It points TOWARD BLACK'S KING! The bishop is now part of a potential kingside attack.
-
-**Compare to Bc4:**
-Also good (aims at f7), but Bd3 is more flexible. From c4, the bishop might get kicked by ...d5 or ...b5.
-
-**This is piece placement planning:** Finding the best long-term home for each piece.`,
-      },
-      { 
-        move: 'dxe4', 
-        explanation: `Black takes, changing the structure.
-
-**What changed?**
-The pawn structure shifted! White must decide how to recapture.
-
-**Piece placement question:**
-Which recapture puts the pieces on better squares?`,
-      },
-      { 
-        move: 'Nxe4', 
-        annotation: '!', 
-        explanation: `**The knight takes its throne!**
-
-Recapturing with the knight puts it on a DOMINANT central square.
-
-**Why not Bxe4?**
-That would be fine too, but the knight on e4 is MORE imposing. It:
-- Attacks f6 knight
-- Controls d6, f6, d2, c5
-- Is a monster in the center!
-
-**Piece placement achieved:**
-- Bishop on d3: Aims at h7
-- Knight on e4: Dominates the center
-- Everything is coordinated!
-
-This is how plans and piece placement work together.`,
-      },
-    ]
-  },
-  {
+      }
+]
+  },{
     id: 'pm-5',
     title: 'Planning an Attack: Concentrated Force',
     fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 0 9',
@@ -1307,8 +1135,8 @@ This is a CLASSIC attacking plan. All of White's pieces will work together towar
     commonMistakes: [
       'Attacking too early before pieces are coordinated',
       'Attacking where opponent is STRONG (not weak)',
-      'Scattering pieces across the board instead of concentrating',
-    ],
+      'Scattering pieces across the board instead of concentrating'
+],
     deeperPrinciple: 'Chess attacks are like military operations - you need overwhelming force at the point of attack. Consolidate, concentrate, then strike.',
     moves: [
       { 
@@ -1356,8 +1184,8 @@ White doesn't get distracted. The knight JOINS the kingside attack from f5!
 White didn't panic about ...e5. Instead, White used it to IMPROVE the attack! The knight was on d4 (good) but now it's on f5 (GREAT for attacking).
 
 This is concentrated attacking: every move brings another piece closer to the enemy king.`,
-      },
-    ]
+      }
+]
   },
   // I'll add a few more key variations but the pattern is established...
   {
@@ -1384,8 +1212,8 @@ Black has struck with ...e5! This challenges White's center. White must defend c
     commonMistakes: [
       'Becoming too passive when defending',
       'Reacting to every threat instead of having a plan',
-      'Forgetting to create counter-threats',
-    ],
+      'Forgetting to create counter-threats'
+],
     deeperPrinciple: 'The best defensive technique is to stay active. A cramped but active position is better than a passive one with no counterplay.',
     moves: [
       { 
@@ -1425,9 +1253,9 @@ More simplification! When defending, trading pieces often helps because:
 The position is completely equal. Black has no attack. White's defensive plan SUCCEEDED.
 
 **Lesson:** Defense doesn't mean suffering. Good defensive play leads to equality or even advantage!`,
-      },
-    ]
-  },
+      }
+]
+  }
 ];
 
 // CHAPTER 3: EVALUATION (keeping shorter for now - can be expanded)
@@ -1478,8 +1306,8 @@ Equal! So we need to look at OTHER factors to evaluate.
 - Space (White has e4 and d4 - slight space advantage)
 
 Bg5 IMPROVES White's position by activating a piece. This is how you improve when material is equal!`,
-      },
-    ]
+      }
+]
   },
   // Additional evaluation variations would follow the same deep pattern...
 ];
@@ -1511,8 +1339,8 @@ You might immediately see Nc3 (develops a piece). Good! But wait - are there BET
     commonMistakes: [
       'Playing the first move that comes to mind',
       'Not considering forcing moves (checks, captures, threats)',
-      'Rushing because of time pressure',
-    ],
+      'Rushing because of time pressure'
+],
     deeperPrinciple: 'Discipline yourself to ALWAYS find at least 3 candidates. This habit alone can improve your rating 100-200 points!',
     moves: [
       { 
@@ -1544,8 +1372,8 @@ d3 is a solid, good move. But is it the BEST? Let's think of alternatives:
 By generating candidates, we see that Ng5 is the most FORCING move. Should we play it?
 
 The answer depends on calculation, but at least we FOUND the aggressive option by looking for candidates!`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'cm-2',
@@ -1589,9 +1417,9 @@ Nxf7! Forking the queen on d8 and the rook on h8.
 Because Ng5 is forcing, we can calculate the consequences more easily than for a quiet move like d3.
 
 **Always check forcing moves first!**`,
-      },
-    ]
-  },
+      }
+]
+  }
 ];
 
 // CHAPTER 5: THINKING TECHNIQUE
@@ -1625,8 +1453,8 @@ Let's practice the blunder check on a simple move.`,
     commonMistakes: [
       'Getting excited about an idea and forgetting to check safety',
       'Playing too fast and missing simple tactics',
-      'Not checking if opponent has a threat BEFORE making your move',
-    ],
+      'Not checking if opponent has a threat BEFORE making your move'
+],
     deeperPrinciple: 'Chess is 99% tactics and 1% strategy (at amateur level). The blunder check is the most important habit you can develop.',
     moves: [
       { 
@@ -1649,8 +1477,8 @@ Only AFTER confirming safety should you consider if the move is GOOD.
 - Prepares to castle
 
 But the key is: we checked for BLUNDERS first! This habit will save you countless games.`,
-      },
-    ]
+      }
+]
   },
   {
     id: 'tt-2',
@@ -1700,9 +1528,9 @@ Is that okay? Yes! After Bb3 dxe4 Nxe4, we're fine.
 5. Play the move!
 
 This is how to think in chess - considering BOTH sides.`,
-      },
-    ]
-  },
+      }
+]
+  }
 ];
 
 export default {

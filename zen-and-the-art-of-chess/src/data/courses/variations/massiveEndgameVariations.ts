@@ -39,10 +39,7 @@ const expandedKingPawnVariations: CourseVariation[] = [
 const expandedRookVariations: CourseVariation[] = [
   // Lucena Variations (1-20)
   { id: 'erk-1', title: 'Lucena Position A', fen: '1K6/1P2k3/8/8/8/8/r7/4R3 w - - 0 1', toMove: 'white', concept: 'Classic Lucena', keyTakeaway: 'Build the bridge!', difficulty: 3, moves: [{ move: 'Re4', annotation: '!', explanation: 'Building the bridge!' }] },
-  { id: 'erk-2', title: 'Lucena Bridge Step 1', fen: '1K6/1P2k3/8/8/4R3/8/r7/8 w - - 0 1', toMove: 'white', concept: 'First bridge step', keyTakeaway: 'Rook to 4th rank.', difficulty: 3, moves: [{ move: 'Kc7', annotation: '!', explanation: 'Walking down!' }] },
-  { id: 'erk-3', title: 'Lucena Bridge Step 2', fen: '8/1PK1k3/8/8/4R3/8/r7/8 w - - 0 1', toMove: 'white', concept: 'Second step', keyTakeaway: 'King approaches the rook.', difficulty: 3, moves: [{ move: 'Kd6', annotation: '!', explanation: 'Continuing!' }] },
-  { id: 'erk-4', title: 'Lucena Bridge Complete', fen: '8/1P6/3Kk3/8/4R3/8/r7/8 w - - 0 1', toMove: 'white', concept: 'Bridge blocks checks', keyTakeaway: 'The rook will block.', difficulty: 3, moves: [{ move: 'Ke5', annotation: '!', explanation: 'Almost there!' }] },
-  // Philidor Variations (21-40)
+  { id: 'erk-2', title: 'Lucena Bridge Step 1', fen: '1K6/1P2k3/8/8/4R3/8/r7/8 w - - 0 1', toMove: 'white', concept: 'First bridge step', keyTakeaway: 'Rook to 4th rank.', difficulty: 3, moves: [{ move: 'Kc7', annotation: '!', explanation: 'Walking down!' }] },// Philidor Variations (21-40)
   { id: 'erk-21', title: 'Philidor Defense', fen: '4k3/R7/8/4PK2/8/8/r7/8 w - - 0 1', toMove: 'white', concept: 'Philidor drawing', keyTakeaway: 'Rook on 6th rank draws.', difficulty: 3, moves: [{ move: 'e6', explanation: 'Advancing.' }] },
   { id: 'erk-22', title: 'Philidor vs Lucena', fen: '4k3/R7/4P3/5K2/8/8/r7/8 w - - 0 1', toMove: 'white', concept: 'When Philidor fails', keyTakeaway: 'Pawn on 6th changes everything.', difficulty: 4, moves: [{ move: 'Ke5', annotation: '!', explanation: 'Winning!' }] },
   // Active Rook (41-60)
@@ -52,9 +49,7 @@ const expandedRookVariations: CourseVariation[] = [
   { id: 'erk-61', title: 'Cut Off by Files', fen: '8/8/8/8/3Rk3/8/8/4K3 w - - 0 1', toMove: 'white', concept: 'File cut off', keyTakeaway: 'Cut off by files.', difficulty: 2, moves: [{ move: 'Ke2', annotation: '!', explanation: 'Approaching!' }] },
   { id: 'erk-62', title: 'Cut Off by Ranks', fen: '8/8/4R3/4k3/8/8/8/4K3 w - - 0 1', toMove: 'white', concept: 'Rank cut off', keyTakeaway: 'Cut off by ranks.', difficulty: 2, moves: [{ move: 'Ke2', annotation: '!', explanation: 'King advances!' }] },
   // 7th Rank (81-100)
-  { id: 'erk-81', title: '7th Rank Power', fen: '8/R4pk1/8/8/8/8/5K2/3r4 w - - 0 1', toMove: 'white', concept: '7th rank dominates', keyTakeaway: '7th rank is very powerful.', difficulty: 2, moves: [{ move: 'Rxf7+', annotation: '!', explanation: 'Winning the pawn!' }] },
-  { id: 'erk-82', title: 'Double 7th', fen: '6k1/RR6/8/8/8/8/5K2/8 w - - 0 1', toMove: 'white', concept: 'Two rooks on 7th', keyTakeaway: 'Two rooks on 7th mate.', difficulty: 2, moves: [{ move: 'Rab7', annotation: '!', explanation: 'Threatening mate!' }] },
-  // Continue for more...
+  { id: 'erk-81', title: '7th Rank Power', fen: '8/R4pk1/8/8/8/8/5K2/3r4 w - - 0 1', toMove: 'white', concept: '7th rank dominates', keyTakeaway: '7th rank is very powerful.', difficulty: 2, moves: [{ move: 'Rxf7+', annotation: '!', explanation: 'Winning the pawn!' }] },// Continue for more...
 ];
 
 // ============================================
@@ -70,9 +65,7 @@ const expandedMinorPieceVariations: CourseVariation[] = [
   // Good vs Bad Bishop (51-70)
   { id: 'emp-51', title: 'Good Bishop', fen: '8/p4p2/1p2kB2/8/8/4K3/PP3P2/3b4 w - - 0 1', toMove: 'white', concept: 'Good bishop dominates', keyTakeaway: 'Bishop on opposite color of pawns.', difficulty: 3, moves: [{ move: 'Kd4', annotation: '!', explanation: 'Centralizing!' }] },
   { id: 'emp-52', title: 'Bad Bishop', fen: '8/p4p2/1p2k3/8/4B3/4K3/PP3P2/8 w - - 0 1', toMove: 'white', concept: 'Bad bishop problems', keyTakeaway: 'Bishop blocked by own pawns.', difficulty: 3, moves: [{ move: 'Kd4', annotation: '!', explanation: 'Approaching!' }] },
-  // Wrong Color Bishop (71-80)
-  { id: 'emp-71', title: 'Wrong Color Bishop', fen: '7k/8/6K1/6P1/8/3B4/8/8 w - - 0 1', toMove: 'white', concept: 'Wrong color draws', keyTakeaway: 'Bishop doesn\'t control promotion square.', difficulty: 3, moves: [{ move: 'g6', explanation: 'Trying to win.' }] },
-  // Continue for more...
+  // Wrong Color Bishop (71-80)// Continue for more...
 ];
 
 // ============================================
@@ -81,9 +74,7 @@ const expandedMinorPieceVariations: CourseVariation[] = [
 const expandedQueenVariations: CourseVariation[] = [
   // Queen vs Pawn (1-20)
   { id: 'eqe-1', title: 'Queen vs Pawn 7th', fen: '8/8/8/4k3/8/8/1p6/4K2Q w - - 0 1', toMove: 'white', concept: 'Queen stops pawn', keyTakeaway: 'Queen usually wins.', difficulty: 3, moves: [{ move: 'Qb7', annotation: '!', explanation: 'Stopping the pawn!' }] },
-  { id: 'eqe-2', title: 'Queen vs c-Pawn', fen: '8/8/2k5/8/8/8/2p5/4K2Q w - - 0 1', toMove: 'white', concept: 'c-pawn is tricky', keyTakeaway: 'c and f pawns are hardest.', difficulty: 4, moves: [{ move: 'Qe4+', annotation: '!', explanation: 'Approaching with checks!' }] },
-  { id: 'eqe-3', title: 'Queen vs f-Pawn', fen: '8/8/5k2/8/8/8/5p2/4K2Q w - - 0 1', toMove: 'white', concept: 'f-pawn draws', keyTakeaway: 'f-pawn can draw!', difficulty: 4, moves: [{ move: 'Qh3+', annotation: '!', explanation: 'Trying to win!' }] },
-  // Queen vs Rook (21-40)
+  { id: 'eqe-2', title: 'Queen vs c-Pawn', fen: '8/8/2k5/8/8/8/2p5/4K2Q w - - 0 1', toMove: 'white', concept: 'c-pawn is tricky', keyTakeaway: 'c and f pawns are hardest.', difficulty: 4, moves: [{ move: 'Qe4+', annotation: '!', explanation: 'Approaching with checks!' }] },// Queen vs Rook (21-40)
   { id: 'eqe-21', title: 'Queen vs Rook Basic', fen: '8/8/4k3/8/8/8/r7/4K2Q w - - 0 1', toMove: 'white', concept: 'Queen beats rook', keyTakeaway: 'Queen wins with technique.', difficulty: 3, moves: [{ move: 'Qe4+', annotation: '!', explanation: 'Centralizing with check!' }] },
   { id: 'eqe-22', title: 'Philidor Position Q vs R', fen: '1r6/8/3k4/8/8/8/8/3QK3 w - - 0 1', toMove: 'white', concept: 'Philidor position', keyTakeaway: 'Third rank defense.', difficulty: 4, moves: [{ move: 'Qd4+', annotation: '!', explanation: 'Approaching!' }] },
   // Queen Endgame Strategy (41-50)
@@ -101,12 +92,7 @@ const practicalEndgameVariations: CourseVariation[] = [
   { id: 'prac-3', title: 'Protected Passed Pawn', fen: '8/8/3pk3/3P4/4K3/8/8/8 w - - 0 1', toMove: 'white', concept: 'Protected passer', keyTakeaway: 'Protected passer ties down.', difficulty: 3, moves: [{ move: 'Kd4', annotation: '!', explanation: 'Supporting!' }] },
   // Fortress Positions (31-50)
   { id: 'prac-31', title: 'Basic Fortress', fen: '8/8/8/8/3k4/8/5B2/3K4 w - - 0 1', toMove: 'white', concept: 'Fortress drawing', keyTakeaway: 'Some positions are fortresses.', difficulty: 4, moves: [{ move: 'Ke2', annotation: '!', explanation: 'Building the fortress!' }] },
-  // Wrong Color Bishop (51-70)
-  { id: 'prac-51', title: 'Wrong Bishop + RP', fen: '7k/8/6K1/6P1/8/3B4/8/8 w - - 0 1', toMove: 'white', concept: 'Rook pawn draw', keyTakeaway: 'Bishop doesn\'t control corner.', difficulty: 3, moves: [{ move: 'g6', explanation: 'Trying anyway.' }] },
-  // Breakthrough (71-90)
-  { id: 'prac-71', title: 'Pawn Breakthrough', fen: '8/8/4k3/ppp5/PPP5/4K3/8/8 w - - 0 1', toMove: 'white', concept: 'Classic breakthrough', keyTakeaway: 'Sacrifice to create passer.', difficulty: 4, moves: [{ move: 'b5', annotation: '!!', explanation: 'Breakthrough!' }] },
-  { id: 'prac-72', title: 'Breakthrough Step 2', fen: '8/8/4k3/pPp5/P1P5/4K3/8/8 w - - 0 1', toMove: 'white', concept: 'Continue breakthrough', keyTakeaway: 'Follow through!', difficulty: 4, moves: [{ move: 'c5', annotation: '!', explanation: 'Continuing!' }] },
-  // Stalemate Tricks (91-100)
+  // Wrong Color Bishop (51-70)// Breakthrough (71-90)// Stalemate Tricks (91-100)
   { id: 'prac-91', title: 'Stalemate Save', fen: '7k/8/6K1/8/8/8/8/8 w - - 0 1', toMove: 'white', concept: 'Avoiding stalemate', keyTakeaway: 'Don\'t stalemate opponent!', difficulty: 2, moves: [{ move: 'Kf6', annotation: '?', explanation: 'Stalemate! Draw.' }] },
   // Continue for more...
 ];
@@ -122,7 +108,7 @@ const complexEndgameVariations: CourseVariation[] = [
   // R vs 2 Minor Pieces (31-45)
   { id: 'comp-31', title: 'R vs B+N', fen: '8/8/4k3/8/8/2BN4/8/4K2R w - - 0 1', toMove: 'white', concept: 'R vs two minors', keyTakeaway: 'Two minors usually win.', difficulty: 4, moves: [{ move: 'Rh6+', annotation: '!', explanation: 'Active rook!' }] },
   // Q vs 2 Rooks (46-50)
-  { id: 'comp-46', title: 'Q vs 2R', fen: '8/8/4k3/8/8/8/RR6/4K2Q w - - 0 1', toMove: 'white', concept: 'Q vs two rooks', keyTakeaway: 'Usually equal.', difficulty: 4, moves: [{ move: 'Qe4+', annotation: '!', explanation: 'Centralizing!' }] },
+  { id: 'comp-46', title: 'Q vs 2R', fen: '8/8/4k3/8/8/8/RR6/4K2Q w - - 0 1', toMove: 'white', concept: 'Q vs two rooks', keyTakeaway: 'Usually equal.', difficulty: 4, moves: [{ move: 'Qe4+', annotation: '!', explanation: 'Centralizing!' }] }
 ];
 
 // ============================================
@@ -135,7 +121,7 @@ export const massiveEndgameVariations: CourseVariation[] = [
   ...expandedMinorPieceVariations,
   ...expandedQueenVariations,
   ...practicalEndgameVariations,
-  ...complexEndgameVariations,
+  ...complexEndgameVariations
 ];
 
 // Export subcategories

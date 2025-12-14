@@ -67,3 +67,4 @@ GRANT ALL ON public.user_puzzle_ratings TO authenticated;
 
 
 
+

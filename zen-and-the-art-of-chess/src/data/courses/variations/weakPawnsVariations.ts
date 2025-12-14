@@ -6,29 +6,7 @@
 import type { CourseVariation } from '../courseTypes';
 
 export const weakPawnsVariations: CourseVariation[] = [
-  // ISOLATED QUEEN PAWN (1-20)
-  {
-    id: 'wp-1',
-    title: 'The Isolated Queen Pawn',
-    fen: 'r1bq1rk1/pp3ppp/2n2n2/3p4/3P4/2NB1N2/PP3PPP/R1BQ1RK1 w - - 0 10',
-    toMove: 'white',
-    concept: 'Blockading and attacking the IQP',
-    keyTakeaway: 'The isolated queen\'s pawn (IQP) is a fundamental weakness because it cannot be defended by other pawns. The key strategy is: FIRST blockade (place a knight on d4), THEN attack the pawn from multiple directions.',
-    introduction: 'The Isolated Queen\'s Pawn (IQP) is one of the most important structural features in chess. An IQP cannot be defended by other pawns—it must be defended by pieces, which ties them down. Nimzowitsch\'s timeless principle applies: "First restrain, then blockade, then destroy." By placing a knight on d4 (the blockade square), you prevent the pawn from advancing and prepare to attack it with your remaining pieces.',
-    difficulty: 3,
-    moves: [
-      { move: 'Bf4', annotation: '!', explanation: 'This developing move serves multiple purposes: (1) It develops a piece to an active square, (2) It controls e5, preventing Black from challenging the center, (3) It prepares to double on the d-file later. The bishop on f4 also eyes the d6 square, which will become important if Black ever plays ...d4. Strategic chess is about multi-purpose moves.' },
-      { move: 'Bg4', explanation: 'Black pins the knight to the queen. This is an active move, but it actually helps White\'s plan—trading the bishop eliminates a potential defender of d5.' },
-      { move: 'h3', annotation: '!', explanation: '"Asking the question" is a classic technique. Black must now decide: keep the pin (and risk h4-h5 later) or trade. Trading is usually forced, but it removes a piece that could defend d5. This small pawn move has strategic significance—it forces your opponent to make a decision.' },
-      { move: 'Bxf3', explanation: 'Black trades. The bishop was a good piece, but the pin wasn\'t sustainable. Notice how White\'s simple h3 forced Black to give up the bishop pair—small moves can have big consequences.' },
-      { move: 'Qxf3', explanation: 'The queen recaptures and now DIRECTLY targets d5. The queen on f3 is perfectly placed: it attacks d5, controls the long diagonal, and supports potential kingside play. Every piece should have a purpose; here, the queen\'s purpose is pressuring the IQP.' },
-      { move: 'Rc8', explanation: 'Black activates the rook, preparing to contest the c-file. This is sound defensive technique—when your opponent controls the center, seek counterplay on the flanks.' },
-      { move: 'Nd4', annotation: '!!', explanation: 'THE BLOCKADE! This is the culmination of White\'s strategy. Why is the knight on d4 so powerful? (1) It BLOCKADES the d5 pawn—preventing it from ever advancing, (2) It cannot be attacked by pawns—there\'s no e-pawn or c-pawn that can challenge it, (3) It radiates influence: controlling c6, e6, c2, e2, b5, f5, (4) Black\'s pieces become passive because they must defend the IQP. Nimzowitsch called the blockade "the soul of positional play."', highlights: ['d4', 'd5'] },
-    ],
-    commonMistakes: ['Attacking the IQP before blockading it—let the pawn advance and you lose your advantage', 'Blocking with the wrong piece—bishops make poor blockaders because they lose mobility', 'Forgetting that the IQP also gives Black active pieces—don\'t be passive while blockading'],
-    deeperPrinciple: 'The IQP creates an imbalance: it\'s both a weakness AND a source of activity for the opponent. Your job is to neutralize the activity (through exchanges and piece placement) and then exploit the weakness. The blockade is central to this—once the pawn cannot advance, it becomes a permanent target.',
-  },
-  {
+  // ISOLATED QUEEN PAWN (1-20){
     id: 'wp-2',
     title: 'Exploiting the IQP in the Endgame',
     fen: 'r4rk1/pp3ppp/2n2n2/3p4/3P4/2NB4/PP3PPP/R4RK1 w - - 0 15',
@@ -41,8 +19,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Ne4', explanation: 'Black centralizes.' },
       { move: 'Bxe4', explanation: 'Trading to simplify.' },
       { move: 'dxe4', explanation: 'Black recaptures.' },
-      { move: 'Nd6', annotation: '!!', explanation: 'The knight dominates! Black has a weak e4 pawn now.', highlights: ['d6', 'e4'] },
-    ]
+      { move: 'Nd6', annotation: '!!', explanation: 'The knight dominates! Black has a weak e4 pawn now.', highlights: ['d6', 'e4'] }
+]
   },
   {
     id: 'wp-3',
@@ -57,8 +35,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Ne4', explanation: 'Knight uses the weak d3 square.' },
       { move: 'Nxe4', explanation: 'Trading.' },
       { move: 'dxe4', explanation: 'Black recaptures.' },
-      { move: 'd5', annotation: '!!', explanation: 'The IQP storms forward! Now it\'s a strength, not a weakness!', highlights: ['d5'] },
-    ]
+      { move: 'd5', annotation: '!!', explanation: 'The IQP storms forward! Now it\'s a strength, not a weakness!', highlights: ['d5'] }
+]
   },
   {
     id: 'wp-4',
@@ -73,8 +51,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Bg4', explanation: 'Black pins.' },
       { move: 'Rc1', annotation: '!', explanation: 'Preparing to double rooks.' },
       { move: 'Rc8', explanation: 'Black contests.' },
-      { move: 'Qd2', annotation: '!', explanation: 'Connecting rooks and eyeing d5.', arrows: [{ from: 'd2', to: 'd5', color: 'yellow' }] },
-    ]
+      { move: 'Qd2', annotation: '!', explanation: 'Connecting rooks and eyeing d5.', arrows: [{ from: 'd2', to: 'd5', color: 'yellow' }] }
+]
   },
   {
     id: 'wp-5',
@@ -89,26 +67,9 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Nxe5', explanation: 'Black trades.' },
       { move: 'dxe5', explanation: 'Recapturing.' },
       { move: 'Qe7', explanation: 'Black attacks e5.' },
-      { move: 'Bf4', annotation: '!', explanation: 'Defending and preparing Nd4 after retreating.' },
-    ]
-  },
-  {
-    id: 'wp-6',
-    title: 'IQP Advance',
-    fen: 'r1bq1rk1/pp3ppp/2n2n2/3p4/3PP3/2N2N2/PP3PPP/R1BQ1RK1 w - - 0 9',
-    toMove: 'white',
-    concept: 'When the IQP should advance',
-    keyTakeaway: 'Advance the IQP when it creates threats.',
-    difficulty: 4,
-    moves: [
-      { move: 'd5', annotation: '!', explanation: 'The IQP becomes a strength!' },
-      { move: 'Ne5', explanation: 'Knight uses the hole.' },
-      { move: 'Nxe5', explanation: 'Trading.' },
-      { move: 'Nxe5', explanation: 'Recapturing.' },
-      { move: 'Bd3', annotation: '!', explanation: 'Attacking the knight!' },
-    ]
-  },
-  {
+      { move: 'Bf4', annotation: '!', explanation: 'Defending and preparing Nd4 after retreating.' }
+]
+  },{
     id: 'wp-7',
     title: 'IQP in the Middlegame',
     fen: 'r1bq1rk1/pp3ppp/2n2n2/2bp4/3P4/2NB1N2/PP3PPP/R1BQ1RK1 w - - 0 10',
@@ -119,8 +80,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'a3', annotation: '!', explanation: 'Prophylaxis—preventing Nb4.' },
       { move: 'a6', explanation: 'Black plays.' },
-      { move: 'Bg5', annotation: '!', explanation: 'Pinning the knight!' },
-    ]
+      { move: 'Bg5', annotation: '!', explanation: 'Pinning the knight!' }
+]
   },
   {
     id: 'wp-8',
@@ -133,8 +94,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'Re1', annotation: '!', explanation: 'Controlling the open file.' },
       { move: 'Be6', explanation: 'Black develops.' },
-      { move: 'Bg5', annotation: '!', explanation: 'Pinning the defender of d5.' },
-    ]
+      { move: 'Bg5', annotation: '!', explanation: 'Pinning the defender of d5.' }
+]
   },
   {
     id: 'wp-9',
@@ -149,26 +110,9 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Nxe5', explanation: 'Black takes.' },
       { move: 'dxe5', explanation: 'Recapturing.' },
       { move: 'Qe7', explanation: 'Attacking e5.' },
-      { move: 'Bf4', annotation: '!', explanation: 'Defending while simplifying.' },
-    ]
-  },
-  {
-    id: 'wp-10',
-    title: 'IQP Dynamic Play',
-    fen: 'r1bq1rk1/pp3ppp/2n2n2/3p4/3PP3/2N2N2/PP3PPP/R1BQ1RK1 w - - 0 9',
-    toMove: 'white',
-    concept: 'Dynamic compensation for IQP',
-    keyTakeaway: 'Active pieces compensate for the weak pawn.',
-    difficulty: 4,
-    moves: [
-      { move: 'Bd3', annotation: '!', explanation: 'Developing aggressively.' },
-      { move: 'dxe4', explanation: 'Black captures.' },
-      { move: 'Nxe4', annotation: '!', explanation: 'The knight is beautifully placed!' },
-      { move: 'Nxe4', explanation: 'Black trades.' },
-      { move: 'Bxe4', annotation: '!', explanation: 'Bishop takes over the central diagonal.' },
-    ]
-  },
-  // DOUBLED PAWNS (11-25)
+      { move: 'Bf4', annotation: '!', explanation: 'Defending while simplifying.' }
+]
+  },// DOUBLED PAWNS (11-25)
   {
     id: 'wp-11',
     title: 'Creating Doubled Pawns',
@@ -181,30 +125,11 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'Nxc6', annotation: '!', explanation: 'This exchange is not about winning material—it\'s about DAMAGING BLACK\'S STRUCTURE permanently. After bxc6, Black will have doubled c-pawns for the rest of the game. This decision should always be weighed carefully: you\'re giving up your developed knight, but in return you get a permanent structural advantage. The question is: "Is the structural damage worth the piece trade?"', arrows: [{ from: 'd4', to: 'c6', color: 'green' }] },
       { move: 'bxc6', explanation: 'Black recaptures toward the center (usually correct). But now observe the damage: (1) The c6 and c7 pawns cannot defend each other, (2) The c-file is half-open—White\'s rooks will target c6, (3) Black\'s queenside pawn majority is "crippled"—it cannot create a passed pawn easily. These problems are PERMANENT—they cannot be fixed by any move.', highlights: ['c6', 'c7'] },
-      { move: 'Bd3', explanation: 'Development continues with a purpose. The bishop eyes the kingside (the h7 square specifically), but White\'s long-term plan is clear: use the semi-open c-file to attack the doubled pawns. In the coming moves, White will play Qc2, Rc1, and pile up on c6. The strategic plan writes itself when you\'ve created a clear weakness.' },
-    ],
+      { move: 'Bd3', explanation: 'Development continues with a purpose. The bishop eyes the kingside (the h7 square specifically), but White\'s long-term plan is clear: use the semi-open c-file to attack the doubled pawns. In the coming moves, White will play Qc2, Rc1, and pile up on c6. The strategic plan writes itself when you\'ve created a clear weakness.' }
+],
     commonMistakes: ['Creating doubled pawns when your opponent gets compensation (like the bishop pair or active pieces)', 'Doubling pawns and then forgetting to exploit them—you must follow up with pressure', 'Not considering that doubled pawns can sometimes be useful (controlling key squares)'],
     deeperPrinciple: 'Doubled pawns are a "permanent" weakness because pawns cannot move backwards. Once created, they\'ll exist until traded or won. However, there\'s a trade-off: creating doubled pawns often means giving your opponent the bishop pair or active pieces. The question is whether the structural advantage outweighs the activity. In endgames, structure usually wins; in sharp middlegames, activity might compensate.',
-  },
-  {
-    id: 'wp-12',
-    title: 'Attacking Doubled Pawns',
-    fen: 'r1bqkb1r/p2ppppp/2p2n2/8/4P3/3B4/PPP2PPP/RNBQK2R w KQkq - 0 6',
-    toMove: 'white',
-    concept: 'Targeting doubled pawns systematically',
-    keyTakeaway: 'Pile up on doubled pawns with queen and rooks.',
-    difficulty: 3,
-    moves: [
-      { move: 'O-O', explanation: 'Castling to connect rooks.' },
-      { move: 'd6', explanation: 'Black develops.' },
-      { move: 'Nc3', explanation: 'Developing with pressure on e4.' },
-      { move: 'Be7', explanation: 'Black develops.' },
-      { move: 'Qe2', explanation: 'The queen eyes the e-file.' },
-      { move: 'O-O', explanation: 'Black castles.' },
-      { move: 'Qa6', annotation: '!', explanation: 'The queen targets the weak c6 pawn!', arrows: [{ from: 'e2', to: 'a6', color: 'green' }], highlights: ['c6'] },
-    ]
-  },
-  {
+  },{
     id: 'wp-13',
     title: 'Doubled Pawns on an Open File',
     fen: 'r1bqk2r/pp1p1ppp/2n1pn2/2p5/2P5/2N2NP1/PP1PPPBP/R1BQK2R w KQkq - 0 6',
@@ -217,8 +142,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'cxd4', explanation: 'Black captures.' },
       { move: 'Nxd4', explanation: 'Recapturing.' },
       { move: 'Nxd4', explanation: 'Black trades.' },
-      { move: 'Qxd4', annotation: '!', explanation: 'Centralizing and preparing to target doubled pawns if they appear.' },
-    ]
+      { move: 'Qxd4', annotation: '!', explanation: 'Centralizing and preparing to target doubled pawns if they appear.' }
+]
   },
   {
     id: 'wp-14',
@@ -233,8 +158,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Kxf7', explanation: 'King takes.' },
       { move: 'Ng5+', annotation: '!', explanation: 'Check! Winning back material.' },
       { move: 'Ke8', explanation: 'King returns.' },
-      { move: 'Qf3', annotation: '!', explanation: 'Threatening Qf7 mate!', arrows: [{ from: 'f3', to: 'f7', color: 'red' }] },
-    ]
+      { move: 'Qf3', annotation: '!', explanation: 'Threatening Qf7 mate!', arrows: [{ from: 'f3', to: 'f7', color: 'red' }] }
+]
   },
   {
     id: 'wp-15',
@@ -249,8 +174,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Nd5', explanation: 'Knight centralizes.' },
       { move: 'Nf3', explanation: 'Developing.' },
       { move: 'Bb4', explanation: 'Black pins.' },
-      { move: 'Bd2', annotation: '!', explanation: 'Unpinning.' },
-    ]
+      { move: 'Bd2', annotation: '!', explanation: 'Unpinning.' }
+]
   },
   {
     id: 'wp-16',
@@ -265,26 +190,9 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'O-O', explanation: 'Black castles.' },
       { move: 'd3', explanation: 'Solid development.' },
       { move: 'd6', explanation: 'Black develops.' },
-      { move: 'Rb1', annotation: '!', explanation: 'Preparing b4.' },
-    ]
-  },
-  {
-    id: 'wp-17',
-    title: 'Doubled Pawns and King Safety',
-    fen: 'r1bqk2r/pppp1p1p/2n2npb/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 0 5',
-    toMove: 'white',
-    concept: 'Doubled pawns near the king',
-    keyTakeaway: 'Doubled pawns near the king are dangerous.',
-    difficulty: 3,
-    moves: [
-      { move: 'd3', explanation: 'Developing.' },
-      { move: 'Be7', explanation: 'Black develops.' },
-      { move: 'Bxf7+', annotation: '!', explanation: 'Creating doubled f-pawns!' },
-      { move: 'Kxf7', explanation: 'King takes.' },
-      { move: 'Ng5+', annotation: '!', explanation: 'Exploiting the weakened king!' },
-    ]
-  },
-  {
+      { move: 'Rb1', annotation: '!', explanation: 'Preparing b4.' }
+]
+  },{
     id: 'wp-18',
     title: 'Fixing Doubled Pawns',
     fen: 'r1bqk2r/p2pppbp/1pn3pn/2p5/2P1P3/2N2NP1/PP1P1PBP/R1BQK2R w KQkq - 0 6',
@@ -297,24 +205,9 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'O-O', explanation: 'Black castles.' },
       { move: 'O-O', explanation: 'Castling.' },
       { move: 'd6', explanation: 'Black develops.' },
-      { move: 'b3', annotation: '!', explanation: 'Fixing the queenside structure.' },
-    ]
-  },
-  {
-    id: 'wp-19',
-    title: 'Doubled Pawns in Endgame',
-    fen: '3r2k1/pp3ppp/2p2n2/8/4P3/2N5/PPP2PPP/3R2K1 w - - 0 20',
-    toMove: 'white',
-    concept: 'Doubled pawns in the endgame',
-    keyTakeaway: 'Doubled pawns are especially weak in endgames.',
-    difficulty: 4,
-    moves: [
-      { move: 'Rxd8+', annotation: '!', explanation: 'Simplifying into a winning endgame.' },
-      { move: 'Nxd8', explanation: 'Black recaptures.' },
-      { move: 'Nd5', annotation: '!', explanation: 'Attacking the weak c-pawns!', highlights: ['c6', 'c7'] },
-    ]
-  },
-  {
+      { move: 'b3', annotation: '!', explanation: 'Fixing the queenside structure.' }
+]
+  },{
     id: 'wp-20',
     title: 'The Crippled Majority',
     fen: 'r1bqk2r/p3ppbp/1pn3pn/2p5/2P1P3/2N2NP1/PP1P1PBP/R1BQK2R w KQkq - 0 6',
@@ -325,8 +218,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'd4', annotation: '!', explanation: 'Challenging the center!' },
       { move: 'cxd4', explanation: 'Black takes.' },
-      { move: 'Nxd4', annotation: '!', explanation: 'Now Black\'s queenside majority is crippled.' },
-    ]
+      { move: 'Nxd4', annotation: '!', explanation: 'Now Black\'s queenside majority is crippled.' }
+]
   },
   // BACKWARD PAWNS (21-35)
   {
@@ -343,28 +236,11 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Ne5', explanation: 'Black tries to find counterplay through piece activity. This is the correct defensive idea—when your structure is compromised, seek activity. But White can simply trade, keeping the structural advantage.' },
       { move: 'Nxe5', explanation: 'Trading is correct. White\'s structural advantage (the weak c6 pawn) is permanent, while Black\'s piece activity was temporary. In positions with clear structural advantages, simplification often favors the side with the better structure.' },
       { move: 'dxe5', explanation: 'Black recaptures. Now the structure is clear: White will target c6 with all their heavy pieces. The e5 pawn is advanced but creates no particular weakness for White to exploit. The asymmetry favors White.' },
-      { move: 'Be3', explanation: 'Development with a plan. The bishop prepares to go to d4 or c5, attacking Black\'s structure. White\'s plan: (1) Play Qd2 connecting rooks, (2) Play Rfc1 to pressure c6, (3) Play Qa5 or Rc1-c2 to double on the c-file, (4) Eventually win the c6 pawn or force Black into a passive position defending it. When you create a backward pawn, the plan writes itself.', arrows: [{ from: 'c1', to: 'c6', color: 'yellow' }] },
-    ],
+      { move: 'Be3', explanation: 'Development with a plan. The bishop prepares to go to d4 or c5, attacking Black\'s structure. White\'s plan: (1) Play Qd2 connecting rooks, (2) Play Rfc1 to pressure c6, (3) Play Qa5 or Rc1-c2 to double on the c-file, (4) Eventually win the c6 pawn or force Black into a passive position defending it. When you create a backward pawn, the plan writes itself.', arrows: [{ from: 'c1', to: 'c6', color: 'yellow' }] }
+],
     commonMistakes: ['Creating a backward pawn but not following up with pressure on it', 'Letting your opponent repair their structure with ...c5 or ...c6-c5', 'Focusing so much on the backward pawn that you ignore counterplay elsewhere'],
     deeperPrinciple: 'The backward pawn is weak for TWO reasons: the pawn itself is a target, AND the square in front of it is an outpost. When you create a backward pawn, you get both advantages. Nimzowitsch called this a "duo of weaknesses"—the opponent must defend both the pawn AND prevent you from using the outpost.',
-  },
-  {
-    id: 'wp-22',
-    title: 'Backward Pawn on Semi-Open File',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3PP3/2NB1N2/PPP2PPP/R1BQ1RK1 w - - 0 8',
-    toMove: 'white',
-    concept: 'Target backward pawns with rooks',
-    keyTakeaway: 'A backward pawn on a semi-open file is very vulnerable.',
-    difficulty: 4,
-    moves: [
-      { move: 'd5', annotation: '!', explanation: 'Creating the backward c6 pawn.' },
-      { move: 'Na5', explanation: 'Black activates.' },
-      { move: 'Rb1', annotation: '!', explanation: 'Preparing Rb6 to attack c6 from the side!' },
-      { move: 'Nc4', explanation: 'Knight attacks.' },
-      { move: 'Bc2', annotation: '!', explanation: 'Retreating to avoid trade while maintaining pressure.' },
-    ]
-  },
-  {
+  },{
     id: 'wp-23',
     title: 'The c6 Backward Pawn',
     fen: 'r1bq1rk1/pp2ppbp/2np1np1/3P4/4P3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 8',
@@ -377,8 +253,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Nh5', explanation: 'Black attacks the bishop.' },
       { move: 'Be3', explanation: 'Retreating.' },
       { move: 'Nf6', explanation: 'Knight returns.' },
-      { move: 'Qd2', annotation: '!', explanation: 'Eyeing a5 to attack the c6 pawn.', arrows: [{ from: 'd2', to: 'a5', color: 'yellow' }], highlights: ['c6'] },
-    ]
+      { move: 'Qd2', annotation: '!', explanation: 'Eyeing a5 to attack the c6 pawn.', arrows: [{ from: 'd2', to: 'a5', color: 'yellow' }], highlights: ['c6'] }
+]
   },
   {
     id: 'wp-24',
@@ -393,8 +269,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Bd6', explanation: 'Black develops.' },
       { move: 'Bd3', explanation: 'Developing.' },
       { move: 'O-O', explanation: 'Black castles.' },
-      { move: 'e4', annotation: '!', explanation: 'Now e5 is coming, creating a backward e6 pawn!' },
-    ]
+      { move: 'e4', annotation: '!', explanation: 'Now e5 is coming, creating a backward e6 pawn!' }
+]
   },
   {
     id: 'wp-25',
@@ -409,36 +285,9 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Nh5', explanation: 'Black attacks.' },
       { move: 'Be3', explanation: 'Retreating.' },
       { move: 'Nf6', explanation: 'Knight returns.' },
-      { move: 'Nd4', annotation: '!', explanation: 'The knight blockades c6\'s potential advance.', highlights: ['c6', 'd4'] },
-    ]
-  },
-  {
-    id: 'wp-26',
-    title: 'Backward Pawn Blockade',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/3P4/8/2N2NP1/PPP1PPBP/R1BQ1RK1 w - - 0 8',
-    toMove: 'white',
-    concept: 'Placing a knight on the backward pawn',
-    keyTakeaway: 'The ideal blockader is a knight.',
-    difficulty: 3,
-    moves: [
-      { move: 'Nc6', annotation: '??', explanation: 'Wait - that\'s not right! The knight goes to c4!'},
-    ]
-  },
-  {
-    id: 'wp-27',
-    title: 'Attacking Along the Semi-Open File',
-    fen: 'r1bq1rk1/pp3pbp/2np1np1/3Pp3/4P3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 9',
-    toMove: 'white',
-    concept: 'Doubling rooks on c-file',
-    keyTakeaway: 'Use the semi-open file to attack the backward pawn.',
-    difficulty: 4,
-    moves: [
-      { move: 'Rc1', annotation: '!', explanation: 'Seizing the c-file!' },
-      { move: 'Re8', explanation: 'Black defends.' },
-      { move: 'Qd2', annotation: '!', explanation: 'Preparing Rc2-Rac1.', arrows: [{ from: 'c1', to: 'c7', color: 'yellow' }] },
-    ]
-  },
-  {
+      { move: 'Nd4', annotation: '!', explanation: 'The knight blockades c6\'s potential advance.', highlights: ['c6', 'd4'] }
+]
+  },{
     id: 'wp-28',
     title: 'Backward Pawn Sacrifice',
     fen: 'r1bq1rk1/pp2ppbp/2np1np1/3P4/4P3/2N2N2/PPP1BPPP/R1BQ1RK1 b - - 0 8',
@@ -451,24 +300,9 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'dxe6', explanation: 'White takes.' },
       { move: 'fxe6', explanation: 'Opening the f-file!' },
       { move: 'Ng5', explanation: 'White attacks.' },
-      { move: 'e5', annotation: '!', explanation: 'The pawn is freed!' },
-    ]
-  },
-  {
-    id: 'wp-29',
-    title: 'Weak Square in Front of Backward Pawn',
-    fen: 'r1bq1rk1/pp2ppbp/2np1np1/3P4/4P3/2N2N2/PPP1BPPP/R1BQ1RK1 w - - 0 8',
-    toMove: 'white',
-    concept: 'The square in front is just as weak',
-    keyTakeaway: 'Control the square in front of the backward pawn.',
-    difficulty: 3,
-    moves: [
-      { move: 'Nc4', annotation: '!', explanation: 'Occupying the weak c5 square!' },
-      { move: 'b5', explanation: 'Black challenges.' },
-      { move: 'Na5', annotation: '!', explanation: 'The knight is perfectly placed!' },
-    ]
-  },
-  {
+      { move: 'e5', annotation: '!', explanation: 'The pawn is freed!' }
+]
+  },{
     id: 'wp-30',
     title: 'Backward Pawn in Endgame',
     fen: '3r2k1/pp2ppbp/2np2p1/3P4/4P3/2N5/PPP2PPP/3R2K1 w - - 0 15',
@@ -479,30 +313,10 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'Nb5', annotation: '!', explanation: 'Attacking the c7 pawn!' },
       { move: 'Na5', explanation: 'Black defends.' },
-      { move: 'Nxc7', annotation: '!', explanation: 'Winning the weak pawn!' },
-    ]
+      { move: 'Nxc7', annotation: '!', explanation: 'Winning the weak pawn!' }
+]
   },
-  // HANGING PAWNS (31-40)
-  {
-    id: 'wp-31',
-    title: 'Hanging Pawns',
-    fen: 'r1bq1rk1/pp3ppp/2n1pn2/2pp4/2P5/1P3NP1/PB2PPBP/R2Q1RK1 w - - 0 10',
-    toMove: 'white',
-    concept: 'Hanging pawns are both strength and weakness',
-    keyTakeaway: 'Hanging pawns (c5+d5 or c4+d4) are dynamically balanced—they control central squares but can become weak if forced to advance. The key strategy is to make ONE of them advance, leaving the other isolated and vulnerable.',
-    introduction: 'Hanging pawns are a unique structure: two adjacent pawns on the same rank (typically c5+d5 or c4+d4) with no supporting pawns beside them. They "hang" in the center, neither protected by other pawns nor clearly weak. They have DUAL nature: (1) STRENGTH: They control key central squares and support piece activity, (2) WEAKNESS: If one advances, the other becomes isolated and attackable. Your strategy is to force one to advance, breaking the duo and creating a target.',
-    difficulty: 4,
-    moves: [
-      { move: 'cxd5', annotation: '!', explanation: 'White challenges the hanging pawns directly. This is the most principled approach: force Black to make a decision about the recapture. After exd5, Black keeps the "duo" but on slightly different squares. The tension has been resolved in a way that gives White clear targets. The principle: when facing hanging pawns, don\'t let them sit peacefully—force the issue.' },
-      { move: 'exd5', explanation: 'Black recaptures toward the center, maintaining the connected pawns. This is the most natural recapture, keeping the c5-d5 duo. However, the pawn structure has subtly shifted—now the d5 pawn is more advanced and harder to defend, while c5 is slightly isolated.' },
-      { move: 'Nc3', explanation: 'Developing with pressure. The knight eyes the d5 pawn and prepares to jump to a4 or e4. Notice how White is targeting the SPECIFIC SQUARES that the hanging pawns create as weaknesses. Piece placement against hanging pawns follows a clear pattern.' },
-      { move: 'd4', explanation: 'This is the CRITICAL MOMENT in hanging pawn positions. Black advances one pawn, breaking the duo. Why? Because the pressure on d5 was unbearable. But now look at the cost: c5 is completely ISOLATED and cannot be defended by other pawns. The hanging pawn strength has been converted into a permanent weakness.', highlights: ['c5'] },
-      { move: 'Na4', annotation: '!', explanation: 'Now White exploits the consequences of the advance. The knight targets c5 directly—a pawn that has no pawn defenders. Black must use PIECES to defend c5, which ties down their army. The strategic transformation is complete: Black\'s hanging pawns, which once controlled the center, have become a liability. This is the ideal outcome when playing against hanging pawns.', arrows: [{ from: 'c3', to: 'a4', color: 'green' }] },
-    ],
-    commonMistakes: ['Letting hanging pawns sit peacefully without challenging them', 'Trading both pawns instead of forcing one to advance', 'Underestimating the DYNAMIC potential of hanging pawns—they can advance with tempo if you\'re passive'],
-    deeperPrinciple: 'Hanging pawns are a double-edged sword. If the side with hanging pawns can advance them (d4-d5 or c4-c5) with a tempo, they often gain a strong passed pawn. If the opponent forces them to advance defensively, the resulting isolated pawn is usually weak. The battle is about WHO controls the timing of the advance.',
-  },
-  {
+  // HANGING PAWNS (31-40){
     id: 'wp-32',
     title: 'Attacking Hanging Pawns',
     fen: 'r1bq1rk1/pp3ppp/2n2n2/2pp4/8/1P2PN2/PB2BPPP/R2Q1RK1 w - - 0 11',
@@ -515,8 +329,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Bd7', explanation: 'Black breaks the pin.' },
       { move: 'Bxc6', annotation: '!', explanation: 'Trading to weaken the pawns.' },
       { move: 'Bxc6', explanation: 'Black recaptures.' },
-      { move: 'Ne5', annotation: '!', explanation: 'Attacking c6 and d5 simultaneously!', arrows: [{ from: 'e5', to: 'c6', color: 'green' }, { from: 'e5', to: 'd5', color: 'green' }] },
-    ]
+      { move: 'Ne5', annotation: '!', explanation: 'Attacking c6 and d5 simultaneously!', arrows: [{ from: 'e5', to: 'c6', color: 'green' }, { from: 'e5', to: 'd5', color: 'green' }] }
+]
   },
   {
     id: 'wp-33',
@@ -531,8 +345,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'exd5', explanation: 'Black maintains the pawn duo.' },
       { move: 'Bf4', annotation: '!', explanation: 'Preventing d4.' },
       { move: 'Be6', explanation: 'Black develops.' },
-      { move: 'Rc1', annotation: '!', explanation: 'Putting pressure on c5.', highlights: ['c5'] },
-    ]
+      { move: 'Rc1', annotation: '!', explanation: 'Putting pressure on c5.', highlights: ['c5'] }
+]
   },
   {
     id: 'wp-34',
@@ -545,26 +359,9 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'e3', annotation: '!', explanation: 'Challenging the d4 pawn.' },
       { move: 'd3', explanation: 'Black pushes.' },
-      { move: 'Qxd3', annotation: '!', explanation: 'Winning the pawn!' },
-    ]
-  },
-  {
-    id: 'wp-35',
-    title: 'Hanging Pawn Blockade',
-    fen: 'r1bq1rk1/pp3ppp/2n1pn2/2pp4/8/1PN2NP1/PB2PPBP/R2Q1RK1 w - - 0 10',
-    toMove: 'white',
-    concept: 'Blockade hanging pawns',
-    keyTakeaway: 'Place pieces on d4 and c4 to blockade.',
-    difficulty: 3,
-    moves: [
-      { move: 'Nd4', annotation: '!', explanation: 'The knight blockades the d-pawn!' },
-      { move: 'Nxd4', explanation: 'Black trades.' },
-      { move: 'Bxd4', explanation: 'Bishop takes over.' },
-      { move: 'Qb6', explanation: 'Black attacks.' },
-      { move: 'Bc3', annotation: '!', explanation: 'Maintaining the blockade.', highlights: ['c3', 'd4'] },
-    ]
-  },
-  // PAWN ISLANDS (36-45)
+      { move: 'Qxd3', annotation: '!', explanation: 'Winning the pawn!' }
+]
+  },// PAWN ISLANDS (36-45)
   {
     id: 'wp-36',
     title: 'Pawn Islands',
@@ -580,8 +377,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'O-O', explanation: 'Black castles.' },
       { move: 'Bd3', explanation: 'Developing.' },
       { move: 'h6', explanation: 'Black asks the question.' },
-      { move: 'Bxf6', annotation: '!', explanation: 'Creating three pawn islands for Black!', highlights: ['e7'] },
-    ]
+      { move: 'Bxf6', annotation: '!', explanation: 'Creating three pawn islands for Black!', highlights: ['e7'] }
+]
   },
   {
     id: 'wp-37',
@@ -596,8 +393,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'O-O', explanation: 'Black castles.' },
       { move: 'dxc5', annotation: '!', explanation: 'Creating an isolated b-pawn.' },
       { move: 'bxc5', explanation: 'Black recaptures.' },
-      { move: 'e4', annotation: '!', explanation: 'Opening lines. Black has 4 pawn islands!', highlights: ['a7', 'c5', 'd5', 'e6'] },
-    ]
+      { move: 'e4', annotation: '!', explanation: 'Opening lines. Black has 4 pawn islands!', highlights: ['a7', 'c5', 'd5', 'e6'] }
+]
   },
   {
     id: 'wp-38',
@@ -610,24 +407,9 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'e5', annotation: '!', explanation: 'Maintaining the pawn chain.' },
       { move: 'Nfd7', explanation: 'Knight retreats.' },
-      { move: 'f4', annotation: '!', explanation: 'Supporting the e5 pawn and maintaining connection.' },
-    ]
-  },
-  {
-    id: 'wp-39',
-    title: 'Exploiting Pawn Islands',
-    fen: 'r1bq1rk1/p3bppp/1p2pn2/2pn4/8/2NB1N2/PP2PPPP/R1BQ1RK1 w - - 0 10',
-    toMove: 'white',
-    concept: 'Target the most isolated island',
-    keyTakeaway: 'Attack the pawn island with the least defenders.',
-    difficulty: 3,
-    moves: [
-      { move: 'Be4', annotation: '!', explanation: 'Attacking d5 and preparing Qa4.' },
-      { move: 'Nf6', explanation: 'Black defends.' },
-      { move: 'Qa4', annotation: '!', explanation: 'Targeting a7!', arrows: [{ from: 'a4', to: 'a7', color: 'green' }], highlights: ['a7'] },
-    ]
-  },
-  {
+      { move: 'f4', annotation: '!', explanation: 'Supporting the e5 pawn and maintaining connection.' }
+]
+  },{
     id: 'wp-40',
     title: 'Creating Extra Islands',
     fen: 'r1bqkb1r/pp2pppp/2n2n2/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 5',
@@ -638,25 +420,10 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'exd5', explanation: 'Opening the position.' },
       { move: 'Qxd5', explanation: 'Black recaptures with queen.' },
-      { move: 'Be3', annotation: '!', explanation: 'Developing and preventing Black\'s castling.' },
-    ]
+      { move: 'Be3', annotation: '!', explanation: 'Developing and preventing Black\'s castling.' }
+]
   },
-  // PASSED PAWNS & WEAK PAWNS (41-60)
-  {
-    id: 'wp-41',
-    title: 'The Passed Pawn Blockade',
-    fen: '8/pp3ppp/2n1k3/3pP3/8/2N5/PPP2PPP/4K3 w - - 0 1',
-    toMove: 'white',
-    concept: 'Blockade passed pawns with pieces',
-    keyTakeaway: 'A knight is the ideal blockader—it doesn\'t lose power.',
-    difficulty: 3,
-    moves: [
-      { move: 'Nd4', annotation: '!!', explanation: 'The knight blockades the d5 pawn perfectly!', highlights: ['d4', 'd5'] },
-      { move: 'Kd7', explanation: 'Black tries to support the pawn.' },
-      { move: 'Ke2', explanation: 'Activating the king.' },
-    ]
-  },
-  {
+  // PASSED PAWNS & WEAK PAWNS (41-60){
     id: 'wp-42',
     title: 'Weak Pawn vs Passed Pawn',
     fen: '8/pp3ppp/4k3/3p4/3P4/4K3/PPP2PPP/8 w - - 0 1',
@@ -667,8 +434,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'c4', annotation: '!', explanation: 'Challenging the d5 pawn!' },
       { move: 'dxc4', explanation: 'Black captures.' },
-      { move: 'd5+', annotation: '!!', explanation: 'Now the d-pawn is passed!', highlights: ['d5'] },
-    ]
+      { move: 'd5+', annotation: '!!', explanation: 'Now the d-pawn is passed!', highlights: ['d5'] }
+]
   },
   {
     id: 'wp-43',
@@ -683,8 +450,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Nb8', explanation: 'Knight retreats.' },
       { move: 'Nf3', explanation: 'Developing.' },
       { move: 'Bd6', explanation: 'Black develops.' },
-      { move: 'Bd3', annotation: '!', explanation: 'Preparing to attack.' },
-    ]
+      { move: 'Bd3', annotation: '!', explanation: 'Preparing to attack.' }
+]
   },
   {
     id: 'wp-44',
@@ -697,8 +464,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'Nf3', explanation: 'Natural development.' },
       { move: 'e6', explanation: 'Black solidifies.' },
-      { move: 'e5', annotation: '!', explanation: 'Now the e6 pawn is backward!', highlights: ['e6'] },
-    ]
+      { move: 'e5', annotation: '!', explanation: 'Now the e6 pawn is backward!', highlights: ['e6'] }
+]
   },
   {
     id: 'wp-45',
@@ -711,8 +478,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'd5', annotation: '!', explanation: 'Fixing the structure. Black has weak dark squares!' },
       { move: 'Na5', explanation: 'Black tries counterplay.' },
-      { move: 'Bg5', annotation: '!', explanation: 'Exploiting the dark square weakness!' },
-    ]
+      { move: 'Bg5', annotation: '!', explanation: 'Exploiting the dark square weakness!' }
+]
   },
   {
     id: 'wp-46',
@@ -725,8 +492,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'cxd5', annotation: '!', explanation: 'Opening lines.' },
       { move: 'exd5', explanation: 'Black recaptures.' },
-      { move: 'Qa4', annotation: '!', explanation: 'Targeting a7!', arrows: [{ from: 'a4', to: 'a7', color: 'green' }] },
-    ]
+      { move: 'Qa4', annotation: '!', explanation: 'Targeting a7!', arrows: [{ from: 'a4', to: 'a7', color: 'green' }] }
+]
   },
   {
     id: 'wp-47',
@@ -741,8 +508,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'Nxd5', explanation: 'Knight recaptures.' },
       { move: 'e4', annotation: '!', explanation: 'Attacking the knight.' },
       { move: 'Nf6', explanation: 'Knight retreats.' },
-      { move: 'Qb3', annotation: '!', explanation: 'Attacking b7 and preparing Bh6!' },
-    ]
+      { move: 'Qb3', annotation: '!', explanation: 'Attacking b7 and preparing Bh6!' }
+]
   },
   {
     id: 'wp-48',
@@ -757,8 +524,8 @@ export const weakPawnsVariations: CourseVariation[] = [
       { move: 'c5', explanation: 'Black counterattacks.' },
       { move: 'O-O', explanation: 'Castling.' },
       { move: 'cxd4', explanation: 'Black takes.' },
-      { move: 'Nxd4', annotation: '!', explanation: 'Knight dominates!' },
-    ]
+      { move: 'Nxd4', annotation: '!', explanation: 'Knight dominates!' }
+]
   },
   {
     id: 'wp-49',
@@ -771,8 +538,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'Re5', annotation: '!', explanation: 'Attacking the d5 pawn!' },
       { move: 'f6', explanation: 'Black defends.' },
-      { move: 'Nb5', annotation: '!', explanation: 'Attacking a7!' },
-    ]
+      { move: 'Nb5', annotation: '!', explanation: 'Attacking a7!' }
+]
   },
   {
     id: 'wp-50',
@@ -785,8 +552,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'b4', annotation: '!', explanation: 'Advancing the majority!' },
       { move: 'Rc8', explanation: 'Black activates.' },
-      { move: 'b5', annotation: '!', explanation: 'The pawn marches!' },
-    ]
+      { move: 'b5', annotation: '!', explanation: 'The pawn marches!' }
+]
   },
   {
     id: 'wp-51',
@@ -799,8 +566,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'Re5', annotation: '!', explanation: 'Attacking the d5 pawn!' },
       { move: 'Rb8', explanation: 'Black defends.' },
-      { move: 'b4', annotation: '!', explanation: 'White\'s majority advances!' },
-    ]
+      { move: 'b4', annotation: '!', explanation: 'White\'s majority advances!' }
+]
   },
   {
     id: 'wp-52',
@@ -813,24 +580,9 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'd5', annotation: '!', explanation: 'Keeping a healthy structure.' },
       { move: 'Nb8', explanation: 'Knight retreats.' },
-      { move: 'Nf3', annotation: '!', explanation: 'Developing.' },
-    ]
-  },
-  {
-    id: 'wp-53',
-    title: 'Weak Pawn Compensation',
-    fen: 'r1bq1rk1/pp3ppp/2n1pn2/2bp4/3P4/2N1PN2/PP3PPP/R1BQ1RK1 w - - 0 9',
-    toMove: 'white',
-    concept: 'When weak pawns give compensation',
-    keyTakeaway: 'Active pieces can compensate for weak pawns.',
-    difficulty: 4,
-    moves: [
-      { move: 'dxc5', annotation: '!', explanation: 'Taking the pawn!' },
-      { move: 'Bxc5', explanation: 'Black recaptures.' },
-      { move: 'Na4', annotation: '!', explanation: 'Attacking the active bishop!' },
-    ]
-  },
-  {
+      { move: 'Nf3', annotation: '!', explanation: 'Developing.' }
+]
+  },{
     id: 'wp-54',
     title: 'Pawn Sacrifice for Activity',
     fen: 'r1bq1rk1/pp3ppp/2n1pn2/2pp4/3PP3/2N2N2/PP3PPP/R1BQ1RK1 w - - 0 8',
@@ -841,8 +593,8 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'exd5', annotation: '!', explanation: 'Sacrificing structure for activity!' },
       { move: 'exd5', explanation: 'Black takes.' },
-      { move: 'Bg5', annotation: '!', explanation: 'Active pieces compensate!' },
-    ]
+      { move: 'Bg5', annotation: '!', explanation: 'Active pieces compensate!' }
+]
   },
   {
     id: 'wp-55',
@@ -855,83 +607,9 @@ export const weakPawnsVariations: CourseVariation[] = [
     moves: [
       { move: 'e5', annotation: '!', explanation: 'Fixing Black\'s structure!' },
       { move: 'Nd7', explanation: 'Knight retreats.' },
-      { move: 'Bf4', annotation: '!', explanation: 'The e6 pawn is backward!' },
-    ]
-  },
-  {
-    id: 'wp-56',
-    title: 'Weak Pawn Defense',
-    fen: 'r1bq1rk1/pp3ppp/2n1pn2/2pp4/3PP3/2N2N2/PP3PPP/R1BQ1RK1 b - - 0 8',
-    toMove: 'black',
-    concept: 'How to defend weak pawns',
-    keyTakeaway: 'Defend weak pawns with pieces, not pawns.',
-    difficulty: 4,
-    moves: [
-      { move: 'Be6', annotation: '!', explanation: 'Defending d5!' },
-      { move: 'exd5', explanation: 'White takes.' },
-      { move: 'Nxd5', annotation: '!', explanation: 'Active defense!' },
-    ]
-  },
-  {
-    id: 'wp-57',
-    title: 'Trading to Improve Structure',
-    fen: 'r1bq1rk1/pp3ppp/2n1pn2/2pp4/3PP3/2N2N2/PP3PPP/R1BQ1RK1 w - - 0 8',
-    toMove: 'white',
-    concept: 'Trade to improve your structure',
-    keyTakeaway: 'Sometimes trades fix your pawn structure.',
-    difficulty: 3,
-    moves: [
-      { move: 'exd5', annotation: '!', explanation: 'Improving structure!' },
-      { move: 'Nxd5', explanation: 'Black recaptures.' },
-      { move: 'Nxd5', explanation: 'Trading.' },
-      { move: 'Qxd5', explanation: 'Queen recaptures.' },
-      { move: 'c3', annotation: '!', explanation: 'White has a healthy structure now!' },
-    ]
-  },
-  {
-    id: 'wp-58',
-    title: 'Pawn Structure Transformation',
-    fen: 'r1bq1rk1/pp3ppp/2n1pn2/2pp4/3PP3/2N2N2/PP3PPP/R1BQ1RK1 w - - 0 8',
-    toMove: 'white',
-    concept: 'Transform the pawn structure',
-    keyTakeaway: 'Sometimes you need to change the structure entirely.',
-    difficulty: 4,
-    moves: [
-      { move: 'dxc5', annotation: '!', explanation: 'Transforming the structure!' },
-      { move: 'Bxc5', explanation: 'Black recaptures.' },
-      { move: 'e5', annotation: '!', explanation: 'Now e6 is backward!' },
-    ]
-  },
-  {
-    id: 'wp-59',
-    title: 'Weak Pawns and Initiative',
-    fen: 'r1bq1rk1/pp3ppp/2n1pn2/2pp4/3PP3/2N2N2/PP3PPP/R1BQ1RK1 w - - 0 8',
-    toMove: 'white',
-    concept: 'Initiative can hide weak pawns',
-    keyTakeaway: 'Attack to distract from your weak pawns.',
-    difficulty: 4,
-    moves: [
-      { move: 'Bg5', annotation: '!', explanation: 'Creating threats!' },
-      { move: 'Be6', explanation: 'Black defends.' },
-      { move: 'e5', annotation: '!', explanation: 'Attacking despite potential weaknesses!' },
-    ]
-  },
-  {
-    id: 'wp-60',
-    title: 'Pawn Weakness Calculation',
-    fen: 'r1bq1rk1/pp3ppp/2n1pn2/2pp4/3PP3/2N2N2/PP3PPP/R1BQ1RK1 w - - 0 8',
-    toMove: 'white',
-    concept: 'Calculate pawn structure changes',
-    keyTakeaway: 'Always calculate the resulting pawn structure.',
-    difficulty: 5,
-    moves: [
-      { move: 'exd5', annotation: '!', explanation: 'Calculating: after Nxd5, Nxd5, Qxd5, c4!' },
-      { move: 'Nxd5', explanation: 'Black recaptures.' },
-      { move: 'Nxd5', explanation: 'Trading.' },
-      { move: 'Qxd5', explanation: 'Queen recaptures.' },
-      { move: 'c4', annotation: '!', explanation: 'Attacking the queen and gaining time!' },
-    ]
-  },
+      { move: 'Bf4', annotation: '!', explanation: 'The e6 pawn is backward!' }
+]
+  }
 ];
 
 export default weakPawnsVariations;

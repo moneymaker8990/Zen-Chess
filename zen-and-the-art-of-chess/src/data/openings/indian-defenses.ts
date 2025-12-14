@@ -587,3 +587,4 @@ export const indianDefenseLines: OpeningLine[] = [
 export default indianDefenseLines;
 
 
+
