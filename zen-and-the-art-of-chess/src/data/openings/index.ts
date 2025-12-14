@@ -421,7 +421,8 @@ import { d4OpeningsLines } from './d4-openings-lines';
 import { otherOpeningsLines } from './other-openings-lines';
 import { moreOpenings } from './more-openings';
 import { expandedSystems } from './expanded-systems';
-import { pgnOpenings } from './pgn-openings';
+// REMOVED: pgnOpenings - 42MB file causing build memory issues
+// import { pgnOpenings } from './pgn-openings';
 import { indianDefenseLines } from './indian-defenses';
 import { italianGameLines } from './italian-lines';
 
@@ -437,7 +438,7 @@ export const allOpenings: OpeningLine[] = [
   ...moreOpenings,
   ...expandedSystems,
   ...indianDefenseLines,   // 50+ lines for Indian systems
-  ...(pgnOpenings as OpeningLine[]),          // 61,000+ lines from PGN database
+  // REMOVED: pgnOpenings - 61,000 lines (42MB) causing Vercel memory issues
 ];
 
 // Get openings by category
