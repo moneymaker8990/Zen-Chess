@@ -733,6 +733,13 @@ export default function CourseLearningPage() {
     }
   }, [selectedSquare, game, getMoveOptions, handleMove]);
 
+  // Previous variation (go to previous lesson)
+  const previousVariation = useCallback(() => {
+    if (currentVariationIndex > 0) {
+      setCurrentVariationIndex(prev => prev - 1);
+    }
+  }, [currentVariationIndex]);
+
   // Next variation
   const nextVariation = useCallback(() => {
     if (currentVariationIndex < variations.length - 1) {
@@ -758,13 +765,15 @@ export default function CourseLearningPage() {
         setShowHint(true);
       } else if (e.key === 'n') {
         nextVariation();
+      } else if (e.key === 'p') {
+        previousVariation();
       } else if (e.key === 'a') {
         setShowAICoach(prev => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [advanceMove, goToPreviousMove, goToFirstMove, goToLastMove, nextVariation]);
+  }, [advanceMove, goToPreviousMove, goToFirstMove, goToLastMove, nextVariation, previousVariation]);
 
   // Build arrows from current move
   const customArrows = useMemo((): [Square, Square, string][] => {
@@ -958,12 +967,12 @@ export default function CourseLearningPage() {
 
             {/* Move Controls - Full navigation */}
             <div className="flex justify-center gap-1 sm:gap-1.5 mt-3 sm:mt-4">
-              {/* First Move */}
+              {/* Previous Lesson */}
               <button
-                onClick={goToFirstMove}
-                disabled={currentMoveIndex === 0}
+                onClick={previousVariation}
+                disabled={currentVariationIndex === 0}
                 className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                title="First Move (Home)"
+                title="Previous Lesson (P)"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
