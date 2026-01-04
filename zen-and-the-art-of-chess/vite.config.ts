@@ -3,11 +3,19 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const isDev = mode === 'development'
+  
+  return {
   plugins: [
     react(),
     VitePWA({
-      registerType: 'prompt', // Prompt user to refresh instead of auto-updating
+      // Disable service worker in development to avoid caching issues
+      devOptions: {
+        enabled: false, // Disable PWA in dev mode
+        type: 'module',
+      },
+      registerType: isDev ? 'autoUpdate' : 'prompt', // Auto-update in dev, prompt in prod
       includeAssets: [
         'favicon.svg', 
         'favicon-32x32.png',
@@ -87,7 +95,7 @@ export default defineConfig({
         // Take control of all clients immediately
         clientsClaim: true,
         runtimeCaching: [
-          // Network-first for navigation requests (HTML)
+          // Network-first for navigation requests (HTML) - shorter cache in dev
           {
             urlPattern: ({ request }) => request.mode === 'navigate',
             handler: 'NetworkFirst',
@@ -95,12 +103,12 @@ export default defineConfig({
               cacheName: 'pages-cache',
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 // 1 hour
+                maxAgeSeconds: isDev ? 0 : 60 * 60 // No cache in dev, 1 hour in prod
               },
               networkTimeoutSeconds: 3
             }
           },
-          // Network-first for JS bundles to always get fresh code
+          // Network-first for JS bundles - always get fresh code, no cache in dev
           {
             urlPattern: /\/assets\/.*\.js$/i,
             handler: 'NetworkFirst',
@@ -108,7 +116,7 @@ export default defineConfig({
               cacheName: 'js-cache',
               expiration: {
                 maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 // 1 day
+                maxAgeSeconds: isDev ? 0 : 60 * 60 * 24 // No cache in dev, 1 day in prod
               },
               networkTimeoutSeconds: 3
             }
@@ -203,4 +211,5 @@ export default defineConfig({
       },
     },
   },
+  }
 })
