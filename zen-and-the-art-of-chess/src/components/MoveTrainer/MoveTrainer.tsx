@@ -9,7 +9,18 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
 import { useBoardSize } from '@/hooks/useBoardSize';
+import { BOARD_COLORS } from '@/lib/constants';
 import type { EnhancedPattern, AnnotatedMove } from '@/data/positional/enhancedPatterns';
+
+// Arrow color mapping from string names to theme-consistent colors
+const ARROW_COLORS: Record<string, string> = {
+  green: 'rgba(74, 222, 128, 0.8)',   // success
+  red: 'rgba(239, 68, 68, 0.8)',      // danger
+  yellow: 'rgba(234, 179, 8, 0.8)',   // warning/highlight
+  blue: 'rgba(59, 130, 246, 0.8)',    // info
+  primary: 'rgba(168, 85, 247, 0.8)', // accent
+  default: 'rgba(74, 222, 128, 0.8)', // success (default)
+};
 
 // ============================================
 // TYPES
@@ -23,6 +34,13 @@ interface MoveTrainerProps {
   mode: TrainingMode;
   onComplete: (success: boolean, stats: TrainingStats) => void;
   onExit: () => void;
+  // Pattern navigation
+  onNextPattern?: () => void;
+  onPreviousPattern?: () => void;
+  hasNextPattern?: boolean;
+  hasPreviousPattern?: boolean;
+  currentPatternIndex?: number;
+  totalPatterns?: number;
 }
 
 interface TrainingStats {
@@ -45,11 +63,31 @@ interface SRSState {
 // MOVETRAINER COMPONENT
 // ============================================
 
-export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerProps) {
+export function MoveTrainer({ 
+  pattern, 
+  mode, 
+  onComplete, 
+  onExit,
+  onNextPattern,
+  onPreviousPattern,
+  hasNextPattern = false,
+  hasPreviousPattern = false,
+  currentPatternIndex = 0,
+  totalPatterns = 1,
+}: MoveTrainerProps) {
   const boardSize = useBoardSize(480, 32);
   
   // Game State
-  const [game, setGame] = useState(() => new Chess(pattern.fen));
+  const [game, setGame] = useState(() => {
+    try {
+      const chess = new Chess(pattern.fen);
+      return chess;
+    } catch (error) {
+      console.error('Invalid FEN for pattern:', pattern.id, pattern.fen, error);
+      // Fallback to starting position
+      return new Chess();
+    }
+  });
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [phase, setPhase] = useState<TrainingPhase>('intro');
   
@@ -97,31 +135,65 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
   const customArrows = useMemo(() => {
     if (!currentMove) return [];
     
-    const arrows: [Square, Square, string][] = [];
+    const arrowMap = new Map<string, [Square, Square, string]>();
     
-    // Show arrows from the current move annotation
-    if (currentMove.arrows && (mode === 'learn' || showHint || phase === 'move_explanation')) {
-      currentMove.arrows.forEach(arrow => {
-        const color = arrow.color || 'rgba(74, 222, 128, 0.8)';
-        arrows.push([arrow.from as Square, arrow.to as Square, color]);
-      });
-    }
+    // Helper to add arrow with deduplication
+    const addArrow = (from: Square, to: Square, color: string) => {
+      const key = `${from}-${to}`;
+      // Only add if not already present (prevents duplicates)
+      if (!arrowMap.has(key)) {
+        arrowMap.set(key, [from, to, color]);
+      }
+    };
     
-    // In learn mode or after showing explanation, show the move arrow
-    if (mode === 'learn' || phase === 'move_explanation') {
+    // LEARN MODE: Show all arrows for the current move
+    if (mode === 'learn') {
+      // Add annotation arrows (tactical ideas, control squares, etc.)
+      if (currentMove.arrows) {
+        currentMove.arrows.forEach(arrow => {
+          const color = arrow.color 
+            ? (ARROW_COLORS[arrow.color] || ARROW_COLORS.default)
+            : ARROW_COLORS.default;
+          addArrow(arrow.from as Square, arrow.to as Square, color);
+        });
+      }
+      
+      // Add move arrow (the actual piece movement) if not already present
       try {
         const tempGame = new Chess(game.fen());
         const moveResult = tempGame.move(currentMove.move);
         if (moveResult) {
-          arrows.push([moveResult.from as Square, moveResult.to as Square, 'rgba(74, 222, 128, 0.9)']);
+          addArrow(moveResult.from as Square, moveResult.to as Square, ARROW_COLORS.green);
         }
       } catch {
         // Invalid move, skip arrow
       }
     }
     
-    return arrows;
-  }, [currentMove, mode, showHint, phase, game]);
+    // TEST MODE: Only show annotation arrows during explanation phase
+    if (mode === 'test' && phase === 'move_explanation') {
+      if (currentMove.arrows) {
+        currentMove.arrows.forEach(arrow => {
+          const color = arrow.color 
+            ? (ARROW_COLORS[arrow.color] || ARROW_COLORS.default)
+            : ARROW_COLORS.default;
+          addArrow(arrow.from as Square, arrow.to as Square, color);
+        });
+      }
+    }
+    
+    // HINT: Show annotation arrows when hint is requested in test mode
+    if (mode === 'test' && showHint && phase === 'playing' && currentMove.arrows) {
+      currentMove.arrows.forEach(arrow => {
+        const color = arrow.color 
+          ? (ARROW_COLORS[arrow.color] || ARROW_COLORS.default)
+          : ARROW_COLORS.default;
+        addArrow(arrow.from as Square, arrow.to as Square, color);
+      });
+    }
+    
+    return Array.from(arrowMap.values());
+  }, [currentMove, currentMoveIndex, mode, showHint, phase, game]);
 
   // ============================================
   // SQUARE HIGHLIGHTING
@@ -136,13 +208,13 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
     // Highlight key squares from the pattern
     if (currentMove?.highlights && (mode === 'learn' || showHint || phase === 'move_explanation')) {
       currentMove.highlights.forEach(sq => {
-        styles[sq] = { backgroundColor: 'rgba(234, 179, 8, 0.4)' };
+        styles[sq] = { backgroundColor: BOARD_COLORS.hintTarget };
       });
     }
     
     // Feedback coloring
     if (feedback === 'correct') {
-      styles[moveFrom || ''] = { backgroundColor: 'rgba(34, 197, 94, 0.5)' };
+      styles[moveFrom || ''] = { backgroundColor: BOARD_COLORS.correctMove };
     }
     
     return styles;
@@ -163,11 +235,11 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
     moves.forEach((move) => {
       newSquares[move.to] = {
         backgroundColor: game.get(move.to as Square) 
-          ? 'rgba(239, 68, 68, 0.4)' 
-          : 'rgba(168, 85, 247, 0.3)',
+          ? BOARD_COLORS.incorrectMove  // Capture indicator
+          : BOARD_COLORS.hint,          // Legal move hint
       };
     });
-    newSquares[square] = { backgroundColor: 'rgba(168, 85, 247, 0.4)' };
+    newSquares[square] = { backgroundColor: BOARD_COLORS.selected };
     setOptionSquares(newSquares);
     return true;
   }, [game]);
@@ -275,38 +347,62 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
     
     // Execute the current move if in learn mode
     if (mode === 'learn' && currentMove) {
-      executeMove(currentMove.move);
+      const moveSuccess = executeMove(currentMove.move);
+      if (!moveSuccess) {
+        console.warn('Invalid move in pattern:', pattern.id, 'move:', currentMove.move, 'at index:', currentMoveIndex);
+        // Skip invalid moves - just advance the index
+      }
     }
     
     setCurrentMoveIndex(prev => prev + 1);
     setPhase('playing');
     setShowHint(false);
     setShowAlternatives(false);
-  }, [currentMoveIndex, pattern.mainLine.length, mode, currentMove, executeMove]);
+  }, [currentMoveIndex, pattern.mainLine.length, pattern.id, mode, currentMove, executeMove]);
 
   const goBack = useCallback(() => {
     if (currentMoveIndex <= 0) return;
     
     // Rebuild position from start
-    const newGame = new Chess(pattern.fen);
-    for (let i = 0; i < currentMoveIndex - 1; i++) {
-      newGame.move(pattern.mainLine[i].move);
+    try {
+      const newGame = new Chess(pattern.fen);
+      for (let i = 0; i < currentMoveIndex - 1; i++) {
+        try {
+          newGame.move(pattern.mainLine[i].move);
+        } catch (error) {
+          console.warn('Invalid move when going back:', pattern.id, 'move:', pattern.mainLine[i].move, 'at index:', i);
+          // Skip invalid moves
+        }
+      }
+      setGame(newGame);
+    } catch (error) {
+      console.error('Error rebuilding position:', pattern.id, error);
+      // Fallback to starting position
+      setGame(new Chess(pattern.fen));
     }
     
-    setGame(newGame);
     setCurrentMoveIndex(prev => prev - 1);
     setPhase('playing');
     setShowHint(false);
     setShowAlternatives(false);
-  }, [currentMoveIndex, pattern.fen, pattern.mainLine]);
+    // Clear move selection and arrows
+    setMoveFrom(null);
+    setOptionSquares({});
+    setFeedback(null);
+  }, [currentMoveIndex, pattern.fen, pattern.mainLine, pattern.id]);
 
   const startTraining = useCallback(() => {
     setPhase('playing');
     setCurrentMoveIndex(0);
-    setGame(new Chess(pattern.fen));
+    try {
+      setGame(new Chess(pattern.fen));
+    } catch (error) {
+      console.error('Invalid FEN when starting training:', pattern.id, pattern.fen, error);
+      setGame(new Chess());
+    }
     setStats({ correctMoves: 0, incorrectMoves: 0, hintsUsed: 0, timeSpent: 0 });
     startTime.current = Date.now();
-  }, [pattern.fen]);
+  }, [pattern.fen, pattern.id]);
 
   const useHint = useCallback(() => {
     if (!showHint) {
@@ -316,12 +412,20 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
   }, [showHint]);
 
   const completeTraining = useCallback(() => {
-    const finalStats = {
-      ...stats,
-      timeSpent: Math.round((Date.now() - startTime.current) / 1000),
-    };
-    onComplete(stats.incorrectMoves === 0, finalStats);
-  }, [stats, onComplete]);
+    try {
+      const finalStats = {
+        ...stats,
+        timeSpent: Math.round((Date.now() - startTime.current) / 1000),
+      };
+      onComplete(stats.incorrectMoves === 0, finalStats);
+      // Exit the training view after completing
+      onExit();
+    } catch (error) {
+      console.error('Error completing training:', error);
+      // Still exit even if there's an error
+      onExit();
+    }
+  }, [stats, onComplete, onExit]);
 
   // Auto-play opponent moves in test mode
   useEffect(() => {
@@ -341,6 +445,23 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
       }
     };
   }, [mode, phase, isUserMove, currentMove, executeMove, advanceMove]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Pattern navigation shortcuts (Shift + N/P)
+      if (e.shiftKey && e.key === 'N' && hasNextPattern) {
+        e.preventDefault();
+        onNextPattern?.();
+      } else if (e.shiftKey && e.key === 'P' && hasPreviousPattern) {
+        e.preventDefault();
+        onPreviousPattern?.();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hasNextPattern, hasPreviousPattern, onNextPattern, onPreviousPattern]);
 
   // ============================================
   // BOARD ORIENTATION
@@ -435,6 +556,9 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
           <h1 className="text-2xl font-display font-medium mb-2" style={{ color: isSuccess ? '#4ade80' : 'var(--text-primary)' }}>
             {isSuccess ? 'Pattern Mastered!' : 'Good Effort!'}
           </h1>
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            Pattern {currentPatternIndex + 1} of {totalPatterns}
+          </p>
         </div>
 
         {/* Stats */}
@@ -494,16 +618,31 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
         )}
 
         {/* Actions */}
-        <div className="flex justify-center gap-4">
-          <button onClick={onExit} className="btn-secondary">
-            ← Back to Patterns
-          </button>
-          <button onClick={startTraining} className="btn-ghost">
+        <div className="flex flex-wrap justify-center gap-3">
+          {hasPreviousPattern && (
+            <button type="button" onClick={onPreviousPattern} className="btn-secondary">
+              ← Previous Pattern
+            </button>
+          )}
+          <button type="button" onClick={startTraining} className="btn-ghost">
             🔄 Practice Again
           </button>
-          <button onClick={completeTraining} className="btn-primary">
-            Complete →
-          </button>
+          {hasNextPattern ? (
+            <button 
+              type="button" 
+              onClick={() => { 
+                completeTraining(); 
+                onNextPattern?.(); 
+              }} 
+              className="btn-primary"
+            >
+              Next Pattern →
+            </button>
+          ) : (
+            <button type="button" onClick={completeTraining} className="btn-primary">
+              Complete Category →
+            </button>
+          )}
         </div>
       </div>
     );
@@ -517,15 +656,28 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
     <div className="space-y-4 animate-fade-in w-full max-w-full overflow-hidden">
       {/* Header with progress */}
       <div className="flex items-center justify-between px-2 sm:px-0 flex-wrap gap-2">
-        <button onClick={onExit} className="btn-ghost text-sm">
-          ← Exit
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={onExit} className="btn-ghost text-sm">
+            ← Exit
+          </button>
+          
+          {/* Previous Pattern Button */}
+          {hasPreviousPattern && (
+            <button 
+              onClick={onPreviousPattern}
+              className="btn-ghost text-sm"
+              title="Previous Pattern (Shift+P)"
+            >
+              ⟨ Prev
+            </button>
+          )}
+        </div>
         
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex flex-col items-center gap-1">
           <span className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
-            Move {currentMoveIndex + 1}/{pattern.mainLine.length}
+            Pattern {currentPatternIndex + 1}/{totalPatterns} • Move {currentMoveIndex + 1}/{pattern.mainLine.length}
           </span>
-          <div className="w-20 sm:w-32 h-2 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
+          <div className="w-32 sm:w-48 h-2 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
             <div 
               className="h-full rounded-full transition-all duration-300"
               style={{ 
@@ -537,6 +689,17 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
         </div>
         
         <div className="flex items-center gap-2">
+          {/* Next Pattern Button */}
+          {hasNextPattern && (
+            <button 
+              onClick={onNextPattern}
+              className="btn-ghost text-sm"
+              title="Next Pattern (Shift+N)"
+            >
+              Next ⟩
+            </button>
+          )}
+          
           {mode === 'test' && (
             <span className="badge badge-purple text-xs">Test</span>
           )}
@@ -611,6 +774,10 @@ export function MoveTrainer({ pattern, mode, onComplete, onExit }: MoveTrainerPr
                 setShowHint(false);
                 setShowAlternatives(false);
                 setFeedback(null);
+                setMoveFrom(null);
+                setOptionSquares({});
+                setStats({ correctMoves: 0, incorrectMoves: 0, hintsUsed: 0, timeSpent: 0 });
+                startTime.current = Date.now();
               }}
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center transition-all hover:bg-[var(--bg-hover)]"
               style={{ background: 'var(--bg-elevated)' }}

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { 
   enhancedPatterns, 
   categoryInfo, 
@@ -125,6 +125,10 @@ export function PatternsManualPage() {
   const [selectedPattern, setSelectedPattern] = useState<EnhancedPattern | null>(null);
   const [trainingMode, setTrainingMode] = useState<TrainingMode>('learn');
   
+  // Queue State for flow navigation
+  const [patternQueue, setPatternQueue] = useState<EnhancedPattern[]>([]);
+  const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
+  
   // Progress State
   const [progress, setProgress] = useState<PatternProgress>(() => loadPatternProgress());
 
@@ -172,12 +176,51 @@ export function PatternsManualPage() {
     return { total: patterns.length, mastered, learning, newCount, due };
   }, [progress]);
 
+  // Initialize queue when category is selected
+  useEffect(() => {
+    if (selectedCategory) {
+      const patterns = getPatternsByCategory(selectedCategory);
+      setPatternQueue(patterns);
+      // If we have a selected pattern, find its index
+      if (selectedPattern) {
+        const index = patterns.findIndex(p => p.id === selectedPattern.id);
+        setCurrentQueueIndex(index >= 0 ? index : 0);
+      } else {
+        setCurrentQueueIndex(0);
+      }
+    }
+  }, [selectedCategory, selectedPattern]);
+
   // Start training a pattern
   const startTraining = useCallback((pattern: EnhancedPattern, mode: TrainingMode) => {
     setSelectedPattern(pattern);
     setTrainingMode(mode);
     setViewMode('training');
   }, []);
+
+  // Navigate to next pattern in queue
+  const goToNextPattern = useCallback(() => {
+    if (currentQueueIndex < patternQueue.length - 1) {
+      const nextPattern = patternQueue[currentQueueIndex + 1];
+      setSelectedPattern(nextPattern);
+      setCurrentQueueIndex(prev => prev + 1);
+      setViewMode('training');
+    } else {
+      // End of queue - return to pattern list
+      setViewMode('patterns');
+      setSelectedPattern(null);
+    }
+  }, [currentQueueIndex, patternQueue]);
+
+  // Navigate to previous pattern in queue
+  const goToPreviousPattern = useCallback(() => {
+    if (currentQueueIndex > 0) {
+      const prevPattern = patternQueue[currentQueueIndex - 1];
+      setSelectedPattern(prevPattern);
+      setCurrentQueueIndex(prev => prev - 1);
+      setViewMode('training');
+    }
+  }, [currentQueueIndex, patternQueue]);
 
   // Handle training completion
   const handleTrainingComplete = useCallback((success: boolean, trainingStats: { correctMoves: number; incorrectMoves: number; hintsUsed: number }) => {
@@ -207,10 +250,17 @@ export function PatternsManualPage() {
   if (viewMode === 'training' && selectedPattern) {
     return (
       <MoveTrainer
+        key={selectedPattern.id}
         pattern={selectedPattern}
         mode={trainingMode}
         onComplete={handleTrainingComplete}
         onExit={handleTrainingExit}
+        onNextPattern={goToNextPattern}
+        onPreviousPattern={goToPreviousPattern}
+        hasNextPattern={currentQueueIndex < patternQueue.length - 1}
+        hasPreviousPattern={currentQueueIndex > 0}
+        currentPatternIndex={currentQueueIndex}
+        totalPatterns={patternQueue.length}
       />
     );
   }
@@ -490,9 +540,10 @@ export function PatternsManualPage() {
             const isDue = card && card.nextReview <= Date.now();
             
             return (
-              <div 
-                key={pattern.id} 
-                className="card p-5 hover:border-[var(--border-strong)] transition-all"
+              <button 
+                key={pattern.id}
+                onClick={() => startTraining(pattern, 'learn')}
+                className="card p-5 hover:border-[var(--border-strong)] transition-all cursor-pointer text-left w-full group relative"
               >
                 <div className="flex items-start gap-4">
                   {/* Pattern Number */}
@@ -573,25 +624,8 @@ export function PatternsManualPage() {
                       )}
                     </div>
                   </div>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex flex-col gap-2 flex-shrink-0">
-                    <button
-                      onClick={() => startTraining(pattern, 'learn')}
-                      className="btn-secondary text-sm px-4 py-2"
-                      style={{ borderColor: `${style.accent}44`, color: style.accent }}
-                    >
-                      📖 Learn
-                    </button>
-                    <button
-                      onClick={() => startTraining(pattern, 'test')}
-                      className="btn-ghost text-sm px-4 py-2"
-                    >
-                      🎯 Test
-                    </button>
-                  </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
