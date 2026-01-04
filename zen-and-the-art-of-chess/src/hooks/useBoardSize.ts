@@ -1,57 +1,93 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
+// UI heights to account for when calculating board size
+const HEADER_HEIGHT = 64; // Mobile header
+const BOTTOM_NAV_HEIGHT = 80; // Bottom nav + safe area estimate
+const CONTROLS_HEIGHT = 120; // Move controls, status, etc.
 
 /**
  * Hook to calculate responsive chessboard size based on container and viewport.
  * Returns the optimal board width in pixels.
  * 
- * Properly accounts for mobile viewports with safe margins to prevent overflow.
+ * Now accounts for BOTH width AND height constraints to prevent:
+ * - Horizontal overflow (board wider than viewport)
+ * - Vertical clipping (board taller than available space)
  */
 export function useBoardSize(
   maxWidth: number = 520,
   padding: number = 32
 ): number {
-  const [boardSize, setBoardSize] = useState(() => {
+  const calculateInitialSize = useCallback(() => {
     if (typeof window === 'undefined') return Math.min(maxWidth, 300);
+    
     const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    
+    // Calculate available height (viewport - header - nav - controls)
+    const availableHeight = vh - HEADER_HEIGHT - BOTTOM_NAV_HEIGHT - CONTROLS_HEIGHT;
+    
     // Mobile-first: VERY conservative to prevent any overflow
+    let widthBased: number;
     if (vw < 400) {
-      return Math.min(maxWidth, vw - 72);
+      widthBased = vw - 48; // Very small screens
+    } else if (vw < 480) {
+      widthBased = vw - 40;
+    } else if (vw < 640) {
+      widthBased = vw - 32;
+    } else if (vw < 1024) {
+      widthBased = Math.min(vw - 48, 480);
+    } else {
+      widthBased = maxWidth;
     }
-    if (vw < 480) {
-      return Math.min(maxWidth, vw - 68);
-    }
-    if (vw < 640) {
-      return Math.min(maxWidth, vw - 64);
-    }
-    return Math.min(maxWidth, vw - padding);
-  });
+    
+    // Board must fit BOTH width and height constraints
+    // Use the smaller of width-based and height-based calculations
+    const heightBased = Math.max(280, availableHeight - 32);
+    
+    return Math.min(maxWidth, widthBased, heightBased);
+  }, [maxWidth]);
+
+  const [boardSize, setBoardSize] = useState(calculateInitialSize);
 
   useEffect(() => {
     const calculateSize = () => {
       const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      // Calculate available height
+      const availableHeight = viewportHeight - HEADER_HEIGHT - BOTTOM_NAV_HEIGHT - CONTROLS_HEIGHT;
+      
+      let widthBased: number;
       
       // Mobile: VERY conservative width - must fit within viewport with all margins/padding
-      // Account for: Layout p-4 (32px) + page px-2 (16px) + scrollbar (~8px) + safety buffer (16px) = ~72px minimum
       if (viewportWidth < 400) {
-        // Very small screens - be very conservative
-        setBoardSize(Math.min(maxWidth, viewportWidth - 72));
+        // Very small screens (320-400px) - max padding reduction
+        widthBased = viewportWidth - 48;
       }
       else if (viewportWidth < 480) {
-        // Small screens - still very conservative  
-        setBoardSize(Math.min(maxWidth, viewportWidth - 68));
+        // Small screens (400-480px)
+        widthBased = viewportWidth - 40;
       }
       else if (viewportWidth < 640) {
-        // Small mobile - conservative
-        setBoardSize(Math.min(maxWidth, viewportWidth - 64));
+        // Small mobile (480-640px)
+        widthBased = viewportWidth - 32;
       }
       // Tablet: constrained width
       else if (viewportWidth < 1024) {
-        setBoardSize(Math.min(maxWidth, viewportWidth - 56, 480));
+        widthBased = Math.min(viewportWidth - 48, 480);
       }
       // Desktop: use max width
       else {
-        setBoardSize(maxWidth);
+        widthBased = maxWidth;
       }
+      
+      // Height constraint: board should fit in available vertical space
+      const heightBased = Math.max(280, availableHeight - 32);
+      
+      // Use the minimum of width, height, and max constraints
+      const finalSize = Math.min(maxWidth, widthBased, heightBased);
+      
+      setBoardSize(finalSize);
     };
 
     calculateSize();
@@ -59,13 +95,21 @@ export function useBoardSize(
     
     // Also handle orientation changes for mobile
     const handleOrientationChange = () => {
-      setTimeout(calculateSize, 100); // Wait for orientation change to complete
+      setTimeout(calculateSize, 150); // Wait for orientation change to complete
     };
     window.addEventListener('orientationchange', handleOrientationChange);
+    
+    // Handle visual viewport changes (keyboard, etc)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', calculateSize);
+    }
     
     return () => {
       window.removeEventListener('resize', calculateSize);
       window.removeEventListener('orientationchange', handleOrientationChange);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', calculateSize);
+      }
     };
   }, [maxWidth, padding]);
 

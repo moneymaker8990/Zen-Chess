@@ -221,3 +221,5 @@ for (const file of filesToProcess) {
 
 console.log(`\n📊 Total: kept ${totalKept} valid variations, removed ${totalRemoved} broken`);
 console.log('\n✅ Done! Now run: npm run build\n');
+
+

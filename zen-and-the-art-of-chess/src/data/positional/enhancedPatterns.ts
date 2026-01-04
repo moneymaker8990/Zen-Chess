@@ -357,15 +357,16 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
         ]
       },
       {
-        move: 'Nd4',
+        move: 'Nb5',
         isMainLine: true,
         annotation: '!',
-        explanation: 'The second knight occupies an outpost! On d4, this knight is beautifully placed, pressuring f5 and supporting the d5 pawn. White\'s position is dominant.',
+        explanation: 'The knight jumps to b5! This creates pressure on c7 and supports the d5 pawn. White\'s position is dominant with the strong d5 pawn and active knight.',
         arrows: [
-          { from: 'd1', to: 'd4', color: 'green' }
+          { from: 'c3', to: 'b5', color: 'green' },
+          { from: 'b5', to: 'c7', color: 'yellow' }
         ],
-        highlights: ['d4', 'd5'],
-        conceptTag: 'Double Outposts'
+        highlights: ['b5', 'd5'],
+        conceptTag: 'Knight Activity'
       }
     ],
     
@@ -635,58 +636,59 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
         ]
       },
       {
-        move: 'Nd4',
+        move: 'Nxd5',
         isMainLine: true,
         annotation: '!!',
-        explanation: 'The BLOCKADE! The knight lands on d4, the most beautiful square on the board. It cannot be driven away by pawns and completely freezes the d5 pawn.',
+        explanation: 'The BLOCKADE! By capturing the isolated pawn, we eliminate Black\'s weakness and gain a strong central knight. This is often even stronger than blockading—we remove the weakness entirely!',
         arrows: [
-          { from: 'c3', to: 'd4', color: 'green' }
+          { from: 'c3', to: 'd5', color: 'green' }
         ],
-        highlights: ['d4', 'd5'],
-        conceptTag: 'The Blockade'
+        highlights: ['d5'],
+        conceptTag: 'Eliminating the Weakness'
       },
       {
-        move: 'Ne5',
+        move: 'Qxd5',
         isMainLine: true,
         annotation: '',
-        explanation: 'Black attacks our bishop, but we have a strong continuation.',
+        explanation: 'Black recaptures with the queen, but now we have a strong central knight and can continue the attack.',
         arrows: [
-          { from: 'c6', to: 'e5', color: 'blue' }
-        ]
-      },
-      {
-        move: 'Bxe5',
-        isMainLine: true,
-        annotation: '',
-        explanation: 'Trading reduces Black\'s attackers. Fewer pieces means the IQP becomes even weaker.',
-        arrows: [
-          { from: 'f4', to: 'e5', color: 'green' }
-        ],
-        conceptTag: 'Trade Attackers'
-      },
-      {
-        move: 'Nxe5',
-        isMainLine: true,
-        annotation: '',
-        explanation: 'Forced recapture.',
-        arrows: [
-          { from: 'f6', to: 'e5', color: 'blue' }
+          { from: 'd8', to: 'd5', color: 'blue' }
         ]
       },
       {
         move: 'Rac1',
         isMainLine: true,
         annotation: '!',
-        explanation: 'Doubling rooks! White will pile up on the c-file and eventually win the weak pawn. The blockade on d4 ensures Black\'s IQP is paralyzed.',
+        explanation: 'Doubling rooks on the c-file! We now have a strong central knight on d5 and control of the open file. Black\'s position is under pressure.',
         arrows: [
           { from: 'a1', to: 'c1', color: 'green' },
           { from: 'c1', to: 'c8', color: 'yellow' }
         ],
         conceptTag: 'Doubling Rooks'
+      },
+      {
+        move: 'Qe6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but our position is clearly superior.',
+        arrows: [
+          { from: 'd5', to: 'e6', color: 'blue' }
+        ]
+      },
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Centralizing the other rook! We now have both rooks active, a strong central knight on d5, and control of key squares. Black\'s position is under severe pressure.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' }
+        ],
+        highlights: ['d5', 'd1'],
+        conceptTag: 'Centralization'
       }
     ],
     
-    summary: 'The isolated d5-pawn was systematically exploited by blockading on d4 with a knight, trading off attackers, and piling up on weak squares. The knight on d4 was the key to the entire strategy.',
+    summary: 'The isolated d5-pawn was systematically exploited by capturing it with Nxd5, gaining a strong central knight, and then piling up on weak squares. The knight on d5 became a monster that dominated the position.',
     
     keyTakeaways: [
       'An isolated pawn is weak because it cannot be defended by other pawns',
@@ -748,12 +750,12 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
         ]
       },
       {
-        move: 'O-O',
+        move: 'Rb8',
         isMainLine: true,
         annotation: '',
-        explanation: 'Black castles, completing development. But the minority attack is coming!',
+        explanation: 'Black develops, but the minority attack is coming!',
         arrows: [
-          { from: 'e8', to: 'g8', color: 'blue' }
+          { from: 'a8', to: 'b8', color: 'blue' }
         ]
       },
       {
@@ -770,39 +772,60 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
         conceptTag: 'Minority Advance'
       },
       {
-        move: 'c4',
+        move: 'cxb4',
         isMainLine: true,
-        annotation: '?!',
-        explanation: 'Black tries to close the queenside, but this creates a backward pawn on d5! An IQP in disguise.',
+        annotation: '',
+        explanation: 'Black captures, but this opens the a-file and leaves c6 vulnerable.',
         arrows: [
-          { from: 'c5', to: 'c4', color: 'red' }
+          { from: 'c5', to: 'b4', color: 'blue' }
         ],
-        highlights: ['d5'],
+        highlights: ['a7', 'c6'],
         alternativeMoves: [
           {
-            move: 'cxb4',
-            evaluation: 'equal',
-            explanation: 'Better, but after axb4 the a-file opens and c6 is still targeted.'
+            move: 'Bd7',
+            evaluation: 'better',
+            explanation: 'Better, but White can still advance b5 later.'
           }
         ]
       },
       {
-        move: 'Bd2',
+        move: 'axb4',
         isMainLine: true,
-        annotation: '',
-        explanation: 'Developing while preparing to put pressure on the new c4 weakness. The bishop can go to a5.',
+        annotation: '!',
+        explanation: 'Recapturing opens the a-file! Now the a7-pawn is weak and c6 is still targeted.',
         arrows: [
-          { from: 'c1', to: 'd2', color: 'green' },
-          { from: 'd2', to: 'a5', color: 'yellow' }
-        ]
+          { from: 'a3', to: 'b4', color: 'green' }
+        ],
+        highlights: ['a7', 'c6'],
+        conceptTag: 'Open File'
       },
       {
         move: 'Bd7',
         isMainLine: true,
         annotation: '',
-        explanation: 'Black develops the bishop. Now we continue the plan.',
+        explanation: 'Black develops the bishop, trying to defend. But the minority attack continues!',
         arrows: [
           { from: 'c8', to: 'd7', color: 'blue' }
+        ]
+      },
+      {
+        move: 'Bd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Developing while preparing to put pressure on the new weaknesses. The bishop can go to a5 to target the weak pawns.',
+        arrows: [
+          { from: 'c1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'a5', color: 'yellow' }
+        ],
+        conceptTag: 'Targeting Weaknesses'
+      },
+      {
+        move: 'Rc8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend the c-file, but the minority attack continues!',
+        arrows: [
+          { from: 'b8', to: 'c8', color: 'blue' }
         ]
       },
       {
@@ -826,15 +849,16 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
         ]
       },
       {
-        move: 'Bxc4',
+        move: 'Rac1',
         isMainLine: true,
         annotation: '!',
-        explanation: 'Capturing the weak pawn! The minority attack has succeeded—Black\'s queenside is shattered.',
+        explanation: 'Doubling rooks on the c-file! Combined with the pressure on c6 from b5, Black\'s queenside is under severe pressure. The minority attack has created lasting weaknesses that we can exploit.',
         arrows: [
-          { from: 'e2', to: 'c4', color: 'green' }
+          { from: 'a1', to: 'c1', color: 'green' },
+          { from: 'c1', to: 'c6', color: 'yellow' }
         ],
-        highlights: ['c4'],
-        conceptTag: 'Weakness Captured'
+        highlights: ['c6', 'b5'],
+        conceptTag: 'Doubling Rooks'
       }
     ],
     
@@ -970,12 +994,12 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
         conceptTag: 'Improving Pieces'
       },
       {
-        move: 'Bb7',
+        move: 'Rac8',
         isMainLine: true,
         annotation: '',
-        explanation: 'Black develops the bishop, but it\'s passive on b7—the e4 square is blocked by our e5 pawn.',
+        explanation: 'Black develops the rook, but without the ...b5 break, Black\'s position lacks dynamism. The prophylactic a3 has done its job!',
         arrows: [
-          { from: 'c8', to: 'b7', color: 'blue' }
+          { from: 'a8', to: 'c8', color: 'blue' }
         ]
       },
       {
@@ -1055,12 +1079,12 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
         ]
       },
       {
-        move: 'Rd8',
+        move: 'Rad8',
         isMainLine: true,
         annotation: '',
         explanation: 'Black contests the file. But we have a second rook!',
         arrows: [
-          { from: 'f8', to: 'd8', color: 'blue' }
+          { from: 'a8', to: 'd8', color: 'blue' }
         ]
       },
       {
@@ -1370,7 +1394,7 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
     category: 'KING_ACTIVITY',
     title: 'The Fighting King',
     subtitle: 'Activate your king in the endgame',
-    fen: '8/pp2kppp/8/2p5/2P5/4K3/PP3PPP/8 w - - 0 1',
+    fen: '8/pp3ppp/3k4/2p5/8/4K3/PP3PPP/8 w - - 0 1',
     toMove: 'white',
     
     introduction: 'In the endgame, the king transforms from a liability to a powerful fighting piece. We\'ll learn how to activate the king and use it to win.',
@@ -1384,23 +1408,22 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
     
     mainLine: [
       {
-        move: 'Kd4',
+        move: 'Ke4',
         isMainLine: true,
         annotation: '!',
-        explanation: 'Centralizing immediately! The king heads toward the action. From d4, it controls key squares and can attack in multiple directions.',
+        explanation: 'Centralizing immediately! The king heads toward the action. From e4, it controls key squares and can attack in multiple directions.',
         arrows: [
-          { from: 'e3', to: 'd4', color: 'green' },
-          { from: 'd4', to: 'c5', color: 'yellow' },
-          { from: 'd4', to: 'd5', color: 'yellow' },
-          { from: 'd4', to: 'e5', color: 'yellow' }
+          { from: 'e3', to: 'e4', color: 'green' },
+          { from: 'e4', to: 'd5', color: 'yellow' },
+          { from: 'e4', to: 'f5', color: 'yellow' }
         ],
-        highlights: ['d4'],
+        highlights: ['e4'],
         conceptTag: 'Centralization',
         alternativeMoves: [
           {
-            move: 'Kf4',
+            move: 'Kd3',
             evaluation: 'good',
-            explanation: 'Also centralizing, but Kd4 is more flexible—it can go to either wing.'
+            explanation: 'Also centralizing, but Ke4 is more active—closer to the center.'
           },
           {
             move: 'a4',
@@ -1410,12 +1433,12 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
         ]
       },
       {
-        move: 'Kd6',
+        move: 'Kc6',
         isMainLine: true,
         annotation: '',
         explanation: 'Black also centralizes, but White moved first and has the initiative.',
         arrows: [
-          { from: 'e7', to: 'd6', color: 'blue' }
+          { from: 'd6', to: 'c6', color: 'blue' }
         ]
       },
       {
@@ -1438,76 +1461,53 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
         ]
       },
       {
-        move: 'Kxb4',
+        move: 'Kd4',
         isMainLine: true,
         annotation: '!',
-        explanation: 'The king captures! Now it\'s even closer to Black\'s queenside pawns. This is why king centralization was so important.',
+        explanation: 'The king moves to d4! Now it heads toward the queenside.',
         arrows: [
-          { from: 'd4', to: 'b4', color: 'green' },
-          { from: 'b4', to: 'a5', color: 'yellow' }
+          { from: 'e4', to: 'd4', color: 'green' }
         ],
-        highlights: ['b4', 'a7'],
-        conceptTag: 'King Attack'
+        highlights: ['d4']
       },
       {
-        move: 'Kc6',
+        move: 'Kb6',
         isMainLine: true,
         annotation: '',
-        explanation: 'Black tries to defend, but White\'s king is too active.',
+        explanation: 'Black tries to defend the queenside, but White\'s king can still capture.',
         arrows: [
-          { from: 'd6', to: 'c6', color: 'blue' }
+          { from: 'c6', to: 'b6', color: 'blue' }
         ]
       },
       {
-        move: 'Ka5',
+        move: 'Kd5',
         isMainLine: true,
         annotation: '!',
-        explanation: 'The king invades! It attacks the a7-pawn directly. Black cannot defend both queenside pawns.',
+        explanation: 'The king moves to d5! Now it heads toward the center.',
         arrows: [
-          { from: 'b4', to: 'a5', color: 'green' },
-          { from: 'a5', to: 'a7', color: 'yellow' }
+          { from: 'd4', to: 'd5', color: 'green' }
         ],
-        highlights: ['a5', 'a7'],
-        conceptTag: 'Invasion'
+        highlights: ['d5']
       },
       {
-        move: 'Kb7',
+        move: 'Kc7',
         isMainLine: true,
         annotation: '',
-        explanation: 'Black defends the a-pawn, but now c5 is available!',
+        explanation: 'Black centralizes, but White\'s king is already well-placed.',
         arrows: [
-          { from: 'c6', to: 'b7', color: 'blue' }
+          { from: 'b6', to: 'c7', color: 'blue' }
         ]
       },
       {
-        move: 'c5',
+        move: 'a4',
         isMainLine: true,
         annotation: '!',
-        explanation: 'The c-pawn advances, creating a passed pawn! The king supported this advance by controlling key squares.',
+        explanation: 'Advancing the a-pawn! The active king supports this advance, creating a passed pawn.',
         arrows: [
-          { from: 'c4', to: 'c5', color: 'green' }
+          { from: 'a2', to: 'a4', color: 'green' }
         ],
-        highlights: ['c5'],
+        highlights: ['a4'],
         conceptTag: 'Passed Pawn'
-      },
-      {
-        move: 'Kc6',
-        isMainLine: true,
-        annotation: '',
-        explanation: 'Black blocks, but it\'s too late. White is winning.',
-        arrows: [
-          { from: 'b7', to: 'c6', color: 'blue' }
-        ]
-      },
-      {
-        move: 'Kxa7',
-        isMainLine: true,
-        annotation: '!',
-        explanation: 'Capturing the a7-pawn! Now White has a passed a-pawn AND a passed c-pawn. The active king made this possible.',
-        arrows: [
-          { from: 'a5', to: 'a7', color: 'green' }
-        ],
-        conceptTag: 'Victory'
       }
     ],
     
@@ -2044,13 +2044,14 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
 // ============================================
 
 import { additionalPatterns } from './morePatterns';
-import { generatedPatterns } from './patternGenerator';
+// Generated patterns temporarily disabled - they only have single moves
+// import { generatedPatterns } from './patternGenerator';
 
-// Combine all patterns - now with 50+ per category (800+ total)
+// Combine all patterns - using only detailed patterns with full move sequences
 export const enhancedPatterns: EnhancedPattern[] = [
   ...baseEnhancedPatterns,
   ...additionalPatterns,
-  ...generatedPatterns,
+  // ...generatedPatterns, // Disabled - these only have single moves
 ];
 
 // ============================================

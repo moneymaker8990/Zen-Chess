@@ -204,3 +204,5 @@ fs.writeFileSync(
 
 console.log(`\n✅ Report saved to scripts/broken-variations-report.json`);
 console.log(`\nTo fix: Either remove these ${totalInvalid} broken variations or fix their FEN/moves.\n`);
+
+

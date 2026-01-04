@@ -1,0 +1,373 @@
+[Event "Third Rosenwald Trophy"]
+[Site "New York, NY USA"]
+[Date "1956.10.17"]
+[EventDate "1956.10.07"]
+[Round "8"]
+[Result "0-1"]
+[White "Donald Byrne"]
+[Black "Robert James Fischer"]
+[ECO "D92"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[PlyCount "82"]
+
+1. Nf3 Nf6 2. c4 g6 3. Nc3 Bg7 4. d4 O-O 5. Bf4 d5 6. Qb3 dxc4
+7. Qxc4 c6 8. e4 Nbd7 9. Rd1 Nb6 10. Qc5 Bg4 11. Bg5 {11. Be2
+followed by 12. O-O would have been more prudent. The bishop
+move played allows a sudden crescendo of tactical points to be
+uncovered by Fischer. -- Wade} Na4 {!} 12. Qa3 {On 12. Nxa4
+Nxe4 and White faces considerable difficulties.} Nxc3 {At
+first glance, one might think that this move only helps White
+create a stronger pawn center; however, Fischer's plan is
+quite the opposite. By eliminating the Knight on c3, it
+becomes possible to sacrifice the exchange via Nxe4 and smash
+White's center, while the King remains trapped in the center.}
+13. bxc3 Nxe4 {The natural continuation of Black's plan.}
+14. Bxe7 Qb6 15. Bc4 Nxc3 16. Bc5 Rfe8+ 17. Kf1 Be6 {!! If
+this is the game of the century, then 17...Be6!! must be the
+counter of the century. Fischer offers his queen in exchange
+for a fierce attack with his minor pieces. Declining this
+offer is not so easy: 18. Bxe6 leads to a 'Philidor Mate'
+(smothered mate) with ...Qb5+ 19. Kg1 Ne2+ 20. Kf1 Ng3+
+21. Kg1 Qf1+ 22. Rxf1 Ne2#. Other ways to decline the queen
+also run into trouble: e.g., 18. Qxc3 Qxc5} 18. Bxb6 Bxc4+
+19. Kg1 Ne2+ 20. Kf1 Nxd4+ {This tactical scenario, where a
+king is repeatedly revealed to checks, is sometimes called a
+"windmill."} 21. Kg1 Ne2+ 22. Kf1 Nc3+ 23. Kg1 axb6 24. Qb4
+Ra4 25. Qxb6 Nxd1 26. h3 Rxa2 27. Kh2 Nxf2 28. Re1 Rxe1
+29. Qd8+ Bf8 30. Nxe1 Bd5 31. Nf3 Ne4 32. Qb8 b5 {Every piece
+and pawn of the black camp is defended. The white queen has
+nothing to do.} 33. h4 h5 34. Ne5 Kg7 35. Kg1 Bc5+ 36. Kf1
+Ng3+ {Now Byrne is hopelessly entangled in Fischer's mating
+net.} 37. Ke1 Bb4+ 38. Kd1 Bb3+ 39. Kc1 Ne2+ 40. Kb1 Nc3+
+41. Kc1 Rc2# 0-1
+
+
+[Event "Paris"]
+[Site "Paris FRA"]
+[Date "1858.??.??"]
+[EventDate "?"]
+[Round "?"]
+[Result "1-0"]
+[White "Paul Morphy"]
+[Black "Duke Karl / Count Isouard"]
+[ECO "C41"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[PlyCount "33"]
+[Source "(London) Field, London, 1858.12.04, p458"]
+
+1.e4 e5 2.Nf3 d6 3.d4 Bg4 {This is a weak move
+already.--Fischer} 4.dxe5 Bxf3 5.Qxf3 dxe5 6.Bc4 Nf6 7.Qb3 Qe7
+8.Nc3 c6 9.Bg5 {Black is in what's like a zugzwang position
+here. He can't develop the [Queen's] knight because the pawn
+is hanging, the bishop is blocked because of the
+Queen.--Fischer} b5 10.Nxb5 cxb5 11.Bxb5+ Nbd7 12.O-O-O Rd8
+13.Rxd7 Rxd7 14.Rd1 Qe6 15.Bxd7+ Nxd7 16.Qb8+ Nxb8 17.Rd8# 1-0
+
+
+[Event "Hoogovens Group A"]
+[Site "Wijk aan Zee NED"]
+[Date "1999.01.20"]
+[EventDate "1999.01.16"]
+[Round "4"]
+[Result "1-0"]
+[White "Garry Kasparov"]
+[Black "Veselin Topalov"]
+[ECO "B07"]
+[WhiteElo "2812"]
+[BlackElo "2700"]
+[PlyCount "87"]
+
+1. e4 d6 2. d4 Nf6 3. Nc3 g6 4. Be3 Bg7 5. Qd2 c6 6. f3 b5
+7. Nge2 Nbd7 8. Bh6 Bxh6 9. Qxh6 Bb7 10. a3 e5 11. O-O-O Qe7
+12. Kb1 a6 13. Nc1 O-O-O 14. Nb3 exd4 15. Rxd4 c5 16. Rd1 Nb6
+17. g3 Kb8 18. Na5 Ba8 19. Bh3 d5 20. Qf4+ Ka7 21. Rhe1 d4
+22. Nd5 Nbxd5 23. exd5 Qd6 24. Rxd4 cxd4 25. Re7+ Kb6
+26. Qxd4+ Kxa5 27. b4+ Ka4 28. Qc3 Qxd5 29. Ra7 Bb7 30. Rxb7
+Qc4 31. Qxf6 Kxa3 32. Qxa6+ Kxb4 33. c3+ Kxc3 34. Qa1+ Kd2
+35. Qb2+ Kd1 36. Bf1 Rd2 37. Rd7 Rxd7 38. Bxc4 bxc4 39. Qxh8
+Rd3 40. Qa8 c3 41. Qa4+ Ke1 42. f4 f5 43. Kc1 Rd2 44. Qa7 1-0
+
+
+[Event "Casual game"]
+[Site "London ENG"]
+[Date "1851.06.21"]
+[EventDate "?"]
+[Round "?"]
+[Result "1-0"]
+[White "Adolf Anderssen"]
+[Black "Lionel Adalbert Bagration Felix Kieseritzky"]
+[ECO "C33"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Source "La Régence, v3 n7, July 1851, pp221-222"]
+[SourceNote "ends 19.Ke2"]
+[Source2 "The Chess Player, vol.i no.1, 1851.07.19, p.2"]
+[PlyCount "45"]
+
+1.e4 e5 2.f4 exf4 3.Bc4 Qh4+ 4.Kf1 b5 5.Bxb5 Nf6 6.Nf3 Qh6
+7.d3 Nh5 8.Nh4 Qg5 9.Nf5 c6 10.g4 Nf6 11.Rg1 cxb5 12.h4 Qg6
+13.h5 Qg5 14.Qf3 Ng8 15.Bxf4 Qf6 16.Nc3 Bc5 17.Nd5 Qxb2 18.Bd6
+Bxg1 {It is from this move that Black's defeat stems. Wilhelm
+Steinitz suggested in 1879 that a better move would be
+18... Qxa1+; likely moves to follow are 19. Ke2 Qb2 20. Kd2
+Bxg1.} 19. e5 Qxa1+ 20. Ke2 Na6 21.Nxg7+ Kd8 22.Qf6+ Nxf6
+23.Be7# 1-0
+
+
+[Event "Lodz"]
+[Site "Lodz RUE"]
+[Date "1907.12.26"]
+[EventDate "?"]
+[Round "6"]
+[Result "0-1"]
+[White "Georg Rotlewi"]
+[Black "Akiba Rubinstein"]
+[ECO "D32"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[PlyCount "50"]
+
+1.d4 {Notes by Carl Schlechter and Dr. Savielly Tartakower.}
+d5 2.Nf3 e6 3.e3 c5 4.c4 Nc6 5.Nc3 Nf6 6.dxc5 {Tartakower:
+Less consistent than 6.a3 or 6.Bd3, maintaining as long as
+possible the tension in the center.} Bxc5 7.a3 a6 8.b4 Bd6
+9.Bb2 O-O 10.Qd2 {? Schlechter: A very bad place for the
+queen. The best continuation is 10.cxd5 exd5 11.Be2, followed
+by O-O. *** Tartakower: Loss of time. The queen will soon have
+to seek a better square (14.Qe2). The most useful move is
+10.Qc2.} Qe7 {! Schlechter: A fine sacrifice of a pawn. If
+11.cxd5 exd5 12.Nxd5? Nxd5 13.Qxd5 Rd8! and Black has a strong
+attack.} 11.Bd3 {Schlechter: Better was 11.cxd5 exd5 12.Be2.}
+dxc4 12.Bxc4 b5 13.Bd3 Rd8 14.Qe2 Bb7 15.O-O Ne5 {!
+Schlechter: Introduced by Marshall and Schlechter in a similar
+position with opposite colors, but here with the extra move
+Rd8.} 16.Nxe5 Bxe5 {Tartakower: Threatening to win a pawn by
+17...Bxh2+ 18.Kxh2 Qd6+. White's next move provides against
+this, but loosens the kingside defenses.} 17.f4 Bc7 18.e4 Rac8
+19.e5 Bb6+ 20.Kh1 Ng4 {!} 21.Be4 {Schlechter: There is no
+defense; e.g., 21.Bxh7+ Kxh7 22.Qxg4 Rd2 etc.; or 21.h3 Qh4
+22.Qxg4 Qxg4 23.hxg4 Rxd3, threatening ...Rh3 mate and
+...Rxc3; or 21.Qxg4 Rxd3 22.Ne2 Rc2 23.Bc1 g6! threatening
+...h5; or 21.Ne4 Qh4 22.h3 (if 22.g3 Qxh2+ 23.Qxh2 Nxh2 and
+wins.) 22....Rxd3 23.Qxd3 Bxe4 24.Qxe4 Qg3 25.hxg4 Qh4+ mate.}
+Qh4 22.g3 {Schlechter: Or 22.h3 Rxc3! 23.Bxc3 Bxe4 24.Qxg4
+Qxg4 25.hxg4 Rd3 wins. *** Tartakower: The alternative 22.h3,
+parrying the mate, would lead to the following brilliant lines
+of play: 22...Rxc3! (an eliminating sacrifice, getting rid of
+the knight, which overprotects the bishop on e4) 23.Bxc3 (or
+23.Qxg4 Rxh3+ 24.Qxh3 Qxh3+ 25.gxh3 Bxe4+ 26.Kh2 Rd2+ 27.Kg3
+Rg2+ 28.Kh4 Bd8+ 29.Kh5 Bg6+ mate) 23...Bxe4+ 24.Qxg4 (if
+24.Qxe4 Qg3 25.hxg4 Qh4+ mate) 24...Qxg4 25.hxg4 Rd3 with the
+double threat of 26...Rh3+ mate and 26....Rxc3, and Black
+wins. Beautiful as are these variations, the continuation in
+the text is still more splendid.} Rxc3 {!!} 23.gxh4 Rd2 {!!}
+24.Qxd2 Bxe4+ 25.Qg2 Rh3 {!} 0-1
+
+
+[Event "US Championship 1963/64"]
+[Site "New York, NY USA"]
+[Date "1963.12.18"]
+[EventDate "1963.??.??"]
+[Round "3"]
+[Result "0-1"]
+[White "Robert Eugene Byrne"]
+[Black "Robert James Fischer"]
+[ECO "E60"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[PlyCount "42"]
+
+1. d4 {Notes from various sources.} Nf6 2. c4 g6 3. g3 c6
+4. Bg2 d5 5. cxd5 {5.Qb3 maintains more tension. -- Fischer}
+cxd5 6. Nc3 Bg7 7. e3 O-O 8. Nge2 Nc6 9. O-O b6 10. b3 {It's
+hard for either side to introduce an imbalance into this
+essentially symmetrical variation. Deadeye equality also
+ensues afer 10.Nf4 e6 11.b3 Ba6 12.Re1 Rc8 13.Ba3 Re8 14.Rc1
+(Stahlberg-Flohr, Kemeri 1937) -- Fischer} Ba6 11. Ba3 {After
+White's 11th move I should adjudicate his position as slightly
+superior, and at worst completely safe. To turn this into a
+mating position in eleven more moves is more witchcraft than
+chess! Quite honestly, I do not see the man who can stop Bobby
+at this time. -- K.F. Kirby, South African Chess Quarterly}
+Re8 12. Qd2 e5 {! I was a bit worried about weakening my QP,
+but felt that the tremendous activity obtained by my minor
+pieces would permit White no time to exploit it. 12...e6 would
+probably lead to a draw. -- Fischer} 13. dxe5 Nxe5 14. Rfd1
+{"Add another to those melancholy case histories entitled: The
+Wrong Rook." -- Fischer ~ "This is very much a case of 'the
+wrong rook'. One can understand Byrne's desire to break the
+pin on the e2-knight, but this turns out to be less important
+than other considerations. Fischer spends a lot of time and
+energy analysing the superior 14. Rad1!, but still comes to
+the conclusion that Black can keep the advantage." -- John
+Nunn} Nd3 {Now it's all systems go for the Fischer rocket. --
+Robert Wade} 15. Qc2 {There is hardly any other defense to the
+threat of ...Ne4. -- Fischer} Nxf2 {! The key to Black's
+previous play. The complete justification for this sac does
+not become apparent until White resigns! -- Fischer} 16. Kxf2
+Ng4+ 17. Kg1 Nxe3 18. Qd2 {Byrne: As I sat pondering why
+Fischer would choose such a line, because it was so obviously
+lost for Black, there suddenly comes...} Nxg2 {!! This
+dazzling move came as the shocker... the culminating
+combination is of such depth that, even at the very moment at
+which I resigned, both grandmasters who were commenting on the
+play for the spectators in a separate room believed I had a
+won game! -- Robert Byrne} 19. Kxg2 d4 {!} 20. Nxd4 Bb7+ {The
+King is at Black's mercy. -- Fischer} 21. Kf1 {In a room set
+aside for commentaries on the games in progress, two
+grandmasters were stating, for the benefit of the spectators,
+that Byrne had a won game. Byrne's reply to Fischer's next
+move must have been jaw dropping! -- Wade} Qd7 {And White
+resigns. Fischer writes: "A bitter disappointment. I'd hoped
+for 22.Qf2 Qh3+ 23.Kg1 Re1+!! 24.Rxe1 Bxd4 with mate to follow
+shortly."} 0-1
+
+
+[Event "Casual Game"]
+[Site "Berlin GER (Prussian Empire)"]
+[Date "1852.??.??"]
+[EventDate "?"]
+[Round "?"]
+[Result "1-0"]
+[White "Adolf Anderssen"]
+[Black "Jean Dufresne"]
+[ECO "C52"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[PlyCount "40"]
+[Source "Schachzeitung, v7 n9, September 1852, pp338-339"]
+[SourceNote "ending given in Schachzeitung, v7 n10, October 1852, p383"]
+
+1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.b4 Bxb4 5.c3 Ba5 6.d4 exd4 7.O-O
+d3 8.Qb3 Qf6 9.e5 Qg6 10.Re1 Nge7 11.Ba3 b5 12.Qxb5 Rb8 13.Qa4
+Bb6 14.Nbd2 Bb7 15.Ne4 Qf5 16.Bxd3 Qh5 17.Nf6+ gxf6 18.exf6
+Rg8 19.Rad1 Qxf3 20.Rxe7+ Nxe7 {White gives mate in 4 moves. 
+21.Qxd7+ Kxd7 22.Bf5+ Ke8 23.Bd7+ Kf8 24.Bxe7#} 1-0
+
+
+[Event "Karpov - Kasparov World Championship Match"]
+[Site "Moscow URS"]
+[Date "1985.10.15"]
+[EventDate "?"]
+[Round "16"]
+[Result "0-1"]
+[White "Anatoly Karpov"]
+[Black "Garry Kasparov"]
+[ECO "B44"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[PlyCount "80"]
+
+1.e4 c5 2.Nf3 e6 3.d4 cxd4 4.Nxd4 Nc6 5.Nb5 d6 6.c4 Nf6 7.N1c3
+a6 8.Na3 d5 9.cxd5 exd5 10.exd5 Nb4 11.Be2 Bc5 12.O-O O-O
+13.Bf3 Bf5 14.Bg5 Re8 15.Qd2 b5 16.Rad1 Nd3 17.Nab1 h6 18.Bh4
+b4 19.Na4 Bd6 20.Bg3 Rc8 21.b3 g5 22.Bxd6 Qxd6 23.g3 Nd7
+24.Bg2 Qf6 25.a3 a5 26.axb4 axb4 27.Qa2 Bg6 28.d6 g4 29.Qd2
+Kg7 30.f3 Qxd6 31.fxg4 Qd4+ 32.Kh1 Nf6 33.Rf4 Ne4 34.Qxd3 Nf2+
+35.Rxf2 Bxd3 36.Rfd2 Qe3 37.Rxd3 Rc1 38.Nb2 Qf2 39.Nd2 Rxd1+
+40.Nxd1 Re1+ 0-1
+
+
+[Event "Hastings"]
+[Site "Hastings ENG"]
+[Date "1895.08.17"]
+[EventDate "1895.08.05"]
+[Round "10"]
+[Result "1-0"]
+[White "Wilhelm Steinitz"]
+[Black "Curt von Bardeleben"]
+[ECO "C54"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[PlyCount "48"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. c3 Nf6 5. d4 exd4 6. cxd4
+Bb4+ 7. Nc3 d5 8. exd5 Nxd5 9. O-O Be6 10. Bg5 Be7 11. Bxd5
+Bxd5 12. Nxd5 Qxd5 13. Bxe7 Nxe7 14. Re1 f6 15. Qe2 Qd7
+16. Rac1 c6 17. d5 cxd5 18. Nd4 Kf7 19. Ne6 Rhc8 20. Qg4 g6
+21. Ng5+ Ke8 22. Rxe7+ Kf8 23. Rf7+ Kg8 24. Rg7+ Kh8 25. Rxh7+
+{And black resigned at this point. As Steinitz demonstrated
+immediately afterward, there is a mate in ten moves which can
+only be averted by ruinous loss of material; analysis follows:
+...Kh8 25. Rxh7+ Kg8 26. Rg7+ Kh8 27. Qh4+ Kxg7 28. Qh7+ Kf8
+29. Qh8+ Ke7 30. Qg7+ Ke8 31. Qg8+ Ke7 32. Qf7+ Kd8 33. Qf8+
+Qe8 34. Nf7+ Kd7 35. Qd6#} 1-0
+
+
+[Event "New York"]
+[Site "New York, NY USA"]
+[Date "1924.03.23"]
+[EventDate "1924.03.16"]
+[Round "6"]
+[Result "1-0"]
+[White "Jose Raul Capablanca"]
+[Black "Savielly Tartakower"]
+[ECO "A40"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[PlyCount "103"]
+
+1. d4 {Notes by Alekhine and Reti.} e6 2. Nf3 f5 3. c4 Nf6
+4. Bg5 Be7 5. Nc3 O-O 6. e3 b6 7. Bd3 Bb7 8. O-O Qe8 9. Qe2
+Ne4 10. Bxe7 Nxc3 11. bxc3 Qxe7 12. a4 Bxf3 13. Qxf3 Nc6
+14. Rfb1 Rae8 15. Qh3 Rf6 16. f4 Na5 17. Qf3 d6 18. Re1 Qd7
+19. e4 fxe4 20. Qxe4 g6 21. g3 Kf8 22. Kg2 Rf7 23. h4 d5
+24. cxd5 exd5 25. Qxe8+ Qxe8 26. Rxe8+ Kxe8 27. h5 {! This is
+the calamity--the Rook now enters the hostile camp. --
+Alekhine} Rf6 28. hxg6 hxg6 29. Rh1 {White plays logically to
+utilize his advantage on the K-side and very properly does not
+concern himself with the weakness of the Q-side. Black, on the
+other hand, makes a defensive move which he could perhaps have
+omitted. -- Reti} Kf8 30. Rh7 Rc6 31. g4 {Anxious nature might
+have moved the King towards the queenside, but Capablanca
+adheres to the principle of aggression that governs rook
+endings. -- Reti} Nc4 32. g5 {He gives his opponent the
+opportunity of winning a pawn. But Capablanca has confidence
+in the passed pawn which he obtains. -- Reti} Ne3+ 33. Kf3 Nf5
+34. Bxf5 {Simple and compelling. -- Alekhine} gxf5 35. Kg3
+{Decisive! White sacrifices material in order to obtain the
+classical position with King on f6, pawn on g6, and Rook on
+h7, whereupon the black pawns tumble like ripe apples. --
+Alekhine} Rxc3+ {It is extremely instructive to see how
+Capablanca is no longer in the least concerned about material
+equality, but thinks only of supporting his passed pawn. --
+Reti} 36. Kh4 Rf3 37. g6 Rxf4+ 38. Kg5 Re4 39. Kf6 {It is a
+frequently available finesse in such positions not to capture
+hostile pawns, but to pass them by in order to be protected in
+the rear against checks by the rook. -- Reti} Kg8 40. Rg7+ Kh8
+41. Rxc7 Re8 42. Kxf5 {Again the simplest. Kf7 would not yet
+have been disastrous because of Rd8, etc. -- Alekhine} Re4
+43. Kf6 Rf4+ 44. Ke5 Rg4 45. g7+ Kg8 {After exchanging rooks,
+White would win still more easily. -- Alekhine} 46. Rxa7 Rg1
+47. Kxd5 Rc1 48. Kd6 Rc2 49. d5 Rc1 50. Rc7 Ra1 51. Kc6 Rxa4
+52. d6 {Capablanca's management of the endgame gives the
+impression of being so natural that one easily forgets the
+difficulty of such precise play. The difficulty is chiefly
+psychological. In chess, as in life, one is so accustomed to
+place value on the material factors that it is not easy to
+conceive the idea of indulging in pawn sacrifices when there
+is so little available material. --Reti} 1-0
+
+
+[Event "FIDE Grand Swiss"]
+[Site "Samarkand UZB"]
+[Date "2025.09.07"]
+[EventDate "2025.09.04"]
+[Round "4.19"]
+[Result "0-1"]
+[White "Aditya Mittal"]
+[Black "Yagiz Kaan Erdogmus"]
+[ECO "D31"]
+[WhiteElo "2589"]
+[BlackElo "2646"]
+[PlyCount "84"]
+
+1. c4 e6 2. Nc3 d5 3. d4 dxc4 4. e4 c5 5. d5 exd5 6. exd5 Bd6 7. Bxc4 Ne7
+8. h3 O-O 9. Nf3 Nd7 10. O-O Nb6 11. b3 Nxc4 12. bxc4 Ng6 13. Ne4 Bf5 14.
+Nxd6 Qxd6 15. Qb3 b6 16. a4 a5 17. Re1 Rfe8 18. Be3 h6 19. Ra2 Be4 20. Nd2
+Nh4 21. Bxc5 Qg6 22. g3 Bg2 23. Be7 Bxh3 24. Kh2 Ng2 25. Re5 f6 26. Qxb6
+Nf4 27. Re4 Qh5 28. Rxf4 Bg4+ 29. Kg1 Rxe7 30. Ra1 Rae8 31. Rf1 Bh3 32. d6
+Re2 33. Rh4 Qf5 34. Qb5 R8e5 35. d7 Rxd2 36. Qb8+ Kh7 37. d8=Q Qxf2+ 38.
+Rxf2 Re1+ 39. Kh2 Rxf2+ 40. Kxh3 Rh1+ 41. Kg4 f5+ 42. Kh5 g6# 0-1

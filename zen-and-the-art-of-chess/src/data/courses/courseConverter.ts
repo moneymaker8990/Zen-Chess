@@ -223,3 +223,5 @@ export function getThemeDescription(theme: PatternType): string {
 }
 
 export default puzzleToCourseVariation;
+
+

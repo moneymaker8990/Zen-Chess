@@ -108,19 +108,20 @@ export function GamesPage() {
           placeholder="Search by player, title, opening, or theme..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg bg-zen-900/50 border border-zen-700/30 text-zen-200 placeholder-zen-600 focus:outline-none focus:border-gold-500/50"
+          className="w-full px-4 py-3 rounded-lg bg-zen-800/60 border border-zen-700/50 text-zen-100 placeholder-zen-500 focus:outline-none focus:border-gold-500/50 focus:bg-zen-800"
         />
 
         {/* Filter row */}
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 items-center">
           {/* Era filter */}
           <select
             value={filterEra}
             onChange={(e) => setFilterEra(e.target.value as FilterEra)}
-            className="px-3 py-2 rounded-lg bg-zen-900/50 border border-zen-700/30 text-zen-300 focus:outline-none focus:border-gold-500/50"
+            className="px-4 py-2.5 rounded-lg bg-zen-800/60 border border-zen-700/50 text-zen-100 focus:outline-none focus:border-gold-500/50 hover:bg-zen-800 transition-colors cursor-pointer"
+            style={{ colorScheme: 'dark' }}
           >
             {eras.map(era => (
-              <option key={era.id} value={era.id}>{era.label}</option>
+              <option key={era.id} value={era.id} className="bg-zen-900 text-zen-100">{era.label}</option>
             ))}
           </select>
 
@@ -128,10 +129,11 @@ export function GamesPage() {
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value as FilterCategory)}
-            className="px-3 py-2 rounded-lg bg-zen-900/50 border border-zen-700/30 text-zen-300 focus:outline-none focus:border-gold-500/50"
+            className="px-4 py-2.5 rounded-lg bg-zen-800/60 border border-zen-700/50 text-zen-100 focus:outline-none focus:border-gold-500/50 hover:bg-zen-800 transition-colors cursor-pointer"
+            style={{ colorScheme: 'dark' }}
           >
             {categories.map(cat => (
-              <option key={cat.id} value={cat.id}>{cat.label}</option>
+              <option key={cat.id} value={cat.id} className="bg-zen-900 text-zen-100">{cat.label}</option>
             ))}
           </select>
 
@@ -139,15 +141,16 @@ export function GamesPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'day' | 'year' | 'name')}
-            className="px-3 py-2 rounded-lg bg-zen-900/50 border border-zen-700/30 text-zen-300 focus:outline-none focus:border-gold-500/50"
+            className="px-4 py-2.5 rounded-lg bg-zen-800/60 border border-zen-700/50 text-zen-100 focus:outline-none focus:border-gold-500/50 hover:bg-zen-800 transition-colors cursor-pointer"
+            style={{ colorScheme: 'dark' }}
           >
-            <option value="day">Sort by Day</option>
-            <option value="year">Sort by Year</option>
-            <option value="name">Sort by Name</option>
+            <option value="day" className="bg-zen-900 text-zen-100">Sort by Day</option>
+            <option value="year" className="bg-zen-900 text-zen-100">Sort by Year</option>
+            <option value="name" className="bg-zen-900 text-zen-100">Sort by Name</option>
           </select>
 
           {/* Results count */}
-          <span className="text-zen-500 text-sm py-2">
+          <span className="text-gold-400/80 text-sm font-medium">
             {filteredGames.length} games
           </span>
         </div>
@@ -220,14 +223,14 @@ export function GamesPage() {
       {/* Empty state */}
       {filteredGames.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-zen-500">No games match your filters.</p>
+          <p className="text-zen-400 mb-4">No games match your filters.</p>
           <button
             onClick={() => {
               setSearchQuery('');
               setFilterEra('all');
               setFilterCategory('all');
             }}
-            className="zen-button mt-4"
+            className="px-6 py-2.5 rounded-lg bg-gold-500/20 text-gold-400 hover:bg-gold-500/30 border border-gold-500/30 transition-all font-medium"
           >
             Clear Filters
           </button>

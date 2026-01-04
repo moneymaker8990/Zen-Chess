@@ -126,6 +126,19 @@ export function ZenChessboard({
   const boardStyles = useBoardStyles();
   const { getMoveOptionsStyle, showMoveHints } = useMoveOptions();
   
+  // Dev-mode assertion: Warn if using legacy green colors
+  if (import.meta.env.DEV) {
+    const knownGreenDefaults = ['#779556', '#ebecd0', 'rgb(119, 149, 86)', 'rgb(235, 236, 208)'];
+    const darkBg = boardStyles.customDarkSquareStyle.backgroundColor;
+    const lightBg = boardStyles.customLightSquareStyle.backgroundColor;
+    if (knownGreenDefaults.includes(darkBg) || knownGreenDefaults.includes(lightBg)) {
+      console.warn('[ZenChessboard] Board using legacy green colors - check theme settings', {
+        dark: darkBg,
+        light: lightBg,
+      });
+    }
+  }
+  
   // Local state for option squares if not externally controlled
   const [internalOptionSquares, setInternalOptionSquares] = useState<Record<string, React.CSSProperties>>({});
   const [rightClickedSquares, setRightClickedSquares] = useState<Record<string, React.CSSProperties>>({});
@@ -309,7 +322,15 @@ export function ZenChessboard({
   };
   
   return (
-    <div className="zen-chessboard relative" style={{ width: boardWidth, maxWidth: '100%' }}>
+    <div 
+      className="zen-chessboard relative" 
+      style={{ 
+        width: boardWidth, 
+        maxWidth: '100%',
+        aspectRatio: '1',
+        overflow: 'hidden',
+      }}
+    >
       <Chessboard
         position={position}
         onSquareClick={handleSquareClick}

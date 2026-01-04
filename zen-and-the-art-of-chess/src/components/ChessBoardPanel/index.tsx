@@ -8,6 +8,7 @@ import { useBoardSize } from '@/hooks/useBoardSize';
 import { stockfish } from '@/engine/stockfish';
 import { playSmartMoveSound, UISounds } from '@/lib/soundSystem';
 import { logger } from '@/lib/logger';
+import { BOARD_COLORS } from '@/lib/constants';
 import type { MoveInfo, EngineEvaluation } from '@/lib/types';
 
 interface ChessBoardPanelProps {
@@ -192,11 +193,11 @@ export function ChessBoardPanel({
     moves.forEach((move) => {
       newSquares[move.to] = {
         backgroundColor: game.get(move.to) 
-          ? 'rgba(255, 0, 0, 0.4)' 
-          : 'rgba(147, 112, 219, 0.3)',
+          ? BOARD_COLORS.incorrectMove  // Capture indicator (red)
+          : BOARD_COLORS.hint,          // Legal move indicator
       };
     });
-    newSquares[square] = { backgroundColor: 'rgba(147, 112, 219, 0.4)' };
+    newSquares[square] = { backgroundColor: BOARD_COLORS.selected };
     setOptionSquares(newSquares);
     return true;
   }, [game]);
@@ -417,10 +418,9 @@ export function ChessBoardPanel({
 
   // Right click for arrows
   const onSquareRightClick = useCallback((square: Square) => {
-    const color = 'rgba(147, 112, 219, 0.5)';
     setRightClickedSquares((prev) => ({
       ...prev,
-      [square]: prev[square] ? undefined! : { backgroundColor: color },
+      [square]: prev[square] ? undefined! : { backgroundColor: BOARD_COLORS.hint },
     }));
   }, []);
 
@@ -429,17 +429,17 @@ export function ChessBoardPanel({
     ...optionSquares,
     ...rightClickedSquares,
     ...(lastMove && {
-      [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.3)' },
-      [lastMove.to]: { backgroundColor: 'rgba(147, 112, 219, 0.4)' },
+      [lastMove.from]: { backgroundColor: BOARD_COLORS.lastMove },
+      [lastMove.to]: { backgroundColor: BOARD_COLORS.highlight },
     }),
     ...(moveResult === 'correct' && lastMove && {
-      [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
+      [lastMove.to]: { backgroundColor: BOARD_COLORS.correctMove },
     }),
     ...(moveResult === 'solved' && lastMove && {
-      [lastMove.to]: { backgroundColor: 'rgba(34, 197, 94, 0.5)' },
+      [lastMove.to]: { backgroundColor: BOARD_COLORS.correctMove },
     }),
     ...(moveResult === 'incorrect' && lastMove && {
-      [lastMove.to]: { backgroundColor: 'rgba(239, 68, 68, 0.5)' },
+      [lastMove.to]: { backgroundColor: BOARD_COLORS.incorrectMove },
     }),
   };
 

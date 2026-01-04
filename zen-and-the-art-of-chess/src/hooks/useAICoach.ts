@@ -39,7 +39,7 @@ interface UseAICoachReturn {
   
   // Actions
   sendMessage: (message: string) => Promise<string>;
-  sendMessageStreaming: (message: string) => Promise<void>;
+  sendMessageStreaming: (message: string) => Promise<string>;
   clearHistory: () => void;
   setAgent: (agentId: AgentId) => void;
   
@@ -126,7 +126,7 @@ export function useAICoach(options: UseAICoachOptions = {}): UseAICoachReturn {
   // SEND MESSAGE (streaming)
   // ============================================
   
-  const sendMessageStreaming = useCallback(async (message: string): Promise<void> => {
+  const sendMessageStreaming = useCallback(async (message: string): Promise<string> => {
     setIsStreaming(true);
     setIsLoading(true);
     setError(null);
@@ -152,12 +152,16 @@ export function useAICoach(options: UseAICoachOptions = {}): UseAICoachReturn {
         setMessages(prev => [...prev, assistantMessage]);
         setCurrentResponse('');
       }
+      
+      // Return the full response for persistence
+      return fullResponse;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get response';
       if (isMounted.current) {
         setError(errorMessage);
       }
       onError?.(err instanceof Error ? err : new Error(errorMessage));
+      throw err;
     } finally {
       if (isMounted.current) {
         setIsLoading(false);

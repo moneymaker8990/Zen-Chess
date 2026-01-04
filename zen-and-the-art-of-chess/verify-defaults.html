@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zen Chess - Reset to Defaults</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a2e;
+      color: #e0e0e0;
+    }
+    .container {
+      background: #16213e;
+      padding: 30px;
+      border-radius: 16px;
+      border: 1px solid #2d3561;
+    }
+    h1 {
+      color: #a855f7;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #9ca3af;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .section {
+      margin-bottom: 25px;
+      padding: 15px;
+      background: #0f1729;
+      border-radius: 8px;
+      border: 1px solid #1e2951;
+    }
+    .section h3 {
+      margin-top: 0;
+      color: #a855f7;
+      font-size: 16px;
+    }
+    .storage-item {
+      font-family: monospace;
+      font-size: 12px;
+      padding: 8px;
+      background: #0a0e1a;
+      border-radius: 4px;
+      margin: 8px 0;
+      color: #60a5fa;
+    }
+    .value {
+      color: #34d399;
+    }
+    button {
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    button.secondary {
+      background: #374151;
+    }
+    .warning {
+      background: #7c2d12;
+      border: 1px solid #ea580c;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+    .success {
+      background: #064e3b;
+      border: 1px solid #10b981;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-size: 14px;
+      display: none;
+    }
+    .info {
+      background: #1e3a8a;
+      border: 1px solid #3b82f6;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧘 Zen Chess - Settings Diagnostic</h1>
+    <p class="subtitle">Check and reset your app settings to defaults</p>
+
+    <div class="info">
+      <strong>💡 Why you need this:</strong> Your browser caches settings in localStorage. 
+      Old settings might override the new Zen Purple defaults.
+    </div>
+
+    <div class="section">
+      <h3>📊 Current Stored Settings</h3>
+      <div id="current-settings"></div>
+    </div>
+
+    <div class="section">
+      <h3>🎨 Expected Defaults</h3>
+      <div class="storage-item">
+        <strong>Board Theme:</strong> <span class="value">"zen"</span> (Zen Purple)
+      </div>
+      <div class="storage-item">
+        <strong>Board Colors:</strong> 
+        <span class="value">Light: #d4cce0, Dark: #6b5b7a</span>
+      </div>
+      <div class="storage-item">
+        <strong>Piece Style:</strong> <span class="value">"cburnett"</span>
+      </div>
+      <div class="storage-item">
+        <strong>Move Hints:</strong> <span class="value">"dots"</span> (Purple dots)
+      </div>
+    </div>
+
+    <div class="warning">
+      ⚠️ <strong>Warning:</strong> Resetting will clear all your board preferences. 
+      This will NOT affect your game history, progress, or account.
+    </div>
+
+    <div class="success" id="success-message">
+      ✅ <strong>Success!</strong> Settings reset to defaults. 
+      Refresh the main app to see changes.
+    </div>
+
+    <div>
+      <button onclick="resetToDefaults()">🔄 Reset to Zen Defaults</button>
+      <button class="secondary" onclick="location.reload()">🔍 Refresh Diagnostic</button>
+      <button class="secondary" onclick="clearAllStorage()">🗑️ Clear All App Data</button>
+    </div>
+
+    <div class="section" style="margin-top: 30px;">
+      <h3>🚀 Next Steps</h3>
+      <ol style="line-height: 1.8; padding-left: 20px;">
+        <li>Click "Reset to Zen Defaults" above</li>
+        <li>Close this tab</li>
+        <li>In your main app, do a <strong>hard refresh</strong>:
+          <ul>
+            <li>Windows/Linux: <code>Ctrl + Shift + R</code></li>
+            <li>Mac: <code>Cmd + Shift + R</code></li>
+          </ul>
+        </li>
+        <li>Verify the purple Zen board is showing</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    // Display current settings
+    function displayCurrentSettings() {
+      const container = document.getElementById('current-settings');
+      const settings = {};
+      
+      // Check for board settings
+      const boardSettings = localStorage.getItem('zen-chess-board-settings');
+      if (boardSettings) {
+        try {
+          const parsed = JSON.parse(boardSettings);
+          settings['Board Settings'] = parsed;
+        } catch (e) {
+          settings['Board Settings'] = 'Error parsing';
+        }
+      } else {
+        settings['Board Settings'] = 'Not found (will use defaults)';
+      }
+
+      // Check for Ask button position
+      const buttonPos = localStorage.getItem('zen-chess-ask-button-position');
+      if (buttonPos) {
+        try {
+          settings['Ask Button Position'] = JSON.parse(buttonPos);
+        } catch (e) {
+          settings['Ask Button Position'] = 'Error parsing';
+        }
+      }
+
+      // Display all settings
+      container.innerHTML = '';
+      for (const [key, value] of Object.entries(settings)) {
+        const div = document.createElement('div');
+        div.className = 'storage-item';
+        div.innerHTML = `<strong>${key}:</strong><br><span class="value">${
+          typeof value === 'object' ? JSON.stringify(value, null, 2) : value
+        }</span>`;
+        container.appendChild(div);
+      }
+
+      if (Object.keys(settings).length === 0) {
+        container.innerHTML = '<div class="storage-item">No settings found (using defaults)</div>';
+      }
+    }
+
+    // Reset to Zen defaults
+    function resetToDefaults() {
+      if (!confirm('Reset to Zen Purple defaults? This will clear your board preferences.')) {
+        return;
+      }
+
+      // Clear board settings - app will use defaults
+      localStorage.removeItem('zen-chess-board-settings');
+      
+      // Clear Ask button position (will use default position)
+      localStorage.removeItem('zen-chess-ask-button-position');
+
+      // Show success
+      document.getElementById('success-message').style.display = 'block';
+      
+      // Refresh display
+      setTimeout(() => {
+        displayCurrentSettings();
+      }, 500);
+    }
+
+    // Clear all localStorage (nuclear option)
+    function clearAllStorage() {
+      if (!confirm('⚠️ WARNING: This will clear ALL app data including settings, preferences, and cached data. Are you sure?')) {
+        return;
+      }
+      
+      if (!confirm('This is your last chance. Really clear everything?')) {
+        return;
+      }
+
+      localStorage.clear();
+      document.getElementById('success-message').style.display = 'block';
+      setTimeout(() => {
+        displayCurrentSettings();
+      }, 500);
+    }
+
+    // Initialize
+    displayCurrentSettings();
+  </script>
+</body>
+</html>
+
+
+

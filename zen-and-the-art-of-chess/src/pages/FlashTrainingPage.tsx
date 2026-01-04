@@ -14,6 +14,21 @@ import {
   type FlashQuestion 
 } from '@/data/flashPositions';
 import { useBoardSize } from '@/hooks/useBoardSize';
+import { useBoardStyles } from '@/state/boardSettingsStore';
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+
+// Fisher-Yates shuffle for proper randomization
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 
 // ============================================
 // TYPES
@@ -82,6 +97,25 @@ const DEFAULT_STATS: FlashStats = {
   lastSession: null
 };
 
+// localStorage persistence for last shown position
+const LAST_POSITION_STORAGE_KEY = 'zenChessFlashLastPosition';
+
+const getLastShownPosition = (): string | null => {
+  try {
+    return localStorage.getItem(LAST_POSITION_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+};
+
+const saveLastShownPosition = (fen: string) => {
+  try {
+    localStorage.setItem(LAST_POSITION_STORAGE_KEY, fen);
+  } catch {
+    // Ignore storage errors
+  }
+};
+
 // Use the expanded positions database
 const FLASH_POSITIONS = ALL_FLASH_POSITIONS;
 
@@ -92,6 +126,7 @@ const FLASH_POSITIONS = ALL_FLASH_POSITIONS;
 export function FlashTrainingPage() {
   const navigate = useNavigate();
   const boardSize = useBoardSize(480, 32);
+  const boardStyles = useBoardStyles();
   
   // State
   const [mode, setMode] = useState<FlashMode>('menu');
@@ -121,6 +156,11 @@ export function FlashTrainingPage() {
   const [showSessionComplete, setShowSessionComplete] = useState(false);
   const [breathingPause, setBreathingPause] = useState(false);
   
+  // Session tracking - avoid showing same position twice in a session
+  const [seenPositions, setSeenPositions] = useState<Set<string>>(new Set());
+  // Track weak categories for session summary
+  const [sessionMistakes, setSessionMistakes] = useState<Array<{ category: string; question: string }>>([]);
+  
   const timerRef = useRef<ReturnType<typeof setInterval>>();
   const questionTimerRef = useRef<ReturnType<typeof setInterval>>();
   
@@ -128,6 +168,17 @@ export function FlashTrainingPage() {
   useEffect(() => {
     localStorage.setItem('zenChessFlashStats', JSON.stringify(stats));
   }, [stats]);
+  
+  // Reset seen positions when mode changes
+  useEffect(() => {
+    setSeenPositions(new Set());
+  }, [mode]);
+  
+  // Temporary debug: clear localStorage position on mount to test randomization
+  useEffect(() => {
+    console.log('[Flash Training] Clearing localStorage position for debug');
+    localStorage.removeItem(LAST_POSITION_STORAGE_KEY);
+  }, []);
   
   // Get filtered positions based on mode
   const getPositionsForMode = useCallback((selectedMode: FlashMode): FlashPosition[] => {
@@ -154,6 +205,8 @@ export function FlashTrainingPage() {
   }, []);
   
   // Load next position - accepts optional mode override to avoid stale closure issues
+  // Now with de-duplication to avoid showing the same position twice in a session
+  // AND persists last-shown position across sessions to avoid immediate repeats
   const loadNextPosition = useCallback((modeOverride?: FlashMode) => {
     const activeMode = modeOverride || mode;
     const positions = getPositionsForMode(activeMode);
@@ -162,7 +215,38 @@ export function FlashTrainingPage() {
       return;
     }
     
-    const randomPos = positions[Math.floor(Math.random() * positions.length)];
+    // Get last position shown (from previous session or current session)
+    const lastShownFen = getLastShownPosition();
+    
+    // Filter out already-seen positions in this session AND last session's position
+    const unseenPositions = positions.filter(p => 
+      !seenPositions.has(p.fen) && p.fen !== lastShownFen
+    );
+    
+    // If all positions seen, reset (but still avoid immediate repeat from last session)
+    const availablePositions = unseenPositions.length > 0 
+      ? unseenPositions 
+      : positions.filter(p => p.fen !== lastShownFen);
+    
+    // Shuffle for better randomization
+    const shuffledPositions = shuffleArray(availablePositions);
+    
+    // Pick the first position from shuffled array (or fallback to any position)
+    const randomPos = shuffledPositions[0] || positions[0];
+    
+    // Mark this position as seen and save to localStorage
+    setSeenPositions(prev => new Set([...prev, randomPos.fen]));
+    saveLastShownPosition(randomPos.fen);
+    
+    // Debug logging - expanded for visibility
+    console.log('[Flash Training] Position selected:');
+    console.log('  Mode:', activeMode);
+    console.log('  Total positions in database:', positions.length);
+    console.log('  Available after filtering seen:', availablePositions.length);
+    console.log('  Selected title:', randomPos.title || 'Untitled');
+    console.log('  FEN:', randomPos.fen.slice(0, 40));
+    console.log('  Full position object:', randomPos);
+    
     setCurrentPosition(randomPos);
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
@@ -207,7 +291,7 @@ export function FlashTrainingPage() {
         return prev - 100;
       });
     }, 100);
-  }, [mode, difficulty, getPositionsForMode]);
+  }, [mode, difficulty, getPositionsForMode, seenPositions]);
 
   // Start a session - accepts mode to avoid stale state
   const startSession = useCallback((startMode: FlashMode) => {
@@ -216,6 +300,8 @@ export function FlashTrainingPage() {
     setSessionStreak(0);
     setQuestionsAnswered(0);
     setPositionsCompleted(0);
+    setSeenPositions(new Set()); // Reset seen positions for new session
+    setSessionMistakes([]); // Reset mistake tracking
     loadNextPosition(startMode);
   }, [loadNextPosition]);
   
@@ -265,6 +351,14 @@ export function FlashTrainingPage() {
           }
         }
       }));
+      
+      // Track mistake for session summary
+      if (currentPosition) {
+        setSessionMistakes(prev => [...prev, {
+          category: question.type,
+          question: question.question.slice(0, 50),
+        }]);
+      }
     }
   }, [selectedAnswer, currentPosition, currentQuestionIndex, difficulty, mode, sessionStreak]);
 
@@ -543,7 +637,7 @@ export function FlashTrainingPage() {
     const modeInfo = MODE_INFO[mode];
     
     return (
-      <div className="space-y-6 animate-fade-in">
+      <div className="space-y-6 animate-fade-in max-w-full">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -582,9 +676,9 @@ export function FlashTrainingPage() {
           />
         </div>
         
-        {/* Breathing pause overlay */}
+        {/* Breathing pause overlay - positioned to respect sidebar on desktop */}
         {breathingPause && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in" style={{ background: 'rgba(0,0,0,0.7)' }}>
+          <div className="fixed inset-0 lg:inset-y-0 lg:left-64 lg:right-0 z-50 flex items-center justify-center animate-fade-in" style={{ background: 'rgba(0,0,0,0.7)' }}>
             <div className="text-center animate-pulse">
               <div className="text-6xl mb-4">🧘</div>
               <h3 className="text-2xl font-display" style={{ color: 'white' }}>
@@ -598,72 +692,63 @@ export function FlashTrainingPage() {
         )}
 
         {/* Main Content */}
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0 max-w-full">
           {/* Board */}
-          <div className="relative flex justify-center">
+          <div className="flex justify-center items-start">
             <div 
-              className={`transition-all duration-500 ease-out ${
-                transitionPhase === 'fading-out' ? 'opacity-50 scale-[0.98]' : 
-                transitionPhase === 'fading-in' ? 'opacity-100 scale-100' :
-                showingPosition ? 'opacity-100' : 'opacity-0'
-              } ${countdownWarning ? 'ring-4 ring-amber-400/50 animate-pulse' : ''}`}
-              style={{ width: boardSize, maxWidth: '100%' }}
+              className="relative"
+              style={{ width: boardSize, maxWidth: '100%', height: boardSize }}
             >
-              <Chessboard
-                position={currentPosition.fen}
-                boardOrientation={new Chess(currentPosition.fen).turn() === 'w' ? 'white' : 'black'}
-                customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
-                arePiecesDraggable={false}
-                boardWidth={boardSize}
-              />
-              
-              {/* Countdown warning overlay */}
-              {countdownWarning && showingPosition && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="text-8xl font-bold animate-pulse" style={{ 
-                    color: 'rgba(251, 191, 36, 0.9)',
-                    textShadow: '0 0 40px rgba(251, 191, 36, 0.5)'
-                  }}>
-                    {Math.ceil(timeRemaining / 1000)}
+              {/* Show board during position flash or result */}
+              {(showingPosition || showResult) && (
+                <div 
+                  className={`transition-all duration-500 ease-out ${
+                    transitionPhase === 'fading-out' ? 'opacity-50 scale-[0.98]' : 
+                    transitionPhase === 'fading-in' ? 'opacity-100 scale-100' :
+                    'opacity-100'
+                  } ${countdownWarning ? 'ring-4 ring-amber-400/50 animate-pulse' : ''}`}
+                >
+                  <Chessboard
+                    position={currentPosition.fen}
+                    boardOrientation={new Chess(currentPosition.fen).turn() === 'w' ? 'white' : 'black'}
+                    customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                    customLightSquareStyle={boardStyles.customLightSquareStyle}
+                    arePiecesDraggable={false}
+                    boardWidth={boardSize}
+                  />
+                  
+                  {/* Countdown warning overlay */}
+                  {countdownWarning && showingPosition && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="text-8xl font-bold animate-pulse" style={{ 
+                        color: 'rgba(251, 191, 36, 0.9)',
+                        textShadow: '0 0 40px rgba(251, 191, 36, 0.5)'
+                      }}>
+                        {Math.ceil(timeRemaining / 1000)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Flash overlay - position hidden */}
+              {!showingPosition && !showResult && transitionPhase !== 'fading-out' && (
+                <div
+                  className="absolute inset-0 flex items-center justify-center animate-fade-in rounded-lg"
+                  style={{ background: 'var(--bg-primary)', border: '2px solid var(--border-subtle)' }}
+                >
+                  <div className="text-center">
+                    <div className="text-6xl mb-4 animate-bounce">🧠</div>
+                    <h3 className="text-xl font-display" style={{ color: 'var(--text-primary)' }}>
+                      Position Hidden
+                    </h3>
+                    <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
+                      Answer from memory!
+                    </p>
                   </div>
                 </div>
               )}
             </div>
-
-            {/* Flash overlay - smoother transition */}
-            {!showingPosition && !showResult && transitionPhase !== 'fading-out' && (
-              <div
-                className="absolute inset-0 flex items-center justify-center animate-fade-in"
-                style={{ background: 'var(--bg-primary)' }}
-              >
-                <div className="text-center">
-                  <div className="text-6xl mb-4 animate-bounce">🧠</div>
-                  <h3 className="text-xl font-display" style={{ color: 'var(--text-primary)' }}>
-                    Position Hidden
-                  </h3>
-                  <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
-                    Answer from memory!
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Show position again in result - with smooth fade */}
-            {showResult && (
-              <div className={`transition-opacity duration-300 ${
-                transitionPhase === 'fading-out' ? 'opacity-50' : 'opacity-100'
-              }`} style={{ width: boardSize, maxWidth: '100%' }}>
-                <Chessboard
-                  position={currentPosition.fen}
-                  boardOrientation={new Chess(currentPosition.fen).turn() === 'w' ? 'white' : 'black'}
-                  customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                  customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
-                  arePiecesDraggable={false}
-                  boardWidth={boardSize}
-                />
-              </div>
-            )}
           </div>
           
           {/* Question Panel */}
@@ -707,7 +792,7 @@ export function FlashTrainingPage() {
                   </span>
                 </div>
                 
-                <h3 className="text-xl font-medium mb-6" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="text-xl font-medium mb-6 break-words" style={{ color: 'var(--text-primary)' }}>
                   {currentQuestion.question}
                 </h3>
                 
@@ -794,6 +879,17 @@ export function FlashTrainingPage() {
       return { emoji: '🌱', title: 'Keep Growing!', subtitle: 'Every session strengthens your chess vision' };
     };
     const message = getMessage();
+    
+    // Calculate weakest categories from session mistakes
+    const categoryMistakeCounts = sessionMistakes.reduce((acc, m) => {
+      acc[m.category] = (acc[m.category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const weakCategories = Object.entries(categoryMistakeCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 2)
+      .map(([cat]) => cat.replace(/-/g, ' '));
 
     return (
       <div className="space-y-8 max-w-2xl mx-auto">
@@ -838,6 +934,36 @@ export function FlashTrainingPage() {
               <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Accuracy</div>
             </div>
           </div>
+
+          {/* Weak Areas (if any mistakes) */}
+          {weakCategories.length > 0 && (
+            <div className="mb-6 p-4 rounded-xl animate-fade-in text-left" style={{ 
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.2)',
+              animationDelay: '0.75s'
+            }}>
+              <h4 className="text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+                📊 Areas to Practice
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {weakCategories.map((cat, i) => (
+                  <span 
+                    key={i}
+                    className="px-3 py-1 rounded-full text-xs capitalize"
+                    style={{ 
+                      background: 'rgba(239, 68, 68, 0.15)',
+                      color: '#f87171'
+                    }}
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs mt-2" style={{ color: 'var(--text-muted)' }}>
+                These patterns tripped you up. Focus on them next session!
+              </p>
+            </div>
+          )}
 
           {/* Mindful message */}
           <div className="mb-8 p-4 rounded-xl animate-fade-in" style={{ 

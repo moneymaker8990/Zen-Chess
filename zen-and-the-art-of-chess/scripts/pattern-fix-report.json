@@ -1,0 +1,191 @@
+[
+  {
+    "patternId": "weak-iqp-blockade",
+    "patternTitle": "The Isolated Queen Pawn",
+    "category": "WEAK_PAWNS",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "structure-minority-attack",
+    "patternTitle": "The Classic Minority Attack",
+    "category": "MINORITY_ATTACK",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "prophylaxis-prevent-break",
+    "patternTitle": "Stopping the Opponent's Plan",
+    "category": "PROPHYLAXIS",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "open-files-seventh-rank",
+    "patternTitle": "The Almighty Seventh Rank",
+    "category": "OPEN_FILES",
+    "fixedMoves": [
+      {
+        "moveIndex": 1,
+        "originalMove": "Rd8",
+        "fixedMove": "Rad8",
+        "reason": "Multiple R moves, using first match (after error: Invalid move: Rd8)"
+      }
+    ],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "bishop-pair-open-position",
+    "patternTitle": "Unleashing the Bishop Pair",
+    "category": "BISHOP_PAIR",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "blockade-nimzo-knight",
+    "patternTitle": "The Nimzowitsch Blockade",
+    "category": "BLOCKADE",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "pawn-break-f5-kings-indian",
+    "patternTitle": "The King's Indian ...f5 Break",
+    "category": "PAWN_BREAKS",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "coordination-rook-lift",
+    "patternTitle": "The Devastating Rook Lift",
+    "category": "PIECE_COORDINATION",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "exchange-good-for-bad",
+    "patternTitle": "Trading Your Best for Their Best",
+    "category": "EXCHANGE_STRATEGY",
+    "fixedMoves": [
+      {
+        "moveIndex": 0,
+        "originalMove": "Nxe6",
+        "fixedMove": "Ne6",
+        "reason": "Single N move to e6 (after error: Invalid move: Nxe6)"
+      }
+    ],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "structure-iqp-attack",
+    "patternTitle": "IQP Attack: Dynamic Play",
+    "category": "PAWN_STRUCTURE",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "open-file-seventh-rank",
+    "patternTitle": "The Seventh Rank",
+    "category": "OPEN_FILES",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "open-file-control",
+    "patternTitle": "Controlling the Open File",
+    "category": "OPEN_FILES",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "bishop-pair-open-position",
+    "patternTitle": "Bishops in Open Positions",
+    "category": "BISHOP_PAIR",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "space-advantage-restrict",
+    "patternTitle": "Restricting the Opponent",
+    "category": "SPACE_ADVANTAGE",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "minority-attack-classic",
+    "patternTitle": "The Classic Minority Attack",
+    "category": "MINORITY_ATTACK",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "centralization-pieces",
+    "patternTitle": "Piece Centralization",
+    "category": "CENTRALIZATION",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "centralization-queen",
+    "patternTitle": "The Centralized Queen",
+    "category": "CENTRALIZATION",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "pawn-structure-carlsbad",
+    "patternTitle": "Carlsbad Structure",
+    "category": "PAWN_STRUCTURE",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "bishop-pair-endgame",
+    "patternTitle": "Bishops in the Endgame",
+    "category": "BISHOP_PAIR",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "pawn-break-c5",
+    "patternTitle": "The c5 Break",
+    "category": "PAWN_BREAKS",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "pawn-break-d5",
+    "patternTitle": "The d5 Advance",
+    "category": "PAWN_BREAKS",
+    "fixedMoves": [
+      {
+        "moveIndex": 0,
+        "originalMove": "d5",
+        "fixedMove": "cxd5",
+        "reason": "Pawn move to d5 (after error: Invalid move: d5)"
+      }
+    ],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "exchange-simplify",
+    "patternTitle": "Simplifying to Win",
+    "category": "EXCHANGE_STRATEGY",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "blockade-passed-pawn",
+    "patternTitle": "Blockading the Passed Pawn",
+    "category": "BLOCKADE",
+    "fixedMoves": [],
+    "needsManualFix": true
+  },
+  {
+    "patternId": "minority-attack-execution",
+    "patternTitle": "Executing the Minority Attack",
+    "category": "MINORITY_ATTACK",
+    "fixedMoves": [],
+    "needsManualFix": true
+  }
+]

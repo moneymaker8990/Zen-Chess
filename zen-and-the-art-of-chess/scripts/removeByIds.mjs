@@ -105,3 +105,5 @@ for (const [filename, ids] of Object.entries(byFile)) {
 
 console.log(`\n📊 Total removed: ${totalRemoved}`);
 console.log('\n✅ Done! Run validation again to verify.\n');
+
+

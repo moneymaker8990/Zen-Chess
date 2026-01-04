@@ -2,6 +2,7 @@
 // FLASH TRAINING POSITIONS DATABASE
 // Comprehensive pattern recognition training
 // 100+ positions covering all aspects of chess
+// Last updated: 2026-01-03 - Added 15 new piece-count positions
 // ============================================
 
 export interface FlashQuestion {
@@ -213,6 +214,314 @@ const OPENING_POSITIONS: FlashPosition[] = [
       }
     ],
     tags: ['opening', 'caro-kann', 'e4']
+  },
+  // Scandinavian Defense
+  {
+    fen: 'rnbqkb1r/ppp1pppp/5n2/3P4/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 3',
+    title: 'Scandinavian After Exchange',
+    questions: [
+      {
+        type: 'material',
+        question: 'Material is currently:',
+        options: ['Equal', 'White is up a pawn', 'Black is up a pawn', 'White is up the exchange'],
+        correctIndex: 0,
+        explanation: 'After dxe5 and Qxd5, material is equal'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many pieces has Black developed?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 1,
+        explanation: 'Only the knight on f6 is developed'
+      }
+    ],
+    tags: ['opening', 'scandinavian', 'e4']
+  },
+  // King's Indian Attack
+  {
+    fen: 'rnbqkb1r/ppp1pppp/5n2/3p4/3P4/5NP1/PPP1PP1P/RNBQKB1R b KQkq - 0 3',
+    title: 'King\'s Indian Attack Setup',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many knights are on the board?',
+        options: ['2', '3', '4', '5'],
+        correctIndex: 2,
+        explanation: 'Both sides have 2 knights each: Nf3, Nb1 for White and Nf6, Nb8 for Black'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many pawns are in the center (d4, d5, e4, e5)?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 2,
+        explanation: 'White has d4, Black has d5 - 2 pawns total in center'
+      }
+    ],
+    tags: ['opening', 'kings-indian-attack', 'd4']
+  },
+  // Caro-Kann Advanced
+  {
+    fen: 'rnbqkb1r/pp2pppp/2p2n2/3P4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 4',
+    title: 'Caro-Kann Advanced Variation',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many minor pieces are developed?',
+        options: ['1', '2', '3', '4'],
+        correctIndex: 1,
+        explanation: 'White Nc3 and Black Nf6 are developed - 2 pieces'
+      },
+      {
+        type: 'material',
+        question: 'Who has more pawns?',
+        options: ['White', 'Black', 'Equal', 'Cannot determine'],
+        correctIndex: 2,
+        explanation: 'Both sides have 8 pawns - material is equal'
+      }
+    ],
+    tags: ['opening', 'caro-kann', 'e4']
+  },
+  // Alekhine Defense
+  {
+    fen: 'rnbqkb1r/pppppppp/5n2/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 1 2',
+    title: 'Alekhine Defense',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many pieces has Black developed?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 1,
+        explanation: 'Only the knight on f6 - Black develops aggressively'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many pieces has White developed?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 0,
+        explanation: 'White has developed no pieces yet, only moved the e-pawn'
+      }
+    ],
+    tags: ['opening', 'alekhine', 'e4']
+  },
+  // Nimzo-Indian
+  {
+    fen: 'rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 2 4',
+    title: 'Nimzo-Indian Defense',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many bishops are on the board?',
+        options: ['2', '3', '4', '5'],
+        correctIndex: 2,
+        explanation: 'White has Bc1, Bf1 and Black has Bb4, Bc8 - 4 bishops total'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many minor pieces are developed?',
+        options: ['1', '2', '3', '4'],
+        correctIndex: 2,
+        explanation: 'White Nc3, Black Bb4 and Nf6 - 3 pieces developed'
+      }
+    ],
+    tags: ['opening', 'nimzo-indian', 'd4']
+  },
+  // Queen's Indian
+  {
+    fen: 'rnbqkb1r/p1pp1ppp/1p2pn2/8/2PP4/5N2/PP2PPPP/RNBQKB1R w KQkq - 0 4',
+    title: 'Queen\'s Indian Defense',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many pawns has Black moved?',
+        options: ['1', '2', '3', '4'],
+        correctIndex: 2,
+        explanation: 'Black moved b6, e6, and Nf6 (knight not pawn) - 2 pawns: b and e'
+      },
+      {
+        type: 'material',
+        question: 'Material balance is:',
+        options: ['Equal', 'White better', 'Black better', 'Unclear'],
+        correctIndex: 0,
+        explanation: 'All pieces are on board, material is perfectly equal'
+      }
+    ],
+    tags: ['opening', 'queens-indian', 'd4']
+  },
+  // English Opening
+  {
+    fen: 'rnbqkbnr/pppppppp/8/8/2P5/8/PP1PPPPP/RNBQKBNR b KQkq c3 0 1',
+    title: 'English Opening',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many pieces are developed?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 0,
+        explanation: 'No pieces developed yet - only the c-pawn moved'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many pawns has White moved?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 1,
+        explanation: 'Only the c-pawn to c4 - that\'s the English Opening!'
+      }
+    ],
+    tags: ['opening', 'english', 'flank']
+  },
+  // Pirc Defense
+  {
+    fen: 'rnbqkb1r/ppp1pppp/3p1n2/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 3',
+    title: 'Pirc Defense',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many pieces has Black developed?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 1,
+        explanation: 'Only Nf6 is developed - Pirc delays development for flexibility'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many center pawns has White placed?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 2,
+        explanation: 'White has d4 and e4 - classical two-pawn center'
+      }
+    ],
+    tags: ['opening', 'pirc', 'e4']
+  },
+  // Modern Defense
+  {
+    fen: 'rnbqk1nr/ppppppbp/6p1/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 1 3',
+    title: 'Modern Defense',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many bishops are developed?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 1,
+        explanation: 'Only Black\'s Bg7 is developed (fianchetto)'
+      },
+      {
+        type: 'material',
+        question: 'Pawn count in center (d4,d5,e4,e5):',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 2,
+        explanation: 'White has d4 and e4, Black has none - 2 center pawns total'
+      }
+    ],
+    tags: ['opening', 'modern', 'e4']
+  },
+  // Dutch Defense
+  {
+    fen: 'rnbqkb1r/ppppp1pp/5n2/5p2/2PP4/8/PP2PPPP/RNBQKBNR w KQkq f6 0 3',
+    title: 'Dutch Defense',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many pawns are on the f-file?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 2,
+        explanation: 'White f2, Black f5 - 2 pawns on the f-file'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many knights are developed?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 1,
+        explanation: 'Only Black\'s Nf6 - White hasn\'t developed knights yet'
+      }
+    ],
+    tags: ['opening', 'dutch', 'd4']
+  },
+  // Benoni Defense
+  {
+    fen: 'rnbqkb1r/pp1p1ppp/4pn2/2pP4/2P5/8/PP2PPPP/RNBQKBNR w KQkq - 0 4',
+    title: 'Benoni Defense',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many pawns in Black\'s queenside (a,b,c files)?',
+        options: ['1', '2', '3', '4'],
+        correctIndex: 2,
+        explanation: 'Black has a7, b7, c5 - 3 pawns on queenside'
+      },
+      {
+        type: 'material',
+        question: 'Who has more center control with pawns?',
+        options: ['White', 'Black', 'Equal', 'Neither'],
+        correctIndex: 0,
+        explanation: 'White has d5 pawn dominating, Black has c5 - White better'
+      }
+    ],
+    tags: ['opening', 'benoni', 'd4']
+  },
+  // Grunfeld Defense
+  {
+    fen: 'rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 3 5',
+    title: 'Grunfeld Defense',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many minor pieces are developed?',
+        options: ['2', '3', '4', '5'],
+        correctIndex: 2,
+        explanation: 'White: Nc3, Nf3. Black: Bg7, Nf6 - 4 minor pieces'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many center pawns (d4,d5,e4,e5)?',
+        options: ['1', '2', '3', '4'],
+        correctIndex: 1,
+        explanation: 'White d4, Black d5 - 2 center pawns fighting for space'
+      }
+    ],
+    tags: ['opening', 'grunfeld', 'd4']
+  },
+  // Slav Defense
+  {
+    fen: 'rnbqkb1r/pp2pppp/2p2n2/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 1 4',
+    title: 'Slav Defense',
+    questions: [
+      {
+        type: 'material',
+        question: 'Is material equal?',
+        options: ['Yes', 'No - White better', 'No - Black better', 'Cannot tell'],
+        correctIndex: 0,
+        explanation: 'All 32 pieces on board - perfectly equal material'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many knights on the board?',
+        options: ['2', '3', '4', '5'],
+        correctIndex: 2,
+        explanation: 'White: Nc3, Nb1. Black: Nf6, Nb8 - 4 knights total'
+      }
+    ],
+    tags: ['opening', 'slav', 'd4']
+  },
+  // Catalan Opening
+  {
+    fen: 'rnbqkb1r/pppp1ppp/4pn2/8/2PP4/6P1/PP2PP1P/RNBQKBNR b KQkq - 0 3',
+    title: 'Catalan Opening',
+    questions: [
+      {
+        type: 'piece-count',
+        question: 'How many pieces are developed?',
+        options: ['0', '1', '2', '3'],
+        correctIndex: 1,
+        explanation: 'Only Black\'s Nf6 is developed so far'
+      },
+      {
+        type: 'piece-count',
+        question: 'How many bishops will be fianchettoed?',
+        options: ['0', '1', '2', 'Cannot tell yet'],
+        correctIndex: 3,
+        explanation: 'White prepared g3 for Bg2, but bishops not placed yet'
+      }
+    ],
+    tags: ['opening', 'catalan', 'd4']
   }
 ];
 
@@ -964,6 +1273,8 @@ export const getRandomFlashPosition = () =>
   ALL_FLASH_POSITIONS[Math.floor(Math.random() * ALL_FLASH_POSITIONS.length)];
 
 export default ALL_FLASH_POSITIONS;
+
+
 
 
 

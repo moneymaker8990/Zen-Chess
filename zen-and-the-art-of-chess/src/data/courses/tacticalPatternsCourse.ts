@@ -129,3 +129,5 @@ export const tacticalPatternTraining: Course = {
 };
 
 export default tacticalPatternTraining;
+
+

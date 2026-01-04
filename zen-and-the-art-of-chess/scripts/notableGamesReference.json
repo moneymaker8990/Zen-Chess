@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "description": "Curated reference list of notable chess games to include in the 365-day collection",
+    "lastUpdated": "2026-01-02",
+    "sources": [
+      "My Great Predecessors series (Kasparov)",
+      "1000 Best Short Games of Chess",
+      "Chess.com/Lichess notable games",
+      "World Championship matches",
+      "Historical famous games"
+    ]
+  },
+  "mustInclude": [
+    {
+      "title": "The Immortal Game",
+      "white": "Anderssen",
+      "black": "Kieseritzky",
+      "year": 1851,
+      "event": "London",
+      "priority": 1000
+    },
+    {
+      "title": "The Evergreen Game",
+      "white": "Anderssen",
+      "black": "Dufresne",
+      "year": 1852,
+      "event": "Berlin",
+      "priority": 1000
+    },
+    {
+      "title": "The Opera Game",
+      "white": "Morphy",
+      "black": "Duke of Brunswick & Count Isouard",
+      "year": 1858,
+      "event": "Paris Opera",
+      "priority": 1000
+    },
+    {
+      "title": "The Game of the Century",
+      "white": "Fischer",
+      "black": "Byrne",
+      "year": 1956,
+      "event": "Rosenwald Memorial",
+      "priority": 1000
+    },
+    {
+      "title": "Kasparov vs Topalov",
+      "white": "Kasparov",
+      "black": "Topalov",
+      "year": 1999,
+      "event": "Wijk aan Zee",
+      "priority": 900
+    },
+    {
+      "title": "Deep Blue vs Kasparov",
+      "white": "Deep Blue",
+      "black": "Kasparov",
+      "year": 1997,
+      "event": "World Championship Match",
+      "priority": 1000
+    }
+  ],
+  "worldChampionshipGames": {
+    "description": "Key World Championship games to prioritize",
+    "matches": [
+      "Steinitz-Zukertort 1886",
+      "Lasker-Steinitz 1894",
+      "Capablanca-Lasker 1921",
+      "Alekhine-Capablanca 1927",
+      "Fischer-Spassky 1972",
+      "Karpov-Korchnoi 1978",
+      "Kasparov-Karpov 1984-1985",
+      "Kasparov-Karpov 1985",
+      "Kramnik-Kasparov 2000",
+      "Anand-Kramnik 2008",
+      "Carlsen-Anand 2013",
+      "Carlsen-Karjakin 2016"
+    ]
+  },
+  "famousTournaments": {
+    "description": "Notable tournament games to include",
+    "tournaments": [
+      "Wijk aan Zee (Tata Steel)",
+      "Linares",
+      "Candidates Tournament",
+      "Interzonal",
+      "Zurich 1953",
+      "New York 1924",
+      "St. Petersburg 1914",
+      "London 1851"
+    ]
+  },
+  "famousPlayers": {
+    "description": "Games featuring these players should be prioritized",
+    "players": [
+      "Morphy",
+      "Anderssen",
+      "Steinitz",
+      "Lasker",
+      "Capablanca",
+      "Alekhine",
+      "Botvinnik",
+      "Smyslov",
+      "Tal",
+      "Petrosian",
+      "Spassky",
+      "Fischer",
+      "Karpov",
+      "Kasparov",
+      "Kramnik",
+      "Anand",
+      "Carlsen"
+    ]
+  },
+  "themes": {
+    "description": "Themes to ensure coverage across all games",
+    "tactical": ["Sacrifice", "King hunt", "Tactical combination", "Mating attack"],
+    "positional": ["Pawn structure", "Piece coordination", "Prophylaxis", "Weak squares"],
+    "endgame": ["Rook endgame", "Pawn endgame", "Bishop vs Knight", "Technique"],
+    "attack": ["Kingside attack", "Central break", "Piece sacrifice", "Initiative"],
+    "defense": ["Defensive technique", "Counterattack", "Resourceful defense"],
+    "strategy": ["Opening preparation", "Long-term planning", "Positional sacrifice"]
+  }
+}
+
+
+

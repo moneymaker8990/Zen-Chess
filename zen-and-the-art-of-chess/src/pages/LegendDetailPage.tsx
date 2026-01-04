@@ -86,6 +86,12 @@ export function LegendDetailPage() {
   const [sessionSummary, setSessionSummary] = useState<any>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState<GuessMoveResult | null>(null);
+  
+  // Guess move attempt tracking
+  const [attemptCount, setAttemptCount] = useState(0);
+  const [lastGuessCorrect, setLastGuessCorrect] = useState<boolean | null>(null);
+  const [showHint, setShowHint] = useState(false);
+  const [guessAnimating, setGuessAnimating] = useState(false);
 
   // Initialize engine with proper cleanup
   useEffect(() => {
@@ -381,48 +387,116 @@ export function LegendDetailPage() {
     }
   }, [playerColor, makeLegendMove]);
 
-  // Guess the Move: Handle user move
+  // Guess the Move: Handle user move with attempt tracking
   const handleGuessMove = useCallback(
     async (sourceSquare: Square, targetSquare: Square) => {
-      if (!guessSession || showFeedback) return false;
+      if (!guessSession || showFeedback || guessAnimating) return false;
 
       const currentPos = guessSession.positions[currentPositionIndex];
       if (!currentPos) return false;
 
       const userMove = `${sourceSquare}${targetSquare}`;
       const legendMove = currentPos.move;
+      
+      // Check if move is correct (exact match)
+      const isCorrect = userMove === legendMove || 
+        (userMove + 'q') === legendMove; // Handle promotion
 
-      // Play move sound for the guess
-      const guessGame = new Chess(currentPos.fen);
-      try {
-        const isCapture = !!guessGame.get(targetSquare);
-        const move = guessGame.move({ from: sourceSquare, to: targetSquare, promotion: 'q' });
-        if (move) {
-          playSmartMoveSound(guessGame, move, { isCapture });
-        }
-      } catch {
-        // Invalid move - still score it
+      // Trigger haptic feedback
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate(isCorrect ? [50] : [30, 30, 30]);
       }
 
-      // Score the guess
-      const result = await scoreGuessMove({
-        fen: currentPos.fen,
-        userMove,
-        legendMove,
-      });
+      if (isCorrect) {
+        // Correct move!
+        setGuessAnimating(true);
+        setLastGuessCorrect(true);
+        
+        // Play success sound
+        const guessGame = new Chess(currentPos.fen);
+        try {
+          const isCapture = !!guessGame.get(targetSquare);
+          const move = guessGame.move({ from: sourceSquare, to: targetSquare, promotion: 'q' });
+          if (move) {
+            playSmartMoveSound(guessGame, move, { isCapture });
+          }
+        } catch {
+          // Sound failed, continue anyway
+        }
 
-      setCurrentFeedback(result);
-      setShowFeedback(true);
-      setGuessResults((prev) => [...prev, result]);
+        // Score the guess
+        const result = await scoreGuessMove({
+          fen: currentPos.fen,
+          userMove,
+          legendMove,
+        });
 
-      return true;
+        // Short delay to show success state, then show feedback
+        setTimeout(() => {
+          setCurrentFeedback(result);
+          setShowFeedback(true);
+          setGuessResults((prev) => [...prev, result]);
+          setAttemptCount(0);
+          setGuessAnimating(false);
+          setShowHint(false);
+        }, 600);
+      } else {
+        // Wrong move - increment attempts
+        setGuessAnimating(true);
+        setLastGuessCorrect(false);
+        setAttemptCount(prev => prev + 1);
+        
+        // Animate piece back (board will reset automatically since we don't update position)
+        setTimeout(() => {
+          setGuessAnimating(false);
+          setLastGuessCorrect(null);
+          
+          // After 3 attempts, show hint option
+          if (attemptCount >= 2) {
+            setShowHint(true);
+          }
+        }, 500);
+      }
+
+      return isCorrect;
     },
-    [guessSession, currentPositionIndex, showFeedback]
+    [guessSession, currentPositionIndex, showFeedback, guessAnimating, attemptCount]
   );
+
+  // Show answer (after failed attempts)
+  const handleShowAnswer = useCallback(async () => {
+    if (!guessSession) return;
+    
+    const currentPos = guessSession.positions[currentPositionIndex];
+    if (!currentPos) return;
+
+    // Create a "gave up" result
+    const result = await scoreGuessMove({
+      fen: currentPos.fen,
+      userMove: '',
+      legendMove: currentPos.move,
+    });
+    
+    // Override the result with a "shown" indicator
+    result.score = 0;
+    result.comment = `The answer was ${currentPos.move}. ${result.comment}`;
+    result.tags = ['shown-answer', ...result.tags];
+
+    setCurrentFeedback(result);
+    setShowFeedback(true);
+    setGuessResults((prev) => [...prev, result]);
+    setAttemptCount(0);
+    setShowHint(false);
+  }, [guessSession, currentPositionIndex]);
 
   // Continue to next position
   const continueGuess = useCallback(() => {
     if (!guessSession) return;
+
+    // Reset attempt tracking
+    setAttemptCount(0);
+    setLastGuessCorrect(null);
+    setShowHint(false);
 
     const nextIndex = currentPositionIndex + 1;
     if (nextIndex >= guessSession.positions.length) {
@@ -471,6 +545,10 @@ export function LegendDetailPage() {
     setSessionSummary(null);
     setShowFeedback(false);
     setCurrentFeedback(null);
+    setAttemptCount(0);
+    setLastGuessCorrect(null);
+    setShowHint(false);
+    setGuessAnimating(false);
   }, []);
 
   if (!legend || !legendData) {
@@ -542,14 +620,16 @@ export function LegendDetailPage() {
                   customSquareStyles={{
                     ...optionSquares,
                     ...(lastMove && {
-                      [lastMove.from]: { backgroundColor: 'rgba(147, 112, 219, 0.3)' },
-                      [lastMove.to]: { backgroundColor: 'rgba(147, 112, 219, 0.4)' },
+                      [lastMove.from]: { backgroundColor: 'rgba(168, 85, 247, 0.3)' },
+                      [lastMove.to]: { backgroundColor: 'rgba(168, 85, 247, 0.4)' },
                     }),
                   }}
                   customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                   customLightSquareStyle={boardStyles.customLightSquareStyle}
                   animationDuration={200}
                   arePiecesDraggable={!isThinking}
+                  snapToCursor={true}
+                  arePremovesAllowed={false}
                 />
                 </div>
               </div>
@@ -578,8 +658,8 @@ export function LegendDetailPage() {
 
             {/* Game Controls - Compact sidebar */}
             <div className="space-y-4">
-              <div className="glass-card p-5">
-                <h3 className="text-base font-medium text-zen-100 mb-3">Game Settings</h3>
+              <div className="glass-card p-4">
+                <h3 className="text-base font-medium text-zen-100 mb-4">Game Settings</h3>
                 
                 <div className="space-y-4">
                   <div>
@@ -592,7 +672,7 @@ export function LegendDetailPage() {
                         }}
                         className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all ${
                           playerColor === 'white'
-                            ? 'bg-white text-zen-900 shadow-md'
+                            ? 'bg-white text-black shadow-md border border-zen-300'
                             : 'bg-zen-800/60 text-zen-400 hover:bg-zen-700/60'
                         }`}
                       >
@@ -621,13 +701,13 @@ export function LegendDetailPage() {
               </div>
 
               {/* Quick style tags */}
-              <div className="glass-card p-5">
-                <h3 className="text-base font-medium text-zen-100 mb-3">Playing Style</h3>
+              <div className="glass-card p-4">
+                <h3 className="text-base font-medium text-zen-100 mb-4">Playing Style</h3>
                 <div className="flex flex-wrap gap-2">
                   {legendData.styleTags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-xs px-3 py-1.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20"
+                      className="text-xs px-3 py-1.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20 truncate max-w-full"
                     >
                       {tag}
                     </span>
@@ -808,36 +888,107 @@ export function LegendDetailPage() {
           ) : (
             <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
               <div className="glass-card p-3 sm:p-4 lg:p-6 w-full max-w-full overflow-hidden">
-                <div className="mb-4 flex justify-center">
-                  <div style={{ width: boardSize, maxWidth: '100%' }}>
+                <div className="mb-4 flex justify-center relative">
+                  <div style={{ width: boardSize, maxWidth: '100%' }} className="relative">
                   {guessChess && (
                     <Chessboard
                       position={guessChess.fen()}
                       onPieceDrop={(source, target) => {
                         handleGuessMove(source, target);
-                        return true;
+                        return !showFeedback; // Return false to prevent board update on wrong moves
                       }}
                       boardOrientation={guessSession?.legendColor || 'white'}
                       boardWidth={boardSize}
                       customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                       customLightSquareStyle={boardStyles.customLightSquareStyle}
+                      animationDuration={200}
+                      snapToCursor={true}
+                      arePremovesAllowed={false}
+                      arePiecesDraggable={!showFeedback && !guessAnimating}
                     />
+                  )}
+                  
+                  {/* Feedback overlay - shows on correct/wrong guess */}
+                  {lastGuessCorrect !== null && !showFeedback && (
+                    <div 
+                      className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 ${
+                        guessAnimating ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      style={{ 
+                        background: lastGuessCorrect 
+                          ? 'rgba(74, 222, 128, 0.2)' 
+                          : 'rgba(239, 68, 68, 0.2)'
+                      }}
+                    >
+                      <div className={`text-6xl ${guessAnimating ? 'animate-bounce' : ''}`}>
+                        {lastGuessCorrect ? '✓' : '✗'}
+                      </div>
+                    </div>
                   )}
                   </div>
                 </div>
-                {currentPosition && (
-                  <div className="text-center text-zen-400 text-sm mt-4">
-                    Move {currentPosition.moveNumber} - Try to find {legendData.name}'s move
+                
+                {/* Move prompt with attempt counter */}
+                {currentPosition && !showFeedback && (
+                  <div className="text-center mt-4 space-y-2">
+                    <div className="text-zen-400 text-sm">
+                      Move {currentPosition.moveNumber} - Try to find {legendData.name}'s move
+                    </div>
+                    
+                    {/* Attempt counter */}
+                    {attemptCount > 0 && (
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-amber-400 text-xs">
+                          Attempt {attemptCount}/3
+                        </span>
+                        {attemptCount >= 1 && (
+                          <div className="flex gap-1">
+                            {[1, 2, 3].map(i => (
+                              <span 
+                                key={i} 
+                                className={`w-2 h-2 rounded-full ${
+                                  i <= attemptCount ? 'bg-amber-400' : 'bg-zen-700'
+                                }`} 
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Show Answer button after 3 attempts */}
+                    {showHint && (
+                      <button
+                        onClick={handleShowAnswer}
+                        className="px-4 py-2 text-sm rounded-lg transition-all mt-2"
+                        style={{
+                          background: 'var(--bg-tertiary)',
+                          color: 'var(--accent-primary)',
+                          border: '1px solid var(--accent-primary)',
+                        }}
+                      >
+                        Show Answer
+                      </button>
+                    )}
+                    
+                    {/* Wrong move hint text */}
+                    {attemptCount > 0 && !showHint && (
+                      <p className="text-red-400/80 text-xs animate-fade-in">
+                        Not quite - try again!
+                      </p>
+                    )}
                   </div>
                 )}
+                
                 <div className="text-center text-zen-400 text-xs mt-2">
                   Position {currentPositionIndex + 1} of {guessSession.positions.length}
                 </div>
               </div>
 
               <div className="space-y-4">
+                {/* Feedback Panel - Desktop sidebar view */}
                 {showFeedback && currentFeedback && (
-                  <div className="glass-card p-6">
+                  <div className="hidden lg:block glass-card p-6">
                     <h3 className="text-lg font-medium text-zen-100 mb-4">Feedback</h3>
                     <div className="space-y-4">
                       <div>
@@ -848,7 +999,7 @@ export function LegendDetailPage() {
                       </div>
                       <div>
                         <div className="text-zen-500 text-sm mb-2">Your move:</div>
-                        <div className="font-mono text-zen-100">{currentFeedback.userMove}</div>
+                        <div className="font-mono text-zen-100">{currentFeedback.userMove || '(skipped)'}</div>
                       </div>
                       <div>
                         <div className="text-zen-500 text-sm mb-2">{legendData.name}'s move:</div>
@@ -862,16 +1013,76 @@ export function LegendDetailPage() {
                               className={`text-xs px-3 py-1 rounded-full ${
                                 tag === 'exact' || tag === 'engine-best'
                                   ? 'bg-emerald-500/20 text-emerald-400'
+                                  : tag === 'shown-answer'
+                                  ? 'bg-amber-500/20 text-amber-400'
                                   : 'bg-zen-800/60 text-zen-400'
                               }`}
                             >
-                              {tag}
+                              {tag.replace(/-/g, ' ')}
                             </span>
                           ))}
                         </div>
                       )}
                       <button onClick={continueGuess} className="zen-button-primary w-full mt-4">
                         Continue
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Mobile Bottom Sheet Feedback - overlays when showing feedback */}
+                {showFeedback && currentFeedback && (
+                  <div className="lg:hidden fixed inset-x-0 bottom-0 z-50 animate-fade-in">
+                    <div 
+                      className="rounded-t-3xl p-4 pb-6 shadow-2xl"
+                      style={{
+                        background: 'var(--bg-secondary)',
+                        borderTop: '1px solid var(--border-subtle)',
+                        paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)',
+                      }}
+                    >
+                      {/* Handle bar */}
+                      <div className="flex justify-center mb-4">
+                        <div className="w-12 h-1 rounded-full bg-zen-600" />
+                      </div>
+                      
+                      <div className="flex items-start gap-4">
+                        {/* Score */}
+                        <div className="text-center">
+                          <div className={`text-4xl font-mono font-bold ${
+                            currentFeedback.isExact ? 'text-emerald-400' : 
+                            currentFeedback.score >= 50 ? 'text-gold-400' : 'text-zen-400'
+                          }`}>
+                            {currentFeedback.score}
+                          </div>
+                          <div className="text-xs text-zen-500">points</div>
+                        </div>
+                        
+                        {/* Feedback details */}
+                        <div className="flex-1 min-w-0">
+                          <div className={`font-medium mb-1 ${
+                            currentFeedback.isExact ? 'text-emerald-400' : 'text-zen-200'
+                          }`}>
+                            {currentFeedback.isExact ? '✓ Correct!' : 'Not quite'}
+                          </div>
+                          <p className="text-sm text-zen-400 line-clamp-2">{currentFeedback.comment}</p>
+                          
+                          <div className="flex items-center gap-4 mt-2 text-xs">
+                            <span className="text-zen-500">
+                              Your: <span className="font-mono text-zen-300">{currentFeedback.userMove || '--'}</span>
+                            </span>
+                            <span className="text-zen-500">
+                              Best: <span className="font-mono text-gold-400">{currentFeedback.legendMove}</span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <button 
+                        onClick={continueGuess} 
+                        className="zen-button-primary w-full mt-4"
+                      >
+                        Continue →
                       </button>
                     </div>
                   </div>

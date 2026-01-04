@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "extractedAt": "2026-01-02T03:37:57.993Z",
+    "totalGames": 0,
+    "stats": {
+      "total": 0,
+      "withResults": 0,
+      "byResult": {
+        "1-0": 0,
+        "0-1": 0,
+        "1/2-1/2": 0
+      },
+      "bySource": {},
+      "avgMoveCount": null,
+      "yearRange": {
+        "min": null,
+        "max": null
+      }
+    }
+  },
+  "games": []
+}

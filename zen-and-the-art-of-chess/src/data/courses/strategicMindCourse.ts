@@ -87,3 +87,5 @@ export const strategicMind: Course = {
 };
 
 export default strategicMind;
+
+

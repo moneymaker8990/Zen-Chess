@@ -156,10 +156,72 @@ export function MistakeLibrary() {
         <div className="space-y-3 max-h-[600px] overflow-y-auto">
           {filteredMistakes.length === 0 ? (
             <div className="glass-card p-8 text-center">
-              <p className="text-zen-500 mb-4">No mistakes recorded yet.</p>
-              <p className="text-zen-600 text-sm">
-                Review your games and add mistakes to start building your library.
+              <div className="text-5xl mb-4">📚</div>
+              <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+                {mistakes.length === 0 ? 'Your Library is Empty' : 'No Matching Mistakes'}
+              </h3>
+              <p className="text-sm mb-6" style={{ color: 'var(--text-tertiary)' }}>
+                {mistakes.length === 0 
+                  ? 'Every mistake is a learning opportunity. Start building your personal study deck!'
+                  : 'Try adjusting your filters to find more mistakes.'
+                }
               </p>
+              
+              {mistakes.length === 0 && (
+                <div className="space-y-4">
+                  {/* How to add mistakes */}
+                  <div 
+                    className="p-4 rounded-lg text-left"
+                    style={{ background: 'var(--bg-tertiary)' }}
+                  >
+                    <h4 className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                      How to add mistakes:
+                    </h4>
+                    <ol className="text-sm space-y-2" style={{ color: 'var(--text-muted)' }}>
+                      <li className="flex items-start gap-2">
+                        <span className="font-mono text-xs mt-0.5" style={{ color: 'var(--accent-primary)' }}>1.</span>
+                        <span>Play a game or import a PGN in the <strong>Game Review</strong> section</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="font-mono text-xs mt-0.5" style={{ color: 'var(--accent-primary)' }}>2.</span>
+                        <span>Let the engine analyze your moves</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="font-mono text-xs mt-0.5" style={{ color: 'var(--accent-primary)' }}>3.</span>
+                        <span>Click "Add to Library" on any mistake you want to study</span>
+                      </li>
+                    </ol>
+                  </div>
+                  
+                  {/* CTA buttons */}
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    <a 
+                      href="/review"
+                      className="btn-primary px-4 py-2 inline-flex items-center gap-2"
+                    >
+                      📊 Review a Game
+                    </a>
+                    <a 
+                      href="/puzzles"
+                      className="btn-secondary px-4 py-2 inline-flex items-center gap-2"
+                    >
+                      ♟️ Practice Puzzles
+                    </a>
+                  </div>
+                </div>
+              )}
+              
+              {mistakes.length > 0 && (
+                <button
+                  onClick={() => {
+                    setFilterType('ALL');
+                    setFilterCause('ALL');
+                  }}
+                  className="btn-secondary px-4 py-2"
+                >
+                  Clear Filters
+                </button>
+              )}
             </div>
           ) : (
             filteredMistakes.map((mistake) => (
@@ -226,8 +288,12 @@ export function MistakeLibrary() {
             }}
           />
         ) : (
-          <div className="glass-card p-8 text-center">
-            <p className="text-zen-500">Select a mistake to view details</p>
+          <div className="glass-card p-8 text-center hidden lg:block">
+            <div className="text-4xl mb-3">👆</div>
+            <p className="text-zen-400">Select a mistake to view details</p>
+            <p className="text-zen-600 text-xs mt-2">
+              You can review the position, mark it studied, or create a drill from it
+            </p>
           </div>
         )}
       </div>

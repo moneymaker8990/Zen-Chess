@@ -1,0 +1,26 @@
+[
+  {
+    "patternId": "open-files-seventh-rank",
+    "file": "enhancedPatterns",
+    "moveIndex": 1,
+    "originalMove": "Rd8",
+    "fixedMove": "Rad8",
+    "reason": "Rook disambiguation needed"
+  },
+  {
+    "patternId": "exchange-good-for-bad",
+    "file": "morePatterns",
+    "moveIndex": 0,
+    "originalMove": "Nxe6",
+    "fixedMove": "Ne6",
+    "reason": "No capture available"
+  },
+  {
+    "patternId": "pawn-break-d5",
+    "file": "morePatterns",
+    "moveIndex": 0,
+    "originalMove": "d5",
+    "fixedMove": "cxd5",
+    "reason": "Must capture first"
+  }
+]

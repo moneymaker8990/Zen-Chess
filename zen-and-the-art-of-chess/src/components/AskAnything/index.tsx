@@ -1,11 +1,12 @@
 // ============================================
 // ASK ANYTHING - FLOATING AI BUTTON
 // Always-available genius-level help
+// Answers persist until explicitly dismissed
 // ============================================
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAICoach, AVAILABLE_AGENTS } from '@/hooks/useAICoach';
+import { motion, AnimatePresence, useDragControls, PanInfo } from 'framer-motion';
+import { useAICoach } from '@/hooks/useAICoach';
 import { useChessGenius } from '@/hooks/useChessGenius';
 
 interface AskAnythingProps {
@@ -18,6 +19,54 @@ interface AskAnythingProps {
   /** Position on screen */
   position?: 'bottom-right' | 'bottom-left';
 }
+
+// Storage key for button position
+const POSITION_STORAGE_KEY = 'zen-chess-ask-button-position';
+
+interface ButtonPosition {
+  x: number;
+  y: number;
+  side: 'left' | 'right';
+}
+
+// Default positions
+const getDefaultPosition = (): ButtonPosition => ({
+  x: typeof window !== 'undefined' ? window.innerWidth - 60 : 0,
+  y: typeof window !== 'undefined' ? window.innerHeight - 140 : 0,
+  side: 'right',
+});
+
+// Load saved position from localStorage
+const loadSavedPosition = (): ButtonPosition | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const saved = localStorage.getItem(POSITION_STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Validate position is within bounds
+      const maxX = window.innerWidth - 48;
+      const maxY = window.innerHeight - 100;
+      return {
+        x: Math.min(Math.max(8, parsed.x), maxX),
+        y: Math.min(Math.max(60, parsed.y), maxY),
+        side: parsed.side || 'right',
+      };
+    }
+  } catch (e) {
+    console.warn('Failed to load button position:', e);
+  }
+  return null;
+};
+
+// Save position to localStorage
+const savePosition = (pos: ButtonPosition) => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(POSITION_STORAGE_KEY, JSON.stringify(pos));
+  } catch (e) {
+    console.warn('Failed to save button position:', e);
+  }
+};
 
 const QUICK_QUESTIONS = {
   puzzle: [
@@ -60,18 +109,81 @@ export function AskAnything({
 }: AskAnythingProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [answer, setAnswer] = useState<string | null>(null);
+  // Persisted answer state - survives panel close
+  const [persistedAnswer, setPersistedAnswer] = useState<string | null>(null);
+  const [persistedQuestion, setPersistedQuestion] = useState<string | null>(null);
   const [isThinking, setIsThinking] = useState(false);
   const [showQuickQuestions, setShowQuickQuestions] = useState(true);
+  const [copySuccess, setCopySuccess] = useState(false);
+  
+  // Draggable button position
+  const [buttonPosition, setButtonPosition] = useState<ButtonPosition>(getDefaultPosition);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragControls = useDragControls();
   
   const inputRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  
+  // Load saved position on mount
+  useEffect(() => {
+    const saved = loadSavedPosition();
+    if (saved) {
+      setButtonPosition(saved);
+    }
+  }, []);
+  
+  // Handle window resize - keep button in bounds
+  useEffect(() => {
+    const handleResize = () => {
+      setButtonPosition(prev => {
+        const maxX = window.innerWidth - 48;
+        const maxY = window.innerHeight - 100;
+        return {
+          x: Math.min(Math.max(8, prev.x), maxX),
+          y: Math.min(Math.max(60, prev.y), maxY),
+          side: prev.x < window.innerWidth / 2 ? 'left' : 'right',
+        };
+      });
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // Handle drag end - snap to edge
+  const handleDragEnd = useCallback((event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    setIsDragging(false);
+    
+    const buttonSize = 44;
+    const padding = 8;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Calculate final position
+    let finalX = buttonPosition.x + info.offset.x;
+    let finalY = buttonPosition.y + info.offset.y;
+    
+    // Snap to nearest edge (left or right)
+    const side: 'left' | 'right' = finalX < viewportWidth / 2 ? 'left' : 'right';
+    finalX = side === 'left' ? padding : viewportWidth - buttonSize - padding;
+    
+    // Clamp Y position
+    const minY = 60; // Below header
+    const maxY = viewportHeight - 100; // Above bottom nav
+    finalY = Math.min(Math.max(minY, finalY), maxY);
+    
+    const newPosition: ButtonPosition = { x: finalX, y: finalY, side };
+    setButtonPosition(newPosition);
+    savePosition(newPosition);
+  }, [buttonPosition]);
   
   const { sendMessageStreaming, currentResponse, isStreaming, clearHistory } = useAICoach({
     agentId: 'coach',
     context: currentPosition ? { currentPosition } : undefined,
   });
   
-  const { askGenius, isAnalyzing } = useChessGenius();
+  const { askGenius } = useChessGenius();
   
   // Focus input when opened
   useEffect(() => {
@@ -79,16 +191,28 @@ export function AskAnything({
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen]);
-  
-  // Clear state when closed
-  useEffect(() => {
-    if (!isOpen) {
-      setAnswer(null);
-      setInput('');
-      setShowQuickQuestions(true);
-      clearHistory();
+
+  // Copy answer to clipboard
+  const handleCopy = useCallback(async () => {
+    const textToCopy = persistedAnswer || currentResponse;
+    if (!textToCopy) return;
+    
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
     }
-  }, [isOpen, clearHistory]);
+  }, [persistedAnswer, currentResponse]);
+
+  // Clear answer and reset state
+  const handleDismissAnswer = useCallback(() => {
+    setPersistedAnswer(null);
+    setPersistedQuestion(null);
+    setShowQuickQuestions(true);
+    clearHistory();
+  }, [clearHistory]);
   
   const handleAsk = useCallback(async (question: string) => {
     if (!question.trim()) return;
@@ -96,20 +220,23 @@ export function AskAnything({
     setShowQuickQuestions(false);
     setIsThinking(true);
     setInput('');
+    setPersistedQuestion(question);
+    setPersistedAnswer(null);
     
     try {
       // Use position-aware genius for position questions, general coach otherwise
-      if (currentPosition && question.toLowerCase().includes('move') || 
+      if (currentPosition && (question.toLowerCase().includes('move') || 
           question.toLowerCase().includes('position') ||
-          question.toLowerCase().includes('piece')) {
+          question.toLowerCase().includes('piece'))) {
         const response = await askGenius(currentPosition, question);
-        setAnswer(response);
+        setPersistedAnswer(response);
       } else {
-        await sendMessageStreaming(question);
+        const response = await sendMessageStreaming(question);
+        setPersistedAnswer(response);
       }
     } catch (error) {
       console.error('Ask failed:', error);
-      setAnswer("I'm having trouble connecting right now. Please try again.");
+      setPersistedAnswer("I'm having trouble connecting right now. Please try again.");
     } finally {
       setIsThinking(false);
     }
@@ -127,47 +254,75 @@ export function AskAnything({
   
   if (!enabled) return null;
   
-  const positionClass = position === 'bottom-right' ? 'right-6' : 'left-6';
   const quickQuestions = QUICK_QUESTIONS[context] || QUICK_QUESTIONS.general;
+  
+  // Check if we have an answer to display
+  const displayAnswer = persistedAnswer || (currentResponse && currentResponse.length > 0 ? currentResponse : null);
+  const hasAnswer = !!displayAnswer;
   
   return (
     <>
-      {/* Floating Button - positioned higher to avoid fixed navigation footers */}
+      {/* Floating Button - Draggable with snap-to-edge */}
       <motion.button
-        onClick={() => setIsOpen(true)}
-        className={`fixed bottom-24 sm:bottom-6 ${positionClass} z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110`}
+        ref={buttonRef}
+        onClick={() => {
+          if (!isDragging) {
+            setIsOpen(true);
+          }
+        }}
+        drag
+        dragControls={dragControls}
+        dragMomentum={false}
+        dragElastic={0.1}
+        onDragStart={() => setIsDragging(true)}
+        onDragEnd={handleDragEnd}
+        className="fixed z-40 w-11 h-11 rounded-full shadow-2xl flex items-center justify-center touch-none"
         style={{
           background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))',
+          left: buttonPosition.x,
+          top: buttonPosition.y,
+          cursor: isDragging ? 'grabbing' : 'grab',
         }}
-        whileHover={{ scale: 1.1 }}
+        whileHover={{ scale: isDragging ? 1 : 1.1 }}
         whileTap={{ scale: 0.95 }}
         initial={false}
         animate={isOpen ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
+        aria-label="Ask Chess Genius (drag to reposition)"
       >
         <motion.span
-          className="text-xl sm:text-2xl"
-          animate={{ rotate: [0, 10, -10, 0] }}
+          className="text-lg pointer-events-none"
+          animate={isDragging ? {} : { rotate: [0, 10, -10, 0] }}
           transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
         >
           🧠
         </motion.span>
         
-        {/* Pulse ring */}
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          style={{
-            border: '2px solid var(--accent-primary)',
-          }}
-          animate={{
-            scale: [1, 1.4, 1.4],
-            opacity: [0.5, 0, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            repeatDelay: 2,
-          }}
-        />
+        {/* Indicator dot if there's a persisted answer */}
+        {persistedAnswer && !isOpen && (
+          <span 
+            className="absolute -top-1 -right-1 w-3 h-3 rounded-full pointer-events-none"
+            style={{ background: 'var(--success)' }}
+          />
+        )}
+        
+        {/* Pulse ring - only when not dragging */}
+        {!isDragging && (
+          <motion.div
+            className="absolute inset-0 rounded-full pointer-events-none"
+            style={{
+              border: '2px solid var(--accent-primary)',
+            }}
+            animate={{
+              scale: [1, 1.4, 1.4],
+              opacity: [0.5, 0, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatDelay: 2,
+            }}
+          />
+        )}
       </motion.button>
       
       {/* Modal */}
@@ -183,20 +338,21 @@ export function AskAnything({
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
             />
             
-            {/* Panel */}
+            {/* Panel - position based on button side */}
             <motion.div
               initial={{ opacity: 0, y: 100, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 100, scale: 0.9 }}
-              className={`fixed bottom-0 ${position === 'bottom-right' ? 'right-0 sm:right-6' : 'left-0 sm:left-6'} sm:bottom-6 z-50 w-full sm:w-[420px] max-h-[80vh] rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl`}
+              className={`fixed bottom-0 ${buttonPosition.side === 'right' ? 'right-0 sm:right-6' : 'left-0 sm:left-6'} sm:bottom-6 z-50 w-full sm:w-[420px] max-h-[80vh] rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col`}
               style={{
-                background: 'var(--bg-elevated)',
+                background: 'var(--bg-elevated, var(--bg-secondary))',
                 border: '1px solid var(--border-subtle)',
+                maxWidth: '100vw',
               }}
             >
               {/* Header */}
               <div 
-                className="flex items-center justify-between p-4 border-b"
+                className="flex items-center justify-between p-4 border-b shrink-0"
                 style={{ borderColor: 'var(--border-subtle)' }}
               >
                 <div className="flex items-center gap-3">
@@ -208,11 +364,11 @@ export function AskAnything({
                   >
                     <span className="text-xl">🧠</span>
                   </div>
-                  <div>
-                    <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
                       Chess Genius
                     </h3>
-                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                    <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
                       Ask me anything about chess
                     </p>
                   </div>
@@ -222,6 +378,7 @@ export function AskAnything({
                   onClick={() => setIsOpen(false)}
                   className="p-2 rounded-full hover:bg-white/10 transition-colors"
                   style={{ color: 'var(--text-muted)' }}
+                  aria-label="Close"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -229,11 +386,15 @@ export function AskAnything({
                 </button>
               </div>
               
-              {/* Content Area */}
-              <div className="p-4 max-h-[50vh] overflow-y-auto">
-                {/* Quick Questions */}
+              {/* Content Area - scrollable */}
+              <div 
+                ref={contentRef}
+                className="p-4 overflow-y-auto overflow-x-hidden flex-1 min-h-0 hide-scrollbar"
+                style={{ maxHeight: 'calc(80vh - 140px)' }}
+              >
+                {/* Quick Questions - show when no answer */}
                 <AnimatePresence>
-                  {showQuickQuestions && !answer && !isStreaming && (
+                  {showQuickQuestions && !hasAnswer && !isStreaming && !isThinking && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -247,7 +408,7 @@ export function AskAnything({
                           <motion.button
                             key={i}
                             onClick={() => handleQuickQuestion(q)}
-                            className="px-3 py-2 text-sm rounded-xl transition-all hover:scale-[1.02]"
+                            className="px-3 py-2 text-sm rounded-xl transition-all hover:scale-[1.02] max-w-full"
                             style={{
                               background: 'var(--bg-hover)',
                               color: 'var(--text-secondary)',
@@ -257,7 +418,7 @@ export function AskAnything({
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.05 }}
                           >
-                            {q}
+                            <span className="truncate block">{q}</span>
                           </motion.button>
                         ))}
                       </div>
@@ -266,7 +427,7 @@ export function AskAnything({
                 </AnimatePresence>
                 
                 {/* Thinking Animation */}
-                {isThinking && !isStreaming && (
+                {isThinking && !isStreaming && !currentResponse && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -299,63 +460,102 @@ export function AskAnything({
                   </motion.div>
                 )}
                 
-                {/* Streaming Response */}
-                {(isStreaming || currentResponse) && (
+                {/* Answer Display - Persisted */}
+                {(hasAnswer || isStreaming) && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-4 rounded-xl"
-                    style={{ background: 'var(--bg-hover)' }}
+                    className="space-y-3"
                   >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: 'var(--text-primary)' }}>
-                      {currentResponse}
-                      {isStreaming && (
-                        <span 
-                          className="inline-block w-2 h-4 ml-1 animate-pulse"
-                          style={{ background: 'var(--accent-primary)' }}
-                        />
-                      )}
-                    </p>
+                    {/* Question shown */}
+                    {persistedQuestion && (
+                      <div className="text-xs break-words" style={{ color: 'var(--text-muted)' }}>
+                        <span className="font-medium">You asked:</span> {persistedQuestion}
+                      </div>
+                    )}
+                    
+                    {/* Answer content with action buttons */}
+                    <div 
+                      className="p-4 rounded-xl relative"
+                      style={{ background: 'var(--bg-hover)' }}
+                    >
+                      {/* Action buttons - top right */}
+                      <div className="absolute top-2 right-2 flex gap-1">
+                        {/* Copy button */}
+                        <button
+                          onClick={handleCopy}
+                          className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                          style={{ color: copySuccess ? 'var(--success)' : 'var(--text-muted)' }}
+                          title="Copy answer"
+                          aria-label="Copy answer to clipboard"
+                        >
+                          {copySuccess ? (
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                          )}
+                        </button>
+                        
+                        {/* Dismiss button */}
+                        {!isStreaming && (
+                          <button
+                            onClick={handleDismissAnswer}
+                            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                            style={{ color: 'var(--text-muted)' }}
+                            title="Dismiss answer"
+                            aria-label="Dismiss answer"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                      
+                      {/* Answer text */}
+                      <p 
+                        className="text-sm leading-relaxed whitespace-pre-wrap pr-16 break-words" 
+                        style={{ color: 'var(--text-primary)', overflowWrap: 'break-word' }}
+                      >
+                        {displayAnswer}
+                        {isStreaming && (
+                          <span 
+                            className="inline-block w-2 h-4 ml-1 animate-pulse"
+                            style={{ background: 'var(--accent-primary)' }}
+                          />
+                        )}
+                      </p>
+                    </div>
+                    
+                    {/* Ask Another button */}
+                    {!isStreaming && (
+                      <motion.button
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        onClick={handleDismissAnswer}
+                        className="w-full py-2 text-sm rounded-xl transition-colors hover:bg-white/5"
+                        style={{
+                          color: 'var(--accent-primary)',
+                          border: '1px solid var(--accent-primary)',
+                        }}
+                      >
+                        Ask another question
+                      </motion.button>
+                    )}
                   </motion.div>
-                )}
-                
-                {/* Static Answer */}
-                {answer && !isStreaming && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="p-4 rounded-xl"
-                    style={{ background: 'var(--bg-hover)' }}
-                  >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: 'var(--text-primary)' }}>
-                      {answer}
-                    </p>
-                  </motion.div>
-                )}
-                
-                {/* Ask Another */}
-                {(answer || currentResponse) && !isStreaming && (
-                  <motion.button
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    onClick={() => {
-                      setAnswer(null);
-                      setShowQuickQuestions(true);
-                      clearHistory();
-                    }}
-                    className="mt-4 w-full py-2 text-sm rounded-xl transition-colors"
-                    style={{
-                      color: 'var(--accent-primary)',
-                      border: '1px solid var(--accent-primary)',
-                    }}
-                  >
-                    Ask another question
-                  </motion.button>
                 )}
               </div>
               
-              {/* Input */}
-              <form onSubmit={handleSubmit} className="p-4 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+              {/* Input - always visible */}
+              <form 
+                onSubmit={handleSubmit} 
+                className="p-4 border-t shrink-0" 
+                style={{ borderColor: 'var(--border-subtle)' }}
+              >
                 <div className="flex gap-2">
                   <input
                     ref={inputRef}
@@ -393,5 +593,3 @@ export function AskAnything({
 }
 
 export default AskAnything;
-
-

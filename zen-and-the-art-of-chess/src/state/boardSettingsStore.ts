@@ -32,7 +32,7 @@ interface BoardSettingsStore {
 }
 
 const DEFAULT_SETTINGS: BoardSettings = {
-  theme: 'classic',
+  theme: 'zen',  // Zen Purple - harmonizes with dark UI
   pieceStyle: 'cburnett',
   moveHintStyle: 'dots',
   animationDuration: 200,

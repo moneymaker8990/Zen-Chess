@@ -741,6 +741,17 @@ export async function testClaudeConnection(): Promise<{
 }> {
   const startTime = Date.now();
   
+  // Check if API key is configured
+  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
+  if (!apiKey || apiKey.trim() === '') {
+    return {
+      connected: false,
+      latency: 0,
+      model: 'unknown',
+      error: 'API key not configured. Set VITE_ANTHROPIC_API_KEY in .env',
+    };
+  }
+  
   try {
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
@@ -754,17 +765,67 @@ export async function testClaudeConnection(): Promise<{
     const latency = Date.now() - startTime;
     const text = response.content[0].type === 'text' ? response.content[0].text : '';
 
+    // If we got a response, the connection is working - regardless of response text
     return {
-      connected: text.includes('Ready') || text.includes('Zen'),
+      connected: true,
       latency,
       model: response.model,
     };
-  } catch (error) {
+  } catch (error: unknown) {
+    // Extract detailed error information
+    let errorMessage = 'Connection failed';
+    let errorType = 'unknown';
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      
+      // Check if it's an Anthropic API error with more details
+      const apiError = error as any;
+      if ('request_id' in apiError || 'status' in apiError || 'type' in apiError) {
+        const parts: string[] = [];
+        
+        // Error type
+        if (apiError.type) {
+          errorType = apiError.type;
+          parts.push(`Type: ${apiError.type}`);
+        }
+        
+        // Status code
+        if (apiError.status) {
+          parts.push(`Status: ${apiError.status}`);
+        }
+        
+        // Request ID
+        if (apiError.request_id) {
+          parts.push(`Request ID: ${apiError.request_id}`);
+        }
+        
+        // Error message
+        if (error.message) {
+          parts.push(error.message);
+        }
+        
+        errorMessage = parts.join(' | ');
+        
+        // Special handling for certain error types that shouldn't be treated as "connection failed"
+        if (apiError.type === 'rate_limit_error' || apiError.type === 'overloaded_error') {
+          errorMessage = `Rate limited or service overloaded. ${errorMessage}`;
+        } else if (apiError.type === 'authentication_error') {
+          errorMessage = `Authentication failed. Check your API key. ${errorMessage}`;
+        } else if (apiError.type === 'invalid_request_error') {
+          errorMessage = `Invalid request. ${errorMessage}`;
+        }
+      }
+    }
+    
+    // Log the full error for debugging
+    logger.warn('Claude connection test failed:', { error, errorType, errorMessage });
+    
     return {
       connected: false,
       latency: Date.now() - startTime,
       model: 'unknown',
-      error: error instanceof Error ? error.message : 'Connection failed',
+      error: errorMessage,
     };
   }
 }

@@ -1,0 +1,1187 @@
+[
+  {
+    "gameId": "immortal-game",
+    "dayNumber": 1,
+    "title": "The Immortal Game",
+    "fixedMoves": 0,
+    "invalidMoves": [],
+    "correctedFENs": 5,
+    "needsManualResearch": false
+  },
+  {
+    "gameId": "evergreen-game",
+    "dayNumber": 2,
+    "title": "The Evergreen Game",
+    "fixedMoves": 0,
+    "invalidMoves": [],
+    "correctedFENs": 38,
+    "needsManualResearch": false
+  },
+  {
+    "gameId": "opera-game",
+    "dayNumber": 3,
+    "title": "The Opera Game",
+    "fixedMoves": 0,
+    "invalidMoves": [],
+    "correctedFENs": 31,
+    "needsManualResearch": false
+  },
+  {
+    "gameId": "game-of-century",
+    "dayNumber": 4,
+    "title": "The Game of the Century",
+    "fixedMoves": 0,
+    "invalidMoves": [],
+    "correctedFENs": 7,
+    "needsManualResearch": false
+  },
+  {
+    "gameId": "rubinstein-immortal",
+    "dayNumber": 5,
+    "title": "Rubinstein's Immortal",
+    "fixedMoves": 0,
+    "invalidMoves": [],
+    "correctedFENs": 34,
+    "needsManualResearch": false
+  },
+  {
+    "gameId": "kasparov-immortal",
+    "dayNumber": 6,
+    "title": "Kasparov's Immortal",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 53,
+        "originalMove": "Kc8",
+        "reason": "Invalid move: Kc8"
+      }
+    ],
+    "correctedFENs": 5,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "steinitz-bardeleben",
+    "dayNumber": 7,
+    "title": "The King Walk",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Be7",
+        "reason": "Invalid move: Be7"
+      }
+    ],
+    "correctedFENs": 4,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "lasker-thomas",
+    "dayNumber": 8,
+    "title": "The King Hunt",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Kxh7",
+        "reason": "Invalid move: Kxh7"
+      }
+    ],
+    "correctedFENs": 9,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "glucksberg-najdorf",
+    "dayNumber": 9,
+    "title": "The Polish Immortal",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 37,
+        "originalMove": "Bh3+",
+        "reason": "Invalid move: Bh3+"
+      }
+    ],
+    "correctedFENs": 5,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "capablanca-tartakower",
+    "dayNumber": 10,
+    "title": "Capablanca's Endgame Masterpiece",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 42,
+        "originalMove": "Rxd8",
+        "reason": "Invalid move: Rxd8"
+      }
+    ],
+    "correctedFENs": 4,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "botvinnik-capablanca",
+    "dayNumber": 11,
+    "title": "The Patriarch Falls",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxa6",
+        "reason": "Invalid move: Nxa6"
+      }
+    ],
+    "correctedFENs": 7,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "tal-larsen",
+    "dayNumber": 12,
+    "title": "The Magician's Attack",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 34,
+        "originalMove": "Nxe5",
+        "reason": "Invalid move: Nxe5"
+      }
+    ],
+    "correctedFENs": 18,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "fischer-spassky-wc6",
+    "dayNumber": 13,
+    "title": "Fischer's Masterpiece",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 22,
+        "originalMove": "Bd2",
+        "reason": "Invalid move: Bd2"
+      }
+    ],
+    "correctedFENs": 16,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "kasparov-karpov-wc85-g16",
+    "dayNumber": 14,
+    "title": "The Tide Turns",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 16,
+        "originalMove": "d5",
+        "reason": "Invalid move: d5"
+      }
+    ],
+    "correctedFENs": 11,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "carlsen-anand-wc13-g5",
+    "dayNumber": 15,
+    "title": "New Era Begins",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "dxe4",
+        "reason": "Invalid move: dxe4"
+      }
+    ],
+    "correctedFENs": 20,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "kasparov-karpov-wc85-g24",
+    "dayNumber": 16,
+    "title": "Crown Changes Hands",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 19,
+        "originalMove": "O-O",
+        "reason": "Invalid move: O-O"
+      }
+    ],
+    "correctedFENs": 13,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "kasparov-beliavsky",
+    "dayNumber": 76,
+    "title": "Future Champion",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxc4",
+        "reason": "Invalid move: Nxc4"
+      }
+    ],
+    "correctedFENs": 23,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "karpov-kasparov-wc90-g20",
+    "dayNumber": 77,
+    "title": "Lyon Thriller",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 6,
+        "originalMove": "cxd5",
+        "reason": "Invalid move: cxd5"
+      }
+    ],
+    "correctedFENs": 3,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "capablanca-lasker-wc",
+    "dayNumber": 31,
+    "title": "The Machine Takes Over",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 27,
+        "originalMove": "Nf6",
+        "reason": "Invalid move: Nf6"
+      }
+    ],
+    "correctedFENs": 21,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "rubinstein-salwe",
+    "dayNumber": 32,
+    "title": "Rubinstein's Rook",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 27,
+        "originalMove": "Nf6",
+        "reason": "Invalid move: Nf6"
+      }
+    ],
+    "correctedFENs": 21,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "rubinstein-schlechter",
+    "dayNumber": 33,
+    "title": "Polish Fire",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "f4",
+        "reason": "Invalid move: f4"
+      }
+    ],
+    "correctedFENs": 18,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "nimzowitsch-tarrasch",
+    "dayNumber": 35,
+    "title": "Hypermodern Dawn",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 28,
+        "originalMove": "d5",
+        "reason": "Invalid move: d5"
+      }
+    ],
+    "correctedFENs": 19,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "vidmar-euwe",
+    "dayNumber": 36,
+    "title": "Yugoslav Power",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "bxc5",
+        "reason": "Invalid move: bxc5"
+      }
+    ],
+    "correctedFENs": 15,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "bogoljubov-alekhine1",
+    "dayNumber": 37,
+    "title": "Russian Clash",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "bxc5",
+        "reason": "Invalid move: bxc5"
+      }
+    ],
+    "correctedFENs": 15,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "reti-bogoljubov",
+    "dayNumber": 38,
+    "title": "Hypermodern Gem",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 4,
+        "originalMove": "cxd4",
+        "reason": "Invalid move: cxd4"
+      }
+    ],
+    "correctedFENs": 3,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "gruenfeld-alekhine",
+    "dayNumber": 39,
+    "title": "Defense Named",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 28,
+        "originalMove": "Bf3",
+        "reason": "Invalid move: Bf3"
+      }
+    ],
+    "correctedFENs": 19,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "ivanchuk-kasparov",
+    "dayNumber": 78,
+    "title": "Ivanchuk Rising",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxc4",
+        "reason": "Invalid move: Nxc4"
+      }
+    ],
+    "correctedFENs": 23,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "kasparov-anand-wc",
+    "dayNumber": 79,
+    "title": "Defending Champion",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxc4",
+        "reason": "Invalid move: Nxc4"
+      }
+    ],
+    "correctedFENs": 23,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "kasparov-shirov",
+    "dayNumber": 80,
+    "title": "Attack vs Attack",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxc4",
+        "reason": "Invalid move: Nxc4"
+      }
+    ],
+    "correctedFENs": 23,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "shirov-topalov",
+    "dayNumber": 81,
+    "title": "Fire on Board",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxc4",
+        "reason": "Invalid move: Nxc4"
+      }
+    ],
+    "correctedFENs": 23,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "kramnik-kasparov-wc",
+    "dayNumber": 82,
+    "title": "Berlin Wall",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 13,
+        "originalMove": "Nf6",
+        "reason": "Invalid move: Nf6"
+      }
+    ],
+    "correctedFENs": 7,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "anand-leko",
+    "dayNumber": 83,
+    "title": "Anand's Speed",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 6,
+        "originalMove": "cxd5",
+        "reason": "Invalid move: cxd5"
+      }
+    ],
+    "correctedFENs": 3,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "topalov-kamsky",
+    "dayNumber": 84,
+    "title": "Bulgarian Fire",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxc4",
+        "reason": "Invalid move: Nxc4"
+      }
+    ],
+    "correctedFENs": 23,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "anand-topalov-wc",
+    "dayNumber": 85,
+    "title": "Indian Tiger",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Rad1",
+        "reason": "Invalid move: Rad1"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "carlsen-aronian",
+    "dayNumber": 86,
+    "title": "Magnus Rising",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 29,
+        "originalMove": "c6",
+        "reason": "Invalid move: c6"
+      }
+    ],
+    "correctedFENs": 26,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "carlsen-anand-wc13-g5",
+    "dayNumber": 87,
+    "title": "New Era Begins",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 6,
+        "originalMove": "cxd5",
+        "reason": "Invalid move: cxd5"
+      }
+    ],
+    "correctedFENs": 3,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "carlsen-anand-wc13-g9",
+    "dayNumber": 88,
+    "title": "Champion Crowned",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 13,
+        "originalMove": "Nf6",
+        "reason": "Invalid move: Nf6"
+      }
+    ],
+    "correctedFENs": 7,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "carlsen-anand-wc14",
+    "dayNumber": 89,
+    "title": "Defense Confirmed",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 13,
+        "originalMove": "Nf6",
+        "reason": "Invalid move: Nf6"
+      }
+    ],
+    "correctedFENs": 7,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "caruana-carlsen-wc",
+    "dayNumber": 90,
+    "title": "Twelve Draws",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxc4",
+        "reason": "Invalid move: Nxc4"
+      }
+    ],
+    "correctedFENs": 23,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "alekhine-bogoljubov-wc",
+    "dayNumber": 45,
+    "title": "Champion Defends",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 35,
+        "originalMove": "Qf5",
+        "reason": "Invalid move: Qf5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "euwe-alekhine-wc",
+    "dayNumber": 46,
+    "title": "The Upset",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 35,
+        "originalMove": "Qf5",
+        "reason": "Invalid move: Qf5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "botvinnik-flohr",
+    "dayNumber": 47,
+    "title": "Soviet Rising",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 35,
+        "originalMove": "Qf5",
+        "reason": "Invalid move: Qf5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "reshevsky-fine",
+    "dayNumber": 48,
+    "title": "American Battle",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 35,
+        "originalMove": "Qf5",
+        "reason": "Invalid move: Qf5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "keres-euwe",
+    "dayNumber": 49,
+    "title": "Estonian Attack",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 31,
+        "originalMove": "Bxf6",
+        "reason": "Invalid move: Bxf6"
+      }
+    ],
+    "correctedFENs": 28,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "smyslov-reshevsky",
+    "dayNumber": 50,
+    "title": "Smyslov's Technique",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 21,
+        "originalMove": "Rxd1",
+        "reason": "Invalid move: Rxd1"
+      }
+    ],
+    "correctedFENs": 13,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "botvinnik-keres",
+    "dayNumber": 51,
+    "title": "Patriarch Rises",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 35,
+        "originalMove": "Qf5",
+        "reason": "Invalid move: Qf5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "bronstein-botvinnik",
+    "dayNumber": 52,
+    "title": "So Close",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 25,
+        "originalMove": "Qc7",
+        "reason": "Invalid move: Qc7"
+      }
+    ],
+    "correctedFENs": 17,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "smyslov-botvinnik-wc",
+    "dayNumber": 53,
+    "title": "Smyslov's Crown",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 19,
+        "originalMove": "Bxc5",
+        "reason": "Invalid move: Bxc5"
+      }
+    ],
+    "correctedFENs": 11,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "tal-botvinnik-wc",
+    "dayNumber": 54,
+    "title": "Magician's Triumph",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 25,
+        "originalMove": "Nd7",
+        "reason": "Invalid move: Nd7"
+      }
+    ],
+    "correctedFENs": 16,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "tal-fischer",
+    "dayNumber": 55,
+    "title": "Fire vs Fire",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 33,
+        "originalMove": "Ne5",
+        "reason": "Invalid move: Ne5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "petrosian-botvinnik",
+    "dayNumber": 56,
+    "title": "Iron Tigran",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 20,
+        "originalMove": "b4",
+        "reason": "Invalid move: b4"
+      }
+    ],
+    "correctedFENs": 12,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "spassky-petrosian-wc",
+    "dayNumber": 57,
+    "title": "Spassky Breaks Through",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 33,
+        "originalMove": "Ne5",
+        "reason": "Invalid move: Ne5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "fischer-petrosian-cand",
+    "dayNumber": 58,
+    "title": "Fischer Crushes",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 33,
+        "originalMove": "Ne5",
+        "reason": "Invalid move: Ne5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "fischer-spassky-wc13",
+    "dayNumber": 60,
+    "title": "American Champion",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 20,
+        "originalMove": "b4",
+        "reason": "Invalid move: b4"
+      }
+    ],
+    "correctedFENs": 12,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "korchnoi-petrosian",
+    "dayNumber": 61,
+    "title": "Viktor Fights",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxc6",
+        "reason": "Invalid move: Nxc6"
+      }
+    ],
+    "correctedFENs": 22,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "karpov-korchnoi1",
+    "dayNumber": 62,
+    "title": "Karpov Arrives",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 25,
+        "originalMove": "Qxf5",
+        "reason": "Invalid move: Qxf5"
+      }
+    ],
+    "correctedFENs": 17,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "karpov-korchnoi-wc78",
+    "dayNumber": 63,
+    "title": "Cold War Chess",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 20,
+        "originalMove": "Bxe6",
+        "reason": "Invalid move: Bxe6"
+      }
+    ],
+    "correctedFENs": 14,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "karpov-spassky",
+    "dayNumber": 64,
+    "title": "Generational Shift",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 20,
+        "originalMove": "Bxe6",
+        "reason": "Invalid move: Bxe6"
+      }
+    ],
+    "correctedFENs": 14,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "polugaevsky-tal",
+    "dayNumber": 65,
+    "title": "Soviet Fireworks",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nxg5",
+        "reason": "Invalid move: Nxg5"
+      }
+    ],
+    "correctedFENs": 23,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "geller-euwe",
+    "dayNumber": 66,
+    "title": "Geller's Art",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxd5",
+        "reason": "Invalid move: Nxd5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "taimanov-najdorf",
+    "dayNumber": 67,
+    "title": "Soviet School",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxd5",
+        "reason": "Invalid move: Nxd5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "larsen-spassky",
+    "dayNumber": 68,
+    "title": "Spassky's Brilliance",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxd5",
+        "reason": "Invalid move: Nxd5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "spassky-bronstein",
+    "dayNumber": 69,
+    "title": "King's Gambit Revival",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 17,
+        "originalMove": "Nxc6",
+        "reason": "Invalid move: Nxc6"
+      }
+    ],
+    "correctedFENs": 4,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "gligoric-fischer",
+    "dayNumber": 70,
+    "title": "Yugoslav Battle",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxd5",
+        "reason": "Invalid move: Nxd5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "kasparov-karpov-wc86-g22",
+    "dayNumber": 73,
+    "title": "Defense Holds",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 20,
+        "originalMove": "Bxe6",
+        "reason": "Invalid move: Bxe6"
+      }
+    ],
+    "correctedFENs": 14,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "kasparov-hubner",
+    "dayNumber": 74,
+    "title": "Champion's Power",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxd5",
+        "reason": "Invalid move: Nxd5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "kasparov-portisch",
+    "dayNumber": 75,
+    "title": "Young Kasparov",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxd5",
+        "reason": "Invalid move: Nxd5"
+      }
+    ],
+    "correctedFENs": 24,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "carlsen-nakamura",
+    "dayNumber": 92,
+    "title": "Internet Rivals",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nd5",
+        "reason": "Invalid move: Nd5"
+      }
+    ],
+    "correctedFENs": 11,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "carlsen-so",
+    "dayNumber": 93,
+    "title": "Number One",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 27,
+        "originalMove": "Bxf5",
+        "reason": "Invalid move: Bxf5"
+      }
+    ],
+    "correctedFENs": 9,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "ding-carlsen",
+    "dayNumber": 94,
+    "title": "Chinese Star",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxe5",
+        "reason": "Invalid move: Nxe5"
+      }
+    ],
+    "correctedFENs": 15,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "carlsen-karjakin-wc",
+    "dayNumber": 95,
+    "title": "Minister of Defense",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 27,
+        "originalMove": "Bxf5",
+        "reason": "Invalid move: Bxf5"
+      }
+    ],
+    "correctedFENs": 9,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "nepo-carlsen-wc",
+    "dayNumber": 96,
+    "title": "Nepo Collapses",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxe5",
+        "reason": "Invalid move: Nxe5"
+      }
+    ],
+    "correctedFENs": 15,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "firouzja-carlsen-tour",
+    "dayNumber": 97,
+    "title": "Young Gun",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxe5",
+        "reason": "Invalid move: Nxe5"
+      }
+    ],
+    "correctedFENs": 15,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "ding-nepo-wc",
+    "dayNumber": 98,
+    "title": "New Champion",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 27,
+        "originalMove": "Bxf5",
+        "reason": "Invalid move: Bxf5"
+      }
+    ],
+    "correctedFENs": 9,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "gukesh-ding-wc",
+    "dayNumber": 99,
+    "title": "Youngest Champion",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxe5",
+        "reason": "Invalid move: Nxe5"
+      }
+    ],
+    "correctedFENs": 15,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "mvl-anand",
+    "dayNumber": 100,
+    "title": "French Attack",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 24,
+        "originalMove": "Nxe5",
+        "reason": "Invalid move: Nxe5"
+      }
+    ],
+    "correctedFENs": 15,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "marshall-levitzky",
+    "dayNumber": 101,
+    "title": "Gold Coins",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 34,
+        "originalMove": "Nf5",
+        "reason": "Invalid move: Nf5"
+      }
+    ],
+    "correctedFENs": 31,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "torre-lasker",
+    "dayNumber": 102,
+    "title": "Torre Attack",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 21,
+        "originalMove": "dxc5",
+        "reason": "Invalid move: dxc5"
+      }
+    ],
+    "correctedFENs": 8,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "alekhine-book",
+    "dayNumber": 103,
+    "title": "Alekhine's Guns",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 27,
+        "originalMove": "Bxf5",
+        "reason": "Invalid move: Bxf5"
+      }
+    ],
+    "correctedFENs": 9,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "bogolyubov-monticelli",
+    "dayNumber": 104,
+    "title": "King Hunt",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 27,
+        "originalMove": "Bxf5",
+        "reason": "Invalid move: Bxf5"
+      }
+    ],
+    "correctedFENs": 9,
+    "needsManualResearch": true
+  },
+  {
+    "gameId": "reti-tartakower",
+    "dayNumber": 105,
+    "title": "Réti System",
+    "fixedMoves": 0,
+    "invalidMoves": [
+      {
+        "index": 23,
+        "originalMove": "Nc5",
+        "reason": "Invalid move: Nc5"
+      }
+    ],
+    "correctedFENs": 22,
+    "needsManualResearch": true
+  }
+]

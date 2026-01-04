@@ -74,6 +74,10 @@ const HowToPage = lazy(() => import('@/pages/HowToPage'));
 const PrivacyPage = lazy(() => import('@/pages/PrivacyPage'));
 const TermsPage = lazy(() => import('@/pages/TermsPage'));
 
+// Dev-only pages (only loaded in development)
+const DevUIAuditPage = lazy(() => import('@/pages/DevUIAuditPage'));
+const DevPatternDebugPage = lazy(() => import('@/pages/DevPatternDebugPage'));
+
 // Loading fallback component
 function PageLoader() {
   return (
@@ -169,6 +173,15 @@ function AnimatedRoutes() {
         {/* Legal Pages */}
         <Route path="/privacy" element={<LazyPage><PrivacyPage /></LazyPage>} />
         <Route path="/terms" element={<LazyPage><TermsPage /></LazyPage>} />
+        
+        {/* Dev-only routes (only accessible in development) */}
+        {import.meta.env.DEV && (
+          <>
+            <Route path="/_dev/ui-audit" element={<LazyPage><DevUIAuditPage /></LazyPage>} />
+            <Route path="/_dev/patterns" element={<LazyPage><DevPatternDebugPage /></LazyPage>} />
+            <Route path="/_dev/patterns/:id" element={<LazyPage><DevPatternDebugPage /></LazyPage>} />
+          </>
+        )}
         
         {/* 404 Catch-all - must be last */}
         <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />

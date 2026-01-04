@@ -1,0 +1,245 @@
+// This file contains corrected FEN positions for instructive games
+// Games needing manual fix are marked with NEEDS_MANUAL_FIX
+
+// DAY 1: The Immortal Game - FENs corrected
+// Corrected 45 FEN positions
+
+// DAY 2: The Evergreen Game - FENs corrected
+// Corrected 47 FEN positions
+
+// DAY 3: The Opera Game - FENs corrected
+// Corrected 33 FEN positions
+
+// DAY 4: The Game of the Century - FENs corrected
+// Corrected 82 FEN positions
+
+// DAY 5: Rubinstein's Immortal - NEEDS MANUAL FIX
+// Errors: Move 33 (Bxe5) error: Invalid move: Bxe5
+
+// DAY 6: Kasparov's Immortal - NEEDS MANUAL FIX
+// Errors: Move 54 (Kc8) error: Invalid move: Kc8
+
+// DAY 7: The King Walk - NEEDS MANUAL FIX
+// Errors: Move 24 (Be7) error: Invalid move: Be7
+
+// DAY 8: The King Hunt - NEEDS MANUAL FIX
+// Errors: Move 24 (Kxh7) error: Invalid move: Kxh7
+
+// DAY 9: The Polish Immortal - NEEDS MANUAL FIX
+// Errors: Move 38 (Bh3+) error: Invalid move: Bh3+
+
+// DAY 10: Capablanca's Endgame Masterpiece - NEEDS MANUAL FIX
+// Errors: Move 43 (Rxd8) error: Invalid move: Rxd8
+
+// DAY 11: The Patriarch Falls - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxa6) error: Invalid move: Nxa6
+
+// DAY 12: The Magician's Attack - NEEDS MANUAL FIX
+// Errors: Move 35 (Nxe5) error: Invalid move: Nxe5
+
+// DAY 13: Fischer's Masterpiece - NEEDS MANUAL FIX
+// Errors: Move 23 (Bd2) error: Invalid move: Bd2
+
+// DAY 14: The Tide Turns - NEEDS MANUAL FIX
+// Errors: Move 17 (d5) error: Invalid move: d5
+
+// DAY 15: New Era Begins - NEEDS MANUAL FIX
+// Errors: Move 24 (dxe4) error: Invalid move: dxe4
+
+// DAY 16: Crown Changes Hands - NEEDS MANUAL FIX
+// Errors: Move 20 (O-O) error: Invalid move: O-O
+
+// DAY 76: Future Champion - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxc4) error: Invalid move: Nxc4
+
+// DAY 77: Lyon Thriller - NEEDS MANUAL FIX
+// Errors: Move 7 (cxd5) error: Invalid move: cxd5
+
+// DAY 31: The Machine Takes Over - NEEDS MANUAL FIX
+// Errors: Move 28 (Nf6) error: Invalid move: Nf6
+
+// DAY 32: Rubinstein's Rook - NEEDS MANUAL FIX
+// Errors: Move 28 (Nf6) error: Invalid move: Nf6
+
+// DAY 33: Polish Fire - NEEDS MANUAL FIX
+// Errors: Move 24 (f4) error: Invalid move: f4
+
+// DAY 35: Hypermodern Dawn - NEEDS MANUAL FIX
+// Errors: Move 29 (d5) error: Invalid move: d5
+
+// DAY 36: Yugoslav Power - NEEDS MANUAL FIX
+// Errors: Move 25 (bxc5) error: Invalid move: bxc5
+
+// DAY 37: Russian Clash - NEEDS MANUAL FIX
+// Errors: Move 25 (bxc5) error: Invalid move: bxc5
+
+// DAY 38: Hypermodern Gem - NEEDS MANUAL FIX
+// Errors: Move 5 (cxd4) error: Invalid move: cxd4
+
+// DAY 39: Defense Named - NEEDS MANUAL FIX
+// Errors: Move 29 (Bf3) error: Invalid move: Bf3
+
+// DAY 78: Ivanchuk Rising - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxc4) error: Invalid move: Nxc4
+
+// DAY 79: Defending Champion - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxc4) error: Invalid move: Nxc4
+
+// DAY 80: Attack vs Attack - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxc4) error: Invalid move: Nxc4
+
+// DAY 81: Fire on Board - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxc4) error: Invalid move: Nxc4
+
+// DAY 82: Berlin Wall - NEEDS MANUAL FIX
+// Errors: Move 14 (Nf6) error: Invalid move: Nf6
+
+// DAY 83: Anand's Speed - NEEDS MANUAL FIX
+// Errors: Move 7 (cxd5) error: Invalid move: cxd5
+
+// DAY 84: Bulgarian Fire - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxc4) error: Invalid move: Nxc4
+
+// DAY 85: Indian Tiger - NEEDS MANUAL FIX
+// Errors: Move 25 (Rad1) error: Invalid move: Rad1
+
+// DAY 86: Magnus Rising - NEEDS MANUAL FIX
+// Errors: Move 30 (c6) error: Invalid move: c6
+
+// DAY 87: New Era Begins - NEEDS MANUAL FIX
+// Errors: Move 7 (cxd5) error: Invalid move: cxd5
+
+// DAY 88: Champion Crowned - NEEDS MANUAL FIX
+// Errors: Move 14 (Nf6) error: Invalid move: Nf6
+
+// DAY 89: Defense Confirmed - NEEDS MANUAL FIX
+// Errors: Move 14 (Nf6) error: Invalid move: Nf6
+
+// DAY 90: Twelve Draws - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxc4) error: Invalid move: Nxc4
+
+// DAY 45: Champion Defends - NEEDS MANUAL FIX
+// Errors: Move 36 (Qf5) error: Invalid move: Qf5
+
+// DAY 46: The Upset - NEEDS MANUAL FIX
+// Errors: Move 36 (Qf5) error: Invalid move: Qf5
+
+// DAY 47: Soviet Rising - NEEDS MANUAL FIX
+// Errors: Move 36 (Qf5) error: Invalid move: Qf5
+
+// DAY 48: American Battle - NEEDS MANUAL FIX
+// Errors: Move 36 (Qf5) error: Invalid move: Qf5
+
+// DAY 49: Estonian Attack - NEEDS MANUAL FIX
+// Errors: Move 32 (Bxf6) error: Invalid move: Bxf6
+
+// DAY 50: Smyslov's Technique - NEEDS MANUAL FIX
+// Errors: Move 22 (Rxd1) error: Invalid move: Rxd1
+
+// DAY 51: Patriarch Rises - NEEDS MANUAL FIX
+// Errors: Move 36 (Qf5) error: Invalid move: Qf5
+
+// DAY 52: So Close - NEEDS MANUAL FIX
+// Errors: Move 26 (Qc7) error: Invalid move: Qc7
+
+// DAY 53: Smyslov's Crown - NEEDS MANUAL FIX
+// Errors: Move 20 (Bxc5) error: Invalid move: Bxc5
+
+// DAY 54: Magician's Triumph - NEEDS MANUAL FIX
+// Errors: Move 26 (Nd7) error: Invalid move: Nd7
+
+// DAY 55: Fire vs Fire - NEEDS MANUAL FIX
+// Errors: Move 34 (Ne5) error: Invalid move: Ne5
+
+// DAY 56: Iron Tigran - NEEDS MANUAL FIX
+// Errors: Move 21 (b4) error: Invalid move: b4
+
+// DAY 57: Spassky Breaks Through - NEEDS MANUAL FIX
+// Errors: Move 34 (Ne5) error: Invalid move: Ne5
+
+// DAY 58: Fischer Crushes - NEEDS MANUAL FIX
+// Errors: Move 34 (Ne5) error: Invalid move: Ne5
+
+// DAY 60: American Champion - NEEDS MANUAL FIX
+// Errors: Move 21 (b4) error: Invalid move: b4
+
+// DAY 61: Viktor Fights - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxc6) error: Invalid move: Nxc6
+
+// DAY 62: Karpov Arrives - NEEDS MANUAL FIX
+// Errors: Move 26 (Qxf5) error: Invalid move: Qxf5
+
+// DAY 63: Cold War Chess - NEEDS MANUAL FIX
+// Errors: Move 21 (Bxe6) error: Invalid move: Bxe6
+
+// DAY 64: Generational Shift - NEEDS MANUAL FIX
+// Errors: Move 21 (Bxe6) error: Invalid move: Bxe6
+
+// DAY 65: Soviet Fireworks - NEEDS MANUAL FIX
+// Errors: Move 24 (Nxg5) error: Invalid move: Nxg5
+
+// DAY 66: Geller's Art - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxd5) error: Invalid move: Nxd5
+
+// DAY 67: Soviet School - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxd5) error: Invalid move: Nxd5
+
+// DAY 68: Spassky's Brilliance - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxd5) error: Invalid move: Nxd5
+
+// DAY 69: King's Gambit Revival - NEEDS MANUAL FIX
+// Errors: Move 18 (Nxc6) error: Invalid move: Nxc6
+
+// DAY 70: Yugoslav Battle - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxd5) error: Invalid move: Nxd5
+
+// DAY 73: Defense Holds - NEEDS MANUAL FIX
+// Errors: Move 21 (Bxe6) error: Invalid move: Bxe6
+
+// DAY 74: Champion's Power - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxd5) error: Invalid move: Nxd5
+
+// DAY 75: Young Kasparov - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxd5) error: Invalid move: Nxd5
+
+// DAY 92: Internet Rivals - NEEDS MANUAL FIX
+// Errors: Move 24 (Nd5) error: Invalid move: Nd5
+
+// DAY 93: Number One - NEEDS MANUAL FIX
+// Errors: Move 28 (Bxf5) error: Invalid move: Bxf5
+
+// DAY 94: Chinese Star - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxe5) error: Invalid move: Nxe5
+
+// DAY 95: Minister of Defense - NEEDS MANUAL FIX
+// Errors: Move 28 (Bxf5) error: Invalid move: Bxf5
+
+// DAY 96: Nepo Collapses - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxe5) error: Invalid move: Nxe5
+
+// DAY 97: Young Gun - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxe5) error: Invalid move: Nxe5
+
+// DAY 98: New Champion - NEEDS MANUAL FIX
+// Errors: Move 28 (Bxf5) error: Invalid move: Bxf5
+
+// DAY 99: Youngest Champion - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxe5) error: Invalid move: Nxe5
+
+// DAY 100: French Attack - NEEDS MANUAL FIX
+// Errors: Move 25 (Nxe5) error: Invalid move: Nxe5
+
+// DAY 101: Gold Coins - NEEDS MANUAL FIX
+// Errors: Move 35 (Nf5) error: Invalid move: Nf5
+
+// DAY 102: Torre Attack - NEEDS MANUAL FIX
+// Errors: Move 22 (dxc5) error: Invalid move: dxc5
+
+// DAY 103: Alekhine's Guns - NEEDS MANUAL FIX
+// Errors: Move 28 (Bxf5) error: Invalid move: Bxf5
+
+// DAY 104: King Hunt - NEEDS MANUAL FIX
+// Errors: Move 28 (Bxf5) error: Invalid move: Bxf5
+
+// DAY 105: Réti System - NEEDS MANUAL FIX
+// Errors: Move 24 (Nc5) error: Invalid move: Nc5

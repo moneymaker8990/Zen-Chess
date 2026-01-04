@@ -211,6 +211,9 @@ const categoryPositions: Record<PositionalCategory, Array<{
 };
 
 // Generate a single pattern
+// NOTE: Currently generates only single-move patterns. To create proper multi-move sequences,
+// this would need chess.js validation and realistic move generation, which is complex.
+// For now, generated patterns are disabled in enhancedPatterns.ts
 function generatePattern(
   category: PositionalCategory,
   index: number,
@@ -279,6 +282,8 @@ export function generateAllPatterns(): EnhancedPattern[] {
 
 // Export generated patterns
 export const generatedPatterns = generateAllPatterns();
+
+
 
 
 

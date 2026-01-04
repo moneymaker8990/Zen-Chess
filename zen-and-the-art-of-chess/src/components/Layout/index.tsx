@@ -218,7 +218,7 @@ export function Layout({ children }: LayoutProps) {
   }
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex overflow-x-hidden">
+    <div className="min-h-screen min-h-[100dvh] flex overflow-x-hidden" style={{ maxWidth: '100vw' }}>
       {/* Skip to main content link for keyboard users */}
       <a 
         href="#main-content" 
@@ -245,7 +245,7 @@ export function Layout({ children }: LayoutProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 overflow-y-auto">
+        <nav className="flex-1 px-3 py-4 overflow-y-auto hide-scrollbar">
           {navSections.map((section, sectionIndex) => (
             <div key={sectionIndex} className={section.title ? 'mt-6 first:mt-0' : ''}>
               {section.title && (
@@ -268,7 +268,7 @@ export function Layout({ children }: LayoutProps) {
                     `}
                   >
                     {item.icon}
-                    <span className="flex-1">{item.label}</span>
+                    <span className="flex-1 min-w-0 truncate">{item.label}</span>
                     {'badge' in item && item.badge && (
                       <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
                         style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' }}>
@@ -375,7 +375,7 @@ export function Layout({ children }: LayoutProps) {
       <aside 
         id="mobile-sidebar"
         className={`
-          lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 flex flex-col
+          lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 flex flex-col overflow-hidden
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         `} 
         style={{ background: 'var(--bg-secondary)' }}
@@ -404,7 +404,7 @@ export function Layout({ children }: LayoutProps) {
         </div>
 
         {/* Mobile navigation - scrollable */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto overscroll-contain">
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto overscroll-contain hide-scrollbar">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
@@ -413,7 +413,7 @@ export function Layout({ children }: LayoutProps) {
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
               {item.icon}
-              <span>{item.label}</span>
+              <span className="truncate">{item.label}</span>
             </NavLink>
           ))}
           <div className="divider" />
@@ -547,8 +547,15 @@ export function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page content */}
-        <main id="main-content" className="p-4 lg:p-8 pb-safe overflow-x-hidden" role="main">
-          <div className="max-w-6xl mx-auto">
+        <main 
+          id="main-content" 
+          className="p-4 lg:p-6 pb-safe overflow-x-hidden min-h-0 flex-1" 
+          role="main"
+          style={{
+            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+          }}
+        >
+          <div className="max-w-6xl mx-auto w-full">
             {children}
           </div>
         </main>
