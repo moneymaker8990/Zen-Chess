@@ -305,7 +305,8 @@ export async function getNextPuzzleAnonymous(
 ): Promise<PuzzleWithMeta | null> {
   // Try Supabase first if configured
   if (!isSupabaseConfigured) {
-    logger.warn('Supabase not configured - using fallback puzzles');
+    logger.error('⚠️ SUPABASE NOT CONFIGURED - Using fallback puzzles. Add credentials to .env');
+    console.warn('🧩 Puzzle System: Using 50 static fallback puzzles. Configure Supabase for full adaptive puzzle experience.');
     return getFallbackPuzzle(userRating, excludeIds);
   }
   
