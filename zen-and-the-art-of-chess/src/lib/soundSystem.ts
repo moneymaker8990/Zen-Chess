@@ -55,20 +55,21 @@ export const useSoundStore = create<SoundStore>()(
 // Use actual audio samples for authentic sound
 // ============================================
 
-// Lichess-style sound URLs (open source, CC licensed)
+// Sound URLs - using local sounds in /public/sounds/ or fallback to empty
+// These are common chess sounds that should be hosted locally
 const SOUND_URLS = {
-  // Standard wooden piece sounds
-  move: 'https://lichess1.org/assets/sound/standard/Move.mp3',
-  capture: 'https://lichess1.org/assets/sound/standard/Capture.mp3',
-  check: 'https://lichess1.org/assets/sound/lisp/Check.mp3',
-  castle: 'https://lichess1.org/assets/sound/standard/Castles.mp3',
-  promote: 'https://lichess1.org/assets/sound/standard/Promote.mp3',
-  gameStart: 'https://lichess1.org/assets/sound/standard/GenericNotify.mp3',
-  gameEnd: 'https://lichess1.org/assets/sound/standard/GenericNotify.mp3',
-  illegal: 'https://lichess1.org/assets/sound/standard/Error.mp3',
+  // Standard wooden piece sounds - use local files
+  move: '/sounds/move.mp3',
+  capture: '/sounds/capture.mp3',
+  check: '/sounds/check.mp3',
+  castle: '/sounds/castle.mp3',
+  promote: '/sounds/promote.mp3',
+  gameStart: '/sounds/notify.mp3',
+  gameEnd: '/sounds/notify.mp3',
+  illegal: '/sounds/error.mp3',
   // UI sounds
-  success: 'https://lichess1.org/assets/sound/standard/Confirmation.mp3',
-  lowTime: 'https://lichess1.org/assets/sound/standard/LowTime.mp3',
+  success: '/sounds/success.mp3',
+  lowTime: '/sounds/lowtime.mp3',
 };
 
 // Preloaded audio buffers

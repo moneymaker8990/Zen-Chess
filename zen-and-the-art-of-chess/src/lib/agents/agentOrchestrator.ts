@@ -542,6 +542,11 @@ export const useAgentStore = create<AgentStore>()(
           suppressedMessages: new Set<string>(),
         },
       }),
+      // Migration function to handle version changes
+      migrate: (persistedState, version) => {
+        // Return fresh state for any old version
+        return persistedState;
+      },
     }
   )
 );

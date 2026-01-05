@@ -195,7 +195,7 @@ function getPuzzleDifficulty(puzzle: PuzzleWithMeta): number {
 // Get puzzle explanation from themes (Lichess puzzles don't have built-in explanations)
 function getPuzzleExplanation(puzzle: PuzzleWithMeta): string | null {
   // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/36a72d14-14e6-4dc3-8f08-e0b574ec4f5a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'PuzzlesPage.tsx:getPuzzleExplanation',message:'getPuzzleExplanation called',data:{puzzleId:puzzle?.id,themes:puzzle?.themes},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
+  // Debug telemetry removed
   // #endregion
   const themes = puzzle.themes || [];
   if (themes.length === 0) return null;
