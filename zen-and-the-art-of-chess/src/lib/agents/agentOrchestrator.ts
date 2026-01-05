@@ -97,9 +97,12 @@ function getMessageSignature(agentId: AgentId, title: string): string {
  */
 function shouldSuppressMessage(
   signature: string,
-  suppressedMessages: Set<string>,
-  cooldownMinutes: number = 30
+  suppressedMessages: Set<string> | undefined | null
 ): boolean {
+  // Handle case where suppressedMessages might not be a Set (e.g., after persistence restore)
+  if (!suppressedMessages || !(suppressedMessages instanceof Set)) {
+    return false;
+  }
   return suppressedMessages.has(signature);
 }
 
@@ -219,8 +222,13 @@ export const useAgentStore = create<AgentStore>()(
           // Generate message signature for suppression check
           const signature = getMessageSignature(message.agentId, message.title);
           
+          // Ensure suppressedMessages is a Set (it might not be after persistence restore)
+          const currentSuppressed = store.state.suppressedMessages instanceof Set
+            ? store.state.suppressedMessages
+            : new Set<string>();
+          
           // Check if message should be suppressed (already seen this session)
-          if (shouldSuppressMessage(signature, store.state.suppressedMessages)) {
+          if (shouldSuppressMessage(signature, currentSuppressed)) {
             // Skip this message - already shown this session
             return store;
           }
@@ -233,7 +241,7 @@ export const useAgentStore = create<AgentStore>()(
           if (hasSimilar) return store;
           
           // Add to suppressed messages set (prevent showing again this session)
-          const newSuppressedMessages = new Set(store.state.suppressedMessages);
+          const newSuppressedMessages = new Set(currentSuppressed);
           newSuppressedMessages.add(signature);
           
           // Update agent cooldown
@@ -523,13 +531,15 @@ export const useAgentStore = create<AgentStore>()(
     }),
     {
       name: 'zen-chess-agents',
-      version: 1,
+      version: 2, // Bump version to clear old persisted data with Set serialization issues
       partialize: (state) => ({
         state: {
           ...state.state,
           // Don't persist active messages - they're session-specific
           activeMessages: [],
           messageQueue: [],
+          // Don't persist suppressedMessages - it's session-based and Sets don't serialize with JSON
+          suppressedMessages: new Set<string>(),
         },
       }),
     }
