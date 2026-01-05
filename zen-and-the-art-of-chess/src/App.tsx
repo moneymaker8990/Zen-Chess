@@ -67,6 +67,7 @@ const IntuitionTrainerPage = lazy(() => import('@/pages/IntuitionTrainerPage'));
 const WeaknessDetectorPage = lazy(() => import('@/pages/WeaknessDetectorPage'));
 const PricingPage = lazy(() => import('@/pages/PricingPage'));
 const AuthPage = lazy(() => import('@/pages/AuthPage'));
+const AuthCallbackPage = lazy(() => import('@/pages/AuthCallbackPage'));
 const AICoachDashboard = lazy(() => import('@/pages/AICoachDashboard'));
 const BeginnerPage = lazy(() => import('@/pages/BeginnerPage'));
 const PlayFriendPage = lazy(() => import('@/pages/PlayFriendPage'));
@@ -159,6 +160,7 @@ function AnimatedRoutes() {
         {/* Auth & Monetization */}
         <Route path="/pricing" element={<LazyPage><PricingPage /></LazyPage>} />
         <Route path="/auth" element={<LazyPage><AuthPage /></LazyPage>} />
+        <Route path="/auth/callback" element={<LazyPage><AuthCallbackPage /></LazyPage>} />
         
         {/* AI Coach Hub */}
         <Route path="/ai-coach" element={<LazyPage><AICoachDashboard /></LazyPage>} />
