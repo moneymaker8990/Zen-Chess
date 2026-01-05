@@ -334,8 +334,8 @@ const OPENING_POSITIONS: FlashPosition[] = [
         type: 'piece-count',
         question: 'How many pawns has Black moved?',
         options: ['1', '2', '3', '4'],
-        correctIndex: 2,
-        explanation: 'Black moved b6, e6, and Nf6 (knight not pawn) - 2 pawns: b and e'
+        correctIndex: 1,
+        explanation: 'Black moved b6 and e6 - 2 pawns total (Nf6 is a knight, not a pawn)'
       },
       {
         type: 'material',

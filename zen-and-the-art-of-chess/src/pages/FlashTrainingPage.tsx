@@ -120,6 +120,94 @@ const saveLastShownPosition = (fen: string) => {
 const FLASH_POSITIONS = ALL_FLASH_POSITIONS;
 
 // ============================================
+// OBSERVATION GUIDES BY QUESTION TYPE
+// ============================================
+
+const OBSERVATION_GUIDES: Record<FlashQuestion['type'], string[]> = {
+  'piece-count': [
+    'Scan systematically: knights, bishops, rooks, queens, kings',
+    'Count each piece type separately',
+    'Check both colors - White and Black'
+  ],
+  'material': [
+    'Compare total material value',
+    'Count pawns, minor pieces, major pieces',
+    'Look for material imbalances'
+  ],
+  'best-piece': [
+    'Look for pieces on active squares',
+    'Check pieces controlling center',
+    'Identify pieces with high mobility',
+    'Find pieces with attacking potential'
+  ],
+  'worst-piece': [
+    'Find pieces on passive squares',
+    'Look for blocked or trapped pieces',
+    'Identify pieces with limited mobility',
+    'Check for pieces doing nothing'
+  ],
+  'threats': [
+    'Check for checks',
+    'Look for captures (especially undefended pieces)',
+    'Scan for forks, pins, skewers',
+    'Watch for discovered attacks',
+    'Identify mate threats'
+  ],
+  'weakness': [
+    'Find weak squares (holes)',
+    'Look for weak pawns (isolated, doubled, backward)',
+    'Check for exposed kings',
+    'Identify pieces that are hard to defend'
+  ],
+  'plan': [
+    'Assess pawn structure',
+    'Check piece placement and activity',
+    'Evaluate king safety',
+    'Identify weaknesses to target',
+    'Consider typical plans for the position type'
+  ],
+  'evaluation': [
+    'Compare material balance',
+    'Assess piece activity',
+    'Check king safety',
+    'Evaluate pawn structure',
+    'Consider space and control'
+  ],
+  'king-safety': [
+    'Check if kings are castled',
+    'Look at pawn shields',
+    'Identify attacking pieces nearby',
+    'Check for open files/ranks',
+    'Assess king mobility'
+  ],
+  'pawn-structure': [
+    'Count pawn islands',
+    'Look for weak pawns (isolated, doubled, backward)',
+    'Check for passed pawns',
+    'Identify pawn majorities',
+    'Evaluate pawn breaks'
+  ],
+  'square-control': [
+    'Check which squares are controlled',
+    'Look for weak squares (holes)',
+    'Identify outpost squares',
+    'Evaluate central control'
+  ]
+};
+
+// Get observation hints for a question type
+const getObservationHints = (questionType: FlashQuestion['type'], difficulty: Difficulty): string[] => {
+  const baseHints = OBSERVATION_GUIDES[questionType] || [];
+  if (difficulty === 'beginner') {
+    return baseHints;
+  } else if (difficulty === 'intermediate') {
+    return baseHints.slice(0, Math.ceil(baseHints.length * 0.7));
+  } else {
+    return baseHints.slice(0, Math.ceil(baseHints.length * 0.5));
+  }
+};
+
+// ============================================
 // MAIN COMPONENT
 // ============================================
 
@@ -155,24 +243,64 @@ export function FlashTrainingPage() {
   const [transitionPhase, setTransitionPhase] = useState<'none' | 'fading-out' | 'transitioning' | 'fading-in'>('none');
   const [showSessionComplete, setShowSessionComplete] = useState(false);
   const [breathingPause, setBreathingPause] = useState(false);
+  const [showPrePositionGuide, setShowPrePositionGuide] = useState(false);
   
   // Session tracking - avoid showing same position twice in a session
   const [seenPositions, setSeenPositions] = useState<Set<string>>(new Set());
   // Track weak categories for session summary
-  const [sessionMistakes, setSessionMistakes] = useState<Array<{ category: string; question: string }>>([]);
+  const [sessionMistakes, setSessionMistakes] = useState<Array<{ category: string; question: string; position: FlashPosition; questionIndex: number }>>([]);
+  
+  // Educational features state
+  const [studyMode, setStudyMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('zenChessFlashStudyMode');
+    return saved === 'true';
+  });
+  const [showHints, setShowHints] = useState<boolean>(() => {
+    const saved = localStorage.getItem('zenChessFlashShowHints');
+    return saved !== 'false'; // Default to true
+  });
+  const [reviewMode, setReviewMode] = useState(false);
+  const [mistakesToReview, setMistakesToReview] = useState<Array<{ position: FlashPosition; questionIndex: number; selectedAnswer: number }>>([]);
+  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+  const [learningPathMode, setLearningPathMode] = useState(false);
+  const [learningPathProgress, setLearningPathProgress] = useState<Record<string, boolean>>({});
+  const [showLearningPathTutorial, setShowLearningPathTutorial] = useState(false);
+  const [learningPathTutorialMode, setLearningPathTutorialMode] = useState<FlashMode | null>(null);
   
   const timerRef = useRef<ReturnType<typeof setInterval>>();
   const questionTimerRef = useRef<ReturnType<typeof setInterval>>();
   
-  // Save stats
+  // Save stats and preferences
   useEffect(() => {
     localStorage.setItem('zenChessFlashStats', JSON.stringify(stats));
   }, [stats]);
+  
+  useEffect(() => {
+    localStorage.setItem('zenChessFlashStudyMode', studyMode.toString());
+  }, [studyMode]);
+  
+  useEffect(() => {
+    localStorage.setItem('zenChessFlashShowHints', showHints.toString());
+  }, [showHints]);
   
   // Reset seen positions when mode changes
   useEffect(() => {
     setSeenPositions(new Set());
   }, [mode]);
+  
+  // Show learning path tutorial when starting a new concept (initial start)
+  useEffect(() => {
+    if (learningPathMode && sessionActive && mode === 'piece-count' && positionsCompleted === 0 && !showingPosition && !showingQuestion && !showLearningPathTutorial) {
+      const isNewConcept = !learningPathProgress[mode];
+      if (isNewConcept) {
+        setShowLearningPathTutorial(true);
+        setLearningPathTutorialMode(mode);
+        // Pause timers
+        clearInterval(timerRef.current);
+        clearInterval(questionTimerRef.current);
+      }
+    }
+  }, [learningPathMode, sessionActive, mode, learningPathProgress, positionsCompleted, showingPosition, showingQuestion, showLearningPathTutorial]);
   
   // Temporary debug: clear localStorage position on mount to test randomization
   useEffect(() => {
@@ -204,6 +332,61 @@ export function FlashTrainingPage() {
     );
   }, []);
   
+  // Start position viewing (called after pre-position guide or immediately)
+  const startPositionViewing = useCallback((position: FlashPosition) => {
+    setShowPrePositionGuide(false);
+    setShowingPosition(true);
+    setShowingQuestion(false);
+    
+    // Start flash timer with countdown warning
+    const settings = DIFFICULTY_SETTINGS[difficulty];
+    setTimeRemaining(settings.flashTime);
+    setCountdownWarning(false);
+    setTransitionPhase('none');
+
+    timerRef.current = setInterval(() => {
+      setTimeRemaining(prev => {
+        // Trigger countdown warning
+        if (prev <= settings.countdownWarning && prev > settings.countdownWarning - 100) {
+          setCountdownWarning(true);
+        }
+        
+        if (prev <= 800 && prev > 100) {
+          // Start fade-out transition
+          setTransitionPhase('fading-out');
+        }
+        
+        if (prev <= 100) {
+          clearInterval(timerRef.current);
+          console.log('[Timer] Position viewing complete, transitioning to question...');
+          console.log('[Timer] studyMode:', studyMode);
+          setTransitionPhase('transitioning');
+          
+          // Smooth transition pause before showing question
+          setTimeout(() => {
+            console.log('[Timer] Setting states: showingPosition=', !studyMode, ', showingQuestion=true');
+            // In study mode, keep position visible
+            if (!studyMode) {
+              setShowingPosition(false);
+            }
+            setCountdownWarning(false);
+            setTransitionPhase('fading-in');
+            setShowingQuestion(true);
+            setTimeRemaining(settings.questionTime);
+            
+            setTimeout(() => {
+              setTransitionPhase('none');
+              console.log('[Timer] Transition complete');
+            }, 300);
+          }, 400);
+          
+          return 0; // Return 0 instead of questionTime to avoid premature update
+        }
+        return prev - 100;
+      });
+    }, 100);
+  }, [difficulty, studyMode]);
+  
   // Load next position - accepts optional mode override to avoid stale closure issues
   // Now with de-duplication to avoid showing the same position twice in a session
   // AND persists last-shown position across sessions to avoid immediate repeats
@@ -223,10 +406,11 @@ export function FlashTrainingPage() {
       !seenPositions.has(p.fen) && p.fen !== lastShownFen
     );
     
-    // If all positions seen, reset (but still avoid immediate repeat from last session)
-    const availablePositions = unseenPositions.length > 0 
+    // Don't reset until 80% of positions seen (better variation)
+    const minUnseenBeforeReset = Math.floor(positions.length * 0.2);
+    const availablePositions = unseenPositions.length >= minUnseenBeforeReset
       ? unseenPositions 
-      : positions.filter(p => p.fen !== lastShownFen);
+      : positions.filter(p => p.fen !== lastShownFen); // Only exclude last position on reset
     
     // Shuffle for better randomization
     const shuffledPositions = shuffleArray(availablePositions);
@@ -239,60 +423,44 @@ export function FlashTrainingPage() {
     saveLastShownPosition(randomPos.fen);
     
     // Debug logging - expanded for visibility
-    console.log('[Flash Training] Position selected:');
-    console.log('  Mode:', activeMode);
-    console.log('  Total positions in database:', positions.length);
-    console.log('  Available after filtering seen:', availablePositions.length);
-    console.log('  Selected title:', randomPos.title || 'Untitled');
-    console.log('  FEN:', randomPos.fen.slice(0, 40));
-    console.log('  Full position object:', randomPos);
+    console.log('[Position Selection]', {
+      mode: activeMode,
+      totalInDatabase: positions.length,
+      seenThisSession: seenPositions.size,
+      unseenPositions: unseenPositions.length,
+      availableAfterFilter: availablePositions.length,
+      selectedTitle: randomPos.title || 'Untitled',
+      questionType: randomPos.questions[0]?.type
+    });
     
     setCurrentPosition(randomPos);
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
     setShowResult(false);
-    setShowingPosition(true);
+    setShowingPosition(false);
     setShowingQuestion(false);
     
-    // Start flash timer with countdown warning
-    const settings = DIFFICULTY_SETTINGS[difficulty];
-    setTimeRemaining(settings.flashTime);
-    setCountdownWarning(false);
-    setTransitionPhase('none');
+    // Show pre-position guide with observation tips
+    if (showHints) {
+      setShowPrePositionGuide(true);
+      setTransitionPhase('none');
+      // Don't start timer yet - wait for user to click "Ready"
+    } else {
+      // Skip guide and show position immediately
+      startPositionViewing(randomPos);
+    }
+  }, [mode, difficulty, getPositionsForMode, seenPositions, showHints, startPositionViewing]);
 
-    timerRef.current = setInterval(() => {
-      setTimeRemaining(prev => {
-        // Trigger countdown warning
-        if (prev <= settings.countdownWarning && prev > settings.countdownWarning - 100) {
-          setCountdownWarning(true);
-        }
-        
-        if (prev <= 800) {
-          // Start fade-out transition
-          setTransitionPhase('fading-out');
-        }
-        
-        if (prev <= 100) {
-          clearInterval(timerRef.current);
-          setTransitionPhase('transitioning');
-          
-          // Smooth transition pause before showing question
-          setTimeout(() => {
-            setShowingPosition(false);
-            setCountdownWarning(false);
-            setTransitionPhase('fading-in');
-            setShowingQuestion(true);
-            
-            setTimeout(() => setTransitionPhase('none'), 300);
-          }, 400);
-          
-          return settings.questionTime;
-        }
-        return prev - 100;
-      });
-    }, 100);
-  }, [mode, difficulty, getPositionsForMode, seenPositions]);
-
+  // Learning path progression order
+  const LEARNING_PATH_ORDER: FlashMode[] = [
+    'piece-count',
+    'best-piece',
+    'threats',
+    'weaknesses',
+    'plans',
+    'evaluation'
+  ];
+  
   // Start a session - accepts mode to avoid stale state
   const startSession = useCallback((startMode: FlashMode) => {
     setSessionActive(true);
@@ -300,10 +468,20 @@ export function FlashTrainingPage() {
     setSessionStreak(0);
     setQuestionsAnswered(0);
     setPositionsCompleted(0);
-    setSeenPositions(new Set()); // Reset seen positions for new session
+    setSeenPositions(new Set()); // Clear seen positions for fresh start
     setSessionMistakes([]); // Reset mistake tracking
-    loadNextPosition(startMode);
-  }, [loadNextPosition]);
+    setMistakesToReview([]); // Clear review list
+    
+    console.log('[Session Start] Mode:', startMode, 'Learning Path:', learningPathMode);
+    console.log('[Session Start] Cleared seen positions for better variety');
+    
+    if (learningPathMode) {
+      setMode('piece-count');
+      loadNextPosition('piece-count');
+    } else {
+      loadNextPosition(startMode);
+    }
+  }, [loadNextPosition, learningPathMode]);
   
   // Handle answer selection
   const handleAnswer = useCallback((index: number) => {
@@ -352,11 +530,20 @@ export function FlashTrainingPage() {
         }
       }));
       
-      // Track mistake for session summary
+      // Track mistake for session summary and review
       if (currentPosition) {
         setSessionMistakes(prev => [...prev, {
           category: question.type,
           question: question.question.slice(0, 50),
+          position: currentPosition,
+          questionIndex: currentQuestionIndex
+        }]);
+        
+        // Add to review list
+        setMistakesToReview(prev => [...prev, {
+          position: currentPosition,
+          questionIndex: currentQuestionIndex,
+          selectedAnswer: index
         }]);
       }
     }
@@ -369,13 +556,22 @@ export function FlashTrainingPage() {
     setSessionActive(false);
     setShowingPosition(false);
     setShowingQuestion(false);
+    setShowPrePositionGuide(false);
+    setShowLearningPathTutorial(false);
+    
+    // If no positions completed, return to menu
+    if (positionsCompleted === 0) {
+      setMode('menu');
+      setPositionsCompleted(0);
+      return;
+    }
     
     setStats(prev => ({
       ...prev,
       totalSessions: prev.totalSessions + 1,
       lastSession: new Date().toISOString()
     }));
-  }, []);
+  }, [positionsCompleted]);
   
   // Continue to next question or position with smooth transitions
   const handleContinue = useCallback(() => {
@@ -417,7 +613,24 @@ export function FlashTrainingPage() {
         
         setTimeout(() => {
           setBreathingPause(false);
-          loadNextPosition(mode);
+          
+          // Learning path progression: advance after 3 positions of current concept
+          if (learningPathMode && positionsCompleted > 0 && positionsCompleted % 3 === 0) {
+            const currentIndex = LEARNING_PATH_ORDER.indexOf(mode);
+            if (currentIndex < LEARNING_PATH_ORDER.length - 1) {
+              const nextMode = LEARNING_PATH_ORDER[currentIndex + 1];
+              setMode(nextMode);
+              setLearningPathProgress(prev => ({ ...prev, [mode]: true }));
+              // Show tutorial for new concept
+              setShowLearningPathTutorial(true);
+              setLearningPathTutorialMode(nextMode);
+            } else {
+              // Learning path complete
+              loadNextPosition(mode);
+            }
+          } else {
+            loadNextPosition(mode);
+          }
         }, 800);
       }
     }
@@ -431,11 +644,10 @@ export function FlashTrainingPage() {
     };
   }, []);
   
-  // Start question timer when showing question
+  // Start question timer when showing question (not in study mode)
   useEffect(() => {
-    if (showingQuestion && !showResult) {
+    if (showingQuestion && !showResult && !studyMode) {
       const settings = DIFFICULTY_SETTINGS[difficulty];
-      setTimeRemaining(settings.questionTime);
       
       questionTimerRef.current = setInterval(() => {
         setTimeRemaining(prev => {
@@ -448,10 +660,13 @@ export function FlashTrainingPage() {
           return prev - 100;
         });
       }, 100);
+    } else if (studyMode && showingQuestion && !showResult) {
+      // In study mode, set a very long time (effectively unlimited)
+      setTimeRemaining(999999);
     }
     
     return () => clearInterval(questionTimerRef.current);
-  }, [showingQuestion, showResult, difficulty]);
+  }, [showingQuestion, showResult, difficulty, studyMode, handleAnswer]);
   
   // Accuracy calculation
   const accuracy = useMemo(() => {
@@ -528,11 +743,57 @@ export function FlashTrainingPage() {
           </div>
         </div>
         
+        {/* Study Options */}
+        <div className="card p-3 sm:p-6">
+          <h3 className="text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4" style={{ color: 'var(--text-muted)' }}>
+            Learning Options
+          </h3>
+          <div className="space-y-3">
+            <label className="flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-[var(--bg-tertiary)] transition-colors" style={{ background: studyMode ? 'var(--accent-primary)' + '20' : 'var(--bg-tertiary)' }}>
+              <div>
+                <div className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>📚 Study Mode</div>
+                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Keep board visible while answering</div>
+              </div>
+              <input
+                type="checkbox"
+                checked={studyMode}
+                onChange={(e) => setStudyMode(e.target.checked)}
+                className="w-5 h-5 rounded"
+              />
+            </label>
+            <label className="flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-[var(--bg-tertiary)] transition-colors" style={{ background: showHints ? 'var(--accent-primary)' + '20' : 'var(--bg-tertiary)' }}>
+              <div>
+                <div className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>💡 Observation Hints</div>
+                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Show what to look for during viewing</div>
+              </div>
+              <input
+                type="checkbox"
+                checked={showHints}
+                onChange={(e) => setShowHints(e.target.checked)}
+                className="w-5 h-5 rounded"
+              />
+            </label>
+          </div>
+        </div>
+        
         {/* Training Modes */}
         <div className="space-y-3 sm:space-y-4">
-          <h3 className="text-xs sm:text-sm uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-            Training Modes
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs sm:text-sm uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+              Training Modes
+            </h3>
+            <button
+              onClick={() => {
+                setLearningPathMode(true);
+                setMode('piece-count');
+                startSession('piece-count');
+              }}
+              className="text-xs px-3 py-1 rounded-full font-medium"
+              style={{ background: 'var(--accent-primary)', color: 'white' }}
+            >
+              🎓 Learning Path
+            </button>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
             {(Object.entries(MODE_INFO) as [FlashMode, typeof MODE_INFO[FlashMode]][])
               .filter(([key]) => key !== 'menu')
@@ -639,21 +900,26 @@ export function FlashTrainingPage() {
     return (
       <div className="space-y-6 animate-fade-in max-w-full">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">{modeInfo.icon}</span>
+        <div className="card p-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl" style={{ background: modeInfo.color + '20' }}>
+              {modeInfo.icon}
+            </div>
             <div>
-              <h2 className="font-medium" style={{ color: 'var(--text-primary)' }}>{modeInfo.name}</h2>
+              <h2 className="font-medium text-lg" style={{ color: 'var(--text-primary)' }}>{modeInfo.name}</h2>
               <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Position {positionsCompleted + 1}/10</p>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="text-center">
+          <div className="flex items-center gap-4">
+            <div className="text-center px-3">
               <div className="text-2xl font-mono font-bold" style={{ color: '#4ade80' }}>{sessionScore}</div>
               <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Score</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-mono font-bold" style={{ color: '#f59e0b' }}>🔥 {sessionStreak}</div>
+            <div className="text-center px-3">
+              <div className="text-2xl font-mono font-bold flex items-center gap-1" style={{ color: '#f59e0b' }}>
+                <span>🔥</span>
+                <span>{sessionStreak}</span>
+              </div>
               <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Streak</div>
             </div>
             <button
@@ -665,16 +931,111 @@ export function FlashTrainingPage() {
           </div>
         </div>
         
+        {/* Session Controls Toolbar */}
+        <div className="card p-2 sm:p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-0">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <button
+              onClick={() => setStudyMode(prev => !prev)}
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 sm:gap-2 ${
+                studyMode ? 'ring-2 ring-purple-500' : ''
+              }`}
+              style={{ background: studyMode ? '#8b5cf6' : 'var(--bg-tertiary)', color: studyMode ? 'white' : 'var(--text-secondary)' }}
+            >
+              <span className="text-sm sm:text-base">{studyMode ? '📚' : '📖'}</span>
+              <span className="hidden sm:inline">Study Mode</span>
+              <span className="sm:hidden">Study</span>
+            </button>
+            <button
+              onClick={() => setShowHints(prev => !prev)}
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 sm:gap-2 ${
+                showHints ? 'ring-2 ring-green-500' : ''
+              }`}
+              style={{ background: showHints ? '#4ade80' : 'var(--bg-tertiary)', color: showHints ? 'white' : 'var(--text-secondary)' }}
+            >
+              <span className="text-sm sm:text-base">{showHints ? '💡' : '🔦'}</span>
+              <span className="hidden sm:inline">Hints</span>
+              <span className="sm:hidden">Hints</span>
+            </button>
+            <button
+              onClick={() => {
+                if (currentPosition) {
+                  // Skip current position
+                  setSeenPositions(prev => new Set([...prev, currentPosition.fen]));
+                  loadNextPosition(mode);
+                }
+              }}
+              className="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 sm:gap-2"
+              style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}
+            >
+              <span className="text-sm sm:text-base">⏭️</span>
+              <span>Skip</span>
+            </button>
+          </div>
+          <div className="text-xs text-center sm:text-left" style={{ color: 'var(--text-muted)' }}>
+            {seenPositions.size} seen
+          </div>
+        </div>
+        
         {/* Timer Bar */}
-        <div className="relative h-2 rounded-full overflow-hidden" style={{ background: 'var(--bg-tertiary)' }}>
+        <div className="relative h-3 rounded-full overflow-hidden shadow-inner" style={{ background: 'var(--bg-tertiary)' }}>
           <div 
             className="absolute inset-y-0 left-0 transition-all duration-100 rounded-full"
             style={{ 
               width: `${timePercent}%`,
-              background: timePercent > 30 ? 'var(--accent-primary)' : '#ef4444'
+              background: timePercent > 30 ? 'linear-gradient(90deg, var(--accent-primary), #4ade80)' : 'linear-gradient(90deg, #ef4444, #f97316)'
             }}
           />
         </div>
+        
+        {/* Learning Path Tutorial Overlay */}
+        {showLearningPathTutorial && learningPathTutorialMode && (
+          <div className="fixed inset-0 lg:inset-y-0 lg:left-64 lg:right-0 z-50 flex items-center justify-center animate-fade-in" style={{ background: 'rgba(0,0,0,0.8)' }}>
+            <div className="max-w-2xl mx-4 card p-8 text-center">
+              <div className="text-6xl mb-4">{MODE_INFO[learningPathTutorialMode].icon}</div>
+              <h3 className="text-3xl font-display mb-4" style={{ color: 'var(--text-primary)' }}>
+                {MODE_INFO[learningPathTutorialMode].name}
+              </h3>
+              <p className="text-lg mb-6" style={{ color: 'var(--text-secondary)' }}>
+                {MODE_INFO[learningPathTutorialMode].description}
+              </p>
+              
+              <div className="text-left mb-6 p-4 rounded-xl" style={{ background: 'var(--bg-tertiary)' }}>
+                <div className="font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
+                  What to focus on:
+                </div>
+                <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  {getObservationHints(
+                    learningPathTutorialMode === 'piece-count' ? 'piece-count' :
+                    learningPathTutorialMode === 'best-piece' ? 'best-piece' :
+                    learningPathTutorialMode === 'threats' ? 'threats' :
+                    learningPathTutorialMode === 'weaknesses' ? 'weakness' :
+                    learningPathTutorialMode === 'plans' ? 'plan' : 'evaluation',
+                    'beginner'
+                  ).map((hint, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span style={{ color: 'var(--accent-primary)' }}>•</span>
+                      <span>{hint}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <button
+                onClick={() => {
+                  setShowLearningPathTutorial(false);
+                  setLearningPathProgress(prev => ({ ...prev, [learningPathTutorialMode]: true }));
+                  // Resume session by loading position
+                  if (learningPathTutorialMode) {
+                    loadNextPosition(learningPathTutorialMode);
+                  }
+                }}
+                className="btn-primary"
+              >
+                Start Training →
+              </button>
+            </div>
+          </div>
+        )}
         
         {/* Breathing pause overlay - positioned to respect sidebar on desktop */}
         {breathingPause && (
@@ -691,6 +1052,53 @@ export function FlashTrainingPage() {
           </div>
         )}
 
+        {/* Pre-Position Guide - Show Before Board */}
+        {showPrePositionGuide && currentPosition && currentPosition.questions[currentQuestionIndex] && (
+          <div className="fixed inset-0 lg:inset-y-0 lg:left-64 lg:right-0 z-50 flex items-center justify-center animate-fade-in" style={{ background: 'rgba(0,0,0,0.85)' }}>
+            <div className="max-w-2xl mx-4 card p-8">
+              <div className="text-center mb-6">
+                <div className="text-6xl mb-4">👀</div>
+                <h3 className="text-3xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>
+                  Get Ready!
+                </h3>
+                <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+                  In a moment, you'll see a position for {(DIFFICULTY_SETTINGS[difficulty].flashTime / 1000).toFixed(0)} seconds
+                </p>
+              </div>
+              
+              <div className="text-left mb-8 p-6 rounded-xl shadow-lg" style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(74, 222, 128, 0.1))', border: '2px solid var(--accent-primary)' + '40' }}>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-primary)' }}>
+                    <span className="text-2xl">💡</span>
+                  </div>
+                  <span className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    What to Look For:
+                  </span>
+                </div>
+                <ul className="space-y-3 text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  {getObservationHints(currentPosition.questions[currentQuestionIndex].type, difficulty).map((hint, idx) => (
+                    <li key={idx} className="flex items-start gap-3 p-2 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">
+                      <span className="text-xl mt-0.5 flex-shrink-0" style={{ color: 'var(--accent-primary)' }}>✓</span>
+                      <span className="flex-1">{hint}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <button
+                onClick={() => {
+                  if (currentPosition) {
+                    startPositionViewing(currentPosition);
+                  }
+                }}
+                className="btn-primary w-full text-lg py-4"
+              >
+                I'm Ready - Show Position →
+              </button>
+            </div>
+          </div>
+        )}
+        
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0 max-w-full">
           {/* Board */}
@@ -699,8 +1107,8 @@ export function FlashTrainingPage() {
               className="relative"
               style={{ width: boardSize, maxWidth: '100%', height: boardSize }}
             >
-              {/* Show board during position flash or result */}
-              {(showingPosition || showResult) && (
+              {/* Show board during position flash, result, or study mode during questions */}
+              {(showingPosition || showResult || (studyMode && showingQuestion)) && (
                 <div 
                   className={`transition-all duration-500 ease-out ${
                     transitionPhase === 'fading-out' ? 'opacity-50 scale-[0.98]' : 
@@ -731,18 +1139,18 @@ export function FlashTrainingPage() {
                 </div>
               )}
 
-              {/* Flash overlay - position hidden */}
-              {!showingPosition && !showResult && transitionPhase !== 'fading-out' && (
+              {/* Flash overlay - position hidden (when study mode is off during questions) */}
+              {showingQuestion && !showResult && !studyMode && transitionPhase !== 'fading-out' && (
                 <div
-                  className="absolute inset-0 flex items-center justify-center animate-fade-in rounded-lg"
-                  style={{ background: 'var(--bg-primary)', border: '2px solid var(--border-subtle)' }}
+                  className="absolute inset-0 flex items-center justify-center animate-fade-in rounded-xl shadow-2xl"
+                  style={{ background: 'linear-gradient(135deg, var(--bg-primary), var(--bg-secondary))', border: '3px solid var(--accent-primary)' + '40' }}
                 >
-                  <div className="text-center">
-                    <div className="text-6xl mb-4 animate-bounce">🧠</div>
-                    <h3 className="text-xl font-display" style={{ color: 'var(--text-primary)' }}>
+                  <div className="text-center p-8">
+                    <div className="text-7xl mb-4 animate-pulse">🧠</div>
+                    <h3 className="text-2xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>
                       Position Hidden
                     </h3>
-                    <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
+                    <p className="text-base" style={{ color: 'var(--text-muted)' }}>
                       Answer from memory!
                     </p>
                   </div>
@@ -756,30 +1164,32 @@ export function FlashTrainingPage() {
             transitionPhase === 'fading-out' ? 'opacity-70 translate-y-1' : 
             transitionPhase === 'fading-in' ? 'opacity-100 translate-y-0' : ''
           }`}>
-            {showingPosition ? (
-              <div className={`card p-8 text-center transition-all duration-500 ${
-                countdownWarning ? 'ring-2 ring-amber-400/30' : ''
-              }`}>
-                <div className="text-6xl mb-4">👀</div>
-                <h3 className="text-2xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>
-                  {countdownWarning ? 'Position fading soon...' : 'Memorize the Position!'}
+            {showingPosition && !showingQuestion ? (
+              <div className={`card p-8 text-center transition-all duration-500 shadow-lg ${
+                countdownWarning ? 'ring-4 ring-amber-400/50' : ''
+              }`} style={{ background: countdownWarning ? 'linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(239, 68, 68, 0.1))' : undefined }}>
+                <div className="text-7xl mb-4 animate-bounce" style={{ animationDuration: countdownWarning ? '0.5s' : '2s' }}>👀</div>
+                <h3 className="text-3xl font-display mb-3" style={{ color: 'var(--text-primary)' }}>
+                  {countdownWarning ? '⚠️ Position Fading Soon!' : 'Study the Position'}
                 </h3>
-                <p style={{ color: countdownWarning ? '#fbbf24' : 'var(--text-tertiary)' }}>
+                <p className="text-lg mb-4" style={{ color: countdownWarning ? '#fbbf24' : 'var(--text-tertiary)' }}>
                   {countdownWarning 
-                    ? `${Math.ceil(timeRemaining / 1000)} seconds left - focus!`
-                    : `Take your time to observe (${(timeRemaining / 1000).toFixed(1)}s)`
+                    ? `Only ${Math.ceil(timeRemaining / 1000)} seconds left - focus!`
+                    : `Focus on what you were told to look for`
                   }
                 </p>
-                <div className={`mt-6 text-4xl font-mono font-bold transition-all duration-300 ${
-                  countdownWarning ? 'text-amber-400 scale-110' : ''
+                <div className={`mt-6 mb-4 text-6xl font-mono font-bold transition-all duration-300 ${
+                  countdownWarning ? 'text-amber-400 scale-125 animate-pulse' : ''
                 }`} style={{ color: countdownWarning ? '#fbbf24' : 'var(--accent-primary)' }}>
                   {(timeRemaining / 1000).toFixed(1)}s
                 </div>
                 
-                {/* Progress hints for beginners */}
-                {difficulty === 'beginner' && !countdownWarning && (
-                  <div className="mt-4 text-xs space-y-1" style={{ color: 'var(--text-muted)' }}>
-                    <p>💡 Look at: piece placement, king safety, pawn structure</p>
+                {/* Simple reminder (not full hints - those were shown before) */}
+                {!countdownWarning && (
+                  <div className="mt-6 px-4 py-2 rounded-lg inline-block" style={{ background: 'var(--bg-tertiary)' }}>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>
+                      Focus: <span style={{ color: 'var(--accent-primary)' }}>{currentPosition?.questions[currentQuestionIndex]?.type.replace(/-/g, ' ')}</span>
+                    </span>
                   </div>
                 )}
               </div>
@@ -787,10 +1197,34 @@ export function FlashTrainingPage() {
               <div className="card p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="badge">Question {currentQuestionIndex + 1}/{currentPosition.questions.length}</span>
-                  <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                    {(timeRemaining / 1000).toFixed(0)}s
-                  </span>
+                  {!studyMode && (
+                    <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                      {(timeRemaining / 1000).toFixed(0)}s
+                    </span>
+                  )}
                 </div>
+                
+                {/* Study Mode Checklist */}
+                {studyMode && showHints && (
+                  <div className="mb-6 p-4 rounded-xl shadow-md" style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(74, 222, 128, 0.15))', border: '1px solid var(--accent-primary)' + '40' }}>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-primary)' }}>
+                        <span className="text-lg">✓</span>
+                      </div>
+                      <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        Observation Checklist:
+                      </div>
+                    </div>
+                    <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      {getObservationHints(currentQuestion.type, difficulty).map((hint, idx) => (
+                        <li key={idx} className="flex items-start gap-2 p-2 rounded hover:bg-[var(--bg-tertiary)] transition-colors">
+                          <span className="mt-0.5" style={{ color: 'var(--accent-primary)' }}>✓</span>
+                          <span>{hint}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 
                 <h3 className="text-xl font-medium mb-6 break-words" style={{ color: 'var(--text-primary)' }}>
                   {currentQuestion.question}
@@ -844,9 +1278,38 @@ export function FlashTrainingPage() {
                         </>
                       )}
                     </div>
-                    <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                    <p className="text-sm mb-3" style={{ color: 'var(--text-tertiary)' }}>
                       {currentQuestion.explanation}
                     </p>
+                    
+                    {/* Enhanced Feedback for Wrong Answers */}
+                    {selectedAnswer !== currentQuestion.correctIndex && (
+                      <div className="mt-3 p-3 rounded-lg" style={{ background: 'rgba(239, 68, 68, 0.1)' }}>
+                        <div className="text-xs font-medium mb-1" style={{ color: '#ef4444' }}>
+                          💭 Why this matters:
+                        </div>
+                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                          {currentQuestion.type === 'piece-count' && 'Accurate piece counting is fundamental to chess - try scanning the board systematically by piece type.'}
+                          {currentQuestion.type === 'threats' && 'Missing threats can lose games instantly. Always check for checks, captures, and attacks.'}
+                          {currentQuestion.type === 'best-piece' && 'Identifying your best pieces helps you know where your strength lies in a position.'}
+                          {currentQuestion.type === 'plan' && 'Good plans are based on the position\'s characteristics. Look for weaknesses and strengths.'}
+                          {currentQuestion.type === 'evaluation' && 'Position evaluation combines multiple factors: material, activity, king safety, and structure.'}
+                          {!['piece-count', 'threats', 'best-piece', 'plan', 'evaluation'].includes(currentQuestion.type) && 'Understanding this concept will help you make better decisions in your games.'}
+                        </p>
+                      </div>
+                    )}
+                    
+                    {/* Pattern Recognition Tip */}
+                    <div className="mt-3 pt-3 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+                      <div className="text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>
+                        🎯 Pattern Recognition Tip:
+                      </div>
+                      <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                        {getObservationHints(currentQuestion.type, difficulty)[0] || 
+                         'Look for similar patterns in future positions. The more you practice, the faster you\'ll recognize these patterns.'}
+                      </p>
+                    </div>
+                    
                     <button
                       onClick={handleContinue}
                       className="btn-primary w-full mt-4"
@@ -864,9 +1327,150 @@ export function FlashTrainingPage() {
   }
   
   // ============================================
+  // RENDER: REVIEW MODE
+  // ============================================
+  if (reviewMode && mistakesToReview.length > 0) {
+    const currentReview = mistakesToReview[currentReviewIndex];
+    const reviewQuestion = currentReview.position.questions[currentReview.questionIndex];
+    
+    return (
+      <div className="space-y-6 animate-fade-in max-w-full">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-medium text-xl" style={{ color: 'var(--text-primary)' }}>
+              📖 Review Mistakes
+            </h2>
+            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+              Position {currentReviewIndex + 1} of {mistakesToReview.length}
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setReviewMode(false);
+              setMistakesToReview([]);
+              setCurrentReviewIndex(0);
+            }}
+            className="btn-ghost text-sm"
+          >
+            Close Review
+          </button>
+        </div>
+        
+        {/* Main Content */}
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0 max-w-full">
+          {/* Board - Always Visible in Review */}
+          <div className="flex justify-center items-start">
+            <div 
+              className="relative"
+              style={{ width: boardSize, maxWidth: '100%', height: boardSize }}
+            >
+              <Chessboard
+                position={currentReview.position.fen}
+                boardOrientation={new Chess(currentReview.position.fen).turn() === 'w' ? 'white' : 'black'}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
+                arePiecesDraggable={false}
+                boardWidth={boardSize}
+              />
+            </div>
+          </div>
+          
+          {/* Question Panel */}
+          <div className="card p-6">
+            <h3 className="text-xl font-medium mb-6 break-words" style={{ color: 'var(--text-primary)' }}>
+              {reviewQuestion.question}
+            </h3>
+            
+            <div className="space-y-3 mb-6">
+              {reviewQuestion.options.map((option, index) => {
+                let buttonStyle = 'var(--bg-tertiary)';
+                let textColor = 'var(--text-secondary)';
+                let borderStyle = '2px solid transparent';
+                
+                if (index === reviewQuestion.correctIndex) {
+                  buttonStyle = 'rgba(74, 222, 128, 0.2)';
+                  textColor = '#4ade80';
+                  borderStyle = '2px solid #4ade80';
+                } else if (index === currentReview.selectedAnswer) {
+                  buttonStyle = 'rgba(239, 68, 68, 0.2)';
+                  textColor = '#ef4444';
+                  borderStyle = '2px solid #ef4444';
+                }
+                
+                return (
+                  <div
+                    key={index}
+                    className="w-full p-4 rounded-xl text-left"
+                    style={{ background: buttonStyle, color: textColor, border: borderStyle }}
+                  >
+                    <span className="font-medium">{String.fromCharCode(65 + index)}.</span> {option}
+                    {index === reviewQuestion.correctIndex && (
+                      <span className="ml-2 text-sm">✓ Correct</span>
+                    )}
+                    {index === currentReview.selectedAnswer && index !== reviewQuestion.correctIndex && (
+                      <span className="ml-2 text-sm">✗ Your Answer</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Enhanced Explanation */}
+            <div className="p-4 rounded-xl mb-6" style={{ background: 'var(--bg-elevated)' }}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">💡</span>
+                <span className="font-medium" style={{ color: 'var(--text-primary)' }}>Explanation</span>
+              </div>
+              <p className="text-sm mb-3" style={{ color: 'var(--text-tertiary)' }}>
+                {reviewQuestion.explanation}
+              </p>
+              
+              {/* Pattern Recognition Tip */}
+              <div className="mt-3 pt-3 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+                <div className="text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>
+                  🎯 Pattern Recognition Tip:
+                </div>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                  {getObservationHints(reviewQuestion.type, difficulty)[0] || 'Look for similar patterns in future positions.'}
+                </p>
+              </div>
+            </div>
+            
+            {/* Navigation */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setCurrentReviewIndex(prev => Math.max(0, prev - 1))}
+                disabled={currentReviewIndex === 0}
+                className="btn-secondary flex-1"
+              >
+                ← Previous
+              </button>
+              <button
+                onClick={() => {
+                  if (currentReviewIndex < mistakesToReview.length - 1) {
+                    setCurrentReviewIndex(prev => prev + 1);
+                  } else {
+                    setReviewMode(false);
+                    setMistakesToReview([]);
+                    setCurrentReviewIndex(0);
+                  }
+                }}
+                className="btn-primary flex-1"
+              >
+                {currentReviewIndex < mistakesToReview.length - 1 ? 'Next →' : 'Finish Review'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  // ============================================
   // RENDER: SESSION COMPLETE
   // ============================================
-  if (!sessionActive && positionsCompleted > 0) {
+  if (!sessionActive && !reviewMode && positionsCompleted > 0) {
     const sessionAccuracy = questionsAnswered > 0
       ? Math.round((sessionScore / (questionsAnswered * 10 * DIFFICULTY_SETTINGS[difficulty].pointsMultiplier)) * 100)
       : 0;
@@ -981,6 +1585,18 @@ export function FlashTrainingPage() {
 
           {/* Action buttons with smooth fade-in */}
           <div className="flex gap-4 justify-center flex-wrap animate-fade-in" style={{ animationDelay: '0.9s' }}>
+            {mistakesToReview.length > 0 && (
+              <button 
+                onClick={() => { 
+                  setReviewMode(true); 
+                  setCurrentReviewIndex(0);
+                  setShowSessionComplete(false);
+                }} 
+                className="btn-primary"
+              >
+                📖 Review Mistakes ({mistakesToReview.length})
+              </button>
+            )}
             <button 
               onClick={() => { setShowSessionComplete(false); startSession(mode); }} 
               className="btn-primary"
@@ -1010,6 +1626,19 @@ export function FlashTrainingPage() {
                 : "Challenge yourself with different training modes to build well-rounded vision"
             }
           </p>
+        </div>
+      </div>
+    );
+  }
+  
+  // If no render condition matches, show menu (fallback)
+  if (!sessionActive && !reviewMode && positionsCompleted === 0) {
+    return (
+      <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
+        {/* Redirect to menu */}
+        {mode !== 'menu' && setMode('menu')}
+        <div className="text-center" style={{ color: 'var(--text-muted)' }}>
+          Loading...
         </div>
       </div>
     );

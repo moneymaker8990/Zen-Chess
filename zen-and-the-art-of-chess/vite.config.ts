@@ -94,6 +94,8 @@ export default defineConfig(({ mode }) => {
         skipWaiting: true,
         // Take control of all clients immediately
         clientsClaim: true,
+        // Force update service worker version
+        cacheId: 'zen-chess-v2.0.0',
         runtimeCaching: [
           // Network-first for navigation requests (HTML) - shorter cache in dev
           {
