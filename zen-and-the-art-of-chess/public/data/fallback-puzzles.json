@@ -1,0 +1,403 @@
+[
+  {
+    "id": "fallback-001",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+    "solutionMoves": ["Nxe5", "Nxe5", "d4"],
+    "rating": 1200,
+    "themes": ["fork", "sacrifice"],
+    "popularity": 100
+  },
+  {
+    "id": "fallback-002",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 2 5",
+    "solutionMoves": ["Bxf7+", "Kxf7", "Ng5+"],
+    "rating": 1300,
+    "themes": ["pin", "discovery"],
+    "popularity": 95
+  },
+  {
+    "id": "fallback-003",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+    "solutionMoves": ["Nxe5", "d6", "Nf3", "Nxe4"],
+    "rating": 1100,
+    "themes": ["material", "tactics"],
+    "popularity": 90
+  },
+  {
+    "id": "fallback-004",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2BPP3/5N2/PPP2PPP/RNBQK2R b KQkq d3 0 5",
+    "solutionMoves": ["Nxe4", "d5", "Bxf2+", "Kxf2", "Nxd5"],
+    "rating": 1400,
+    "themes": ["tactics", "material"],
+    "popularity": 92
+  },
+  {
+    "id": "fallback-005",
+    "fen": "r1bqkb1r/pppp1ppp/2n5/4p3/2BnP3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 5",
+    "solutionMoves": ["Nxe5", "Nxe5", "d4"],
+    "rating": 1250,
+    "themes": ["pin", "fork"],
+    "popularity": 88
+  },
+  {
+    "id": "fallback-006",
+    "fen": "rnbqkb1r/ppp2ppp/3p1n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+    "solutionMoves": ["Nxe5", "dxe5", "Qh5"],
+    "rating": 1350,
+    "themes": ["queen", "attack"],
+    "popularity": 85
+  },
+  {
+    "id": "fallback-007",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R b KQkq - 5 4",
+    "solutionMoves": ["Nxe4", "Nxe4", "d5"],
+    "rating": 1150,
+    "themes": ["tactics", "material"],
+    "popularity": 87
+  },
+  {
+    "id": "fallback-008",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPPQPPP/RNB1KB1R b KQkq - 3 3",
+    "solutionMoves": ["Nc6", "Qxe5+", "Be7"],
+    "rating": 1450,
+    "themes": ["queen", "check"],
+    "popularity": 83
+  },
+  {
+    "id": "fallback-009",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPPQPPP/RNB1K2R b KQkq - 4 5",
+    "solutionMoves": ["Nd4", "Nxd4", "Bxf2+"],
+    "rating": 1500,
+    "themes": ["discovery", "sacrifice"],
+    "popularity": 80
+  },
+  {
+    "id": "fallback-010",
+    "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+    "solutionMoves": ["Nc6", "Bb5", "a6"],
+    "rating": 1000,
+    "themes": ["opening", "development"],
+    "popularity": 95
+  },
+  {
+    "id": "fallback-011",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQK2R b KQkq - 0 5",
+    "solutionMoves": ["Nd4", "Nxe5", "Nxc2+"],
+    "rating": 1600,
+    "themes": ["fork", "check"],
+    "popularity": 78
+  },
+  {
+    "id": "fallback-012",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3",
+    "solutionMoves": ["Nxe4", "Bd3", "d5"],
+    "rating": 1200,
+    "themes": ["tactics", "center"],
+    "popularity": 82
+  },
+  {
+    "id": "fallback-013",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+    "solutionMoves": ["Bc4", "Bc5", "c3"],
+    "rating": 1100,
+    "themes": ["opening", "control"],
+    "popularity": 90
+  },
+  {
+    "id": "fallback-014",
+    "fen": "rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+    "solutionMoves": ["Ng5", "O-O", "Qh5"],
+    "rating": 1300,
+    "themes": ["attack", "queen"],
+    "popularity": 84
+  },
+  {
+    "id": "fallback-015",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R b KQkq - 0 3",
+    "solutionMoves": ["d5", "exd5", "Qxd5"],
+    "rating": 1250,
+    "themes": ["center", "queen"],
+    "popularity": 86
+  },
+  {
+    "id": "fallback-016",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+    "solutionMoves": ["d4", "exd4", "e5"],
+    "rating": 1150,
+    "themes": ["center", "tactics"],
+    "popularity": 88
+  },
+  {
+    "id": "fallback-017",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 2 4",
+    "solutionMoves": ["Nc3", "Bc5", "Bg5"],
+    "rating": 1400,
+    "themes": ["development", "pin"],
+    "popularity": 81
+  },
+  {
+    "id": "fallback-018",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+    "solutionMoves": ["Nxe4", "Bxf7+", "Kxf7"],
+    "rating": 1500,
+    "themes": ["sacrifice", "check"],
+    "popularity": 79
+  },
+  {
+    "id": "fallback-019",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 5",
+    "solutionMoves": ["O-O", "d6", "Ng5"],
+    "rating": 1350,
+    "themes": ["attack", "castling"],
+    "popularity": 83
+  },
+  {
+    "id": "fallback-020",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/5N2/PPPP2PP/RNBQKB1R b KQkq f3 0 3",
+    "solutionMoves": ["Nxe4", "fxe4", "Qh4+"],
+    "rating": 1450,
+    "themes": ["check", "queen"],
+    "popularity": 77
+  },
+  {
+    "id": "fallback-021",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+    "solutionMoves": ["Nc3", "Nf6", "Bc4"],
+    "rating": 1100,
+    "themes": ["development", "opening"],
+    "popularity": 91
+  },
+  {
+    "id": "fallback-022",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R b KQkq - 0 3",
+    "solutionMoves": ["Nc6", "Nc3", "Bc5"],
+    "rating": 1200,
+    "themes": ["development", "bishop"],
+    "popularity": 85
+  },
+  {
+    "id": "fallback-023",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2BPP3/5N2/PPP2PPP/RNBQK2R b KQkq d3 0 4",
+    "solutionMoves": ["Nxe4", "d5", "Bb4+"],
+    "rating": 1550,
+    "themes": ["check", "tactics"],
+    "popularity": 76
+  },
+  {
+    "id": "fallback-024",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+    "solutionMoves": ["Nc6", "Nc3", "Nxe4"],
+    "rating": 1300,
+    "themes": ["tactics", "material"],
+    "popularity": 82
+  },
+  {
+    "id": "fallback-025",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+    "solutionMoves": ["d3", "h6", "Nc3"],
+    "rating": 1150,
+    "themes": ["development", "opening"],
+    "popularity": 87
+  },
+  {
+    "id": "fallback-026",
+    "fen": "rnbqkbnr/pppp1ppp/8/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq f3 0 2",
+    "solutionMoves": ["exf4", "Nf3", "d5"],
+    "rating": 1250,
+    "themes": ["center", "pawn"],
+    "popularity": 84
+  },
+  {
+    "id": "fallback-027",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2BPP3/5N2/PPP2PPP/RNBQK2R b KQkq d3 0 5",
+    "solutionMoves": ["d5", "exd5", "Nxd5"],
+    "rating": 1400,
+    "themes": ["center", "tactics"],
+    "popularity": 80
+  },
+  {
+    "id": "fallback-028",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPPQPPP/RNB1KB1R b KQkq - 3 3",
+    "solutionMoves": ["d5", "exd5", "Nxd5"],
+    "rating": 1500,
+    "themes": ["center", "queen"],
+    "popularity": 75
+  },
+  {
+    "id": "fallback-029",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R b KQkq - 0 3",
+    "solutionMoves": ["Nf6", "Nc3", "Bb4"],
+    "rating": 1200,
+    "themes": ["development", "pin"],
+    "popularity": 83
+  },
+  {
+    "id": "fallback-030",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3",
+    "solutionMoves": ["Nxe4", "Qe2", "Qe7"],
+    "rating": 1350,
+    "themes": ["pin", "queen"],
+    "popularity": 81
+  },
+  {
+    "id": "fallback-031",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+    "solutionMoves": ["Nc3", "Bc5", "d3"],
+    "rating": 1100,
+    "themes": ["development", "opening"],
+    "popularity": 89
+  },
+  {
+    "id": "fallback-032",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+    "solutionMoves": ["Nc3", "Nc6", "Bc4"],
+    "rating": 1250,
+    "themes": ["development", "bishop"],
+    "popularity": 85
+  },
+  {
+    "id": "fallback-033",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 2 4",
+    "solutionMoves": ["Nbd2", "Be7", "Bc4"],
+    "rating": 1450,
+    "themes": ["development", "control"],
+    "popularity": 78
+  },
+  {
+    "id": "fallback-034",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R b KQkq - 0 3",
+    "solutionMoves": ["Nc6", "Nc3", "d5"],
+    "rating": 1300,
+    "themes": ["center", "opening"],
+    "popularity": 82
+  },
+  {
+    "id": "fallback-035",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 5",
+    "solutionMoves": ["Bg5", "h6", "Bh4"],
+    "rating": 1400,
+    "themes": ["pin", "development"],
+    "popularity": 79
+  },
+  {
+    "id": "fallback-036",
+    "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+    "solutionMoves": ["d6", "d4", "Nd7"],
+    "rating": 1150,
+    "themes": ["opening", "development"],
+    "popularity": 86
+  },
+  {
+    "id": "fallback-037",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 5 4",
+    "solutionMoves": ["Nxe4", "Re1", "d5"],
+    "rating": 1500,
+    "themes": ["tactics", "pin"],
+    "popularity": 74
+  },
+  {
+    "id": "fallback-038",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPPQPPP/RNB1KB1R b KQkq - 3 3",
+    "solutionMoves": ["Nc6", "d4", "exd4"],
+    "rating": 1250,
+    "themes": ["center", "tactics"],
+    "popularity": 83
+  },
+  {
+    "id": "fallback-039",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2BPP3/5N2/PPP2PPP/RNBQK2R b KQkq d3 0 5",
+    "solutionMoves": ["Nxe4", "O-O", "Bxf2+"],
+    "rating": 1600,
+    "themes": ["sacrifice", "attack"],
+    "popularity": 72
+  },
+  {
+    "id": "fallback-040",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+    "solutionMoves": ["Bc5", "c3", "d6"],
+    "rating": 1200,
+    "themes": ["development", "opening"],
+    "popularity": 84
+  },
+  {
+    "id": "fallback-041",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 2 4",
+    "solutionMoves": ["Nc3", "Bc5", "Bg5"],
+    "rating": 1350,
+    "themes": ["pin", "development"],
+    "popularity": 80
+  },
+  {
+    "id": "fallback-042",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3",
+    "solutionMoves": ["exd4", "e5", "Ne4"],
+    "rating": 1450,
+    "themes": ["tactics", "center"],
+    "popularity": 77
+  },
+  {
+    "id": "fallback-043",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R b KQkq - 0 3",
+    "solutionMoves": ["d5", "exd5", "Qxd5"],
+    "rating": 1300,
+    "themes": ["center", "queen"],
+    "popularity": 81
+  },
+  {
+    "id": "fallback-044",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+    "solutionMoves": ["d3", "Nc6", "Bg5"],
+    "rating": 1150,
+    "themes": ["development", "pin"],
+    "popularity": 85
+  },
+  {
+    "id": "fallback-045",
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+    "solutionMoves": ["d3", "d6", "c3"],
+    "rating": 1250,
+    "themes": ["control", "development"],
+    "popularity": 82
+  },
+  {
+    "id": "fallback-046",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/5N2/PPPP2PP/RNBQKB1R b KQkq f3 0 3",
+    "solutionMoves": ["d5", "exd5", "Nxd5"],
+    "rating": 1400,
+    "themes": ["center", "tactics"],
+    "popularity": 78
+  },
+  {
+    "id": "fallback-047",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+    "solutionMoves": ["Bc4", "Bc5", "d3"],
+    "rating": 1100,
+    "themes": ["development", "opening"],
+    "popularity": 88
+  },
+  {
+    "id": "fallback-048",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R b KQkq - 0 3",
+    "solutionMoves": ["Nc6", "Nc3", "Be7"],
+    "rating": 1200,
+    "themes": ["development", "control"],
+    "popularity": 83
+  },
+  {
+    "id": "fallback-049",
+    "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+    "solutionMoves": ["d3", "Be7", "O-O"],
+    "rating": 1300,
+    "themes": ["castling", "development"],
+    "popularity": 80
+  },
+  {
+    "id": "fallback-050",
+    "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+    "solutionMoves": ["Nxe5", "d6", "Nf3", "Nxe4"],
+    "rating": 1350,
+    "themes": ["tactics", "material"],
+    "popularity": 79
+  }
+]
+

@@ -1103,6 +1103,63 @@ export function PuzzlesPage() {
     : 100;
 
   // ============================================
+  // RENDER: LOADING / ERROR STATES
+  // ============================================
+  if (isLoadingPuzzle && mode !== 'menu') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[600px] space-y-4">
+        <div className="relative">
+          <div className="w-16 h-16 rounded-full border-4 border-zen-800 border-t-purple-500 animate-spin"></div>
+          <div className="absolute inset-0 flex items-center justify-center text-2xl">
+            ♟️
+          </div>
+        </div>
+        <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>Loading puzzle...</p>
+      </div>
+    );
+  }
+
+  if (puzzleError && mode !== 'menu') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[600px] space-y-4 px-4">
+        <div 
+          className="w-20 h-20 rounded-full flex items-center justify-center text-4xl"
+          style={{ background: 'rgba(239, 68, 68, 0.1)' }}
+        >
+          ⚠️
+        </div>
+        <h2 className="text-xl font-display" style={{ color: 'var(--text-primary)' }}>
+          Failed to Load Puzzle
+        </h2>
+        <p className="text-center max-w-md" style={{ color: 'var(--text-secondary)' }}>
+          {puzzleError}
+        </p>
+        <div className="flex gap-3">
+          <button 
+            onClick={() => {
+              setPuzzleError(null);
+              startMode('menu');
+            }}
+            className="btn-secondary"
+          >
+            Back to Menu
+          </button>
+          <button 
+            onClick={() => {
+              setPuzzleError(null);
+              setIsLoadingPuzzle(true);
+              startMode(mode);
+            }}
+            className="btn-primary"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ============================================
   // RENDER: MODE SELECTION MENU
   // ============================================
   if (mode === 'menu') {
@@ -1359,6 +1416,30 @@ export function PuzzlesPage() {
             </p>
           </button>
         </div>
+
+        {/* Empty State - No Puzzles Available */}
+        {puzzleCount === 0 && (
+          <div className="card p-8 text-center">
+            <div 
+              className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl"
+              style={{ background: 'rgba(99, 102, 241, 0.1)' }}
+            >
+              🧩
+            </div>
+            <h3 className="text-xl font-display mb-2" style={{ color: 'var(--text-primary)' }}>
+              No Puzzles Available
+            </h3>
+            <p className="mb-6" style={{ color: 'var(--text-tertiary)' }}>
+              Unable to load puzzles from the database. This may be due to a connection issue.
+            </p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="btn-primary"
+            >
+              Refresh Page
+            </button>
+          </div>
+        )}
 
         {/* Theme Performance */}
         <div className="card p-6">

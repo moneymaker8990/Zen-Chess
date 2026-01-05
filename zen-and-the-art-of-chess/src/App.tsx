@@ -22,6 +22,7 @@ import { OfflineIndicator } from '@/components/OfflineIndicator';
 import { useProgressStore } from '@/state/useStore';
 import { useAuthStore } from '@/state/useAuthStore';
 import { initializeCoach } from '@/state/coachStore';
+import { useNavigationHistory } from '@/state/navigationHistoryStore';
 
 // ============================================
 // LAZY-LOADED PAGES FOR FASTER INITIAL LOAD
@@ -204,6 +205,14 @@ function AppContent() {
   
   // AI preferences for genius features
   const { showAskAnything, showWhispers } = useAIPreferencesStore();
+  
+  // 🔄 NAVIGATION HISTORY - Track navigation for proper back button behavior
+  const { push: pushHistory } = useNavigationHistory();
+  
+  // Track navigation history on route changes
+  useEffect(() => {
+    pushHistory(location.pathname);
+  }, [location.pathname, pushHistory]);
   
   // Determine context based on current route
   const aiContext = useMemo(() => {

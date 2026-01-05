@@ -149,6 +149,8 @@ interface ProgressStore {
   addMeditationMinutes: (minutes: number) => void;
   updateStreak: () => void;
   updateSettings: (settings: Partial<UserProgress['settings']>) => void;
+  completeOpening: (openingId: string) => void;
+  getOpeningStreak: () => number;
 }
 
 const initialProgress: UserProgress = {
@@ -169,6 +171,9 @@ const initialProgress: UserProgress = {
     calmPlayDelay: 3,
     engineStrength: 10,
   },
+  completedOpenings: new Set<string>(),
+  openingStreak: 0,
+  lastOpeningDate: undefined,
 };
 
 export const useProgressStore = create<ProgressStore>()(
@@ -253,6 +258,41 @@ export const useProgressStore = create<ProgressStore>()(
           settings: { ...state.progress.settings, ...settings },
         }
       })),
+
+      completeOpening: (openingId) => set((state) => {
+        const today = new Date().toISOString().split('T')[0];
+        const completedOpenings = state.progress.completedOpenings || new Set<string>();
+        const lastOpeningDate = state.progress.lastOpeningDate;
+        
+        // Update streak if completed today, otherwise reset
+        const newStreak = lastOpeningDate === today 
+          ? (state.progress.openingStreak || 0) + 1 
+          : 1;
+        
+        // Add to completed set
+        const newCompleted = new Set(completedOpenings);
+        newCompleted.add(openingId);
+        
+        return {
+          progress: {
+            ...state.progress,
+            completedOpenings: newCompleted,
+            openingStreak: newStreak,
+            lastOpeningDate: today,
+          }
+        };
+      }),
+
+      getOpeningStreak: () => {
+        const { progress } = get();
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Return streak only if completed today
+        if (progress.lastOpeningDate === today) {
+          return progress.openingStreak || 0;
+        }
+        return 0;
+      },
     }),
     {
       name: 'zen-chess-progress',

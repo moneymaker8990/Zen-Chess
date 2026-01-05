@@ -77,7 +77,30 @@ function createInitialState(): AgentOrchestratorState {
       // Background agents (run silently)
       'insight-engine', 'motivator', 'flow-keeper', 'session-manager',
     ],
+    suppressedMessages: new Set<string>(), // Track suppressed message signatures
   };
+}
+
+// ============================================
+// MESSAGE SIGNATURE HELPERS
+// ============================================
+
+/**
+ * Generate a unique signature for a message to detect duplicates
+ */
+function getMessageSignature(agentId: AgentId, title: string): string {
+  return `${agentId}:${title}`;
+}
+
+/**
+ * Check if a message should be suppressed based on recent history
+ */
+function shouldSuppressMessage(
+  signature: string,
+  suppressedMessages: Set<string>,
+  cooldownMinutes: number = 30
+): boolean {
+  return suppressedMessages.has(signature);
 }
 
 // ============================================
@@ -193,12 +216,25 @@ export const useAgentStore = create<AgentStore>()(
       
       pushMessage: (message) => {
         set((store) => {
-          // Check if similar message already exists
+          // Generate message signature for suppression check
+          const signature = getMessageSignature(message.agentId, message.title);
+          
+          // Check if message should be suppressed (already seen this session)
+          if (shouldSuppressMessage(signature, store.state.suppressedMessages)) {
+            // Skip this message - already shown this session
+            return store;
+          }
+          
+          // Check if similar message already exists in active messages
           const hasSimilar = store.state.activeMessages.some(
             m => m.agentId === message.agentId && m.title === message.title
           );
           
           if (hasSimilar) return store;
+          
+          // Add to suppressed messages set (prevent showing again this session)
+          const newSuppressedMessages = new Set(store.state.suppressedMessages);
+          newSuppressedMessages.add(signature);
           
           // Update agent cooldown
           const newCooldowns = {
@@ -223,6 +259,7 @@ export const useAgentStore = create<AgentStore>()(
               recentMessages: [message, ...store.state.recentMessages].slice(0, 50),
               agentLastActive: newCooldowns,
               memory: newMemory,
+              suppressedMessages: newSuppressedMessages,
             },
           };
         });

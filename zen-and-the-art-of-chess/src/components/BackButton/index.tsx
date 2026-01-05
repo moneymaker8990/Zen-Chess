@@ -1,5 +1,6 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
+import { useNavigationHistory } from '@/state/navigationHistoryStore';
 
 interface BackButtonProps {
   fallback?: string;
@@ -10,7 +11,8 @@ interface BackButtonProps {
 
 /**
  * A reliable back button that handles navigation history properly.
- * - If there's history, it goes back
+ * - Uses navigation history store to track actual route changes
+ * - If there's history, it goes back to the previous route
  * - If no history (direct link), it navigates to the fallback route
  */
 export function BackButton({ 
@@ -20,19 +22,17 @@ export function BackButton({
   style = {}
 }: BackButtonProps) {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pop: popHistory } = useNavigationHistory();
 
   const handleBack = useCallback(() => {
-    // Check if we have history to go back to
-    // window.history.length > 2 means there's actual navigation history
-    // (browser starts with length 1 or 2 depending on browser)
-    if (window.history.length > 2 && document.referrer) {
-      navigate(-1);
+    const previousPath = popHistory();
+    if (previousPath) {
+      navigate(previousPath, { replace: true });
     } else {
       // No history - navigate to fallback
       navigate(fallback, { replace: true });
     }
-  }, [navigate, fallback]);
+  }, [navigate, fallback, popHistory]);
 
   return (
     <button
@@ -60,14 +60,16 @@ export function BackButton({
  */
 export function useBackNavigation(fallback: string = '/') {
   const navigate = useNavigate();
+  const { pop: popHistory } = useNavigationHistory();
   
   return useCallback(() => {
-    if (window.history.length > 2 && document.referrer) {
-      navigate(-1);
+    const previousPath = popHistory();
+    if (previousPath) {
+      navigate(previousPath, { replace: true });
     } else {
       navigate(fallback, { replace: true });
     }
-  }, [navigate, fallback]);
+  }, [navigate, fallback, popHistory]);
 }
 
 export default BackButton;

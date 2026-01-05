@@ -3,6 +3,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { useBoardSize } from '@/hooks/useBoardSize';
+import { useProgressStore } from '@/state/useStore';
 import allOpenings, { type OpeningLine } from '@/data/openings';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 
@@ -358,6 +359,9 @@ export function OpeningsPage() {
   const [filterSide, setFilterSide] = useState<'all' | 'white' | 'black'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   
+  // Progress tracking
+  const { completeOpening, getOpeningStreak } = useProgressStore();
+  
   // Practice state
   const [game, setGame] = useState(new Chess());
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
@@ -461,6 +465,22 @@ export function OpeningsPage() {
     }
   }, []);
 
+  // Get the next opening in the current course
+  const getNextOpening = useCallback(() => {
+    if (!selectedCourse || !selectedOpening) return null;
+    
+    // Get current course lines (learning only, not database)
+    const lines = courseLines.learning;
+    const currentIndex = lines.findIndex(l => l.name === selectedOpening.name);
+    
+    if (currentIndex === -1 || currentIndex >= lines.length - 1) {
+      // No more lines in this course
+      return null;
+    }
+    
+    return lines[currentIndex + 1];
+  }, [selectedCourse, selectedOpening, courseLines.learning]);
+
   // Auto-play opponent moves
   useEffect(() => {
     if (!selectedOpening || practiceMode !== 'learn') return;
@@ -551,6 +571,8 @@ export function OpeningsPage() {
         
         if (currentMoveIndex + 1 >= selectedOpening.moves.length) {
           setFeedback('complete');
+          // Track completion in progress store
+          completeOpening(selectedOpening.name);
         } else {
           setIsUserTurn(false);
           setTimeout(() => setFeedback(null), 600);
@@ -1046,20 +1068,37 @@ export function OpeningsPage() {
                 
                 {/* Feedback Overlay */}
                 {feedback === 'complete' && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-                    <div className="text-center p-8">
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                    <div className="text-center p-8 max-w-md">
                       <div className="text-6xl mb-4">🎉</div>
                       <h3 className="text-2xl font-serif text-gold-400 mb-2">Line Complete!</h3>
-                      <p className="text-zen-400 mb-6">You've mastered this variation.</p>
-                      <div className="flex gap-3 justify-center">
-                        <button onClick={resetLine} className="zen-button">
+                      <p className="text-zen-400 mb-6">
+                        You've mastered this variation. 
+                        {getOpeningStreak() > 1 && <span className="block text-gold-500 mt-2">🔥 {getOpeningStreak()} openings completed today!</span>}
+                      </p>
+                      <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 justify-center">
+                        {getNextOpening() && (
+                          <button 
+                            onClick={() => {
+                              const next = getNextOpening();
+                              if (next) startOpening(next, userColor);
+                            }}
+                            className="zen-button w-full sm:w-auto"
+                          >
+                            Next Opening →
+                          </button>
+                        )}
+                        <button 
+                          onClick={resetLine} 
+                          className={getNextOpening() ? "zen-button-ghost w-full sm:w-auto" : "zen-button w-full sm:w-auto"}
+                        >
                           Practice Again
                         </button>
                         <button
                           onClick={() => setViewMode('lines')}
-                          className="zen-button-ghost"
+                          className="zen-button-ghost w-full sm:w-auto"
                         >
-                          Next Line
+                          Back to Course
                         </button>
                       </div>
                     </div>

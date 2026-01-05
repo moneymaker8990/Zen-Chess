@@ -7,9 +7,56 @@ import { useMistakeLibraryStore, usePositionSparringStore } from '@/state/traini
 import { useBoardSettingsStore, useBoardStyles } from '@/state/boardSettingsStore';
 import { useAIPreferencesStore, type AIIntrusiveness, type WhisperFrequency, type InsightDetail } from '@/state/aiPreferencesStore';
 import { useAuthStore } from '@/state/useAuthStore';
+import { useAgentStore } from '@/lib/agents/agentOrchestrator';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { BOARD_THEMES, PIECE_STYLES, MOVE_HINT_STYLES } from '@/lib/constants';
 import type { BoardTheme, PieceStyle, MoveHintStyle } from '@/lib/constants';
+
+// ============================================
+// AGENT VERBOSITY SECTION COMPONENT
+// ============================================
+
+function AgentVerbositySection() {
+  const agentVerbosity = useAgentStore((state) => state.state.agentVerbosity);
+  const setVerbosity = useAgentStore((state) => state.setVerbosity);
+
+  const verbosityOptions: Array<{
+    value: 'quiet' | 'normal' | 'chatty';
+    label: string;
+    desc: string;
+    icon: string;
+  }> = [
+    { value: 'quiet', label: 'Quiet', desc: 'Critical messages only', icon: '🤫' },
+    { value: 'normal', label: 'Normal', desc: 'Helpful insights', icon: '💬' },
+    { value: 'chatty', label: 'Chatty', desc: 'All agent messages', icon: '🗣️' },
+  ];
+
+  return (
+    <div className="mb-6">
+      <label className="block text-zen-400 text-sm mb-3">Agent Communication</label>
+      <div className="flex gap-2">
+        {verbosityOptions.map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => setVerbosity(opt.value)}
+            className={`flex-1 p-3 rounded-lg transition-all ${
+              agentVerbosity === opt.value
+                ? 'bg-purple-500/20 border border-purple-500/50'
+                : 'bg-zen-800/40 border border-zen-700/30 hover:border-zen-600/50'
+            }`}
+          >
+            <div className="text-xl mb-1">{opt.icon}</div>
+            <div className="text-sm font-medium text-zen-300">{opt.label}</div>
+            <div className="text-xs text-zen-500">{opt.desc}</div>
+          </button>
+        ))}
+      </div>
+      <p className="text-xs text-zen-600 mt-2">
+        Control how frequently agents message you during your practice sessions
+      </p>
+    </div>
+  );
+}
 
 // ============================================
 // ACCOUNT SECTION COMPONENT
@@ -400,6 +447,9 @@ function AIPreferencesSection() {
           ))}
         </div>
       </div>
+
+      {/* Agent Verbosity */}
+      <AgentVerbositySection />
 
       {/* Feature Toggles */}
       <div className="space-y-4">

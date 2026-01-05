@@ -245,6 +245,54 @@ export async function getNextPuzzleFromSupabase(
  * Get next puzzle from Supabase for ANY user (including anonymous)
  * This is the PRIMARY way to get puzzles - uses Lichess database
  */
+/**
+ * Load fallback puzzles from local JSON
+ */
+let fallbackPuzzles: PuzzleWithMeta[] | null = null;
+
+async function loadFallbackPuzzles(): Promise<PuzzleWithMeta[]> {
+  if (fallbackPuzzles) return fallbackPuzzles;
+  
+  try {
+    const response = await fetch('/data/fallback-puzzles.json');
+    if (!response.ok) throw new Error('Failed to fetch fallback puzzles');
+    const data = await response.json();
+    fallbackPuzzles = data;
+    logger.info('Loaded fallback puzzles:', fallbackPuzzles.length);
+    return fallbackPuzzles;
+  } catch (err) {
+    logger.error('Failed to load fallback puzzles:', err);
+    return [];
+  }
+}
+
+/**
+ * Get a puzzle from fallback local set
+ */
+async function getFallbackPuzzle(
+  userRating: number,
+  excludeIds: string[] = []
+): Promise<PuzzleWithMeta | null> {
+  const puzzles = await loadFallbackPuzzles();
+  if (puzzles.length === 0) return null;
+  
+  // Filter by rating range (±200) and exclude seen IDs
+  const filtered = puzzles.filter(p => 
+    Math.abs(p.rating - userRating) <= 200 &&
+    !excludeIds.includes(p.id)
+  );
+  
+  // If no matches in range, use any unseen puzzle
+  const available = filtered.length > 0 ? filtered : puzzles.filter(p => !excludeIds.includes(p.id));
+  
+  if (available.length === 0) {
+    // All puzzles seen, return random from full set
+    return puzzles[Math.floor(Math.random() * puzzles.length)];
+  }
+  
+  return available[Math.floor(Math.random() * available.length)];
+}
+
 export async function getNextPuzzleAnonymous(
   userRating: number = DEFAULT_RATING,
   excludeIds: string[] = [],
@@ -255,9 +303,10 @@ export async function getNextPuzzleAnonymous(
     ratingRange?: number;
   } = {}
 ): Promise<PuzzleWithMeta | null> {
+  // Try Supabase first if configured
   if (!isSupabaseConfigured) {
-    logger.error('Supabase not configured - cannot fetch puzzles');
-    return null;
+    logger.warn('Supabase not configured - using fallback puzzles');
+    return getFallbackPuzzle(userRating, excludeIds);
   }
   
   const {
@@ -294,7 +343,10 @@ export async function getNextPuzzleAnonymous(
     // Supabase doesn't have ORDER BY RANDOM(), so we fetch a few and pick one
     const { data, error } = await query.limit(20);
     
-    if (error) throw error;
+    if (error) {
+      logger.error('Supabase query error:', error);
+      throw error;
+    }
     
     if (data && data.length > 0) {
       // Pick a random puzzle from the results
@@ -318,7 +370,10 @@ export async function getNextPuzzleAnonymous(
       .lte('rating', userRating + ratingRange * 3)
       .limit(20);
     
-    if (widerError) throw widerError;
+    if (widerError) {
+      logger.error('Wider search error:', widerError);
+      throw widerError;
+    }
     
     if (widerData && widerData.length > 0) {
       const puzzle = widerData[Math.floor(Math.random() * widerData.length)];
@@ -332,13 +387,17 @@ export async function getNextPuzzleAnonymous(
       };
     }
     
-    // Last resort: get any puzzle
+    // Last resort: get any puzzle from Supabase
+    logger.info('No puzzles found in wide range, trying any puzzle...');
     const { data: anyData, error: anyError } = await supabase
       .from('puzzles')
       .select('id, fen, solution_moves, rating, themes, popularity')
       .limit(10);
     
-    if (anyError) throw anyError;
+    if (anyError) {
+      logger.error('Any puzzle query error:', anyError);
+      throw anyError;
+    }
     
     if (anyData && anyData.length > 0) {
       const puzzle = anyData[Math.floor(Math.random() * anyData.length)];
@@ -352,10 +411,13 @@ export async function getNextPuzzleAnonymous(
       };
     }
     
-    return null;
+    // Supabase returned nothing, fall back to local puzzles
+    logger.warn('No puzzles from Supabase, using fallback');
+    return getFallbackPuzzle(userRating, excludeIds);
   } catch (err) {
-    logger.error('Failed to get puzzle from Supabase:', err);
-    return null;
+    logger.error('Failed to get puzzle from Supabase, using fallback:', err);
+    // Fall back to local puzzles on any error
+    return getFallbackPuzzle(userRating, excludeIds);
   }
 }
 

@@ -248,6 +248,9 @@ export interface AgentOrchestratorState {
   notificationsEnabled: boolean;
   agentVerbosity: 'quiet' | 'normal' | 'chatty';
   enabledAgents: AgentId[];
+  
+  // Session-based suppression
+  suppressedMessages: Set<string>; // Message signatures to suppress this session
 }
 
 // ============================================

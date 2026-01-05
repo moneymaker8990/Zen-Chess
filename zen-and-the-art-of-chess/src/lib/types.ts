@@ -221,6 +221,9 @@ export interface UserProgress {
   tiltEvents: TiltEvent[];
   meditationMinutes: number;
   settings: UserSettings;
+  completedOpenings?: Set<string>; // Opening IDs completed
+  openingStreak?: number; // Consecutive openings completed today
+  lastOpeningDate?: string; // Date of last opening completion
 }
 
 export interface TiltEvent {
