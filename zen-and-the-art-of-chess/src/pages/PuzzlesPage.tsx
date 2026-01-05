@@ -851,9 +851,25 @@ export function PuzzlesPage() {
       
       // Check if move matches - Lichess uses UCI format (e2e4), also support SAN for legacy
       const playerMove = `${from}${to}${result.promotion || ''}`;
-      const isCorrect = moveMatchesUci({ from, to, promotion: result.promotion }, expectedMove) ||
-        result.san === expectedMove ||
-        result.san.replace(/[+#]/g, '') === expectedMove?.replace(/[+#]/g, '');
+      const uciMatch = moveMatchesUci({ from, to, promotion: result.promotion }, expectedMove);
+      const sanMatch = result.san === expectedMove;
+      const sanNormalizedMatch = result.san.replace(/[+#]/g, '') === expectedMove?.replace(/[+#]/g, '');
+      const isCorrect = uciMatch || sanMatch || sanNormalizedMatch;
+      
+      // Debug logging for puzzle solving
+      if (!isCorrect) {
+        console.log('[Puzzle Debug]', {
+          playerMove,
+          playerUCI: `${from}${to}`,
+          playerSAN: result.san,
+          expectedMove,
+          moveIndex,
+          uciMatch,
+          sanMatch,
+          sanNormalizedMatch,
+          solutionMoves
+        });
+      }
 
       if (isCorrect) {
         // Preserve scroll position to prevent jump after state updates
