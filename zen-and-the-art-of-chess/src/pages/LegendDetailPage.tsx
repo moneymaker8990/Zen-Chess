@@ -29,7 +29,7 @@ export function LegendDetailPage() {
   const { addNote } = useNotesStore();
   const { recordGamePlayed, recordPuzzleSolved } = useStudyStore();
   const { markGameReviewed, isGameReviewed, getGameReview, getLegendStats } = useLegendGameReviewStore();
-  const boardSize = useBoardSize(520, 32);
+  const boardSize = useBoardSize(480, 32);
   
   const legend = legendId as LegendId;
   const legendData = legend ? LEGEND_STYLES[legend] : null;
@@ -626,31 +626,29 @@ export function LegendDetailPage() {
       {activeTab === 'play' && (
         <div className="space-y-6">
           {/* Game Area - Board and Controls */}
-          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden">
+          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden">
             {/* Chessboard */}
-            <div className="glass-card p-3 sm:p-4 lg:p-6 w-full max-w-full overflow-hidden">
-              <div className="w-full flex justify-center">
-                <div style={{ width: boardSize, maxWidth: '100%' }}>
-                <Chessboard
-                  position={game.fen()}
-                  onSquareClick={onSquareClick}
-                  onPieceDrop={onDrop}
-                  boardOrientation={playerColor}
-                  boardWidth={boardSize}
-                  customSquareStyles={{
-                    ...optionSquares,
-                    ...(lastMove && {
-                      [lastMove.from]: { backgroundColor: 'rgba(168, 85, 247, 0.3)' },
-                      [lastMove.to]: { backgroundColor: 'rgba(168, 85, 247, 0.4)' },
-                    }),
-                  }}
-                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                  customLightSquareStyle={boardStyles.customLightSquareStyle}
-                  animationDuration={200}
-                  arePiecesDraggable={!isThinking}
-                  snapToCursor={true}
-                  arePremovesAllowed={false}
-                />
+            <div className="card p-4 w-full">
+              <div className="w-full flex justify-center overflow-hidden">
+                <div style={{ width: '100%', maxWidth: boardSize, aspectRatio: '1' }}>
+                  <Chessboard
+                    position={game.fen()}
+                    onSquareClick={onSquareClick}
+                    onPieceDrop={onDrop}
+                    boardOrientation={playerColor}
+                    customSquareStyles={{
+                      ...optionSquares,
+                      ...(lastMove && {
+                        [lastMove.from]: { backgroundColor: 'rgba(168, 85, 247, 0.3)' },
+                        [lastMove.to]: { backgroundColor: 'rgba(168, 85, 247, 0.4)' },
+                      }),
+                    }}
+                    customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                    customLightSquareStyle={boardStyles.customLightSquareStyle}
+                    animationDuration={boardStyles.animationDuration}
+                    arePiecesDraggable={!isThinking}
+                    boardWidth={boardSize}
+                  />
                 </div>
               </div>
 
@@ -906,50 +904,43 @@ export function LegendDetailPage() {
               )}
             </div>
           ) : (
-            <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
-              <div className="glass-card p-3 sm:p-4 lg:p-6 w-full max-w-full overflow-hidden">
-                <div className="mb-4 flex justify-center relative">
-                  <div
-                    style={{ width: boardSize, maxWidth: '100%', touchAction: 'none' }}
-                    className="relative select-none touch-none overscroll-none"
-                  >
-                  {guessChess && (
-                    <Chessboard
-                      position={guessChess.fen()}
-                      onPieceDrop={(source, target) => {
-                        handleGuessMove(source, target);
-                        return !showFeedback; // Return false to prevent board update on wrong moves
-                      }}
-                      onPieceDragBegin={() => setIsBoardDragging(true)}
-                      onPieceDragEnd={() => setIsBoardDragging(false)}
-                      boardOrientation={guessSession?.legendColor || 'white'}
-                      boardWidth={boardSize}
-                      customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                      customLightSquareStyle={boardStyles.customLightSquareStyle}
-                      animationDuration={200}
-                      snapToCursor={true}
-                      arePremovesAllowed={false}
-                      arePiecesDraggable={!showFeedback && !guessAnimating}
-                    />
-                  )}
-                  
-                  {/* Feedback overlay - shows on correct/wrong guess */}
-                  {lastGuessCorrect !== null && !showFeedback && (
-                    <div 
-                      className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 ${
-                        guessAnimating ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      style={{ 
-                        background: lastGuessCorrect 
-                          ? 'rgba(74, 222, 128, 0.2)' 
-                          : 'rgba(239, 68, 68, 0.2)'
-                      }}
-                    >
-                      <div className={`text-6xl ${guessAnimating ? 'animate-bounce' : ''}`}>
-                        {lastGuessCorrect ? '✓' : '✗'}
+            <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
+              <div className="card p-4 w-full">
+                <div className="w-full flex justify-center overflow-hidden">
+                  <div style={{ width: '100%', maxWidth: boardSize, aspectRatio: '1' }} className="relative">
+                    {guessChess && (
+                      <Chessboard
+                        position={guessChess.fen()}
+                        onPieceDrop={(source, target) => {
+                          handleGuessMove(source, target);
+                          return !showFeedback;
+                        }}
+                        boardOrientation={guessSession?.legendColor || 'white'}
+                        customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                        customLightSquareStyle={boardStyles.customLightSquareStyle}
+                        animationDuration={boardStyles.animationDuration}
+                        arePiecesDraggable={!showFeedback && !guessAnimating}
+                        boardWidth={boardSize}
+                      />
+                    )}
+                    
+                    {/* Feedback overlay - shows on correct/wrong guess */}
+                    {lastGuessCorrect !== null && !showFeedback && (
+                      <div 
+                        className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 rounded-sm ${
+                          guessAnimating ? 'opacity-100' : 'opacity-0'
+                        }`}
+                        style={{ 
+                          background: lastGuessCorrect 
+                            ? 'rgba(74, 222, 128, 0.3)' 
+                            : 'rgba(239, 68, 68, 0.3)'
+                        }}
+                      >
+                        <div className={`text-6xl ${guessAnimating ? 'animate-bounce' : ''}`}>
+                          {lastGuessCorrect ? '✓' : '✗'}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                   </div>
                 </div>
                 

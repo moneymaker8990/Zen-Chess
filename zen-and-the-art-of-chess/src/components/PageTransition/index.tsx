@@ -7,14 +7,13 @@ interface PageTransitionProps {
 }
 
 // Smooth, fast page transition variants
+// NOTE: No transforms (y/x/scale) to avoid breaking chessboard drag coordinate mapping
 const pageVariants: Variants = {
   initial: {
     opacity: 0,
-    y: 8,
   },
   enter: {
     opacity: 1,
-    y: 0,
     transition: {
       duration: 0.2,
       ease: [0.25, 0.46, 0.45, 0.94] as const, // Custom ease for smooth feel
@@ -22,7 +21,6 @@ const pageVariants: Variants = {
   },
   exit: {
     opacity: 0,
-    y: -8,
     transition: {
       duration: 0.15,
       ease: [0.25, 0.46, 0.45, 0.94] as const,

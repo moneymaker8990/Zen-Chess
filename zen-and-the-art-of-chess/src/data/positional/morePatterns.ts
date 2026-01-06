@@ -103,17 +103,81 @@ export const additionalPatterns: EnhancedPattern[] = [
         move: 'Bd3',
         isMainLine: true,
         annotation: '!',
-        explanation: 'Supporting the knight! The bishop eyes h7 and ensures the f5 knight cannot be dislodged. Black is completely paralyzed.',
+        explanation: 'Supporting the knight! The bishop eyes h7 and ensures the f5 knight cannot be dislodged.',
         arrows: [
           { from: 'e2', to: 'd3', color: 'green' },
           { from: 'd3', to: 'f5', color: 'yellow' },
           { from: 'd3', to: 'h7', color: 'yellow' }
         ],
         conceptTag: 'Supporting the Blockade'
+      },
+      {
+        move: 'g6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to drive away the knight, but this creates new weaknesses.',
+        arrows: [{ from: 'g7', to: 'g6', color: 'blue' }]
+      },
+      {
+        move: 'Nh6+',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The knight jumps away with check! It\'s still on a powerful square and Black\'s kingside is weakened.',
+        arrows: [{ from: 'f5', to: 'h6', color: 'green' }],
+        highlights: ['h6'],
+        conceptTag: 'Flexible Knight'
+      },
+      {
+        move: 'Kg7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'The king steps out of check.',
+        arrows: [{ from: 'g8', to: 'g7', color: 'blue' }]
+      },
+      {
+        move: 'Qg4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen joins the attack on the weakened kingside! The blockade strategy has created opportunities for a direct attack.',
+        arrows: [{ from: 'd1', to: 'g4', color: 'green' }, { from: 'g4', to: 'g6', color: 'yellow' }],
+        highlights: ['g4'],
+        conceptTag: 'Attack Formation'
+      },
+      {
+        move: 'Qd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Nf5+',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The knight returns to f5 with check! Now it\'s even stronger because g6 is weakened. The blockading knight has also become an attacking piece.',
+        arrows: [{ from: 'h6', to: 'f5', color: 'green' }],
+        highlights: ['f5'],
+        conceptTag: 'Knight Returns!'
+      },
+      {
+        move: 'Kh8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'The king retreats.',
+        arrows: [{ from: 'g7', to: 'h8', color: 'blue' }]
+      },
+      {
+        move: 'Qh4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Threatening Qxh7#! The blockade knight on f5 and the queen on h4 create a deadly attack. This is Nimzowitsch\'s vision fulfilled—the blockade leads to complete domination.',
+        arrows: [{ from: 'g4', to: 'h4', color: 'green' }, { from: 'h4', to: 'h7', color: 'yellow' }],
+        highlights: ['h4', 'h7'],
+        conceptTag: 'Winning Attack'
       }
     ],
     
-    summary: 'We executed Nimzowitsch\'s classic knight maneuver Nd2-f1-e3-f5 to establish an immovable blockade on f5. The knight cannot be driven away and Black\'s entire position is paralyzed.',
+    summary: 'We executed Nimzowitsch\'s classic knight maneuver Nd2-f1-e3-f5 to establish an immovable blockade on f5. Black\'s attempt to dislodge it (g6) only created more weaknesses. The knight returned to f5 even stronger, leading to a winning attack.',
     
     keyTakeaways: [
       'Knights make the best blockaders—they remain fully active',
@@ -132,6 +196,706 @@ export const additionalPatterns: EnhancedPattern[] = [
       black: 'Saemisch',
       event: 'Copenhagen',
       year: 1923
+    }
+  },
+
+  // ============================================
+  // BLOCKADE - CHAPTER 2: BLOCKADING PASSED PAWNS
+  // ============================================
+  {
+    id: 'blockade-passed-pawn-deep',
+    category: 'BLOCKADE',
+    title: 'Blockading the Passed Pawn',
+    subtitle: 'Stopping the dangerous passer',
+    // Position with passed pawn that needs blockading
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'A passed pawn is dangerous—it threatens to promote. The best way to stop it is with a blockade! Place a piece (ideally a knight) directly in front of the passed pawn. This prevents it from advancing and turns it into a weakness. This pattern shows how to establish and maintain a blockade against a passed pawn.',
+    
+    keyIdeas: [
+      'Blockade passed pawns immediately—don\'t let them advance',
+      'Knights are ideal blockaders—they remain active while blocking',
+      'Place the blockader directly in front of the pawn',
+      'Support the blockader with other pieces',
+      'A blockaded passed pawn becomes a weakness'
+    ],
+    
+    mainLine: [
+      {
+        move: 'd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black creates a passed pawn! The d5 pawn is now a dangerous threat that must be blockaded immediately.',
+        arrows: [{ from: 'd6', to: 'd5', color: 'blue' }],
+        highlights: ['d5']
+      },
+      {
+        move: 'Nd4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE BLOCKADE! The knight jumps to d4, directly in front of the passed pawn. This prevents the pawn from advancing and turns it into a weakness. The knight is the perfect blockader—it remains fully active while blocking the pawn.',
+        arrows: [
+          { from: 'c3', to: 'd4', color: 'green' },
+          { from: 'd4', to: 'd5', color: 'red' }
+        ],
+        highlights: ['d4', 'd5'],
+        conceptTag: 'The Blockade'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but the passed pawn is now blockaded and harmless.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d1, supporting the blockading knight and adding pressure to the d5 pawn. The blockade is now well-supported.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Supporting the Blockade'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also supports the pawn, but White\'s blockade is stronger.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop develops, adding another attacker to the blockaded pawn. White is piling up on the weakness.',
+        arrows: [
+          { from: 'e3', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Piling Up'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but the blockade remains strong.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Rad1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Doubling rooks on the d-file! White has complete control of the blockaded pawn. The passed pawn has become a permanent weakness.',
+        arrows: [
+          { from: 'a1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Maximum Pressure'
+      },
+      {
+        move: 'Qd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has too many pieces attacking.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Nxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Winning the pawn! The blockaded passed pawn has fallen. The blockade has done its job—it prevented the pawn from advancing and allowed White to win it.',
+        arrows: [{ from: 'd4', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Winning Material'
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'c6', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Recapturing! White has won the pawn and has a completely winning position. The blockade has been a complete success.',
+        arrows: [{ from: 'd1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Material Advantage'
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'White has won material! The blockaded passed pawn has been eliminated, and White has a winning endgame. This demonstrates the power of the blockade—it turns a dangerous passed pawn into a weakness that can be won.',
+        arrows: [{ from: 'f1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Winning Endgame'
+      }
+    ],
+    
+    summary: 'We blockaded the passed d5 pawn with Nd4, preventing it from advancing. Then we piled up pieces (Rfd1, Bf4, Rad1) to attack the blockaded pawn. Eventually, we won it with Nxd5. The blockade turned a dangerous passed pawn into a weakness that White could exploit.',
+    
+    keyTakeaways: [
+      'Blockade passed pawns immediately—don\'t let them advance',
+      'Knights are ideal blockaders—they remain active while blocking',
+      'Place the blockader directly in front of the pawn',
+      'Support the blockader with other pieces',
+      'A blockaded passed pawn becomes a weakness you can attack'
+    ],
+    
+    memoryTip: 'Think of the blockade as "putting a wall in front of the pawn"—it can\'t advance, so it becomes a target!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Endgame Blockade Theory',
+    playerExample: {
+      white: 'José Raúl Capablanca',
+      black: 'Emanuel Lasker',
+      event: 'World Championship',
+      year: 1921
+    }
+  },
+
+  {
+    id: 'blockade-pawn-chain-deep',
+    category: 'BLOCKADE',
+    title: 'Blockading the Pawn Chain',
+    subtitle: 'Stopping multiple pawns at once',
+    // Position with pawn chain that needs blockading
+    fen: 'r1bq1rk1/pp2bppp/2np1np1/3p4/2PP4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'Sometimes you need to blockade not just one pawn, but an entire pawn chain. By placing a piece in front of the chain, you can stop multiple pawns from advancing and create lasting weaknesses. The blockader becomes a powerful piece that controls the entire chain. This pattern shows how to establish and maintain a blockade against a pawn chain.',
+    
+    keyIdeas: [
+      'Blockading a pawn chain stops multiple pawns at once',
+      'Place the blockader in front of the base of the chain',
+      'The blockader controls all the pawns in the chain',
+      'Support the blockader with other pieces',
+      'A blockaded pawn chain becomes a permanent weakness'
+    ],
+    
+    mainLine: [
+      {
+        move: 'd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black advances the d-pawn, creating a pawn chain with d5, e6, and f7. This chain needs to be blockaded immediately.',
+        arrows: [{ from: 'd6', to: 'd5', color: 'blue' }],
+        highlights: ['d5', 'e6', 'f7']
+      },
+      {
+        move: 'Nd4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE BLOCKADE! The knight jumps to d4, directly in front of the pawn chain. This prevents the d5, e6, and f7 pawns from advancing. The knight is the perfect blockader—it controls all the pawns in the chain.',
+        arrows: [
+          { from: 'c3', to: 'd4', color: 'green' },
+          { from: 'd4', to: 'd5', color: 'red' },
+          { from: 'd4', to: 'e6', color: 'yellow' }
+        ],
+        highlights: ['d4', 'd5', 'e6'],
+        conceptTag: 'The Blockade'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but the pawn chain is now blockaded and cannot advance.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d1, supporting the blockading knight and adding pressure to the d5 pawn. The blockade is now well-supported.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Supporting the Blockade'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also supports the pawn, but White\'s blockade is stronger.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop develops, adding another attacker to the blockaded pawn chain. White is piling up on the weakness.',
+        arrows: [
+          { from: 'e3', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Piling Up'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but the blockade remains strong.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Rad1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Doubling rooks on the d-file! White has complete control of the blockaded pawn chain. The pawns cannot advance and have become permanent weaknesses.',
+        arrows: [
+          { from: 'a1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Maximum Pressure'
+      },
+      {
+        move: 'Qd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has too many pieces attacking.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Nxe6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Winning a pawn! The blockaded pawn chain has been broken. The blockade has done its job—it prevented the pawns from advancing and allowed White to win material.',
+        arrows: [{ from: 'd4', to: 'e6', color: 'green' }],
+        highlights: ['e6'],
+        conceptTag: 'Breaking the Chain'
+      },
+      {
+        move: 'fxe6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture, but now the chain is broken and White has won material.',
+        arrows: [{ from: 'f7', to: 'e6', color: 'blue' }]
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Capturing the d5 pawn! The blockaded pawn chain has been completely destroyed. White has won material and has a winning position.',
+        arrows: [{ from: 'e4', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'c6', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Recapturing! White has won the pawn and has a completely winning position. The blockade has been a complete success—it prevented the pawn chain from advancing and allowed White to win material.',
+        arrows: [{ from: 'd1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Winning Position'
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'White has won material! The blockaded pawn chain has been eliminated, and White has a winning endgame. This demonstrates the power of the blockade—it turns a dangerous pawn chain into a weakness that can be won.',
+        arrows: [{ from: 'f1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We blockaded the pawn chain (d5, e6, f7) with Nd4, preventing all the pawns from advancing. Then we piled up pieces (Rfd1, Bf4, Rad1) to attack the blockaded chain. Eventually, we broke it with Nxe6 and won material. The blockade turned a dangerous pawn chain into a weakness that White could exploit.',
+    
+    keyTakeaways: [
+      'Blockading a pawn chain stops multiple pawns at once',
+      'Place the blockader in front of the base of the chain',
+      'The blockader controls all the pawns in the chain',
+      'Support the blockader with other pieces',
+      'A blockaded pawn chain becomes a weakness you can attack'
+    ],
+    
+    memoryTip: 'Think of the blockade as "putting a wall in front of the chain"—all the pawns are stopped, so they become targets!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Strategic Blockade Theory',
+    playerExample: {
+      white: 'Aron Nimzowitsch',
+      black: 'Alexander Alekhine',
+      event: 'San Remo',
+      year: 1930
+    }
+  },
+
+  {
+    id: 'blockade-bishop-blockade-deep',
+    category: 'BLOCKADE',
+    title: 'Bishop as Blockader',
+    subtitle: 'Using the bishop to blockade',
+    // Position where bishop blockade is effective
+    fen: 'r1bq1rk1/pp2bppp/2np1np1/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'While knights are ideal blockaders, bishops can also be effective blockaders in certain positions! A bishop on a long diagonal can blockade multiple pawns and remain active. This pattern shows how to use a bishop as a blockader effectively.',
+    
+    keyIdeas: [
+      'Bishops can be effective blockaders on long diagonals',
+      'A bishop can blockade multiple pawns at once',
+      'Bishops remain active while blockading',
+      'Place the bishop on a diagonal that controls the pawns',
+      'Bishop blockades are especially effective against pawn chains'
+    ],
+    
+    mainLine: [
+      {
+        move: 'd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black advances the d-pawn, creating a passed pawn that needs to be blockaded.',
+        arrows: [{ from: 'd6', to: 'd5', color: 'blue' }],
+        highlights: ['d5']
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE BISHOP BLOCKADE! The bishop moves to f4, controlling the d6 square and preventing the d5 pawn from advancing. The bishop is an effective blockader on this diagonal!',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'red' }
+        ],
+        highlights: ['f4', 'd5'],
+        conceptTag: 'The Blockade'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but the passed pawn is now blockaded and harmless.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d1, supporting the blockading bishop and adding pressure to the d5 pawn. The blockade is now well-supported.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Supporting the Blockade'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also supports the pawn, but White\'s blockade is stronger.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Bd3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop develops to d3, adding another attacker to the blockaded pawn. White is piling up on the weakness.',
+        arrows: [
+          { from: 'e2', to: 'd3', color: 'green' },
+          { from: 'd3', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d3'],
+        conceptTag: 'Piling Up'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but the blockade remains strong.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Rad1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Doubling rooks on the d-file! White has complete control of the blockaded pawn. The bishop blockade has been a complete success.',
+        arrows: [
+          { from: 'a1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Maximum Pressure'
+      },
+      {
+        move: 'Qd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has too many pieces attacking.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop captures the d5 pawn! The blockaded passed pawn has fallen. The bishop blockade has done its job—it prevented the pawn from advancing and allowed White to win it.',
+        arrows: [{ from: 'd3', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Winning Material'
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'c6', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Recapturing! White has won the pawn and has a completely winning position. The bishop blockade has been a complete success.',
+        arrows: [{ from: 'd1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Winning Position'
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'White has won material! The blockaded passed pawn has been eliminated, and White has a winning endgame. This demonstrates the power of the bishop blockade—it can be just as effective as a knight blockade in the right position.',
+        arrows: [{ from: 'f1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We blockaded the passed d5 pawn with Bf4, preventing it from advancing. Then we piled up pieces (Rfd1, Bd3, Rad1) to attack the blockaded pawn. Eventually, we won it with Bxd5. The bishop blockade turned a dangerous passed pawn into a weakness that White could exploit.',
+    
+    keyTakeaways: [
+      'Bishops can be effective blockaders on long diagonals',
+      'A bishop can blockade multiple pawns at once',
+      'Bishops remain active while blockading',
+      'Place the bishop on a diagonal that controls the pawns',
+      'Bishop blockades are especially effective against pawn chains'
+    ],
+    
+    memoryTip: 'Think of the bishop blockade as "a sniper on a long diagonal"—it can block multiple pawns from far away!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Blockade Theory',
+    playerExample: {
+      white: 'Mikhail Botvinnik',
+      black: 'Vasily Smyslov',
+      event: 'World Championship',
+      year: 1954
+    }
+  },
+
+  {
+    id: 'blockade-rook-blockade-deep',
+    category: 'BLOCKADE',
+    title: 'Rook as Blockader',
+    subtitle: 'Using the rook to blockade',
+    // Position where rook blockade is effective
+    fen: 'r1bq1rk1/pp2bppp/2np1np1/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'While knights are ideal blockaders, rooks can also be effective blockaders in certain positions! A rook on a file can blockade a passed pawn and remain active. This pattern shows how to use a rook as a blockader effectively.',
+    
+    keyIdeas: [
+      'Rooks can be effective blockaders on files',
+      'A rook can blockade a passed pawn and remain active',
+      'Place the rook directly in front of the pawn',
+      'Rooks on files can blockade while controlling the file',
+      'Rook blockades are especially effective against central pawns'
+    ],
+    
+    mainLine: [
+      {
+        move: 'd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black advances the d-pawn, creating a passed pawn that needs to be blockaded.',
+        arrows: [{ from: 'd6', to: 'd5', color: 'blue' }],
+        highlights: ['d5']
+      },
+      {
+        move: 'Rd1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE ROOK BLOCKADE! The rook moves to d1, controlling the d-file and preventing the d5 pawn from advancing. The rook is an effective blockader on this file!',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'red' }
+        ],
+        highlights: ['d1', 'd5'],
+        conceptTag: 'The Blockade'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but the passed pawn is now blockaded and harmless.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop develops, supporting the blockading rook and adding pressure to the d5 pawn. The blockade is now well-supported.',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Supporting the Blockade'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also supports the pawn, but White\'s blockade is stronger.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Rad1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Doubling rooks on the d-file! White has complete control of the blockaded pawn. The rooks are perfectly placed to maintain the blockade.',
+        arrows: [
+          { from: 'a1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Doubled Rooks'
+      },
+      {
+        move: 'Rad8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also doubles, but White has the initiative.',
+        arrows: [{ from: 'a8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen develops, adding another attacker to the blockaded pawn. White is piling up on the weakness.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Piling Up'
+      },
+      {
+        move: 'Qd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has too many pieces attacking.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook captures the d5 pawn! The blockaded passed pawn has fallen. The rook blockade has done its job—it prevented the pawn from advancing and allowed White to win it.',
+        arrows: [{ from: 'd1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Winning Material'
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'd8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Recapturing! White has won the pawn and has a completely winning position. The rook blockade has been a complete success.',
+        arrows: [{ from: 'f1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Winning Position'
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Qxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen captures! White has won material and has a completely winning position. The blockaded passed pawn has been eliminated, and White has a winning endgame. This demonstrates the power of the rook blockade—it can be just as effective as a knight blockade in the right position.',
+        arrows: [{ from: 'd2', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We blockaded the passed d5 pawn with Rd1, preventing it from advancing. Then we piled up pieces (Bf4, Rad1, Qd2) to attack the blockaded pawn. Eventually, we won it with Rxd5. The rook blockade turned a dangerous passed pawn into a weakness that White could exploit.',
+    
+    keyTakeaways: [
+      'Rooks can be effective blockaders on files',
+      'A rook can blockade a passed pawn and remain active',
+      'Place the rook directly in front of the pawn',
+      'Rooks on files can blockade while controlling the file',
+      'Rook blockades are especially effective against central pawns'
+    ],
+    
+    memoryTip: 'Think of the rook blockade as "a wall on the file"—it stops the pawn and controls the entire file!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Blockade Theory',
+    playerExample: {
+      white: 'Aron Nimzowitsch',
+      black: 'Alexander Alekhine',
+      event: 'San Remo',
+      year: 1930
     }
   },
 
@@ -349,19 +1113,48 @@ export const additionalPatterns: EnhancedPattern[] = [
         arrows: [{ from: 'f8', to: 'g8', color: 'blue' }]
       },
       {
-        move: 'Qg7+',
+        move: 'Rxg8+',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Exchanging rooks to open up Black\'s king. The attack continues with full force.',
+        arrows: [{ from: 'g1', to: 'g8', color: 'green' }],
+        conceptTag: 'Opening Lines'
+      },
+      {
+        move: 'Kxg8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'The king must recapture.',
+        arrows: [{ from: 'h8', to: 'g8', color: 'blue' }]
+      },
+      {
+        move: 'Rg1+',
         isMainLine: true,
         annotation: '!!',
-        explanation: 'Check! The coordinated attack with Qh6, Rg1, and the pawn on h5 creates an irresistible assault. The rook lift concept is demonstrated—pieces working together in perfect harmony.',
-        arrows: [
-          { from: 'h6', to: 'g7', color: 'green' }
-        ],
-        highlights: ['g3', 'h1', 'h6'],
-        conceptTag: 'Full Coordination'
+        explanation: 'The second rook enters with check! This is the power of piece coordination—when all pieces work together, the attack is unstoppable.',
+        arrows: [{ from: 'd1', to: 'g1', color: 'green' }],
+        highlights: ['g1'],
+        conceptTag: 'Doubling Rooks'
+      },
+      {
+        move: 'Kf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'The king flees, but there\'s no escape.',
+        arrows: [{ from: 'g8', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'Qh8+',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen delivers check, driving the king further into the open. The coordinated attack has demolished Black\'s defenses. This is the power of the rook lift combined with piece coordination!',
+        arrows: [{ from: 'h6', to: 'h8', color: 'green' }],
+        highlights: ['h8'],
+        conceptTag: 'Decisive Attack'
       }
     ],
     
-    summary: 'We coordinated our pieces beautifully: h4-h5 opened lines, Bxh6 removed a defender, and the rook lift Rdg1-g3 brought maximum firepower against Black\'s king.',
+    summary: 'We coordinated our pieces beautifully: h4-h5 opened lines, Bxh6 removed a defender, and the rook lift Rg1 brought maximum firepower against Black\'s king. The combination of pawn storm, bishop trade, and rook lift created an irresistible attack.',
     
     keyTakeaways: [
       'Rook lifts (Rg1-g3-h3) bring rooks into the attack without needing open files',
@@ -380,6 +1173,692 @@ export const additionalPatterns: EnhancedPattern[] = [
       black: 'Veselin Topalov',
       event: 'Wijk aan Zee',
       year: 1999
+    }
+  },
+
+  // ============================================
+  // PIECE COORDINATION - CHAPTER 2: QUEEN-BISHOP BATTERY
+  // ============================================
+  {
+    id: 'coordination-queen-bishop-battery',
+    category: 'PIECE_COORDINATION',
+    title: 'The Queen-Bishop Battery',
+    subtitle: 'Diagonal destruction with coordinated pieces',
+    // Position where queen-bishop battery can be formed
+    fen: 'r1bq1rk1/pp2ppbp/2np1np1/8/3PP3/2N1BN2/PP1QBPPP/R4RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'A battery is two pieces lined up on the same diagonal or file. The queen-bishop battery on the a1-h8 or b1-h7 diagonal pointing at the enemy king is devastating. The bishop leads, the queen follows! This pattern shows how to create and exploit queen-bishop batteries.',
+    
+    keyIdeas: [
+      'A battery is two pieces on the same line (diagonal or file)',
+      'Queen-bishop batteries on long diagonals are especially powerful',
+      'The bishop can sacrifice itself to open lines for the queen',
+      'Batteries create multiple mating threats',
+      'Coordinate heavy pieces for maximum effect'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Bh6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop moves to h6, preparing to form a battery with the queen. This bishop will lead the attack.',
+        arrows: [
+          { from: 'e3', to: 'h6', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['h6'],
+        conceptTag: 'Preparing the Battery'
+      },
+      {
+        move: 'Bxh6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black trades to remove the threat, but this weakens the dark squares.',
+        arrows: [{ from: 'g7', to: 'h6', color: 'blue' }]
+      },
+      {
+        move: 'Qxh6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen recaptures! Now the queen is on h6, eyeing the weak dark squares around Black\'s king. The battery is forming.',
+        arrows: [
+          { from: 'e2', to: 'h6', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['h6'],
+        conceptTag: 'Queen to h6'
+      },
+      {
+        move: 'Qd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White continues building the battery.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE BATTERY! The bishop moves to f4, and now Qh6 and Bf4 form a battery on the b8-h2 diagonal! The bishop can sacrifice itself to open lines for the queen.',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'h6', color: 'yellow' },
+          { from: 'h6', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['f4', 'h6'],
+        conceptTag: 'The Battery!'
+      },
+      {
+        move: 'Rfe8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but the battery creates unstoppable threats.',
+        arrows: [{ from: 'f8', to: 'e8', color: 'blue' }]
+      },
+      {
+        move: 'Rae1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Bringing the rook into play! White has multiple pieces coordinating toward the kingside. The battery is the focal point.',
+        arrows: [{ from: 'a1', to: 'e1', color: 'green' }],
+        highlights: ['e1'],
+        conceptTag: 'Rook Coordination'
+      },
+      {
+        move: 'Nd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to improve, but White has a devastating continuation.',
+        arrows: [{ from: 'c6', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bxg7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE BATTERY STRIKES! The bishop sacrifices itself to open the h-file for the queen. This is the power of the battery—the bishop clears the way for the queen to deliver the final blow.',
+        arrows: [
+          { from: 'f4', to: 'g7', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['g7'],
+        conceptTag: 'Battery Sacrifice'
+      },
+      {
+        move: 'Kxg7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must capture, but now the h-file is open and the king is exposed.',
+        arrows: [{ from: 'g8', to: 'g7', color: 'blue' }],
+        highlights: ['h6', 'h8']
+      },
+      {
+        move: 'Qh7+',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Check! The queen invades on the open h-file. The battery has done its job—the bishop cleared the way for the queen.',
+        arrows: [{ from: 'h6', to: 'h7', color: 'green' }],
+        highlights: ['h7'],
+        conceptTag: 'Queen Invasion'
+      },
+      {
+        move: 'Kf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'The king flees, but there\'s no escape.',
+        arrows: [{ from: 'g7', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'Qh8+',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Another check! The queen continues the attack. The battery has created a winning position.',
+        arrows: [{ from: 'h7', to: 'h8', color: 'green' }],
+        highlights: ['h8'],
+        conceptTag: 'Pursuing the King'
+      },
+      {
+        move: 'Ke7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'The king moves to e7, but White has more threats.',
+        arrows: [{ from: 'f8', to: 'e7', color: 'blue' }]
+      },
+      {
+        move: 'Re3',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook lifts to the third rank! Combined with the queen on h8, White has a winning attack. The queen-bishop battery has transformed into a complete attacking formation. This is the power of piece coordination—batteries multiply the effectiveness of both pieces.',
+        arrows: [
+          { from: 'e1', to: 'e3', color: 'green' },
+          { from: 'e3', to: 'e7', color: 'yellow' }
+        ],
+        highlights: ['e3'],
+        conceptTag: 'Complete Coordination'
+      }
+    ],
+    
+    summary: 'We created a queen-bishop battery on the long diagonal (Bf4-Qh6). The bishop sacrificed itself (Bxg7) to open lines for the queen, which then invaded on the h-file. The battery coordinated both pieces perfectly, creating an unstoppable attack.',
+    
+    keyTakeaways: [
+      'Batteries are two pieces on the same line (diagonal or file)',
+      'Queen-bishop batteries on long diagonals are devastating',
+      'The bishop can sacrifice to open lines for the queen',
+      'Batteries create multiple mating threats',
+      'Coordinate heavy pieces for maximum attacking power'
+    ],
+    
+    memoryTip: 'Think of a battery as "two cannons firing together"—the combined firepower is unstoppable!',
+    
+    difficulty: 4,
+    estimatedMinutes: 12,
+    source: 'Attacking Chess Patterns',
+    playerExample: {
+      white: 'Garry Kasparov',
+      black: 'Anatoly Karpov',
+      event: 'World Championship',
+      year: 1985
+    }
+  },
+
+  // ============================================
+  // PIECE COORDINATION - CHAPTER 3: DOUBLED ROOKS
+  // ============================================
+  {
+    id: 'coordination-doubled-rooks-deep',
+    category: 'PIECE_COORDINATION',
+    title: 'The Power of Doubled Rooks',
+    subtitle: 'Two rooks working together',
+    // Position where doubled rooks can be created
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'Doubled rooks are one of the most powerful formations in chess! Two rooks on the same file create irresistible pressure. They support each other, can trade favorably, and often lead to material gains or decisive attacks. This pattern shows how to create and exploit doubled rooks.',
+    
+    keyIdeas: [
+      'Doubled rooks on a file create maximum pressure',
+      'Two rooks support each other and can trade favorably',
+      'Doubled rooks often lead to material gains',
+      'Use doubled rooks to penetrate the enemy position',
+      'The front rook can sacrifice itself to open lines for the back rook'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d1, preparing to double on the d-file. This is the first step in creating doubled rooks.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd7', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Preparing to Double'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also uses the file, but White continues the plan.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Rad1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'DOUBLED ROOKS! The second rook moves to d1, creating doubled rooks on the d-file. This creates maximum pressure and is one of the most powerful formations in chess!',
+        arrows: [
+          { from: 'a1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd7', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Doubled Rooks!'
+      },
+      {
+        move: 'Rad8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also doubles, but White has the initiative.',
+        arrows: [{ from: 'a8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen joins the attack! Now White has doubled rooks AND the queen all on the d-file. This creates overwhelming pressure.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'd7', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Tripling'
+      },
+      {
+        move: 'Qd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but White has too many pieces on the file.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Rxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The front rook sacrifices itself! By trading, White opens the file for the back rook. This is the power of doubled rooks—they can trade favorably.',
+        arrows: [{ from: 'd1', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Front Rook Sacrifice'
+      },
+      {
+        move: 'Rxd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture, but now the file is open for White\'s back rook.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Rxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The back rook recaptures! Now White has a rook on the 7th rank, attacking pawns and restricting Black\'s king. The doubled rooks have been a complete success!',
+        arrows: [
+          { from: 'd1', to: 'd7', color: 'green' },
+          { from: 'd7', to: 'b7', color: 'yellow' },
+          { from: 'd7', to: 'f7', color: 'yellow' }
+        ],
+        highlights: ['d7'],
+        conceptTag: '7th Rank!'
+      },
+      {
+        move: 'Qxd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Qxd7',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen recaptures! White has won a rook and has a completely winning position. The doubled rooks have paid off!',
+        arrows: [{ from: 'd2', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has too many advantages.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Qxb7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Winning another pawn! White has a completely winning position. The doubled rooks have created a decisive material advantage. This demonstrates the power of doubled rooks—they create irresistible pressure that leads to material gains.',
+        arrows: [{ from: 'd7', to: 'b7', color: 'green' }],
+        highlights: ['b7'],
+        conceptTag: 'Total Success'
+      }
+    ],
+    
+    summary: 'We created doubled rooks on the d-file, then tripled with the queen. The front rook sacrificed itself to open the file, and the back rook invaded the 7th rank, winning material. The doubled rooks created irresistible pressure that led to a winning position.',
+    
+    keyTakeaways: [
+      'Doubled rooks on a file create maximum pressure',
+      'Two rooks support each other and can trade favorably',
+      'The front rook can sacrifice to open lines for the back rook',
+      'Doubled rooks often lead to material gains',
+      'Use doubled rooks to penetrate the enemy position'
+    ],
+    
+    memoryTip: 'Think of doubled rooks as "two tanks rolling down the same road"—they\'re unstoppable!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Rook Coordination Theory',
+    playerExample: {
+      white: 'José Raúl Capablanca',
+      black: 'Emanuel Lasker',
+      event: 'World Championship',
+      year: 1921
+    }
+  },
+
+  {
+    id: 'coordination-queen-knight-battery-deep',
+    category: 'PIECE_COORDINATION',
+    title: 'Queen and Knight Battery',
+    subtitle: 'The powerful queen-knight combination',
+    // Position where queen-knight battery is powerful
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'A queen and knight working together create one of the most dangerous combinations in chess! The queen provides long-range power while the knight adds tactical threats. Together, they can create devastating attacks. This pattern shows how to coordinate a queen and knight battery.',
+    
+    keyIdeas: [
+      'Queen and knight complement each other perfectly',
+      'The queen provides long-range power',
+      'The knight adds tactical threats and forks',
+      'Place the knight on a strong square near the queen',
+      'Queen-knight batteries often lead to mating attacks'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The knight jumps to d5, a powerful central square! From d5, it prepares to coordinate with the queen.',
+        arrows: [
+          { from: 'c3', to: 'd5', color: 'green' },
+          { from: 'd5', to: 'c7', color: 'yellow' },
+          { from: 'd5', to: 'e7', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'Knight Placement'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White continues building.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen moves to d2, creating a queen-knight battery! The queen supports the knight on d5, and together they create powerful threats. This is a dangerous combination!',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'd5', color: 'yellow' },
+          { from: 'd2', to: 'h6', color: 'yellow' }
+        ],
+        highlights: ['d2', 'd5'],
+        conceptTag: 'Queen-Knight Battery'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White has more threats.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop develops, adding another attacker. White\'s pieces are coordinating beautifully—the queen, knight, and bishop all work together.',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'c7', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Piece Coordination'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but White\'s queen-knight battery is too powerful.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Qh6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen moves to h6, joining the attack! Combined with the knight on d5, White has a powerful attack on the kingside. The queen-knight battery is creating devastating threats.',
+        arrows: [
+          { from: 'd2', to: 'h6', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' },
+          { from: 'd5', to: 'f6', color: 'yellow' }
+        ],
+        highlights: ['h6', 'g7'],
+        conceptTag: 'Queen Attack'
+      },
+      {
+        move: 'Bf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has more threats.',
+        arrows: [{ from: 'e7', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'Nf6+',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight checks on f6! The queen-knight battery has created a winning tactical opportunity. The knight fork is devastating!',
+        arrows: [
+          { from: 'd5', to: 'f6', color: 'green' },
+          { from: 'f6', to: 'g8', color: 'yellow' },
+          { from: 'f6', to: 'h7', color: 'yellow' }
+        ],
+        highlights: ['f6'],
+        conceptTag: 'Knight Fork'
+      },
+      {
+        move: 'Kh8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to escape, but White has a winning position.',
+        arrows: [{ from: 'g8', to: 'h8', color: 'blue' }]
+      },
+      {
+        move: 'Qxh7+',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Check! The queen captures on h7, using the knight\'s support. The queen-knight battery has created a winning attack.',
+        arrows: [{ from: 'h6', to: 'h7', color: 'green' }],
+        highlights: ['h7'],
+        conceptTag: 'Winning Attack'
+      },
+      {
+        move: 'Kg8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to escape, but White has mate.',
+        arrows: [{ from: 'h8', to: 'g8', color: 'blue' }]
+      },
+      {
+        move: 'Qh8#',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Checkmate! The queen-knight battery has created a perfect mating attack. The queen and knight worked together perfectly to deliver checkmate. This demonstrates the power of queen-knight coordination.',
+        arrows: [{ from: 'h7', to: 'h8', color: 'green' }],
+        highlights: ['h8'],
+        conceptTag: 'Checkmate'
+      }
+    ],
+    
+    summary: 'We placed the knight on d5 and the queen on d2, creating a queen-knight battery. The battery coordinated perfectly to create a winning attack (Qh6, Nf6+, Qxh7+, Qh8#). The queen-knight combination is one of the most dangerous in chess.',
+    
+    keyTakeaways: [
+      'Queen and knight complement each other perfectly',
+      'The queen provides long-range power',
+      'The knight adds tactical threats and forks',
+      'Place the knight on a strong square near the queen',
+      'Queen-knight batteries often lead to mating attacks'
+    ],
+    
+    memoryTip: 'Think of the queen-knight battery as "a sniper and a ninja"—long-range power plus tactical threats!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Piece Coordination Theory',
+    playerExample: {
+      white: 'Garry Kasparov',
+      black: 'Viswanathan Anand',
+      event: 'World Championship',
+      year: 1995
+    }
+  },
+
+  {
+    id: 'coordination-bishop-knight-battery-deep',
+    category: 'PIECE_COORDINATION',
+    title: 'Bishop and Knight Battery',
+    subtitle: 'The powerful bishop-knight combination',
+    // Position where bishop-knight battery is powerful
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'A bishop and knight working together create one of the most versatile combinations in chess! The bishop provides long-range power while the knight adds tactical threats. Together, they can control both color complexes and create devastating attacks. This pattern shows how to coordinate a bishop and knight battery.',
+    
+    keyIdeas: [
+      'Bishop and knight complement each other perfectly',
+      'The bishop provides long-range power',
+      'The knight adds tactical threats and forks',
+      'Place the knight on a strong square near the bishop',
+      'Bishop-knight batteries often lead to material gains or attacks'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The knight jumps to d5, a powerful central square! From d5, it prepares to coordinate with the bishop.',
+        arrows: [
+          { from: 'c3', to: 'd5', color: 'green' },
+          { from: 'd5', to: 'c7', color: 'yellow' },
+          { from: 'd5', to: 'e7', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'Knight Placement'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White continues building.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop develops to f4, creating a bishop-knight battery! The bishop supports the knight on d5, and together they create powerful threats. This is a dangerous combination!',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'yellow' },
+          { from: 'f4', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['f4', 'd5'],
+        conceptTag: 'Bishop-Knight Battery'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but White\'s battery is too powerful.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen develops, adding another attacker. White\'s pieces are coordinating beautifully—the bishop, knight, and queen all work together.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Queen Coordination'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White has more threats.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Nf6+',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight checks on f6! The bishop-knight battery has created a winning tactical opportunity. The knight fork is devastating!',
+        arrows: [
+          { from: 'd5', to: 'f6', color: 'green' },
+          { from: 'f6', to: 'g8', color: 'yellow' },
+          { from: 'f6', to: 'h7', color: 'yellow' }
+        ],
+        highlights: ['f6'],
+        conceptTag: 'Knight Fork'
+      },
+      {
+        move: 'Kh8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to escape, but White has a winning position.',
+        arrows: [{ from: 'g8', to: 'h8', color: 'blue' }]
+      },
+      {
+        move: 'Bxd6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop captures on d6! The bishop-knight battery has created a winning opportunity. White has won material.',
+        arrows: [{ from: 'f4', to: 'd6', color: 'green' }],
+        highlights: ['d6'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Bxd6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'e7', to: 'd6', color: 'blue' }]
+      },
+      {
+        move: 'Qxd6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen captures! White has won material and has a completely winning position. The bishop-knight battery has been a complete success.',
+        arrows: [{ from: 'd2', to: 'd6', color: 'green' }],
+        highlights: ['d6'],
+        conceptTag: 'Winning Position'
+      },
+      {
+        move: 'Qxd6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd8', to: 'd6', color: 'blue' }]
+      },
+      {
+        move: 'Rxd6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook captures! White has won material and has a completely winning position. The bishop-knight battery has created irresistible pressure that led to material gains.',
+        arrows: [{ from: 'd1', to: 'd6', color: 'green' }],
+        highlights: ['d6'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We placed the knight on d5 and the bishop on f4, creating a bishop-knight battery. The battery coordinated perfectly to create winning tactics (Nf6+, Bxd6) that led to material gains. The bishop-knight combination is one of the most versatile in chess.',
+    
+    keyTakeaways: [
+      'Bishop and knight complement each other perfectly',
+      'The bishop provides long-range power',
+      'The knight adds tactical threats and forks',
+      'Place the knight on a strong square near the bishop',
+      'Bishop-knight batteries often lead to material gains or attacks'
+    ],
+    
+    memoryTip: 'Think of the bishop-knight battery as "a sniper and a ninja"—long-range power plus tactical threats!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Piece Coordination Theory',
+    playerExample: {
+      white: 'Mikhail Botvinnik',
+      black: 'Vasily Smyslov',
+      event: 'World Championship',
+      year: 1954
     }
   },
 
@@ -481,9 +1960,57 @@ export const additionalPatterns: EnhancedPattern[] = [
         move: 'O-O-O',
         isMainLine: true,
         annotation: '!',
-        explanation: 'Castling queenside and connecting the rooks. White has a beautiful position: the queen on h6, the dark squares are weak, and the doubled e-pawns are targets.',
+        explanation: 'Castling queenside and connecting the rooks. White has a beautiful position with pressure on the dark squares.',
         arrows: [{ from: 'e1', to: 'c1', color: 'green' }],
-        conceptTag: 'Superior Position'
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Qf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to exchange queens to relieve the pressure.',
+        arrows: [{ from: 'd8', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'Qg5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen retreats to g5, staying active and avoiding the trade. White wants to keep the queens on to exploit the dark square weaknesses.',
+        arrows: [{ from: 'h6', to: 'g5', color: 'green' }],
+        highlights: ['g5'],
+        conceptTag: 'Avoiding Bad Trades'
+      },
+      {
+        move: 'Qf6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries again to exchange.',
+        arrows: [{ from: 'f8', to: 'f6', color: 'blue' }]
+      },
+      {
+        move: 'Qh6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen returns to h6! White keeps the pressure on. Trading queens would ease Black\'s defensive burden, so we avoid it.',
+        arrows: [{ from: 'g5', to: 'h6', color: 'green' }],
+        highlights: ['h6'],
+        conceptTag: 'Maintaining Pressure'
+      },
+      {
+        move: 'Rf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black repositions.',
+        arrows: [{ from: 'f7', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'f4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Preparing f5 to open more lines! The strategic exchanges earlier (Nxe6 and Bxh6) have given White a dominating position. This is the reward of good exchange strategy—trade the right pieces and you end up with a superior position.',
+        arrows: [{ from: 'f3', to: 'f4', color: 'green' }, { from: 'f4', to: 'f5', color: 'yellow' }],
+        highlights: ['f4'],
+        conceptTag: 'Opening Lines'
       }
     ],
     
@@ -501,6 +2028,710 @@ export const additionalPatterns: EnhancedPattern[] = [
     difficulty: 3,
     estimatedMinutes: 8,
     source: 'Sicilian Dragon Strategy',
+    playerExample: {
+      white: 'Anatoly Karpov',
+      black: 'Viktor Korchnoi',
+      event: 'World Championship',
+      year: 1978
+    }
+  },
+
+  // ============================================
+  // EXCHANGE STRATEGY - CHAPTER 2: SIMPLIFYING WHEN AHEAD
+  // ============================================
+  {
+    id: 'exchange-simplify-ahead-deep',
+    category: 'EXCHANGE_STRATEGY',
+    title: 'Simplifying When Ahead',
+    subtitle: 'Trading down to a winning endgame',
+    // Position where White is ahead and should simplify
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'When you have an advantage, simplify! Trade pieces to reduce your opponent\'s counterplay and convert your advantage into a winning endgame. The fewer pieces on the board, the harder it is for the opponent to create complications. This pattern shows how to simplify correctly when ahead.',
+    
+    keyIdeas: [
+      'When ahead, trade pieces to reduce counterplay',
+      'Trade queens when you have a material or positional advantage',
+      'Simplify to endgames where your advantage is clearer',
+      'Fewer pieces make it harder for the opponent to create complications',
+      'Trade active pieces to prevent counterattacks'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nxd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Trading knights! White has a slight advantage, so simplifying is correct. Fewer pieces reduce Black\'s counterplay.',
+        arrows: [{ from: 'c3', to: 'd5', color: 'green' }],
+        conceptTag: 'Simplifying'
+      },
+      {
+        move: 'Nxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures. The position is simplified, and White\'s advantage remains.',
+        arrows: [{ from: 'f6', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Trading the bishop for the knight! White continues simplifying. The position is becoming clearer.',
+        arrows: [{ from: 'e3', to: 'd5', color: 'green' }]
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures. White\'s advantage persists.',
+        arrows: [{ from: 'e7', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Qxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Trading the queen! This is the key simplification—when ahead, trade queens to eliminate counterplay. The endgame will be much easier to win.',
+        arrows: [{ from: 'd1', to: 'd5', color: 'green' }],
+        conceptTag: 'Trading Queens'
+      },
+      {
+        move: 'Qxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture. The position is now simplified to an endgame where White\'s advantage is clearer.',
+        arrows: [{ from: 'd8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d1, targeting the queen. White continues to simplify.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Rook Activity'
+      },
+      {
+        move: 'Qxd1+',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black trades queens, further simplifying. This is exactly what White wants!',
+        arrows: [{ from: 'd5', to: 'd1', color: 'blue' }]
+      },
+      {
+        move: 'Rxd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Recapturing! White has successfully simplified to an endgame. The advantage is now much easier to convert.',
+        arrows: [{ from: 'a1', to: 'd1', color: 'green' }],
+        highlights: ['d1'],
+        conceptTag: 'Endgame Reached'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black doubles rooks, but White has a winning endgame.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Rxd8',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Trading rooks! White continues simplifying. The fewer pieces, the easier to convert.',
+        arrows: [{ from: 'd1', to: 'd8', color: 'green' }]
+      },
+      {
+        move: 'Rxd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures. The position is now very simplified.',
+        arrows: [{ from: 'a8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Rxd8',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Trading the last rooks! White has simplified to a pure endgame. The advantage is now easy to convert—fewer pieces mean less counterplay.',
+        arrows: [{ from: 'f1', to: 'd8', color: 'green' }],
+        highlights: ['d8'],
+        conceptTag: 'Complete Simplification'
+      },
+      {
+        move: 'Bxd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures. White has a winning endgame with the bishop pair.',
+        arrows: [{ from: 'c8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop develops! White has successfully simplified to a winning endgame. The bishop pair and space advantage are decisive. This demonstrates the power of simplifying when ahead—trade pieces to reduce counterplay and convert your advantage.',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Winning Endgame'
+      }
+    ],
+    
+    summary: 'We systematically simplified by trading knights, bishops, queens, and rooks. Each trade reduced Black\'s counterplay and made White\'s advantage clearer. The final endgame with the bishop pair is easily winning. This shows the power of simplifying when ahead—fewer pieces mean less counterplay.',
+    
+    keyTakeaways: [
+      'When ahead, trade pieces to reduce counterplay',
+      'Trade queens when you have an advantage—endgames are easier to win',
+      'Simplify to positions where your advantage is clearer',
+      'Fewer pieces make it harder for the opponent to create complications',
+      'Trade active pieces to prevent counterattacks'
+    ],
+    
+    memoryTip: 'Think of simplifying as "clearing the board"—fewer pieces mean fewer complications!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Endgame Conversion Technique',
+    playerExample: {
+      white: 'Anatoly Karpov',
+      black: 'Viktor Korchnoi',
+      event: 'World Championship',
+      year: 1978
+    }
+  },
+
+  {
+    id: 'exchange-create-weaknesses-deep',
+    category: 'EXCHANGE_STRATEGY',
+    title: 'Exchanging to Create Weaknesses',
+    subtitle: 'Trading pieces to expose weaknesses',
+    // Position where exchanging creates weaknesses
+    fen: 'r1bq1rk1/pp2bppp/2np1np1/2N5/3PP3/2N2P2/PP4PP/R1BQKB1R w KQ - 0 9',
+    toMove: 'white',
+    
+    introduction: 'Sometimes the best exchange is one that creates lasting weaknesses in your opponent\'s position. By trading pieces strategically, you can expose weak squares, create bad pawns, or remove key defenders. The weaknesses created by exchanges often last longer than temporary piece activity. This pattern shows how to use exchanges to create permanent weaknesses.',
+    
+    keyIdeas: [
+      'Exchanges can create lasting weaknesses in the opponent\'s position',
+      'Trade pieces to expose weak squares or create bad pawns',
+      'Remove defenders to create weaknesses around the king',
+      'Structural weaknesses last longer than temporary piece activity',
+      'Evaluate what weaknesses remain after the exchange'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nxe6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Trading the knight! This exchange will create doubled pawns in Black\'s position. The e6 square will be weak, and Black\'s pawn structure will be damaged.',
+        arrows: [
+          { from: 'c5', to: 'e6', color: 'green' },
+          { from: 'e6', to: 'f7', color: 'yellow' }
+        ],
+        highlights: ['e6'],
+        conceptTag: 'Creating Weaknesses'
+      },
+      {
+        move: 'fxe6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture with the f-pawn. Now Black has doubled e-pawns—a permanent weakness! The e6 pawn is weak and cannot be defended by another pawn.',
+        arrows: [{ from: 'f7', to: 'e6', color: 'blue' }],
+        highlights: ['e6', 'e7']
+      },
+      {
+        move: 'Be3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Developing the bishop and preparing to attack the weak e6 pawn. The exchange has created a target that White can attack.',
+        arrows: [
+          { from: 'c1', to: 'e3', color: 'green' },
+          { from: 'e3', to: 'e6', color: 'yellow' }
+        ],
+        highlights: ['e3'],
+        conceptTag: 'Targeting Weakness'
+      },
+      {
+        move: 'Nd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black repositions the knight, but the weak e6 pawn remains.',
+        arrows: [{ from: 'f6', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bh6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Trading the dark-squared bishops! This exchange will remove Black\'s key defender (the fianchettoed bishop) and create dark square weaknesses around Black\'s king.',
+        arrows: [
+          { from: 'e3', to: 'h6', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['h6'],
+        conceptTag: 'Removing Defender'
+      },
+      {
+        move: 'Bxh6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must trade. The fianchettoed bishop was a key defender of the dark squares around the king. Now those squares are weak!',
+        arrows: [{ from: 'g7', to: 'h6', color: 'blue' }],
+        highlights: ['g7', 'h6', 'f8']
+      },
+      {
+        move: 'Qxh6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen captures! Now White has a powerful queen on h6, eyeing the weakened dark squares around Black\'s king. The exchange has created lasting weaknesses.',
+        arrows: [
+          { from: 'd1', to: 'h6', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' },
+          { from: 'h6', to: 'f8', color: 'yellow' }
+        ],
+        highlights: ['h6', 'g7', 'f8'],
+        conceptTag: 'Exploiting Weaknesses'
+      },
+      {
+        move: 'Rf7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to activate the rook, but White has more threats.',
+        arrows: [{ from: 'f8', to: 'f7', color: 'blue' }]
+      },
+      {
+        move: 'O-O-O',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Castling queenside and connecting the rooks. White\'s position is harmonious, and the weaknesses created by the exchanges are becoming more apparent.',
+        arrows: [{ from: 'e1', to: 'c1', color: 'green' }],
+        highlights: ['c1'],
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Qf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to exchange queens to relieve the pressure, but White can avoid the trade.',
+        arrows: [{ from: 'd8', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'Qg5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen retreats to g5, staying active and avoiding the trade. White wants to keep the queens on to exploit the dark square weaknesses created by the exchange.',
+        arrows: [
+          { from: 'h6', to: 'g5', color: 'green' },
+          { from: 'g5', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['g5'],
+        conceptTag: 'Maintaining Pressure'
+      },
+      {
+        move: 'Qf6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries again to exchange, but White has better options.',
+        arrows: [{ from: 'f8', to: 'f6', color: 'blue' }]
+      },
+      {
+        move: 'Qh6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen returns to h6! White keeps the pressure on the weakened dark squares. The exchange has created permanent weaknesses that White can exploit.',
+        arrows: [
+          { from: 'g5', to: 'h6', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['h6'],
+        conceptTag: 'Persistent Pressure'
+      },
+      {
+        move: 'Rf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black repositions, but the weaknesses remain.',
+        arrows: [{ from: 'f7', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'f4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Preparing f5 to open more lines! The strategic exchanges (Nxe6 and Bxh6) have created lasting weaknesses—doubled pawns and dark square weaknesses. White can now attack on multiple fronts.',
+        arrows: [
+          { from: 'f3', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'f5', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Opening Lines'
+      },
+      {
+        move: 'e5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to block, but White has more threats.',
+        arrows: [{ from: 'e6', to: 'e5', color: 'blue' }]
+      },
+      {
+        move: 'f5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Opening the f-file! The exchanges have created weaknesses that White can now exploit. The f-file is open, the dark squares are weak, and White has a winning attack. This demonstrates the power of exchanging to create weaknesses—the structural damage lasts forever.',
+        arrows: [
+          { from: 'f4', to: 'f5', color: 'green' },
+          { from: 'f5', to: 'e6', color: 'yellow' }
+        ],
+        highlights: ['f5'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'Two key exchanges created lasting weaknesses: Nxe6 created doubled pawns, and Bxh6 removed a key defender and created dark square weaknesses. These weaknesses lasted throughout the game and gave White a winning position. This shows the power of exchanging to create permanent weaknesses.',
+    
+    keyTakeaways: [
+      'Exchanges can create lasting weaknesses in the opponent\'s position',
+      'Trade pieces to expose weak squares or create bad pawns',
+      'Remove defenders to create weaknesses around the king',
+      'Structural weaknesses last longer than temporary piece activity',
+      'Evaluate what weaknesses remain after the exchange'
+    ],
+    
+    memoryTip: 'Think of exchanges as "sculpting"—each trade shapes the position and creates lasting weaknesses!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Strategic Exchange Theory',
+    playerExample: {
+      white: 'Garry Kasparov',
+      black: 'Anatoly Karpov',
+      event: 'World Championship',
+      year: 1985
+    }
+  },
+
+  {
+    id: 'exchange-avoiding-bad-trade-deep',
+    category: 'EXCHANGE_STRATEGY',
+    title: 'Avoiding Bad Exchanges',
+    subtitle: 'Knowing when NOT to trade',
+    // Position where avoiding a bad exchange is key
+    fen: 'r1bq1rk1/pp2bppp/2np1np1/2N5/3PP3/2N2P2/PP4PP/R1BQKB1R w KQ - 0 9',
+    toMove: 'white',
+    
+    introduction: 'Exchange strategy isn\'t just about trading—it\'s also about knowing when NOT to trade! Sometimes avoiding an exchange is the best move. If your piece is more active than your opponent\'s, or if trading would help your opponent, avoid the trade. This pattern shows how to recognize and avoid bad exchanges.',
+    
+    keyIdeas: [
+      'Avoid trading when your piece is more active',
+      'Don\'t trade if it helps your opponent',
+      'Keep active pieces on the board',
+      'Trading can sometimes equalize the position',
+      'Evaluate the position after the trade before committing'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen develops, connecting the rooks. White avoids trading the active knight on c5, which is more valuable than Black\'s passive pieces.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'c5', to: 'c5', color: 'yellow' }
+        ],
+        highlights: ['d2', 'c5'],
+        conceptTag: 'Avoiding Bad Trade'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White continues avoiding trades.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Be3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop develops, maintaining piece activity. White avoids trading the active pieces, keeping the initiative.',
+        arrows: [
+          { from: 'c1', to: 'e3', color: 'green' },
+          { from: 'e3', to: 'c5', color: 'yellow' }
+        ],
+        highlights: ['e3'],
+        conceptTag: 'Maintaining Activity'
+      },
+      {
+        move: 'Rfc8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White has more active pieces.',
+        arrows: [{ from: 'a8', to: 'c8', color: 'blue' }]
+      },
+      {
+        move: 'O-O-O',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Castling queenside! White avoids trading active pieces and maintains the initiative. The active pieces are worth more than material.',
+        arrows: [{ from: 'e1', to: 'c1', color: 'green' }],
+        highlights: ['c1'],
+        conceptTag: 'Maintaining Initiative'
+      },
+      {
+        move: 'Bxc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to force a trade, but White has a better response.',
+        arrows: [{ from: 'd7', to: 'c5', color: 'blue' }]
+      },
+      {
+        move: 'Bxc5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'White recaptures, but now the bishop is active on c5. The trade was acceptable because White maintained piece activity.',
+        arrows: [{ from: 'e3', to: 'c5', color: 'green' }],
+        highlights: ['c5'],
+        conceptTag: 'Acceptable Trade'
+      },
+      {
+        move: 'Qc7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White has more threats.',
+        arrows: [{ from: 'd8', to: 'c7', color: 'blue' }]
+      },
+      {
+        move: 'Qh6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen moves to h6, joining the attack! White avoided bad trades and maintained active pieces, which now create a winning attack.',
+        arrows: [
+          { from: 'd2', to: 'h6', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['h6'],
+        conceptTag: 'Active Pieces Attack'
+      },
+      {
+        move: 'Bf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has more threats.',
+        arrows: [{ from: 'e7', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'Bxg7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop captures on g7, breaking through! White\'s active pieces have created a winning attack. Avoiding bad trades has paid off.',
+        arrows: [{ from: 'c5', to: 'g7', color: 'green' }],
+        highlights: ['g7'],
+        conceptTag: 'Breakthrough'
+      },
+      {
+        move: 'Kxg7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture, but the king is now exposed.',
+        arrows: [{ from: 'g8', to: 'g7', color: 'blue' }]
+      },
+      {
+        move: 'Qxh7+',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Check! The queen captures on h7, using the active pieces. White has a completely winning attack.',
+        arrows: [{ from: 'h6', to: 'h7', color: 'green' }],
+        highlights: ['h7'],
+        conceptTag: 'Winning Attack'
+      },
+      {
+        move: 'Kg8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to escape, but White has mate.',
+        arrows: [{ from: 'g7', to: 'g8', color: 'blue' }]
+      },
+      {
+        move: 'Qh8#',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Checkmate! Avoiding bad trades and maintaining active pieces has created a winning attack. This demonstrates the power of knowing when NOT to trade.',
+        arrows: [{ from: 'h7', to: 'h8', color: 'green' }],
+        highlights: ['h8'],
+        conceptTag: 'Checkmate'
+      }
+    ],
+    
+    summary: 'We avoided bad trades and maintained active pieces (Qd2, Be3, O-O-O). The active pieces created a winning attack (Qh6, Bxg7, Qxh7+, Qh8#). Avoiding bad exchanges is just as important as making good ones.',
+    
+    keyTakeaways: [
+      'Avoid trading when your piece is more active',
+      'Don\'t trade if it helps your opponent',
+      'Keep active pieces on the board',
+      'Trading can sometimes equalize the position',
+      'Evaluate the position after the trade before committing'
+    ],
+    
+    memoryTip: 'Think of avoiding bad trades as "keeping your best players on the field"—don\'t trade away your active pieces!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Exchange Strategy Theory',
+    playerExample: {
+      white: 'Bobby Fischer',
+      black: 'Boris Spassky',
+      event: 'World Championship',
+      year: 1972
+    }
+  },
+
+  {
+    id: 'exchange-strategy-winning-endgame-deep',
+    category: 'EXCHANGE_STRATEGY',
+    title: 'Exchanging to a Winning Endgame',
+    subtitle: 'Trading down to convert advantages',
+    // Position where exchanging leads to winning endgame
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'When you have an advantage, exchanging pieces can simplify the position and make your advantage clearer. By trading down to an endgame, you can convert material or positional advantages into wins. This pattern shows how to exchange correctly to reach a winning endgame.',
+    
+    keyIdeas: [
+      'Exchange pieces when you have an advantage',
+      'Trading down simplifies the position',
+      'Endgames make advantages clearer',
+      'Trade active pieces to prevent counterplay',
+      'Convert advantages into winning endgames'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nxd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Trading knights! White has a slight advantage, so simplifying is correct. Fewer pieces reduce Black\'s counterplay.',
+        arrows: [{ from: 'c3', to: 'd5', color: 'green' }],
+        conceptTag: 'Simplifying'
+      },
+      {
+        move: 'exd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, and now the position is simpler.',
+        arrows: [{ from: 'e6', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Trading bishops! White continues simplifying. The position is becoming clearer.',
+        arrows: [{ from: 'e3', to: 'd5', color: 'green' }],
+        conceptTag: 'More Simplification'
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, and the position is even simpler.',
+        arrows: [{ from: 'e7', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Qxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Trading queens! White has an advantage, so trading queens simplifies to an endgame where the advantage is clearer. This is the key exchange.',
+        arrows: [{ from: 'd1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Trading Queens'
+      },
+      {
+        move: 'Qxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, and now we\'re in an endgame.',
+        arrows: [{ from: 'd8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Trading rooks! White continues simplifying. The endgame is becoming clearer, and White\'s advantage is more obvious.',
+        arrows: [{ from: 'd1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Trading Rooks'
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, and we\'re in a simplified endgame.',
+        arrows: [{ from: 'd8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The final trade! White has simplified to an endgame where the advantage is clear. The exchanges have been a complete success.',
+        arrows: [{ from: 'f1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Winning Endgame'
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, and White has a winning endgame.',
+        arrows: [{ from: 'f8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop captures! White has won material and has a completely winning endgame. The exchanges have simplified the position and made White\'s advantage decisive.',
+        arrows: [{ from: 'e2', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'c8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Kf1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king moves forward, preparing to support the pawns. White has won material and has a completely winning endgame. The exchanges have been a complete success.',
+        arrows: [
+          { from: 'g1', to: 'f1', color: 'green' },
+          { from: 'f1', to: 'e2', color: 'yellow' }
+        ],
+        highlights: ['f1'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We systematically simplified by trading knights, bishops, queens, and rooks. Each trade reduced Black\'s counterplay and made White\'s advantage clearer. The final endgame with material advantage is easily winning. This shows the power of exchanging to convert advantages.',
+    
+    keyTakeaways: [
+      'Exchange pieces when you have an advantage',
+      'Trading down simplifies the position',
+      'Endgames make advantages clearer',
+      'Trade active pieces to prevent counterplay',
+      'Convert advantages into winning endgames'
+    ],
+    
+    memoryTip: 'Think of exchanging to an endgame as "clearing the board to show your advantage"—simpler positions make advantages clearer!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Endgame Conversion Technique',
     playerExample: {
       white: 'Anatoly Karpov',
       black: 'Viktor Korchnoi',
@@ -613,10 +2844,58 @@ export const additionalPatterns: EnhancedPattern[] = [
         explanation: 'Capturing the pawn with check, and the queen on d8 is falling. The eternal knight delivered a knockout!',
         arrows: [{ from: 'h6', to: 'f7', color: 'green' }],
         conceptTag: 'Decisive Combination'
+      },
+      {
+        move: 'Kg8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'The king moves back, but the damage is done.',
+        arrows: [{ from: 'h8', to: 'g8', color: 'blue' }]
+      },
+      {
+        move: 'Nxd8',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Capturing the queen! White has won decisive material thanks to the eternal knight on f5. The knight that started the attack has now won the queen.',
+        arrows: [{ from: 'f7', to: 'd8', color: 'green' }],
+        highlights: ['d8'],
+        conceptTag: 'Winning Material'
+      },
+      {
+        move: 'Rxd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White is up a queen for a knight.',
+        arrows: [{ from: 'e8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Rad1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Bringing the rook to the open file! White is completely winning—material advantage plus active pieces. This is the reward for establishing the eternal knight.',
+        arrows: [{ from: 'a1', to: 'd1', color: 'green' }],
+        highlights: ['d1'],
+        conceptTag: 'Converting the Advantage'
+      },
+      {
+        move: 'Rxa8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black grabs a rook, but White\'s advantage is overwhelming.',
+        arrows: [{ from: 'd8', to: 'a8', color: 'blue' }]
+      },
+      {
+        move: 'Qf5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen takes control! White threatens Qf7+ and has complete dominance. The eternal knight created the conditions for this crushing victory.',
+        arrows: [{ from: 'g4', to: 'f5', color: 'green' }, { from: 'f5', to: 'f7', color: 'yellow' }],
+        highlights: ['f5'],
+        conceptTag: 'Total Control'
       }
     ],
     
-    summary: 'The knight on f5 was an "eternal" piece—immune to pawn attacks and dominating the position. From there, it delivered a decisive tactical blow.',
+    summary: 'The knight on f5 was an "eternal" piece—immune to pawn attacks and dominating the position. From there, it delivered a decisive tactical blow that won the queen. This is the power of a well-placed knight on an outpost.',
     
     keyTakeaways: [
       'Look for squares where knights cannot be attacked by pawns',
@@ -635,6 +2914,734 @@ export const additionalPatterns: EnhancedPattern[] = [
       black: 'Vishy Anand',
       event: 'World Championship',
       year: 2014
+    }
+  },
+
+  // ============================================
+  // KNIGHT PLACEMENT - CHAPTER 2: THE OCTOPUS KNIGHT
+  // ============================================
+  {
+    id: 'knight-octopus-e6-deep',
+    category: 'KNIGHT_PLACEMENT',
+    title: 'The Octopus Knight on e6',
+    subtitle: 'A knight deep in enemy territory',
+    // Position where White can establish knight on e6
+    fen: 'r1bq1rk1/pp2bppp/2nppn2/4N3/2B1P3/2N1B3/PPP2PPP/R2Q1RK1 w - - 0 10',
+    toMove: 'white',
+    
+    introduction: 'A knight on e6 (or e3 for Black) is called an "octopus"—it has tentacles everywhere! It attacks multiple squares and is very hard to remove. The octopus knight is one of the most powerful knight placements in chess. This pattern shows how to establish and exploit an octopus knight.',
+    
+    keyIdeas: [
+      'An octopus knight is deep in enemy territory (e6 for White, e3 for Black)',
+      'It attacks 8 squares simultaneously—like an octopus with 8 tentacles',
+      'It\'s hard to remove—often requires multiple pieces to challenge it',
+      'Use it to create multiple threats and dominate the position',
+      'Support it with pawns and pieces to make it permanent'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nxe6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE OCTOPUS! The knight captures on e6, establishing itself deep in Black\'s territory. From e6, it attacks c7, d8, f8, g7, g5, f4, d4, and c5—8 squares at once! This is the octopus knight.',
+        arrows: [
+          { from: 'e5', to: 'e6', color: 'green' },
+          { from: 'e6', to: 'c7', color: 'yellow' },
+          { from: 'e6', to: 'd8', color: 'yellow' },
+          { from: 'e6', to: 'f8', color: 'yellow' },
+          { from: 'e6', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['e6'],
+        conceptTag: 'The Octopus'
+      },
+      {
+        move: 'Bxe6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture, but now the e6 square is available for White\'s other knight!',
+        arrows: [{ from: 'e7', to: 'e6', color: 'blue' }]
+      },
+      {
+        move: 'f4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Supporting the e5 square! This pawn advance prepares to establish another knight on e5, or supports a future e5 advance. White is building pressure.',
+        arrows: [
+          { from: 'f2', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'e5', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Pawn Support'
+      },
+      {
+        move: 'Qd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the queen, but White continues the plan.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Ne5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight jumps to e5! Now White has a powerful central knight that controls many squares. Combined with the threat of Ne6, Black\'s position is under severe pressure.',
+        arrows: [
+          { from: 'c3', to: 'e5', color: 'green' },
+          { from: 'e5', to: 'c6', color: 'yellow' },
+          { from: 'e5', to: 'd7', color: 'yellow' },
+          { from: 'e5', to: 'f7', color: 'yellow' }
+        ],
+        highlights: ['e5'],
+        conceptTag: 'Central Knight'
+      },
+      {
+        move: 'Bd6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to challenge the knight, but White has a strong response.',
+        arrows: [{ from: 'e6', to: 'd6', color: 'blue' }]
+      },
+      {
+        move: 'Nxd6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Trading the knight for the bishop! This opens the e-file and gives White a strong central pawn on e5. The octopus knight has done its job.',
+        arrows: [{ from: 'e5', to: 'd6', color: 'green' }],
+        conceptTag: 'Favorable Trade'
+      },
+      {
+        move: 'Qxd6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but now the e-file is open and White has a strong central pawn.',
+        arrows: [{ from: 'd7', to: 'd6', color: 'blue' }],
+        highlights: ['e5']
+      },
+      {
+        move: 'f5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The pawn advances! This opens more lines and creates threats. White\'s position is becoming overwhelming.',
+        arrows: [
+          { from: 'f4', to: 'f5', color: 'green' },
+          { from: 'f5', to: 'e6', color: 'yellow' }
+        ],
+        highlights: ['f5'],
+        conceptTag: 'Pawn Break'
+      },
+      {
+        move: 'exf5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must capture, but this opens the e-file completely.',
+        arrows: [{ from: 'e6', to: 'f5', color: 'blue' }]
+      },
+      {
+        move: 'exf5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Recapturing opens the e-file! Now White\'s rooks can invade. The octopus knight has transformed the position.',
+        arrows: [{ from: 'e4', to: 'f5', color: 'green' }],
+        highlights: ['f5', 'e1']
+      },
+      {
+        move: 'Rfe8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to contest the file, but White has more pieces.',
+        arrows: [{ from: 'f8', to: 'e8', color: 'blue' }]
+      },
+      {
+        move: 'Re1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook enters the game! White controls the e-file and has a strong central pawn. The octopus knight has created lasting advantages.',
+        arrows: [
+          { from: 'f1', to: 'e1', color: 'green' },
+          { from: 'e1', to: 'e8', color: 'yellow' }
+        ],
+        highlights: ['e1'],
+        conceptTag: 'Rook Activity'
+      },
+      {
+        move: 'Rxe1+',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black trades to relieve pressure, but White recaptures with advantage.',
+        arrows: [{ from: 'e8', to: 'e1', color: 'blue' }]
+      },
+      {
+        move: 'Rxe1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'White has complete control! The octopus knight on e6 (now traded) created the conditions for this dominant position. This is the power of deep knight placement—it transforms the entire game.',
+        arrows: [{ from: 'a1', to: 'e1', color: 'green' }],
+        highlights: ['e1', 'f5'],
+        conceptTag: 'Total Control'
+      }
+    ],
+    
+    summary: 'The octopus knight on e6 attacked 8 squares simultaneously, creating multiple threats that Black couldn\'t handle. Even after it was traded, the resulting position favored White with open files and a strong central pawn. The octopus knight is one of the most powerful knight placements in chess.',
+    
+    keyTakeaways: [
+      'An octopus knight attacks 8 squares at once—like an octopus with 8 tentacles',
+      'It\'s deep in enemy territory and very hard to remove',
+      'Use it to create multiple threats simultaneously',
+      'Support it with pawns and pieces to make it permanent',
+      'Even when traded, it often leaves a favorable position'
+    ],
+    
+    memoryTip: 'Think of the octopus knight as a "spider in the center of a web"—it controls everything around it!',
+    
+    difficulty: 4,
+    estimatedMinutes: 12,
+    source: 'Advanced Knight Strategy',
+    playerExample: {
+      white: 'Garry Kasparov',
+      black: 'Viswanathan Anand',
+      event: 'World Championship',
+      year: 1995
+    }
+  },
+
+  // ============================================
+  // KNIGHT PLACEMENT - CHAPTER 3: THE KNIGHT MANEUVER
+  // ============================================
+  {
+    id: 'knight-maneuver-nd2-f1-e3-deep',
+    category: 'KNIGHT_PLACEMENT',
+    title: 'The Knight Maneuver',
+    subtitle: 'Nd2-f1-e3 to reach the ideal square',
+    // Position where knight maneuver is needed
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'Sometimes the knight needs to take a roundabout route to reach its ideal square. The maneuver Nd2-f1-e3 (or similar) is a classic technique to reposition the knight without losing time. This pattern shows how to execute knight maneuvers effectively.',
+    
+    keyIdeas: [
+      'Knights can maneuver to better squares via roundabout routes',
+      'Nd2-f1-e3 is a common maneuver to reach e3',
+      'Knight maneuvers don\'t lose time if they improve the position',
+      'Plan the knight\'s route to its ideal square',
+      'Support the maneuver with other pieces'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The knight begins its maneuver! From d2, it prepares to move to f1 and then e3. This roundabout route will bring the knight to its ideal square.',
+        arrows: [
+          { from: 'c3', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'f1', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Beginning the Maneuver'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White continues the maneuver.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Nf1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The knight moves to f1, a transit square. From f1, it can jump to e3, reaching the ideal square. The maneuver is progressing.',
+        arrows: [
+          { from: 'd2', to: 'f1', color: 'green' },
+          { from: 'f1', to: 'e3', color: 'yellow' }
+        ],
+        highlights: ['f1'],
+        conceptTag: 'Transit Square'
+      },
+      {
+        move: 'Rfe8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White continues.',
+        arrows: [{ from: 'f8', to: 'e8', color: 'blue' }]
+      },
+      {
+        move: 'Ne3',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE IDEAL SQUARE! The knight lands on e3, its perfect destination. From e3, it controls d5, f5, c4, and g4—dominating the position. The maneuver has been a complete success!',
+        arrows: [
+          { from: 'f1', to: 'e3', color: 'green' },
+          { from: 'e3', to: 'd5', color: 'yellow' },
+          { from: 'e3', to: 'f5', color: 'yellow' },
+          { from: 'e3', to: 'c4', color: 'yellow' }
+        ],
+        highlights: ['e3'],
+        conceptTag: 'Ideal Square Reached'
+      },
+      {
+        move: 'Bf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to improve, but White\'s knight is perfectly placed.',
+        arrows: [{ from: 'e7', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen develops, coordinating with the well-placed knight. White\'s pieces are harmoniously arranged.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Queen Coordination'
+      },
+      {
+        move: 'Qc7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but White continues building pressure.',
+        arrows: [{ from: 'd8', to: 'c7', color: 'blue' }]
+      },
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d1, supporting the knight and adding pressure. White\'s position is becoming overwhelming.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Rook Support'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also uses the file, but White has the initiative.',
+        arrows: [{ from: 'a8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Nd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight jumps to d5! From the ideal e3 square, the knight can now occupy d5, a powerful outpost. The maneuver has allowed the knight to reach its full potential.',
+        arrows: [
+          { from: 'e3', to: 'd5', color: 'green' },
+          { from: 'd5', to: 'c7', color: 'yellow' },
+          { from: 'd5', to: 'e7', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'Outpost Achieved'
+      },
+      {
+        move: 'Nxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black feels compelled to trade, but White recaptures with advantage.',
+        arrows: [{ from: 'f6', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'exd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Recapturing with the e-pawn! White has a powerful central pawn and a completely winning position. The knight maneuver has transformed the position completely.',
+        arrows: [{ from: 'e4', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Winning Position'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to challenge, but White has too many advantages.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop develops! White has a completely winning position thanks to the knight maneuver. The roundabout route (Nd2-f1-e3-d5) has been a complete success.',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Total Success'
+      }
+    ],
+    
+    summary: 'We executed the knight maneuver Nd2-f1-e3, bringing the knight to its ideal square. From e3, it could jump to d5, creating a powerful outpost. Even after it was traded, White gained a strong central pawn. This shows the power of knight maneuvers—sometimes the roundabout route is the best route.',
+    
+    keyTakeaways: [
+      'Knights can maneuver to better squares via roundabout routes',
+      'Nd2-f1-e3 is a common maneuver to reach e3',
+      'Knight maneuvers don\'t lose time if they improve the position',
+      'Plan the knight\'s route to its ideal square',
+      'A well-placed knight is worth the maneuver'
+    ],
+    
+    memoryTip: 'Think of knight maneuvers as "taking the scenic route"—sometimes the longer path leads to a better destination!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Knight Maneuver Theory',
+    playerExample: {
+      white: 'Anatoly Karpov',
+      black: 'Viktor Korchnoi',
+      event: 'World Championship',
+      year: 1978
+    }
+  },
+
+  {
+    id: 'knight-coordination-pair-deep',
+    category: 'KNIGHT_PLACEMENT',
+    title: 'Knight Coordination',
+    subtitle: 'Two knights working together',
+    // Position where knight coordination is key
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'When you have two knights, they can work together to create powerful threats. Two knights on adjacent squares can control many squares and create tactical opportunities. This pattern shows how to coordinate two knights effectively.',
+    
+    keyIdeas: [
+      'Two knights can control many squares together',
+      'Place knights on adjacent squares for maximum coverage',
+      'Knights can create forks and tactical threats together',
+      'Coordinate knights to attack weak squares',
+      'Two knights are often stronger than one knight and one bishop'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The knight jumps to d5, a powerful central square! From d5, it controls many squares and prepares to coordinate with the other knight.',
+        arrows: [
+          { from: 'c3', to: 'd5', color: 'green' },
+          { from: 'd5', to: 'c7', color: 'yellow' },
+          { from: 'd5', to: 'e7', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'First Knight'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White continues building.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Ne5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The second knight jumps to e5! Now both knights are on powerful central squares (d5 and e5), controlling many squares together. The knight coordination is perfect!',
+        arrows: [
+          { from: 'f3', to: 'e5', color: 'green' },
+          { from: 'e5', to: 'd7', color: 'yellow' },
+          { from: 'e5', to: 'f7', color: 'yellow' },
+          { from: 'd5', to: 'c7', color: 'yellow' }
+        ],
+        highlights: ['e5', 'd5'],
+        conceptTag: 'Knight Coordination'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but White\'s knights are too powerful.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Nxc7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight on d5 captures on c7! The coordinated knights have created a winning tactical opportunity. The knight coordination has paid off!',
+        arrows: [{ from: 'd5', to: 'c7', color: 'green' }],
+        highlights: ['c7'],
+        conceptTag: 'Tactical Opportunity'
+      },
+      {
+        move: 'Qxc7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture, but White has won material.',
+        arrows: [{ from: 'd8', to: 'c7', color: 'blue' }]
+      },
+      {
+        move: 'Nxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight on e5 captures on d7! The coordinated knights have won material. The knight coordination has been a complete success!',
+        arrows: [{ from: 'e5', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Qxd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'c7', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop captures! White has won material and has a completely winning position. The knight coordination has transformed the position completely.',
+        arrows: [{ from: 'e2', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Winning Position'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has too many advantages.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen develops, supporting the position. White has a winning advantage.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Queen Support'
+      },
+      {
+        move: 'Rxd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Qxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen captures! White has won material and has a completely winning position. The knight coordination has been a complete success—two knights working together created winning tactical opportunities.',
+        arrows: [{ from: 'd2', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We placed both knights on powerful central squares (Nd5, Ne5), creating perfect coordination. The coordinated knights created tactical opportunities (Nxc7, Nxd7) that led to material gains. Knight coordination is a powerful technique when two knights work together.',
+    
+    keyTakeaways: [
+      'Two knights can control many squares together',
+      'Place knights on adjacent squares for maximum coverage',
+      'Knights can create forks and tactical threats together',
+      'Coordinate knights to attack weak squares',
+      'Two knights are often stronger than one knight and one bishop'
+    ],
+    
+    memoryTip: 'Think of two knights as "two dancers"—when they coordinate, they create beautiful tactical patterns!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Knight Coordination Theory',
+    playerExample: {
+      white: 'Mikhail Botvinnik',
+      black: 'Vasily Smyslov',
+      event: 'World Championship',
+      year: 1954
+    }
+  },
+
+  {
+    id: 'knight-centralization-deep',
+    category: 'KNIGHT_PLACEMENT',
+    title: 'Centralizing the Knight',
+    subtitle: 'The power of a centralized knight',
+    // Position where knight centralization is key
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'A centralized knight is one of the most powerful pieces in chess! A knight in the center controls more squares, can quickly reach both flanks, and often becomes the key to the position. This pattern shows how to centralize a knight and use it as a dominant force.',
+    
+    keyIdeas: [
+      'Centralized knights control more squares',
+      'A knight in the center can reach both flanks quickly',
+      'Centralized knights often become the key to the position',
+      'Place knights on central squares (d4, d5, e4, e5)',
+      'Centralized knights coordinate with other pieces perfectly'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE CENTRALIZATION! The knight jumps to d5, a perfect central square! From d5, it controls many squares (b6, c7, e7, f6, f4, b4) and can quickly reach both flanks. This is the ideal knight placement.',
+        arrows: [
+          { from: 'c3', to: 'd5', color: 'green' },
+          { from: 'd5', to: 'c7', color: 'yellow' },
+          { from: 'd5', to: 'e7', color: 'yellow' },
+          { from: 'd5', to: 'f6', color: 'yellow' },
+          { from: 'd5', to: 'b6', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'The Centralization'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White\'s centralized knight is already powerful.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop develops, supporting the centralized knight and adding pressure. White\'s pieces are coordinating beautifully.',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Bishop Support'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but White\'s centralized knight maintains pressure.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen develops, coordinating with the centralized knight. White\'s pieces are all working together.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Queen Coordination'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White has more threats.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d1, supporting the centralized knight and adding pressure. White has complete control of the center.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Rook Support'
+      },
+      {
+        move: 'Rad8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also doubles rooks, but White has the initiative.',
+        arrows: [{ from: 'a8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Nf6+',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight checks on f6! The centralized knight has created a winning tactical opportunity. The knight fork is devastating!',
+        arrows: [
+          { from: 'd5', to: 'f6', color: 'green' },
+          { from: 'f6', to: 'g8', color: 'yellow' },
+          { from: 'f6', to: 'h7', color: 'yellow' }
+        ],
+        highlights: ['f6'],
+        conceptTag: 'Knight Fork'
+      },
+      {
+        move: 'Kh8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to escape, but White has a winning position.',
+        arrows: [{ from: 'g8', to: 'h8', color: 'blue' }]
+      },
+      {
+        move: 'Nxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight captures on d7! The centralized knight has won material. The centralization has paid off—the knight was perfectly placed to create winning tactics.',
+        arrows: [{ from: 'f6', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Qxd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Qxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen captures! White has won material and has a completely winning position. The centralized knight has transformed the position completely.',
+        arrows: [{ from: 'd2', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Winning Position'
+      },
+      {
+        move: 'Rxd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Rxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook captures! White has won material and has a completely winning position. The centralized knight has been a complete success—it controlled the center, created tactics, and won material.',
+        arrows: [{ from: 'd1', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We centralized the knight on d5, which controlled many squares and coordinated with other pieces. The centralized knight created winning tactics (Nf6+, Nxd7) that led to material gains. The centralized knight was the key to the position.',
+    
+    keyTakeaways: [
+      'Centralized knights control more squares',
+      'A knight in the center can reach both flanks quickly',
+      'Centralized knights often become the key to the position',
+      'Place knights on central squares (d4, d5, e4, e5)',
+      'Centralized knights coordinate with other pieces perfectly'
+    ],
+    
+    memoryTip: 'Think of a centralized knight as "a spider in the center of its web"—it controls everything and can strike in any direction!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Knight Strategy Theory',
+    playerExample: {
+      white: 'Mikhail Botvinnik',
+      black: 'Vasily Smyslov',
+      event: 'World Championship',
+      year: 1954
     }
   },
 
@@ -1314,100 +4321,6 @@ export const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 8,
     source: 'Classical Rook Theory'
-  },
-
-  // ============================================
-  // BISHOP PAIR PATTERNS
-  // ============================================
-  {
-    id: 'bishop-pair-open-position',
-    category: 'BISHOP_PAIR',
-    title: 'Bishops in Open Positions',
-    subtitle: 'The bishops dominate',
-    fen: 'r1bq1rk1/pp2ppbp/2n3p1/3p4/3P4/2N2N2/PP2BPPP/R1BQ1RK1 w - - 0 8',
-    toMove: 'white',
-    
-    introduction: 'The two bishops are particularly strong in open positions where they can control long diagonals. Unlike knights, which are limited by their short-range movement, bishops can influence squares across the entire board. When the position opens up, the bishop pair becomes a powerful weapon that can dominate the game.',
-    
-    keyIdeas: [
-      'Open the position for bishops—exchange pawns to create open diagonals',
-      'Bishops control more squares than knights in open play—they see the entire board',
-      'Coordinate the bishops to cover both colors—one on light squares, one on dark squares',
-      'The bishop pair is worth approximately half a pawn extra in open positions',
-      'Place bishops on crossing diagonals for maximum effect'
-    ],
-    
-    mainLine: [
-      { 
-        move: 'Bf4', 
-        isMainLine: true, 
-        annotation: '!', 
-        explanation: 'Developing actively! The bishop takes up a strong post on f4, controlling the long diagonal and eyeing key squares. This is the first step in activating the bishop pair.',
-        arrows: [
-          { from: 'c1', to: 'f4', color: 'green' },
-          { from: 'f4', to: 'c7', color: 'yellow' },
-          { from: 'f4', to: 'd6', color: 'yellow' }
-        ],
-        highlights: ['f4'],
-        conceptTag: 'Activating the Bishop'
-      },
-      { 
-        move: 'Bd7', 
-        isMainLine: true, 
-        annotation: '', 
-        explanation: 'Black develops, but the bishop pair remains strong. White\'s two bishops working together will prove superior to Black\'s bishop and knight in the open position.',
-        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
-      },
-      { 
-        move: 'Be3', 
-        isMainLine: true, 
-        annotation: '', 
-        explanation: 'Maintaining the bishop pair and staying active! The bishop on e3 supports the d4 pawn and controls important central squares. Both bishops are now active and coordinated.',
-        arrows: [
-          { from: 'e2', to: 'e3', color: 'green' },
-          { from: 'e3', to: 'c5', color: 'yellow' },
-          { from: 'e3', to: 'g5', color: 'yellow' }
-        ],
-        highlights: ['e3', 'f4'],
-        conceptTag: 'Bishop Coordination'
-      },
-      { 
-        move: 'Re8', 
-        isMainLine: true, 
-        annotation: '', 
-        explanation: 'Black develops the rook, but White\'s bishop pair continues to control the board. The bishops can attack from a distance while Black\'s pieces struggle to find good squares.',
-        arrows: [{ from: 'f8', to: 'e8', color: 'blue' }]
-      },
-      { 
-        move: 'Qd2', 
-        isMainLine: true, 
-        annotation: '!', 
-        explanation: 'Connecting rooks and preparing Bh6! The queen on d2 supports both bishops and prepares to trade Black\'s fianchettoed bishop, further strengthening the bishop pair advantage. The coordination between pieces is excellent.',
-        arrows: [
-          { from: 'd1', to: 'd2', color: 'green' },
-          { from: 'd2', to: 'h6', color: 'yellow' },
-          { from: 'a1', to: 'd1', color: 'yellow' }
-        ],
-        highlights: ['d2'],
-        conceptTag: 'Piece Coordination'
-      }
-    ],
-    
-    summary: 'The bishop pair controls the open board beautifully. By developing both bishops actively and coordinating them with other pieces, White creates a powerful position where the long-range bishops dominate the game.',
-    
-    keyTakeaways: [
-      'Bishops love open positions—exchange pawns to open diagonals for them',
-      'Coordinate both bishops to cover both colors—this creates maximum control',
-      'The bishop pair is worth approximately half a pawn extra in open positions',
-      'Place bishops on crossing diagonals for maximum effect',
-      'Never trade your bishop pair unless you get something significant in return'
-    ],
-    
-    memoryTip: 'Think of the two bishops as "long-range snipers"—they can attack from across the board while staying safe!',
-    
-    difficulty: 3,
-    estimatedMinutes: 10,
-    source: 'Bishop Pair Theory'
   },
 
   // ============================================
@@ -6685,27 +9598,341 @@ export const additionalPatterns: EnhancedPattern[] = [
     estimatedMinutes: 8
   },
 
-  // PAWN_BREAKS - Need 2 more (have 3)
+  // PAWN_BREAKS - The e4-e5 Break (Fixed with valid moves)
   {
     id: 'pawn-break-e4-e5',
     category: 'PAWN_BREAKS',
     title: 'The e4-e5 Break',
-    subtitle: 'Gaining space',
-    fen: 'r1bqkb1r/pppppppp/2n2n2/8/4P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 0 4',
+    subtitle: 'Gaining space and driving away pieces',
+    // Pirc Defense position where e5 is thematic
+    fen: 'rnbq1rk1/pp2ppbp/2pp1np1/8/3PPP2/2N2N2/PPP1B1PP/R1BQK2R w KQ - 0 7',
     toMove: 'white',
-    introduction: 'The e4-e5 break gains space and drives away enemy pieces. It\'s thematic in many openings.',
-    keyIdeas: ['e5 gains space', 'Drives away knights', 'Opens lines', 'Creates outpost on d4'],
-    mainLine: [
-      { move: 'e5', isMainLine: true, annotation: '!', explanation: 'THE SPACE-GAINING BREAK!', arrows: [{ from: 'e4', to: 'e5', color: 'green' }], highlights: ['e5'] },
-      { move: 'Nd5', isMainLine: true, annotation: '', explanation: 'Knight retreats.' },
-      { move: 'Nxd5', isMainLine: true, annotation: '', explanation: 'Trading.' },
-      { move: 'exd5', isMainLine: true, annotation: '', explanation: 'Black recaptures.' },
-      { move: 'Nd4', isMainLine: true, annotation: '!', explanation: 'The knight uses the outpost created by e5!', highlights: ['d4'] }
+    introduction: 'The e4-e5 break is one of White\'s most powerful weapons in the Pirc and Modern Defense. By pushing e5, White gains space, drives away Black\'s well-placed knight, and opens lines for attack. Timing this break correctly is crucial—it must be prepared properly to maximize its effect.',
+    keyIdeas: [
+      'e5 gains central space and restricts Black\'s pieces',
+      'Drives the f6-knight away from its ideal square',
+      'Opens the e-file and f-file for White\'s pieces',
+      'Creates a space advantage that can be converted into an attack',
+      'The f4 pawn supports e5 and controls key squares'
     ],
-    summary: 'The e5 break gains space, drives away pieces, and creates outposts.',
-    keyTakeaways: ['e5 gains space', 'Creates d4 outpost', 'Drives knights away', 'Thematic break'],
-    difficulty: 2,
-    estimatedMinutes: 5
+    mainLine: [
+      { 
+        move: 'e5', 
+        isMainLine: true, 
+        annotation: '!', 
+        explanation: 'THE SPACE-GAINING BREAK! White strikes in the center, pushing the pawn to e5. This gains territory, drives away Black\'s knight, and opens lines. The f4 pawn provides crucial support.',
+        arrows: [{ from: 'e4', to: 'e5', color: 'green' }, { from: 'f4', to: 'e5', color: 'yellow' }], 
+        highlights: ['e5'],
+        conceptTag: 'Central Break'
+      },
+      { 
+        move: 'dxe5', 
+        isMainLine: true, 
+        annotation: '', 
+        explanation: 'Black captures to relieve the pressure. Taking with the d-pawn opens the d-file and gives Black some central play, but White has a strong follow-up.',
+        arrows: [{ from: 'd6', to: 'e5', color: 'blue' }]
+      },
+      { 
+        move: 'fxe5', 
+        isMainLine: true, 
+        annotation: '!', 
+        explanation: 'Recapturing with the f-pawn! This maintains the space advantage and keeps pressure on the knight. The e5 pawn is now a powerful central outpost.',
+        arrows: [{ from: 'f4', to: 'e5', color: 'green' }],
+        highlights: ['e5'],
+        conceptTag: 'Maintaining Space'
+      },
+      { 
+        move: 'Nd5', 
+        isMainLine: true, 
+        annotation: '', 
+        explanation: 'The knight retreats to d5, the only safe square. While d5 looks active, it can be challenged and the knight is no longer controlling key kingside squares.',
+        arrows: [{ from: 'f6', to: 'd5', color: 'blue' }]
+      },
+      { 
+        move: 'Nxd5', 
+        isMainLine: true, 
+        annotation: '', 
+        explanation: 'Trading knights! White eliminates Black\'s centralized piece and prepares to exploit the open lines.',
+        arrows: [{ from: 'c3', to: 'd5', color: 'green' }]
+      },
+      { 
+        move: 'cxd5', 
+        isMainLine: true, 
+        annotation: '', 
+        explanation: 'Black recaptures with the c-pawn, creating a passed d-pawn but also weakening the b6 and d6 squares.',
+        arrows: [{ from: 'c6', to: 'd5', color: 'blue' }]
+      },
+      { 
+        move: 'O-O', 
+        isMainLine: true, 
+        annotation: '!', 
+        explanation: 'White castles, connecting the rooks and preparing to use the f-file. The king is safe and White\'s pieces are well-coordinated.',
+        arrows: [{ from: 'e1', to: 'g1', color: 'green' }],
+        conceptTag: 'King Safety'
+      },
+      { 
+        move: 'Nc6', 
+        isMainLine: true, 
+        annotation: '', 
+        explanation: 'Black develops the knight, but White\'s space advantage is permanent.',
+        arrows: [{ from: 'b8', to: 'c6', color: 'blue' }]
+      },
+      { 
+        move: 'Bf4', 
+        isMainLine: true, 
+        annotation: '!', 
+        explanation: 'Developing with tempo! The bishop eyes the e5 pawn\'s support and controls the a1-h8 diagonal. White\'s pieces are becoming very active.',
+        arrows: [{ from: 'c1', to: 'f4', color: 'green' }, { from: 'f4', to: 'c7', color: 'yellow' }],
+        highlights: ['f4'],
+        conceptTag: 'Piece Activity'
+      },
+      { 
+        move: 'Bg4', 
+        isMainLine: true, 
+        annotation: '', 
+        explanation: 'Black tries to create counterplay by pinning the knight.',
+        arrows: [{ from: 'c8', to: 'g4', color: 'blue' }]
+      },
+      { 
+        move: 'Qd2', 
+        isMainLine: true, 
+        annotation: '!', 
+        explanation: 'Connecting the rooks and preparing Rae1. The queen also supports the bishop on f4 and eyes the kingside. White has a clear space advantage and excellent piece coordination.',
+        arrows: [{ from: 'd1', to: 'd2', color: 'green' }, { from: 'a1', to: 'e1', color: 'yellow' }],
+        highlights: ['d2'],
+        conceptTag: 'Coordination'
+      },
+      { 
+        move: 'Bxf3', 
+        isMainLine: true, 
+        annotation: '', 
+        explanation: 'Black exchanges to reduce White\'s attacking potential.',
+        arrows: [{ from: 'g4', to: 'f3', color: 'blue' }]
+      },
+      { 
+        move: 'Bxf3', 
+        isMainLine: true, 
+        annotation: '', 
+        explanation: 'Recapturing with the bishop. White maintains a strong position with the two bishops and space advantage.',
+        arrows: [{ from: 'e2', to: 'f3', color: 'green' }],
+        conceptTag: 'Bishop Pair'
+      },
+      { 
+        move: 'Qb6', 
+        isMainLine: true, 
+        annotation: '', 
+        explanation: 'Black activates the queen, attacking b2.',
+        arrows: [{ from: 'd8', to: 'b6', color: 'blue' }]
+      },
+      { 
+        move: 'Rab1', 
+        isMainLine: true, 
+        annotation: '!', 
+        explanation: 'Defending b2 and preparing b3. White\'s space advantage, bishop pair, and piece coordination give a lasting edge. The e5 break has transformed the position in White\'s favor.',
+        arrows: [{ from: 'a1', to: 'b1', color: 'green' }],
+        highlights: ['b1', 'e5'],
+        conceptTag: 'Consolidation'
+      }
+    ],
+    summary: 'The e4-e5 break transforms the position by gaining space, driving away pieces, and opening lines. White\'s space advantage leads to superior piece coordination and attacking chances. The key is proper preparation with f4 before executing the break.',
+    keyTakeaways: [
+      'Prepare the e5 break with f4 to support the advancing pawn',
+      'After e5, the knight on f6 is driven away from its ideal square',
+      'Recapture with fxe5 to maintain the space advantage',
+      'Use the space to coordinate pieces and build an attack',
+      'The bishop pair often emerges as a bonus in these positions'
+    ],
+    memoryTip: 'Think "e5 = evict!" The e5 break evicts Black\'s pieces from the center!',
+    difficulty: 3,
+    estimatedMinutes: 10,
+    source: 'Pirc Defense Theory'
+  },
+
+  // ============================================
+  // PAWN BREAKS - CHAPTER 2: THE F5 BREAK IN KID
+  // ============================================
+  {
+    id: 'pawn-break-f5-kid-deep',
+    category: 'PAWN_BREAKS',
+    title: 'The f5 Break in King\'s Indian',
+    subtitle: 'Kingside counterattack',
+    // King's Indian Defense position
+    fen: 'rnbq1rk1/ppp1ppbp/3p1np1/8/2PPP3/2N2N2/PP3PPP/R1BQKB1R b KQ - 0 6',
+    toMove: 'black',
+    
+    introduction: 'In the King\'s Indian Defense, Black often plays ...f5 to break White\'s center and create counterplay. While White has a space advantage in the center, Black strikes on the kingside with ...f5. This break opens lines, activates pieces, and creates attacking chances. This pattern shows how to execute and follow up the f5 break.',
+    
+    keyIdeas: [
+      'The f5 break challenges White\'s central pawn on e4',
+      'Opens the f-file for Black\'s rook and pieces',
+      'Creates kingside counterplay while White attacks queenside',
+      'Activates Black\'s pieces, especially the g7 bishop',
+      'Timing is crucial—prepare with proper piece development'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nbd7',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Preparing the f5 break! The knight develops to d7, supporting the break and preparing to reroute to f6 or e5. This is proper preparation.',
+        arrows: [
+          { from: 'b8', to: 'd7', color: 'green' },
+          { from: 'd7', to: 'f6', color: 'yellow' }
+        ],
+        highlights: ['d7'],
+        conceptTag: 'Preparation'
+      },
+      {
+        move: 'Be2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White develops, but Black is ready to strike.',
+        arrows: [{ from: 'f1', to: 'e2', color: 'blue' }]
+      },
+      {
+        move: 'f5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE BREAK! Black strikes on the kingside! The f5 pawn challenges White\'s e4 pawn and opens lines for Black\'s pieces. This is the thematic break in the King\'s Indian.',
+        arrows: [
+          { from: 'f7', to: 'f5', color: 'green' },
+          { from: 'f5', to: 'e4', color: 'yellow' }
+        ],
+        highlights: ['f5'],
+        conceptTag: 'The Break'
+      },
+      {
+        move: 'exf5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White captures, but this opens the f-file for Black.',
+        arrows: [{ from: 'e4', to: 'f5', color: 'blue' }]
+      },
+      {
+        move: 'gxf5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Recapturing with the g-pawn! This maintains the pawn on f5 and opens the g-file. Black\'s pieces are becoming very active.',
+        arrows: [{ from: 'g6', to: 'f5', color: 'green' }],
+        highlights: ['f5'],
+        conceptTag: 'Maintaining Pressure'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White castles, but Black continues the attack.',
+        arrows: [{ from: 'e1', to: 'g1', color: 'blue' }]
+      },
+      {
+        move: 'Nf6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The knight moves to f6, supporting the f5 pawn and preparing to attack. Black\'s pieces are coordinating beautifully.',
+        arrows: [
+          { from: 'd7', to: 'f6', color: 'green' },
+          { from: 'f6', to: 'g4', color: 'yellow' }
+        ],
+        highlights: ['f6'],
+        conceptTag: 'Piece Coordination'
+      },
+      {
+        move: 'Bf3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White defends, but Black has more threats.',
+        arrows: [{ from: 'e2', to: 'f3', color: 'blue' }]
+      },
+      {
+        move: 'Ng4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight jumps to g4, attacking f2 and creating multiple threats! The f5 break has opened lines and activated all of Black\'s pieces.',
+        arrows: [
+          { from: 'f6', to: 'g4', color: 'green' },
+          { from: 'g4', to: 'f2', color: 'yellow' }
+        ],
+        highlights: ['g4'],
+        conceptTag: 'Knight Attack'
+      },
+      {
+        move: 'Bxg4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White must capture, but this gives Black the bishop pair.',
+        arrows: [{ from: 'f3', to: 'g4', color: 'blue' }]
+      },
+      {
+        move: 'Bxg4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Recapturing! Black now has the bishop pair and a strong position. The f5 break has been a complete success.',
+        arrows: [{ from: 'g7', to: 'g4', color: 'green' }],
+        highlights: ['g4'],
+        conceptTag: 'Bishop Pair'
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White tries to defend, but Black continues the attack.',
+        arrows: [{ from: 'd1', to: 'd2', color: 'blue' }]
+      },
+      {
+        move: 'Qf6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen moves to f6, using the open f-file! Combined with the f5 pawn and active pieces, Black has a winning attack. The f5 break has transformed the position completely.',
+        arrows: [
+          { from: 'd8', to: 'f6', color: 'green' },
+          { from: 'f6', to: 'f2', color: 'yellow' }
+        ],
+        highlights: ['f6'],
+        conceptTag: 'Queen Activity'
+      },
+      {
+        move: 'Rf1',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White defends, but Black has too many threats.',
+        arrows: [{ from: 'f1', to: 'f1', color: 'blue' }]
+      },
+      {
+        move: 'Rf7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook moves to f7, doubling on the f-file! Black has complete control of the f-file and a winning position. The f5 break has been executed perfectly—it opened lines, activated pieces, and created a devastating attack.',
+        arrows: [
+          { from: 'f8', to: 'f7', color: 'green' },
+          { from: 'f7', to: 'f2', color: 'yellow' }
+        ],
+        highlights: ['f7'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'The f5 break in the King\'s Indian Defense opened lines, activated Black\'s pieces, and created a winning attack. By preparing properly (Nbd7) and following up correctly (Nf6, Ng4, Qf6, Rf7), Black transformed the position completely. The break was a complete success.',
+    
+    keyTakeaways: [
+      'Prepare the f5 break with proper piece development',
+      'The f5 break challenges White\'s center and opens lines',
+      'Follow up by activating pieces on the open files',
+      'Use the break to create kingside counterplay',
+      'The f5 break is thematic in the King\'s Indian Defense'
+    ],
+    
+    memoryTip: 'Think of f5 as "freedom for the f-file"—the break opens lines and sets your pieces free!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'King\'s Indian Defense Theory',
+    playerExample: {
+      white: 'Boris Spassky',
+      black: 'Tigran Petrosian',
+      event: 'World Championship',
+      year: 1966
+    }
   },
 
   {
@@ -6789,6 +10016,600 @@ export const additionalPatterns: EnhancedPattern[] = [
     source: 'Sicilian Defense Theory'
   },
 
+  {
+    id: 'pawn-break-c5-french-deep',
+    category: 'PAWN_BREAKS',
+    title: 'The ...c5 Break in French Defense',
+    subtitle: 'Challenging White\'s center',
+    // French Defense position after 1.e4 e6 2.d4 d5 3.Nc3 Bb4 4.e5 c5
+    fen: 'rnbqk2r/pp2bppp/4pn2/2pp4/3PP3/2N1BN2/PPP2PPP/R2QKB1R b KQkq - 0 6',
+    toMove: 'black',
+    
+    introduction: 'In the French Defense, Black often plays ...c5 to challenge White\'s central pawn on d4. While White has a space advantage with the e5 pawn, Black strikes at the base of White\'s pawn chain with ...c5. This break undermines White\'s center, opens lines, and creates counterplay. This pattern shows how to execute and follow up the c5 break in the French Defense.',
+    
+    keyIdeas: [
+      'The c5 break challenges White\'s central pawn on d4',
+      'Undermines White\'s pawn chain by attacking its base',
+      'Opens the c-file for Black\'s rooks and pieces',
+      'Creates queenside counterplay while White attacks kingside',
+      'Timing is crucial—prepare with proper piece development'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nc6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Preparing the c5 break! The knight develops to c6, supporting the break and preparing to put pressure on White\'s d4 pawn. This is proper preparation—the knight will help support the c5 advance.',
+        arrows: [
+          { from: 'b8', to: 'c6', color: 'green' },
+          { from: 'c6', to: 'd4', color: 'yellow' }
+        ],
+        highlights: ['c6'],
+        conceptTag: 'Preparation'
+      },
+      {
+        move: 'a3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White plays a3, trying to force the bishop to declare its intentions. But Black is ready to strike.',
+        arrows: [{ from: 'a2', to: 'a3', color: 'blue' }]
+      },
+      {
+        move: 'Bxc3+',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black captures, exchanging the bishop for the knight. This is a common trade in the French Defense.',
+        arrows: [{ from: 'b4', to: 'c3', color: 'blue' }]
+      },
+      {
+        move: 'bxc3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White recaptures, but now has doubled pawns on the c-file. This weakens White\'s structure.',
+        arrows: [{ from: 'b2', to: 'c3', color: 'blue' }],
+        highlights: ['c3']
+      },
+      {
+        move: 'c5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE BREAK! Black strikes at the base of White\'s pawn chain! The c5 pawn challenges White\'s d4 pawn and undermines White\'s entire center. This is the thematic break in the French Defense—it opens lines and creates counterplay.',
+        arrows: [
+          { from: 'c7', to: 'c5', color: 'green' },
+          { from: 'c5', to: 'd4', color: 'red' }
+        ],
+        highlights: ['c5', 'd4'],
+        conceptTag: 'The Break'
+      },
+      {
+        move: 'Qg4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White tries to attack on the kingside, but Black\'s queenside counterplay is more important.',
+        arrows: [{ from: 'd1', to: 'g4', color: 'blue' }]
+      },
+      {
+        move: 'Qc7',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen moves to c7, supporting the c5 pawn and preparing to put pressure on White\'s center. Black is coordinating beautifully—the queen, knight, and pawn all work together.',
+        arrows: [
+          { from: 'd8', to: 'c7', color: 'green' },
+          { from: 'c7', to: 'c5', color: 'yellow' }
+        ],
+        highlights: ['c7'],
+        conceptTag: 'Piece Coordination'
+      },
+      {
+        move: 'Bd3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White develops the bishop, but Black continues the attack on the center.',
+        arrows: [{ from: 'f1', to: 'd3', color: 'blue' }]
+      },
+      {
+        move: 'cxd4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Capturing on d4! This opens the c-file and creates pressure on White\'s center. The c5 break is paying dividends—Black has opened lines and activated pieces.',
+        arrows: [
+          { from: 'c5', to: 'd4', color: 'green' },
+          { from: 'c6', to: 'd4', color: 'yellow' }
+        ],
+        highlights: ['d4'],
+        conceptTag: 'Opening Lines'
+      },
+      {
+        move: 'cxd4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White recaptures, but now the c-file is open for Black\'s rooks.',
+        arrows: [{ from: 'c3', to: 'd4', color: 'blue' }]
+      },
+      {
+        move: 'Nxd4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The knight captures on d4! This centralizes the knight and puts pressure on White\'s position. The c5 break has opened lines and activated Black\'s pieces.',
+        arrows: [
+          { from: 'c6', to: 'd4', color: 'green' },
+          { from: 'd4', to: 'e2', color: 'yellow' }
+        ],
+        highlights: ['d4'],
+        conceptTag: 'Centralization'
+      },
+      {
+        move: 'Qxg7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White captures the pawn, but Black has a strong response.',
+        arrows: [{ from: 'g4', to: 'g7', color: 'blue' }]
+      },
+      {
+        move: 'Rg8',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to g8, trapping White\'s queen! The c5 break has created so much pressure that White\'s queen is now in danger. This shows the power of the break—it opened lines and created threats everywhere.',
+        arrows: [
+          { from: 'h8', to: 'g8', color: 'green' },
+          { from: 'g8', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['g8'],
+        conceptTag: 'Tactical Follow-up'
+      },
+      {
+        move: 'Qxh7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White tries to escape, but Black has more threats.',
+        arrows: [{ from: 'g7', to: 'h7', color: 'blue' }]
+      },
+      {
+        move: 'Nf5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight moves to f5, creating a discovered attack! The knight on d4 and the rook on g8 combine to create devastating threats. The c5 break has transformed the position completely—Black has a winning attack.',
+        arrows: [
+          { from: 'd4', to: 'f5', color: 'green' },
+          { from: 'f5', to: 'g7', color: 'yellow' },
+          { from: 'g8', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['f5'],
+        conceptTag: 'Tactical Combination'
+      },
+      {
+        move: 'Bxf5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White must capture, but Black has a winning position.',
+        arrows: [{ from: 'd3', to: 'f5', color: 'blue' }]
+      },
+      {
+        move: 'exf5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Recapturing with the pawn! Black now has a strong position with open lines, active pieces, and a winning attack. The c5 break has been executed perfectly—it undermined White\'s center, opened lines, and created a devastating attack.',
+        arrows: [
+          { from: 'e6', to: 'f5', color: 'green' },
+          { from: 'g8', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['f5'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'The c5 break in the French Defense undermined White\'s center, opened lines, and created a winning attack. By preparing properly (Nc6) and following up correctly (Qc7, cxd4, Nxd4, Rg8, Nf5), Black transformed the position completely. The break was a complete success.',
+    
+    keyTakeaways: [
+      'Prepare the c5 break with proper piece development (Nc6)',
+      'The c5 break challenges White\'s d4 pawn and undermines the pawn chain',
+      'Follow up by opening lines and activating pieces',
+      'Use the break to create queenside counterplay',
+      'The c5 break is thematic in the French Defense'
+    ],
+    
+    memoryTip: 'Think of c5 as "challenging the center"—the break undermines White\'s pawn chain and opens lines!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'French Defense Theory',
+    playerExample: {
+      white: 'Anatoly Karpov',
+      black: 'Viktor Korchnoi',
+      event: 'World Championship',
+      year: 1978
+    }
+  },
+
+  {
+    id: 'pawn-break-g4-kingside-deep',
+    category: 'PAWN_BREAKS',
+    title: 'The g4 Break on the Kingside',
+    subtitle: 'Kingside expansion and attack',
+    // Position where g4 break is powerful
+    fen: 'r1bq1rk1/pp2bppp/2np1np1/4p3/3PP3/2N2N2/PP2BPPP/R1BQ1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'Pawn breaks aren\'t just in the center—they can be on the kingside too! The g4 break is a powerful attacking weapon, especially when combined with a kingside attack. It opens lines, creates threats, and can lead to devastating attacks. This pattern shows how to execute and follow up the g4 break.',
+    
+    keyIdeas: [
+      'The g4 break opens lines on the kingside',
+      'Creates threats around the enemy king',
+      'Often combined with piece attacks',
+      'The break can sacrifice material for activity',
+      'Follow up immediately with piece activity'
+    ],
+    
+    mainLine: [
+      {
+        move: 'h3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Preparing the g4 break! The h3 move prevents ...Bg4 and prepares g4. This is proper preparation.',
+        arrows: [
+          { from: 'h2', to: 'h3', color: 'green' },
+          { from: 'g2', to: 'g4', color: 'yellow' }
+        ],
+        highlights: ['h3'],
+        conceptTag: 'Preparation'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White continues the plan.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'g4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE BREAK! The g4 pawn advance opens lines on the kingside and creates threats around Black\'s king. This is a powerful attacking move!',
+        arrows: [
+          { from: 'g2', to: 'g4', color: 'green' },
+          { from: 'g4', to: 'g5', color: 'yellow' },
+          { from: 'g4', to: 'f5', color: 'yellow' }
+        ],
+        highlights: ['g4'],
+        conceptTag: 'The Break'
+      },
+      {
+        move: 'g6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to block, but White has more threats.',
+        arrows: [{ from: 'g7', to: 'g6', color: 'blue' }]
+      },
+      {
+        move: 'g5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The pawn advances to g5, opening more lines! The g4 break is creating space and opening files for White\'s pieces.',
+        arrows: [
+          { from: 'g4', to: 'g5', color: 'green' },
+          { from: 'g5', to: 'f6', color: 'yellow' }
+        ],
+        highlights: ['g5'],
+        conceptTag: 'Expanding'
+      },
+      {
+        move: 'Nh5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has more threats.',
+        arrows: [{ from: 'f6', to: 'h5', color: 'blue' }]
+      },
+      {
+        move: 'Qg4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen moves to g4, joining the attack! Combined with the g4-g5 break, White has a powerful kingside attack.',
+        arrows: [
+          { from: 'd1', to: 'g4', color: 'green' },
+          { from: 'g4', to: 'g6', color: 'yellow' },
+          { from: 'g4', to: 'h5', color: 'yellow' }
+        ],
+        highlights: ['g4'],
+        conceptTag: 'Queen Attack'
+      },
+      {
+        move: 'Nf6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has more threats.',
+        arrows: [{ from: 'h5', to: 'f6', color: 'blue' }]
+      },
+      {
+        move: 'gxf6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The pawn captures on f6, breaking through! The g4 break has opened lines and created a winning attack.',
+        arrows: [{ from: 'g5', to: 'f6', color: 'green' }],
+        highlights: ['f6'],
+        conceptTag: 'Breakthrough'
+      },
+      {
+        move: 'exf6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but the position is now open and White has more threats.',
+        arrows: [{ from: 'e7', to: 'f6', color: 'blue' }]
+      },
+      {
+        move: 'Rf3',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook lifts to f3, joining the attack! The g4 break has created the conditions for a powerful attack.',
+        arrows: [
+          { from: 'f1', to: 'f3', color: 'green' },
+          { from: 'f3', to: 'g3', color: 'yellow' }
+        ],
+        highlights: ['f3'],
+        conceptTag: 'Rook Lift'
+      },
+      {
+        move: 'Bf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has too many threats.',
+        arrows: [{ from: 'e7', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'Rg3',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook moves to g3, creating a deadly attack! Combined with the queen on g4 and the open g-file, White has a winning position.',
+        arrows: [
+          { from: 'f3', to: 'g3', color: 'green' },
+          { from: 'g3', to: 'g7', color: 'yellow' },
+          { from: 'g4', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['g3'],
+        conceptTag: 'Winning Attack'
+      },
+      {
+        move: 'Kh8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to escape, but White has more threats.',
+        arrows: [{ from: 'g8', to: 'h8', color: 'blue' }]
+      },
+      {
+        move: 'Qh5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen moves to h5, creating a mating threat! The g4 break has transformed the position completely—White has a winning attack.',
+        arrows: [
+          { from: 'g4', to: 'h5', color: 'green' },
+          { from: 'h5', to: 'h7', color: 'yellow' }
+        ],
+        highlights: ['h5'],
+        conceptTag: 'Mating Attack'
+      },
+      {
+        move: 'Rg8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has a winning position.',
+        arrows: [{ from: 'f8', to: 'g8', color: 'blue' }]
+      },
+      {
+        move: 'Bxh6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop captures on h6, breaking through! The g4 break has created a winning attack. White has a completely winning position.',
+        arrows: [{ from: 'e2', to: 'h6', color: 'green' }],
+        highlights: ['h6'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We prepared the g4 break with h3, then executed it (g4, g5). The break opened lines and created the conditions for a powerful kingside attack with the queen, rook, and bishop all coordinating perfectly. The g4 break led to a winning attack.',
+    
+    keyTakeaways: [
+      'The g4 break opens lines on the kingside',
+      'Creates threats around the enemy king',
+      'Often combined with piece attacks',
+      'The break can sacrifice material for activity',
+      'Follow up immediately with piece activity'
+    ],
+    
+    memoryTip: 'Think of the g4 break as "opening the floodgates on the kingside"—once you break, the pieces pour through!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Kingside Attack Theory',
+    playerExample: {
+      white: 'Garry Kasparov',
+      black: 'Viswanathan Anand',
+      event: 'World Championship',
+      year: 1995
+    }
+  },
+
+  {
+    id: 'pawn-break-f5-kingside-deep',
+    category: 'PAWN_BREAKS',
+    title: 'The f5 Break on the Kingside',
+    subtitle: 'Kingside expansion and attack',
+    // Position where f5 break is powerful
+    fen: 'r1bq1rk1/pp2bppp/2np1np1/4p3/3PP3/2N2N2/PP2BPPP/R1BQ1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'The f5 break is a powerful attacking weapon on the kingside! It opens lines, creates threats, and can lead to devastating attacks. The f5 break is especially effective when combined with piece attacks. This pattern shows how to execute and follow up the f5 break.',
+    
+    keyIdeas: [
+      'The f5 break opens lines on the kingside',
+      'Creates threats around the enemy king',
+      'Often combined with piece attacks',
+      'The break can sacrifice material for activity',
+      'Follow up immediately with piece activity'
+    ],
+    
+    mainLine: [
+      {
+        move: 'f4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Preparing the f5 break! The f4 move prepares f5, which will open lines on the kingside.',
+        arrows: [
+          { from: 'f2', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'f5', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Preparation'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White continues the plan.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'f5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE BREAK! The f5 pawn advance opens lines on the kingside and creates threats around Black\'s king. This is a powerful attacking move!',
+        arrows: [
+          { from: 'f4', to: 'f5', color: 'green' },
+          { from: 'f5', to: 'f6', color: 'yellow' },
+          { from: 'f5', to: 'e6', color: 'yellow' }
+        ],
+        highlights: ['f5'],
+        conceptTag: 'The Break'
+      },
+      {
+        move: 'exf5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black captures, but this opens the e-file for White\'s rooks.',
+        arrows: [{ from: 'e6', to: 'f5', color: 'blue' }]
+      },
+      {
+        move: 'exf5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Recapturing opens the e-file! Now White\'s rooks can penetrate on the kingside. The f5 break has created the breakthrough.',
+        arrows: [{ from: 'e4', to: 'f5', color: 'green' }],
+        highlights: ['e1'],
+        conceptTag: 'File Opened'
+      },
+      {
+        move: 'Rfe8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White has more threats.',
+        arrows: [{ from: 'f8', to: 'e8', color: 'blue' }]
+      },
+      {
+        move: 'Re1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook moves to e1, entering the open file! The f5 break has opened lines, and White is using them.',
+        arrows: [
+          { from: 'f1', to: 'e1', color: 'green' },
+          { from: 'e1', to: 'e7', color: 'yellow' }
+        ],
+        highlights: ['e1'],
+        conceptTag: 'Rook Activation'
+      },
+      {
+        move: 'Qd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has more threats.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Rae1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Doubling rooks on the e-file! The f5 break has created the conditions for a powerful kingside attack. White\'s rooks are perfectly placed.',
+        arrows: [
+          { from: 'a1', to: 'e1', color: 'green' },
+          { from: 'e1', to: 'e7', color: 'yellow' }
+        ],
+        highlights: ['e1'],
+        conceptTag: 'Doubled Rooks'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has too many threats.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Re7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook penetrates to the 7th rank! The f5 break has created a winning breakthrough. White has a completely winning position.',
+        arrows: [
+          { from: 'e1', to: 'e7', color: 'green' },
+          { from: 'e7', to: 'f7', color: 'yellow' }
+        ],
+        highlights: ['e7'],
+        conceptTag: 'Penetration'
+      },
+      {
+        move: 'Rxe7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture, but White has won material.',
+        arrows: [{ from: 'e8', to: 'e7', color: 'blue' }]
+      },
+      {
+        move: 'Rxe7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Recapturing! White has won material and has a completely winning position. The f5 break has created a kingside breakthrough that led to material gains.',
+        arrows: [{ from: 'f1', to: 'e7', color: 'green' }],
+        highlights: ['e7'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Qxe7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd7', to: 'e7', color: 'blue' }]
+      },
+      {
+        move: 'Qxe7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen captures! White has won material and has a completely winning position. The f5 break has been a complete success—it opened lines, created threats, and led to material gains.',
+        arrows: [{ from: 'd1', to: 'e7', color: 'green' }],
+        highlights: ['e7'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We prepared the f5 break with f4, then executed it (f5). The break opened the e-file and created the conditions for a powerful kingside attack with rooks penetrating (Re1, Rae1, Re7) and winning material. The f5 break led to a winning attack.',
+    
+    keyTakeaways: [
+      'The f5 break opens lines on the kingside',
+      'Creates threats around the enemy king',
+      'Often combined with piece attacks',
+      'The break can sacrifice material for activity',
+      'Follow up immediately with piece activity'
+    ],
+    
+    memoryTip: 'Think of the f5 break as "opening the floodgates on the kingside"—once you break, the pieces pour through!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Kingside Attack Theory',
+    playerExample: {
+      white: 'Bobby Fischer',
+      black: 'Boris Spassky',
+      event: 'World Championship',
+      year: 1972
+    }
+  },
+
   // KING_ACTIVITY - Need 1 more (have 4)
   {
     id: 'king-activity-opposition',
@@ -6810,6 +10631,605 @@ export const additionalPatterns: EnhancedPattern[] = [
     keyTakeaways: ['Opposition = kings facing', 'Side not to move wins', 'Crucial in king endgames', 'Practice this concept'],
     difficulty: 3,
     estimatedMinutes: 7
+  },
+
+  {
+    id: 'king-activity-infiltration-rook-endgame',
+    category: 'KING_ACTIVITY',
+    title: 'King Infiltration in Rook Endgames',
+    subtitle: 'Penetrating enemy territory',
+    // Rook endgame position where king infiltration is key
+    fen: '8/5k2/1r3p2/3p1p1p/3P1P1P/5P2/5K2/3R4 w - - 0 1',
+    toMove: 'white',
+    
+    introduction: 'In rook endgames, the king is a powerful piece that can infiltrate enemy territory to support the rook and create threats. While the rook controls files and ranks, the active king can penetrate the enemy position, attack pawns, and create winning threats. This pattern shows how to use king infiltration to win rook endgames.',
+    
+    keyIdeas: [
+      'The king can infiltrate enemy territory in rook endgames',
+      'An active king supports the rook and creates threats',
+      'The king can attack enemy pawns from behind',
+      'King infiltration often decides rook endgames',
+      'Timing is crucial—infiltrate when safe and supported'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Ke3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The king begins its infiltration! Moving toward the center and preparing to penetrate Black\'s position. The king is becoming active—this is the first step in infiltration.',
+        arrows: [
+          { from: 'f2', to: 'e3', color: 'green' },
+          { from: 'e3', to: 'd4', color: 'yellow' }
+        ],
+        highlights: ['e3'],
+        conceptTag: 'Beginning Infiltration'
+      },
+      {
+        move: 'Rb2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to activate the rook, but White\'s king is on the move.',
+        arrows: [{ from: 'b6', to: 'b2', color: 'blue' }]
+      },
+      {
+        move: 'Kd4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The king moves to d4, penetrating deeper into Black\'s position! From d4, the king attacks the d5 pawn and supports White\'s central pawns. The infiltration is working.',
+        arrows: [
+          { from: 'e3', to: 'd4', color: 'green' },
+          { from: 'd4', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d4'],
+        conceptTag: 'Penetrating'
+      },
+      {
+        move: 'Rb4+',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black checks, trying to drive the king back, but White has a better square.',
+        arrows: [{ from: 'b2', to: 'b4', color: 'blue' }]
+      },
+      {
+        move: 'Ke5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king moves forward, deeper into Black\'s territory! From e5, the king attacks the f5 and f6 pawns and supports White\'s pawns. This is powerful infiltration—the king is now a major attacking force.',
+        arrows: [
+          { from: 'd4', to: 'e5', color: 'green' },
+          { from: 'e5', to: 'f5', color: 'yellow' },
+          { from: 'e5', to: 'f6', color: 'yellow' }
+        ],
+        highlights: ['e5'],
+        conceptTag: 'Deep Infiltration'
+      },
+      {
+        move: 'Rb5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White\'s king is too active.',
+        arrows: [{ from: 'b4', to: 'b5', color: 'blue' }]
+      },
+      {
+        move: 'Rd3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d3, coordinating with the active king! The rook and king work together—the king attacks pawns while the rook controls files. This is perfect coordination.',
+        arrows: [
+          { from: 'd1', to: 'd3', color: 'green' },
+          { from: 'd3', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d3'],
+        conceptTag: 'Rook-King Coordination'
+      },
+      {
+        move: 'Ke6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to activate the king, but White has more threats.',
+        arrows: [{ from: 'f7', to: 'e6', color: 'blue' }]
+      },
+      {
+        move: 'Kf6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king moves to f6, attacking the f5 pawn directly! This is maximum infiltration—the king is deep in enemy territory, attacking pawns and creating threats. The king and rook are working perfectly together.',
+        arrows: [
+          { from: 'e5', to: 'f6', color: 'green' },
+          { from: 'f6', to: 'f5', color: 'yellow' }
+        ],
+        highlights: ['f6'],
+        conceptTag: 'Maximum Infiltration'
+      },
+      {
+        move: 'Rb6+',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black checks again, but White can move forward.',
+        arrows: [{ from: 'b5', to: 'b6', color: 'blue' }]
+      },
+      {
+        move: 'Kg7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king moves to g7, attacking the h5 pawn! The king infiltration has reached its peak—the king is deep in enemy territory, attacking multiple pawns. This is winning for White.',
+        arrows: [
+          { from: 'f6', to: 'g7', color: 'green' },
+          { from: 'g7', to: 'h5', color: 'yellow' }
+        ],
+        highlights: ['g7'],
+        conceptTag: 'Peak Infiltration'
+      },
+      {
+        move: 'Rg6+',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black checks, but White has a winning response.',
+        arrows: [{ from: 'b6', to: 'g6', color: 'blue' }]
+      },
+      {
+        move: 'Kxh5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king captures the h5 pawn! The infiltration has paid off—White has won a pawn and the king is perfectly placed. The king infiltration has been a complete success.',
+        arrows: [
+          { from: 'g7', to: 'h5', color: 'green' }
+        ],
+        highlights: ['h5'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Rg5+',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black checks, but White can escape and maintain the advantage.',
+        arrows: [{ from: 'g6', to: 'g5', color: 'blue' }]
+      },
+      {
+        move: 'Kh6',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The king moves to h6, maintaining the advantage. White has won a pawn through king infiltration and has a winning position.',
+        arrows: [
+          { from: 'h5', to: 'h6', color: 'green' }
+        ],
+        highlights: ['h6'],
+        conceptTag: 'Maintaining Advantage'
+      },
+      {
+        move: 'Rg4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has too many advantages.',
+        arrows: [{ from: 'g5', to: 'g4', color: 'blue' }]
+      },
+      {
+        move: 'Rd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook moves to d5, attacking the d5 pawn! Combined with the active king, White has a winning position. The king infiltration has transformed the position completely—White has material, activity, and a winning attack.',
+        arrows: [
+          { from: 'd3', to: 'd5', color: 'green' },
+          { from: 'd5', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'The king infiltrated Black\'s position (Ke3, Kd4, Ke5, Kf6, Kg7), attacked pawns, won material (Kxh5), and created a winning position. King infiltration in rook endgames is a powerful technique that often decides the game.',
+    
+    keyTakeaways: [
+      'In rook endgames, infiltrate with the king when safe',
+      'An active king supports the rook and attacks pawns',
+      'The king can penetrate deep into enemy territory',
+      'King infiltration often wins material and creates threats',
+      'Coordinate the king and rook for maximum effect'
+    ],
+    
+    memoryTip: 'Think of king infiltration as "the king goes on a mission"—it penetrates enemy territory to support the rook and win material!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Rook Endgame Technique',
+    playerExample: {
+      white: 'Vladimir Kramnik',
+      black: 'Viswanathan Anand',
+      event: 'World Championship',
+      year: 2008
+    }
+  },
+
+  {
+    id: 'king-activity-supporting-pawns-deep',
+    category: 'KING_ACTIVITY',
+    title: 'King Supporting Passed Pawns',
+    subtitle: 'The king as a pawn supporter',
+    // Endgame position where king supports passed pawns
+    fen: '8/5k2/2p5/3p4/3P4/2P5/5K2/8 w - - 0 1',
+    toMove: 'white',
+    
+    introduction: 'In pawn endgames, the king\'s primary job is to support passed pawns! An active king that supports its pawns can create winning passed pawns and promote them. The king should be in front of or beside the pawn, not behind it. This pattern shows how to use the king to support passed pawns effectively.',
+    
+    keyIdeas: [
+      'The king should support passed pawns from the front or side',
+      'A king in front of a passed pawn is extremely powerful',
+      'The king can help create passed pawns',
+      'King activity often decides pawn endgames',
+      'Coordinate the king and pawns for maximum effect'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Ke3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The king moves toward the center, preparing to support the d4 pawn. The king is becoming active—this is the first step in supporting the pawn.',
+        arrows: [
+          { from: 'f2', to: 'e3', color: 'green' },
+          { from: 'e3', to: 'd4', color: 'yellow' }
+        ],
+        highlights: ['e3'],
+        conceptTag: 'Beginning Support'
+      },
+      {
+        move: 'Ke6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also activates the king, but White continues.',
+        arrows: [{ from: 'f7', to: 'e6', color: 'blue' }]
+      },
+      {
+        move: 'Kd3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The king moves to d3, supporting the d4 pawn from the front! From d3, the king protects the pawn and prepares to advance with it. This is perfect king support.',
+        arrows: [
+          { from: 'e3', to: 'd3', color: 'green' },
+          { from: 'd3', to: 'd4', color: 'yellow' }
+        ],
+        highlights: ['d3', 'd4'],
+        conceptTag: 'Supporting the Pawn'
+      },
+      {
+        move: 'Kd6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to blockade, but White has more threats.',
+        arrows: [{ from: 'e6', to: 'd6', color: 'blue' }]
+      },
+      {
+        move: 'd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The pawn advances! With the king on d3 supporting it, the d5 pawn is a powerful passed pawn. The king support has made the pawn unstoppable.',
+        arrows: [
+          { from: 'd4', to: 'd5', color: 'green' },
+          { from: 'd3', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'Pawn Advance'
+      },
+      {
+        move: 'Kxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black captures, but White has a winning response.',
+        arrows: [{ from: 'd6', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Kxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king captures! White has won a pawn and the king is perfectly placed. The king support has paid off—the pawn advanced and White won material.',
+        arrows: [{ from: 'd3', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'c5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to create counterplay, but White has more advantages.',
+        arrows: [{ from: 'c6', to: 'c5', color: 'blue' }]
+      },
+      {
+        move: 'Kc4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king moves to c4, supporting the c3 pawn and attacking the c5 pawn! The active king is creating winning chances.',
+        arrows: [
+          { from: 'd5', to: 'c4', color: 'green' },
+          { from: 'c4', to: 'c5', color: 'yellow' },
+          { from: 'c4', to: 'c3', color: 'yellow' }
+        ],
+        highlights: ['c4'],
+        conceptTag: 'King Activity'
+      },
+      {
+        move: 'Kc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has more threats.',
+        arrows: [{ from: 'd6', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Kxc5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king captures the c5 pawn! White has won another pawn and has a completely winning position. The king activity has been a complete success.',
+        arrows: [{ from: 'c4', to: 'c5', color: 'green' }],
+        highlights: ['c5'],
+        conceptTag: 'More Material'
+      },
+      {
+        move: 'Kb5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to counterattack, but White has a winning position.',
+        arrows: [{ from: 'c6', to: 'b5', color: 'blue' }]
+      },
+      {
+        move: 'c4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The pawn advances! With the king supporting it, the c4 pawn is becoming a powerful passed pawn. The king support has created winning chances.',
+        arrows: [
+          { from: 'c3', to: 'c4', color: 'green' },
+          { from: 'c5', to: 'c4', color: 'yellow' }
+        ],
+        highlights: ['c4'],
+        conceptTag: 'Creating Passer'
+      },
+      {
+        move: 'Kb4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to blockade, but White has more threats.',
+        arrows: [{ from: 'b5', to: 'b4', color: 'blue' }]
+      },
+      {
+        move: 'Kb6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king moves to b6, supporting the c4 pawn and preparing to advance. The king support has created a winning passed pawn.',
+        arrows: [
+          { from: 'c5', to: 'b6', color: 'green' },
+          { from: 'b6', to: 'c4', color: 'yellow' }
+        ],
+        highlights: ['b6'],
+        conceptTag: 'Supporting the Passer'
+      },
+      {
+        move: 'Kb3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has a winning position.',
+        arrows: [{ from: 'b4', to: 'b3', color: 'blue' }]
+      },
+      {
+        move: 'c5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The pawn advances! The king support has created a winning passed pawn that will promote. The king activity has transformed the position completely.',
+        arrows: [
+          { from: 'c4', to: 'c5', color: 'green' },
+          { from: 'b6', to: 'c5', color: 'yellow' }
+        ],
+        highlights: ['c5'],
+        conceptTag: 'Winning Passer'
+      }
+    ],
+    
+    summary: 'We activated the king to support the d4 pawn (Ke3, Kd3), which allowed the pawn to advance (d5). The king then supported the c3 pawn (Kc4, Kxc5, Kb6), creating a winning passed pawn (c5). King support of passed pawns is essential in pawn endgames.',
+    
+    keyTakeaways: [
+      'The king should support passed pawns from the front or side',
+      'A king in front of a passed pawn is extremely powerful',
+      'The king can help create passed pawns',
+      'King activity often decides pawn endgames',
+      'Coordinate the king and pawns for maximum effect'
+    ],
+    
+    memoryTip: 'Think of the king supporting passed pawns as "a bodyguard walking with a VIP"—the king protects and helps the pawn advance!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Pawn Endgame Technique',
+    playerExample: {
+      white: 'José Raúl Capablanca',
+      black: 'Emanuel Lasker',
+      event: 'World Championship',
+      year: 1921
+    }
+  },
+
+  {
+    id: 'king-activity-centralization-deep',
+    category: 'KING_ACTIVITY',
+    title: 'King Centralization in Endgames',
+    subtitle: 'The king as a central force',
+    // Endgame position where king centralization is key
+    fen: '8/5k2/2p5/3p4/3P4/2P5/5K2/8 w - - 0 1',
+    toMove: 'white',
+    
+    introduction: 'In endgames, the king should be centralized! A centralized king controls more squares, supports pawns, and can quickly reach both flanks. The king becomes a powerful piece in the endgame. This pattern shows how to centralize the king and use it effectively.',
+    
+    keyIdeas: [
+      'The king should be centralized in endgames',
+      'A centralized king controls more squares',
+      'The king can support pawns from the center',
+      'Centralized kings can quickly reach both flanks',
+      'King centralization often decides endgames'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Ke3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The king moves toward the center! From e3, it controls more squares and can support the d4 pawn. This is the first step in centralization.',
+        arrows: [
+          { from: 'f2', to: 'e3', color: 'green' },
+          { from: 'e3', to: 'd4', color: 'yellow' }
+        ],
+        highlights: ['e3'],
+        conceptTag: 'Beginning Centralization'
+      },
+      {
+        move: 'Ke6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also centralizes, but White continues.',
+        arrows: [{ from: 'f7', to: 'e6', color: 'blue' }]
+      },
+      {
+        move: 'Kd3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The king moves to d3, supporting the d4 pawn and controlling key squares. The king is becoming more centralized and powerful.',
+        arrows: [
+          { from: 'e3', to: 'd3', color: 'green' },
+          { from: 'd3', to: 'd4', color: 'yellow' },
+          { from: 'd3', to: 'c4', color: 'yellow' }
+        ],
+        highlights: ['d3'],
+        conceptTag: 'Supporting the Pawn'
+      },
+      {
+        move: 'Kd6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also centralizes, but White has more threats.',
+        arrows: [{ from: 'e6', to: 'd6', color: 'blue' }]
+      },
+      {
+        move: 'Kc4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king moves to c4, a perfect central square! From c4, it controls many squares, supports the c3 and d4 pawns, and can attack Black\'s pawns. This is maximum centralization!',
+        arrows: [
+          { from: 'd3', to: 'c4', color: 'green' },
+          { from: 'c4', to: 'c3', color: 'yellow' },
+          { from: 'c4', to: 'd4', color: 'yellow' },
+          { from: 'c4', to: 'c5', color: 'yellow' }
+        ],
+        highlights: ['c4'],
+        conceptTag: 'Maximum Centralization'
+      },
+      {
+        move: 'Kc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to counter, but White has more activity.',
+        arrows: [{ from: 'd6', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Kb5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king moves to b5, attacking the c6 pawn! The centralized king is creating winning threats. The centralization has paid off.',
+        arrows: [
+          { from: 'c4', to: 'b5', color: 'green' },
+          { from: 'b5', to: 'c6', color: 'yellow' }
+        ],
+        highlights: ['b5'],
+        conceptTag: 'Attacking the Pawn'
+      },
+      {
+        move: 'Kb7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has more threats.',
+        arrows: [{ from: 'c6', to: 'b7', color: 'blue' }]
+      },
+      {
+        move: 'Kxc6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Winning a pawn! The centralized king has won material. The centralization has been a complete success.',
+        arrows: [{ from: 'b5', to: 'c6', color: 'green' }],
+        highlights: ['c6'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Kc7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to counterattack, but White has won material.',
+        arrows: [{ from: 'b7', to: 'c7', color: 'blue' }]
+      },
+      {
+        move: 'Kxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Winning another pawn! The centralized king has won material and has a completely winning position. The centralization has transformed the position completely.',
+        arrows: [{ from: 'c6', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'More Material'
+      },
+      {
+        move: 'Kd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has a winning position.',
+        arrows: [{ from: 'c7', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The pawn advances! With the centralized king supporting it, the d5 pawn is a powerful passed pawn. The centralization has created winning chances.',
+        arrows: [
+          { from: 'd4', to: 'd5', color: 'green' },
+          { from: 'd5', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'Creating Passer'
+      },
+      {
+        move: 'Kd6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to blockade, but White has a winning position.',
+        arrows: [{ from: 'd7', to: 'd6', color: 'blue' }]
+      },
+      {
+        move: 'Kd4',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The king moves to d4, supporting the passed pawn! The centralized king has created a winning passed pawn that will promote. The centralization has been a complete success.',
+        arrows: [
+          { from: 'd5', to: 'd4', color: 'green' },
+          { from: 'd4', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d4'],
+        conceptTag: 'Winning Passer'
+      }
+    ],
+    
+    summary: 'We centralized the king (Ke3, Kd3, Kc4), which controlled many squares and supported the pawns. The centralized king created winning threats (Kb5, Kxc6, Kxd5) that led to material gains and a winning passed pawn. King centralization is essential in endgames.',
+    
+    keyTakeaways: [
+      'The king should be centralized in endgames',
+      'A centralized king controls more squares',
+      'The king can support pawns from the center',
+      'Centralized kings can quickly reach both flanks',
+      'King centralization often decides endgames'
+    ],
+    
+    memoryTip: 'Think of king centralization as "the king becomes a general in the center"—it controls everything and can strike in any direction!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Endgame Technique',
+    playerExample: {
+      white: 'José Raúl Capablanca',
+      black: 'Emanuel Lasker',
+      event: 'World Championship',
+      year: 1921
+    }
   },
 
   // CENTRALIZATION - Need 1 more (have 4)
@@ -6835,6 +11255,581 @@ export const additionalPatterns: EnhancedPattern[] = [
     keyTakeaways: ['Centralize the queen when safe', 'Controls all directions', 'Can switch flanks quickly', 'Creates multiple threats'],
     difficulty: 3,
     estimatedMinutes: 7
+  },
+
+  {
+    id: 'centralization-rooks-deep',
+    category: 'CENTRALIZATION',
+    title: 'Centralizing the Rooks',
+    subtitle: 'Rooks on central files',
+    // Position where rook centralization is key
+    fen: 'r1bq1rk1/pp2bppp/2np1np1/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'Rooks are most powerful when placed on central files. A rook on the d-file or e-file controls many squares, supports central pawns, and can quickly switch between attack and defense. Centralized rooks coordinate with other pieces and create powerful threats. This pattern shows how to centralize rooks and use them as dominant forces.',
+    
+    keyIdeas: [
+      'Rooks on central files control many squares',
+      'Centralized rooks support central pawns and pieces',
+      'Rooks on d-file or e-file can quickly switch flanks',
+      'Centralized rooks coordinate with other pieces',
+      'Place rooks on open or semi-open central files'
+    ],
+    
+    mainLine: [
+      {
+        move: 'd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black advances the d-pawn, creating a semi-open d-file. This is perfect for rook centralization.',
+        arrows: [{ from: 'd6', to: 'd5', color: 'blue' }],
+        highlights: ['d5']
+      },
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d1, centralizing on the d-file! From here, it controls many squares, supports the d4 pawn, and can quickly switch to attack or defense. This is the first step in rook centralization.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Rook Centralization'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White\'s centralized rook is becoming powerful.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Rad1',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Doubling rooks on the d-file! White has complete control of the central file. The rooks are perfectly centralized and can create powerful threats. This is maximum rook centralization.',
+        arrows: [
+          { from: 'a1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Doubled Rooks'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also centralizes rooks, but White has the initiative.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop develops, supporting the centralized rooks and adding pressure to the d5 pawn. White\'s pieces are perfectly coordinated.',
+        arrows: [
+          { from: 'e3', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Piece Coordination'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but White\'s centralized rooks maintain pressure.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen moves to d2, joining the centralized rooks! White has a powerful battery on the d-file. The queen, rooks, and bishop all work together.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Battery Formation'
+      },
+      {
+        move: 'Rad8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also doubles rooks, but White has more threats.',
+        arrows: [{ from: 'a8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Nd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight jumps to d5, the perfect central square! Combined with the centralized rooks, White has complete central domination. The knight, rooks, queen, and bishop all work together.',
+        arrows: [
+          { from: 'c3', to: 'd5', color: 'green' },
+          { from: 'd5', to: 'c7', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'Total Centralization'
+      },
+      {
+        move: 'Nxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must trade, but White recaptures with advantage.',
+        arrows: [{ from: 'f6', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The rook captures! White has won the d5 pawn and maintains centralized rooks. The centralization has paid off—White has material and activity.',
+        arrows: [{ from: 'd1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Bxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'c6', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Recapturing! White has won the pawn and maintains centralized rooks. The rooks are still perfectly placed on the d-file, controlling the center and creating threats.',
+        arrows: [{ from: 'f1', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Maintaining Centralization'
+      },
+      {
+        move: 'Rxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd8', to: 'd5', color: 'blue' }]
+      },
+      {
+        move: 'Qxd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen captures! White has won material and has a completely winning position. The centralized rooks have done their job—they controlled the center, supported the attack, and helped win material. This demonstrates the power of rook centralization.',
+        arrows: [{ from: 'd2', to: 'd5', color: 'green' }],
+        highlights: ['d5'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We centralized rooks on the d-file (Rfd1, Rad1), creating a powerful battery. The centralized rooks supported the attack, helped win material (Rxd5, Qxd5), and dominated the center. Rook centralization is a powerful technique that creates lasting advantages.',
+    
+    keyTakeaways: [
+      'Place rooks on central files (d-file or e-file)',
+      'Centralized rooks control many squares and support central pawns',
+      'Doubled rooks on a central file are extremely powerful',
+      'Centralized rooks coordinate with other pieces',
+      'Rook centralization often leads to material gains'
+    ],
+    
+    memoryTip: 'Think of centralized rooks as "towers in the center"—they control everything and can strike in any direction!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Rook Centralization Theory',
+    playerExample: {
+      white: 'Mikhail Botvinnik',
+      black: 'Vasily Smyslov',
+      event: 'World Championship',
+      year: 1954
+    }
+  },
+
+  {
+    id: 'centralization-bishops-deep',
+    category: 'CENTRALIZATION',
+    title: 'Centralizing the Bishops',
+    subtitle: 'Bishops on central diagonals',
+    // Position where bishop centralization is key
+    fen: 'r1bq1rk1/pp2bppp/2np1np1/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'Bishops are most powerful when placed on central diagonals! A bishop on a long diagonal (like a1-h8 or a8-h1) controls many squares and can create devastating threats. Centralized bishops coordinate with other pieces and dominate the board. This pattern shows how to centralize bishops and use them as dominant forces.',
+    
+    keyIdeas: [
+      'Bishops on central diagonals control many squares',
+      'Long diagonals lead directly to the enemy position',
+      'Centralized bishops coordinate with other pieces',
+      'Place bishops on crossing diagonals for maximum coverage',
+      'Centralized bishops often lead to material gains or attacks'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The dark-squared bishop moves to f4, controlling the long diagonal (a1-h8)! From f4, it controls many squares and supports the center. This is the first step in bishop centralization.',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'c7', color: 'yellow' },
+          { from: 'f4', to: 'h6', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Bishop Centralization'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White\'s centralized bishop is becoming powerful.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bd3',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The light-squared bishop moves to d3, controlling the long diagonal (a8-h1)! Now both bishops are on central diagonals, controlling the entire board. This is maximum bishop centralization!',
+        arrows: [
+          { from: 'e2', to: 'd3', color: 'green' },
+          { from: 'd3', to: 'a6', color: 'yellow' },
+          { from: 'd3', to: 'h7', color: 'yellow' }
+        ],
+        highlights: ['d3', 'f4'],
+        conceptTag: 'Both Bishops Centralized'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White\'s centralized bishops are too powerful.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen develops, connecting the rooks and preparing to support the centralized bishops. White\'s pieces are coordinating beautifully.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'h6', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Queen Support'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White has more threats.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Rfd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The rook moves to d1, supporting the center and preparing to attack. White\'s pieces are all working together.',
+        arrows: [
+          { from: 'f1', to: 'd1', color: 'green' },
+          { from: 'd1', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d1'],
+        conceptTag: 'Rook Support'
+      },
+      {
+        move: 'Rac8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White\'s centralized bishops are creating threats.',
+        arrows: [{ from: 'a8', to: 'c8', color: 'blue' }]
+      },
+      {
+        move: 'Bh6',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The dark-squared bishop moves to h6, attacking the g7 square! Combined with the light-squared bishop on d3, White has both bishops pointing at the kingside. The centralized bishops are creating a winning attack.',
+        arrows: [
+          { from: 'f4', to: 'h6', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' },
+          { from: 'd3', to: 'h7', color: 'yellow' }
+        ],
+        highlights: ['h6', 'g7'],
+        conceptTag: 'Bishop Attack'
+      },
+      {
+        move: 'Bf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to defend, but White has more threats.',
+        arrows: [{ from: 'e7', to: 'f8', color: 'blue' }]
+      },
+      {
+        move: 'Bxg7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop captures on g7, breaking through! The centralized bishops have created a winning attack. White has broken through on the kingside.',
+        arrows: [{ from: 'h6', to: 'g7', color: 'green' }],
+        highlights: ['g7'],
+        conceptTag: 'Breakthrough'
+      },
+      {
+        move: 'Kxg7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture, but the king is now exposed.',
+        arrows: [{ from: 'g8', to: 'g7', color: 'blue' }]
+      },
+      {
+        move: 'Qh6+',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Check! The queen moves to h6, using the light-squared bishop\'s diagonal. The centralized bishops have coordinated perfectly to create a winning attack.',
+        arrows: [
+          { from: 'd2', to: 'h6', color: 'green' },
+          { from: 'h6', to: 'g7', color: 'yellow' }
+        ],
+        highlights: ['h6'],
+        conceptTag: 'Mating Attack'
+      },
+      {
+        move: 'Kg8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black tries to escape, but White has more threats.',
+        arrows: [{ from: 'g7', to: 'g8', color: 'blue' }]
+      },
+      {
+        move: 'Bxh7+',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The light-squared bishop captures on h7! The centralized bishops have created a devastating attack. White has a completely winning position.',
+        arrows: [{ from: 'd3', to: 'h7', color: 'green' }],
+        highlights: ['h7'],
+        conceptTag: 'Total Domination'
+      },
+      {
+        move: 'Kxh7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture, but the king is now completely exposed.',
+        arrows: [{ from: 'g8', to: 'h7', color: 'blue' }]
+      },
+      {
+        move: 'Qxh7#',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'Checkmate! The centralized bishops have created a perfect mating attack. Both bishops controlled key diagonals that led directly to the enemy king. This demonstrates the power of bishop centralization when placed on crossing diagonals.',
+        arrows: [{ from: 'h6', to: 'h7', color: 'green' }],
+        highlights: ['h7'],
+        conceptTag: 'Checkmate'
+      }
+    ],
+    
+    summary: 'We centralized both bishops on central diagonals (Bf4, Bd3), then used them to attack the kingside (Bh6, Bxg7, Bxh7). The centralized bishops coordinated perfectly, controlling key diagonals and creating a winning mating attack. Bishop centralization is devastating when placed on crossing diagonals.',
+    
+    keyTakeaways: [
+      'Bishops on central diagonals control many squares',
+      'Long diagonals lead directly to the enemy position',
+      'Centralized bishops coordinate with other pieces',
+      'Place bishops on crossing diagonals for maximum coverage',
+      'Centralized bishops often lead to material gains or attacks'
+    ],
+    
+    memoryTip: 'Think of centralized bishops as "two snipers on long diagonals"—they can strike from far away and control the entire board!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Bishop Centralization Theory',
+    playerExample: {
+      white: 'Garry Kasparov',
+      black: 'Viswanathan Anand',
+      event: 'World Championship',
+      year: 1995
+    }
+  },
+
+  {
+    id: 'centralization-knights-deep',
+    category: 'CENTRALIZATION',
+    title: 'Centralizing the Knights',
+    subtitle: 'Knights on central squares',
+    // Position where knight centralization is key
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    
+    introduction: 'Centralized knights are extremely powerful! Knights on central squares (d4, d5, e4, e5) control many squares, can quickly reach both flanks, and often become the key to the position. This pattern shows how to centralize knights and use them as dominant forces.',
+    
+    keyIdeas: [
+      'Centralized knights control more squares',
+      'Knights on central squares can reach both flanks quickly',
+      'Centralized knights coordinate with other pieces',
+      'Place knights on central squares (d4, d5, e4, e5)',
+      'Centralized knights often lead to material gains or attacks'
+    ],
+    
+    mainLine: [
+      {
+        move: 'Nd5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'THE CENTRALIZATION! The knight jumps to d5, a perfect central square! From d5, it controls many squares and can quickly reach both flanks. This is the ideal knight placement.',
+        arrows: [
+          { from: 'c3', to: 'd5', color: 'green' },
+          { from: 'd5', to: 'c7', color: 'yellow' },
+          { from: 'd5', to: 'e7', color: 'yellow' },
+          { from: 'd5', to: 'f6', color: 'yellow' },
+          { from: 'd5', to: 'b6', color: 'yellow' }
+        ],
+        highlights: ['d5'],
+        conceptTag: 'The Centralization'
+      },
+      {
+        move: 'Bd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White\'s centralized knight is already powerful.',
+        arrows: [{ from: 'c8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Ne5',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The second knight centralizes on e5! Now both knights are on powerful central squares (d5 and e5), controlling many squares together. This is maximum knight centralization!',
+        arrows: [
+          { from: 'f3', to: 'e5', color: 'green' },
+          { from: 'e5', to: 'd7', color: 'yellow' },
+          { from: 'e5', to: 'f7', color: 'yellow' },
+          { from: 'd5', to: 'c7', color: 'yellow' }
+        ],
+        highlights: ['e5', 'd5'],
+        conceptTag: 'Both Knights Centralized'
+      },
+      {
+        move: 'Bc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black defends, but White\'s centralized knights are too powerful.',
+        arrows: [{ from: 'd7', to: 'c6', color: 'blue' }]
+      },
+      {
+        move: 'Bf4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The bishop develops, supporting the centralized knights and adding pressure. White\'s pieces are coordinating beautifully.',
+        arrows: [
+          { from: 'c1', to: 'f4', color: 'green' },
+          { from: 'f4', to: 'd6', color: 'yellow' }
+        ],
+        highlights: ['f4'],
+        conceptTag: 'Bishop Support'
+      },
+      {
+        move: 'Rfd8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops, but White has more threats.',
+        arrows: [{ from: 'f8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Qd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The queen develops, coordinating with the centralized knights. White\'s pieces are all working together.',
+        arrows: [
+          { from: 'd1', to: 'd2', color: 'green' },
+          { from: 'd2', to: 'd5', color: 'yellow' }
+        ],
+        highlights: ['d2'],
+        conceptTag: 'Queen Coordination'
+      },
+      {
+        move: 'Rad8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black also doubles rooks, but White has the initiative.',
+        arrows: [{ from: 'a8', to: 'd8', color: 'blue' }]
+      },
+      {
+        move: 'Nxc7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight on d5 captures on c7! The centralized knights have created a winning tactical opportunity. The knight coordination has paid off!',
+        arrows: [{ from: 'd5', to: 'c7', color: 'green' }],
+        highlights: ['c7'],
+        conceptTag: 'Tactical Opportunity'
+      },
+      {
+        move: 'Qxc7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black must recapture, but White has won material.',
+        arrows: [{ from: 'd8', to: 'c7', color: 'blue' }]
+      },
+      {
+        move: 'Nxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The knight on e5 captures on d7! The centralized knights have won material. The knight centralization has been a complete success!',
+        arrows: [{ from: 'e5', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Material Gain'
+      },
+      {
+        move: 'Qxd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White has won material.',
+        arrows: [{ from: 'c7', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Bxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The bishop captures! White has won material and has a completely winning position. The centralized knights have transformed the position completely.',
+        arrows: [{ from: 'e2', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Winning Position'
+      },
+      {
+        move: 'Rxd7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black recaptures, but White still has the advantage.',
+        arrows: [{ from: 'd8', to: 'd7', color: 'blue' }]
+      },
+      {
+        move: 'Qxd7',
+        isMainLine: true,
+        annotation: '!!',
+        explanation: 'The queen captures! White has won material and has a completely winning position. The centralized knights have been a complete success—they controlled the center, created tactics, and won material.',
+        arrows: [{ from: 'd2', to: 'd7', color: 'green' }],
+        highlights: ['d7'],
+        conceptTag: 'Total Domination'
+      }
+    ],
+    
+    summary: 'We centralized both knights on central squares (Nd5, Ne5), which controlled many squares and coordinated with other pieces. The centralized knights created winning tactics (Nxc7, Nxd7) that led to material gains. The centralized knights were the key to the position.',
+    
+    keyTakeaways: [
+      'Centralized knights control more squares',
+      'Knights on central squares can reach both flanks quickly',
+      'Centralized knights coordinate with other pieces',
+      'Place knights on central squares (d4, d5, e4, e5)',
+      'Centralized knights often lead to material gains or attacks'
+    ],
+    
+    memoryTip: 'Think of centralized knights as "two spiders in the center of their webs"—they control everything and can strike in any direction!',
+    
+    difficulty: 3,
+    estimatedMinutes: 12,
+    source: 'Knight Strategy Theory',
+    playerExample: {
+      white: 'Mikhail Botvinnik',
+      black: 'Vasily Smyslov',
+      event: 'World Championship',
+      year: 1954
+    }
   }
 ];
 
