@@ -92,6 +92,7 @@ export function LegendDetailPage() {
   const [lastGuessCorrect, setLastGuessCorrect] = useState<boolean | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [guessAnimating, setGuessAnimating] = useState(false);
+  const [isBoardDragging, setIsBoardDragging] = useState(false);
 
   // Initialize engine with proper cleanup
   useEffect(() => {
@@ -114,6 +115,25 @@ export function LegendDetailPage() {
       stockfish.stop();
     };
   }, []);
+
+  // Prevent page scroll / touch gestures while dragging pieces on mobile.
+  // This mitigates touch coordinate drift/jumps when the page is scrolled.
+  useEffect(() => {
+    if (!isBoardDragging) return;
+    const prevOverflow = document.body.style.overflow;
+    const prevTouchAction = document.body.style.touchAction;
+    const prevUserSelect = document.body.style.userSelect;
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+    document.body.style.userSelect = 'none';
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.touchAction = prevTouchAction;
+      document.body.style.userSelect = prevUserSelect;
+    };
+  }, [isBoardDragging]);
 
   // Track game completion for Play vs Legend mode
   const [gameTracked, setGameTracked] = useState(false);
@@ -889,7 +909,10 @@ export function LegendDetailPage() {
             <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
               <div className="glass-card p-3 sm:p-4 lg:p-6 w-full max-w-full overflow-hidden">
                 <div className="mb-4 flex justify-center relative">
-                  <div style={{ width: boardSize, maxWidth: '100%' }} className="relative">
+                  <div
+                    style={{ width: boardSize, maxWidth: '100%', touchAction: 'none' }}
+                    className="relative select-none touch-none overscroll-none"
+                  >
                   {guessChess && (
                     <Chessboard
                       position={guessChess.fen()}
@@ -897,6 +920,8 @@ export function LegendDetailPage() {
                         handleGuessMove(source, target);
                         return !showFeedback; // Return false to prevent board update on wrong moves
                       }}
+                      onPieceDragBegin={() => setIsBoardDragging(true)}
+                      onPieceDragEnd={() => setIsBoardDragging(false)}
                       boardOrientation={guessSession?.legendColor || 'white'}
                       boardWidth={boardSize}
                       customDarkSquareStyle={boardStyles.customDarkSquareStyle}
