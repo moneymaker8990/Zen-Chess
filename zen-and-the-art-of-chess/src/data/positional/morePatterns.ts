@@ -289,6 +289,134 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 4,
     source: "Central control principles",
+  },
+
+  {
+    id: 'king-activity-endgame',
+    category: 'KING_ACTIVITY',
+    title: "The Active King in Endgames",
+    subtitle: "King as a fighting piece",
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: "In the endgame, the king transforms from a piece to protect into a powerful fighting unit. An active king is often the difference between a draw and a win.",
+    keyIdeas: [
+      "Activate your king in endgames",
+      "Kings should move toward the center",
+      "Use your king to attack enemy pawns",
+      "King activity is crucial in pawn endgames"
+    ],
+    mainLine: [
+      {
+        move: "Kf1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Activating the king, heading toward the center.",
+        conceptTag: "King Activity"
+      },
+      {
+        move: "Kf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black activates their king as well.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Continuing toward the center.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Both kings march forward.",
+        conceptTag: ""
+      },
+      {
+        move: "Kd3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our king reaches a central square, ready to support our pawns or attack Black's pawns.",
+        highlights: [
+          "d3"
+        ],
+        conceptTag: "Centralization"
+      }
+    ],
+    summary: "In endgames, activate your king immediately. A centralized, active king can make the difference between winning and drawing.",
+    keyTakeaways: [
+      "Kings are strong in the endgame",
+      "Centralize your king when the queens are off",
+      "Use the king to attack and defend",
+      "King activity often decides endgames"
+    ],
+    memoryTip: "In the endgame, the king is king!",
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: "Endgame principles",
+  },
+
+  {
+    id: 'prophylaxis-preventing-breaks',
+    category: 'PROPHYLAXIS',
+    title: "Preventing Pawn Breaks",
+    subtitle: "Stopping opponent plans",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Prophylaxis means preventing your opponent's plans. In this position, we need to stop Black's ...d5 break.",
+    keyIdeas: [
+      "Identify opponent threats before they happen",
+      "Prevent key pawn breaks",
+      "Control critical squares prophylactically",
+      "Think: \"What does my opponent want to do?\""
+    ],
+    mainLine: [
+      {
+        move: "d4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "This move controls d5 and e5, preventing Black's pawn breaks. Classic prophylaxis!",
+        highlights: [
+          "d5",
+          "e5"
+        ],
+        conceptTag: "Prophylaxis"
+      },
+      {
+        move: "exd4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black captures.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "We recapture, maintaining central control.",
+        conceptTag: ""
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Prophylaxis is about prevention. Before making your move, ask: \"What does my opponent want to do?\" Then stop it!",
+    keyTakeaways: [
+      "Think about opponent's plans first",
+      "Prevent key pawn breaks",
+      "Control critical squares",
+      "Prophylaxis > Immediate action"
+    ],
+    memoryTip: "Prevention is better than cure!",
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Aron Nimzowitsch principles",
   }
 ];
 
