@@ -13637,7 +13637,7 @@ const baseEnhancedPatterns: EnhancedPattern[] = [
 // IMPORT ADDITIONAL PATTERNS
 // ============================================
 
-import { additionalPatterns } from './morePatterns';
+import additionalPatterns from './morePatterns';
 // Generated patterns temporarily disabled - they only have single moves
 // import { generatedPatterns } from './patternGenerator';
 
