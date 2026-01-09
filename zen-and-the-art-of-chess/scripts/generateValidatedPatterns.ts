@@ -549,6 +549,71 @@ function generateKnightPlacementPatterns(): EnhancedPattern[] {
     source: 'Chess principles'
   });
   
+  // Pattern 3: Knight on Strong Squares
+  patterns.push({
+    id: 'knight-strong-squares',
+    category: 'KNIGHT_PLACEMENT',
+    title: 'Placing Knights on Strong Squares',
+    subtitle: 'Knights need secure posts',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'Knights are most effective on strong squares where they cannot be easily driven away. Place knights on squares that are protected by pawns.',
+    keyIdeas: [
+      'Place knights on protected squares',
+      'Knights need secure posts',
+      'Avoid squares where knights can be attacked by pawns',
+      'Strong squares give knights long-term power'
+    ],
+    mainLine: [
+      {
+        move: 'd3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Supporting e4 and preparing to castle.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White castles.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles as well.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We develop the knight to c3, a strong square protected by the b2 and d2 pawns. This gives the knight a secure post.',
+        highlights: ['c3'],
+        conceptTag: 'Knight Placement'
+      }
+    ],
+    summary: 'Knights need strong, protected squares to be effective. Place them on squares that cannot be easily attacked by enemy pawns.',
+    keyTakeaways: [
+      'Knights need secure posts',
+      'Protected squares give knights power',
+      'Avoid easily attackable squares',
+      'Strong squares = strong knights'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: 'Knight placement principles'
+  });
+  
   return patterns;
 }
 
@@ -1493,6 +1558,57 @@ function generatePawnBreaksPatterns(): EnhancedPattern[] {
     source: 'Pawn break theory'
   });
   
+  // Pattern 3: d5 Pawn Break (Queenside)
+  patterns.push({
+    id: 'pawn-break-d5-queenside',
+    category: 'PAWN_BREAKS',
+    title: 'The d5 Pawn Break',
+    subtitle: 'Breaking in the center',
+    fen: 'r1bqkb1r/ppp2ppp/2n2n2/2p1p3/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq c6 0 6',
+    toMove: 'white',
+    introduction: 'The d5 pawn break opens the center and challenges Black\'s pawn structure. This type of break is essential for opening closed positions.',
+    keyIdeas: [
+      'Use pawn breaks to open the center',
+      'Challenge opponent\'s central structure',
+      'Open lines with pawn advances',
+      'Prepare breaks with piece development'
+    ],
+    mainLine: [
+      {
+        move: 'd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The pawn break! Opening the center and challenging Black\'s pawn structure. This is a crucial break for opening the position.',
+        highlights: ['d5'],
+        conceptTag: 'Pawn Break'
+      },
+      {
+        move: 'Qxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black captures with the queen, opening lines.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nxd5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White recaptures with the knight, maintaining central control.',
+        conceptTag: ''
+      }
+    ],
+    summary: 'Pawn breaks in the center, like d5, open up closed positions and create activity for your pieces. Timing and preparation are crucial.',
+    keyTakeaways: [
+      'Use pawn breaks to open the center',
+      'Challenge central structures with breaks',
+      'Prepare breaks with development',
+      'Central breaks create piece activity'
+    ],
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: 'Pawn break principles'
+  });
+  
   return patterns;
 }
 
@@ -1643,12 +1759,70 @@ function generatePieceCoordinationPatterns(): EnhancedPattern[] {
     source: 'Rook coordination principles'
   });
   
+  // Pattern 3: Coordinating Bishop and Knight
+  patterns.push({
+    id: 'piece-coordination-bishop-knight',
+    category: 'PIECE_COORDINATION',
+    title: 'Coordinating Bishop and Knight',
+    subtitle: 'Working different pieces together',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'Bishops and knights can coordinate effectively when they work together. The bishop controls long diagonals while the knight controls key squares.',
+    keyIdeas: [
+      'Coordinate different types of pieces',
+      'Use bishops and knights together',
+      'Control key squares with coordinated pieces',
+      'Create threats with piece harmony'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling to safety and activating the rook.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We develop the knight, and now our bishop on c4 and knight on c3 coordinate, controlling key central squares together.',
+        highlights: ['c3', 'c4'],
+        conceptTag: 'Piece Coordination'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      }
+    ],
+    summary: 'Coordinating different types of pieces, like bishops and knights, creates powerful combinations. Each piece supports the other\'s strengths.',
+    keyTakeaways: [
+      'Coordinate different piece types together',
+      'Bishops and knights complement each other',
+      'Use piece harmony to control squares',
+      'Create threats with coordinated pieces'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Piece coordination principles'
+  });
+  
   return patterns;
 }
 
 // Main generation function
 async function generateAndValidatePatterns() {
-  console.log('🎯 Starting AI-Assisted Pattern Generation - Batch 6\n');
+  console.log('🎯 Starting AI-Assisted Pattern Generation - Batch 7\n');
   console.log('Generating patterns with immediate validation...\n');
   
   const allPatterns: EnhancedPattern[] = [];
@@ -1671,8 +1845,8 @@ async function generateAndValidatePatterns() {
     { name: 'PIECE_COORDINATION', fn: generatePieceCoordinationPatterns },
   ];
   
-  console.log('Note: Batch 6 - Adding 3rd patterns to key categories.');
-  console.log('Focus: BLOCKADE, EXCHANGE_STRATEGY, and continuing to expand all categories\n');
+  console.log('Note: Batch 7 - Adding more patterns to categories needing them.');
+  console.log('Focus: PAWN_BREAKS, PIECE_COORDINATION, KNIGHT_PLACEMENT, CENTRALIZATION, KING_ACTIVITY\n');
   
   for (const { name, fn } of generators) {
     console.log(`\n📦 Generating ${name} patterns...`);
