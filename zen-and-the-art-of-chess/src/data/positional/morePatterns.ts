@@ -228,6 +228,70 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'knight-avoid-rim',
+    category: 'KNIGHT_PLACEMENT',
+    title: "Avoiding the Rim",
+    subtitle: "Knights belong in the center",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "The saying goes: \"A knight on the rim is dim!\" Knights are weakest on the edge of the board, controlling far fewer squares than from the center.",
+    keyIdeas: [
+      "Avoid placing knights on the rim",
+      "Centralized knights are powerful",
+      "Knights on the rim control few squares",
+      "Use knights to control key central squares"
+    ],
+    mainLine: [
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We develop the knight toward the center, avoiding the rim squares like a1. Central placement gives maximum control.",
+        conceptTag: "Knight Placement"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops actively.",
+        conceptTag: ""
+      },
+      {
+        move: "Be2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops, preparing to castle.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White castles as well.",
+        conceptTag: "King Safety"
+      }
+    ],
+    summary: "Knights on the rim are ineffective. Always strive to place knights on central squares where they control the most squares and influence the game.",
+    keyTakeaways: [
+      "A knight on the rim is dim",
+      "Centralize knights whenever possible",
+      "Avoid edge squares like a1, h1, a8, h8",
+      "Knights need central squares to be effective"
+    ],
+    memoryTip: "A knight on the rim is dim!",
+    difficulty: 1,
+    estimatedMinutes: 4,
+    source: "Chess principles",
+  },
+
+  {
     id: 'centralization-piece-activity',
     category: 'CENTRALIZATION',
     title: "Centralizing Your Pieces",
@@ -289,6 +353,73 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 4,
     source: "Central control principles",
+  },
+
+  {
+    id: 'centralization-endgame',
+    category: 'CENTRALIZATION',
+    title: "Centralizing in the Endgame",
+    subtitle: "Bringing pieces to the center",
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: "In the endgame, centralization becomes even more important. Centralized pieces can quickly reach any part of the board to attack or defend.",
+    keyIdeas: [
+      "Centralize pieces in the endgame",
+      "Central pieces reach all areas quickly",
+      "Control the center in endgames",
+      "Use centralized pieces to support pawns"
+    ],
+    mainLine: [
+      {
+        move: "Kf1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Activating the king toward the center.",
+        conceptTag: "King Activity"
+      },
+      {
+        move: "Kg8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke2",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our king reaches a central square, from where it can quickly move to support our pawns or attack Black's pawns on either flank.",
+        highlights: [
+          "e2"
+        ],
+        conceptTag: "Centralization"
+      },
+      {
+        move: "Kf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Kd3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Further centralization, controlling key squares.",
+        conceptTag: ""
+      }
+    ],
+    summary: "In endgames, centralization is crucial. Centralized kings and pieces control the board and can quickly respond to threats anywhere.",
+    keyTakeaways: [
+      "Centralize pieces in endgames",
+      "Central pieces have maximum mobility",
+      "Control the center for endgame success",
+      "Centralized pieces support all plans"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: "Endgame principles",
   },
 
   {
@@ -356,6 +487,73 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 4,
     source: "Endgame principles",
+  },
+
+  {
+    id: 'king-activity-attacking-pawns',
+    category: 'KING_ACTIVITY',
+    title: "King Attacking Weak Pawns",
+    subtitle: "Using the king as an attacker",
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: "In endgames, the king can attack enemy pawns directly. An active king that attacks weaknesses is a powerful weapon.",
+    keyIdeas: [
+      "Use the king to attack weak pawns",
+      "Active kings decide endgames",
+      "Attack enemy pawns with your king",
+      "Centralize the king to reach all areas"
+    ],
+    mainLine: [
+      {
+        move: "Kf1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Moving the king toward the center and Black's pawns.",
+        conceptTag: "King Activity"
+      },
+      {
+        move: "Kg8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Continuing centralization.",
+        conceptTag: ""
+      },
+      {
+        move: "Kf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Kd3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our king is now centralized and ready to attack Black's pawns on either flank. Active kings are key to endgame success.",
+        highlights: [
+          "d3"
+        ],
+        conceptTag: "King Activity"
+      }
+    ],
+    summary: "In endgames, use your king actively to attack enemy pawns. An active king that attacks weaknesses is far superior to a passive king.",
+    keyTakeaways: [
+      "Active kings attack weak pawns",
+      "Centralize the king in endgames",
+      "Use the king as an attacking piece",
+      "King activity often decides endgames"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: "King activity in endgames",
   },
 
   {
@@ -487,6 +685,73 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'blockade-backward-pawn',
+    category: 'BLOCKADE',
+    title: "Blockading a Backward Pawn",
+    subtitle: "Stopping a weak pawn advance",
+    fen: 'r1bqkb1r/ppp2ppp/2n2n2/2p1p3/2P1P3/2N2N2/PP1P1PPP/R1BQKB1R w KQkq c6 0 6',
+    toMove: 'white',
+    introduction: "A backward pawn is a pawn that cannot be supported by other pawns. Blockading it prevents it from advancing and fixes the weakness.",
+    keyIdeas: [
+      "Block backward pawns to fix the weakness",
+      "Use knights or other pieces to blockade",
+      "Prevent pawn advances with blockaders",
+      "Control squares in front of weak pawns"
+    ],
+    mainLine: [
+      {
+        move: "Be2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing, preparing to castle.",
+        conceptTag: "Development"
+      },
+      {
+        move: "Be7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White castles for king safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles as well.",
+        conceptTag: ""
+      },
+      {
+        move: "Nd5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our knight blockades Black's backward pawn on d6, preventing it from advancing and fixing the weakness.",
+        highlights: [
+          "d5"
+        ],
+        conceptTag: "Blockade"
+      }
+    ],
+    summary: "Blockading backward pawns fixes them as weaknesses. The blockader controls squares and prevents the pawn from advancing to safety.",
+    keyTakeaways: [
+      "Backward pawns are chronic weaknesses",
+      "Blockade them to prevent advances",
+      "Knights are excellent blockading pieces",
+      "The blockader gains control of key squares"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Pawn structure theory",
+  },
+
+  {
     id: 'exchange-trading-bad-pieces',
     category: 'EXCHANGE_STRATEGY',
     title: "Exchanging Bad Pieces for Good",
@@ -555,6 +820,70 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 3,
     estimatedMinutes: 5,
     source: "Exchange strategy principles",
+  },
+
+  {
+    id: 'exchange-simplifying-position',
+    category: 'EXCHANGE_STRATEGY',
+    title: "Simplifying to a Better Endgame",
+    subtitle: "Trading to convert an advantage",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "When you have a positional advantage, sometimes the best plan is to simplify by exchanging pieces. This reduces your opponent's counterplay and brings you closer to the endgame.",
+    keyIdeas: [
+      "Exchange pieces when you have an advantage",
+      "Simplify to convert positional advantages",
+      "Reduce opponent's counterplay with exchanges",
+      "Trade toward favorable endgames"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety first.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops the knight.",
+        conceptTag: "Development"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxe5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We exchange knights, simplifying the position. This reduces Black's counterplay while maintaining our central control.",
+        conceptTag: "Exchange"
+      }
+    ],
+    summary: "Strategic exchanges can simplify positions and convert advantages. When ahead, trade pieces to reduce counterplay and reach favorable endgames.",
+    keyTakeaways: [
+      "Exchange when you have an advantage",
+      "Simplify to reduce counterplay",
+      "Trade toward better endgames",
+      "Keep your advantage through simplification"
+    ],
+    
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Strategic exchange principles",
   },
 
   {

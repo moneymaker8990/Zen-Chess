@@ -484,6 +484,71 @@ function generateKnightPlacementPatterns(): EnhancedPattern[] {
     source: 'Classical principles'
   });
   
+  // Pattern 2: Knight on the Rim is Dim
+  patterns.push({
+    id: 'knight-avoid-rim',
+    category: 'KNIGHT_PLACEMENT',
+    title: 'Avoiding the Rim',
+    subtitle: 'Knights belong in the center',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'The saying goes: "A knight on the rim is dim!" Knights are weakest on the edge of the board, controlling far fewer squares than from the center.',
+    keyIdeas: [
+      'Avoid placing knights on the rim',
+      'Centralized knights are powerful',
+      'Knights on the rim control few squares',
+      'Use knights to control key central squares'
+    ],
+    mainLine: [
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We develop the knight toward the center, avoiding the rim squares like a1. Central placement gives maximum control.',
+        conceptTag: 'Knight Placement'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops actively.',
+        conceptTag: ''
+      },
+      {
+        move: 'Be2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White develops, preparing to castle.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White castles as well.',
+        conceptTag: 'King Safety'
+      }
+    ],
+    summary: 'Knights on the rim are ineffective. Always strive to place knights on central squares where they control the most squares and influence the game.',
+    keyTakeaways: [
+      'A knight on the rim is dim',
+      'Centralize knights whenever possible',
+      'Avoid edge squares like a1, h1, a8, h8',
+      'Knights need central squares to be effective'
+    ],
+    memoryTip: 'A knight on the rim is dim!',
+    difficulty: 1,
+    estimatedMinutes: 4,
+    source: 'Chess principles'
+  });
+  
   return patterns;
 }
 
@@ -552,6 +617,71 @@ function generateCentralizationPatterns(): EnhancedPattern[] {
     difficulty: 2,
     estimatedMinutes: 4,
     source: 'Central control principles'
+  });
+  
+  // Pattern 2: Centralizing in the Endgame
+  patterns.push({
+    id: 'centralization-endgame',
+    category: 'CENTRALIZATION',
+    title: 'Centralizing in the Endgame',
+    subtitle: 'Bringing pieces to the center',
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: 'In the endgame, centralization becomes even more important. Centralized pieces can quickly reach any part of the board to attack or defend.',
+    keyIdeas: [
+      'Centralize pieces in the endgame',
+      'Central pieces reach all areas quickly',
+      'Control the center in endgames',
+      'Use centralized pieces to support pawns'
+    ],
+    mainLine: [
+      {
+        move: 'Kf1',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Activating the king toward the center.',
+        conceptTag: 'King Activity'
+      },
+      {
+        move: 'Kg8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black moves the king.',
+        conceptTag: ''
+      },
+      {
+        move: 'Ke2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Our king reaches a central square, from where it can quickly move to support our pawns or attack Black\'s pawns on either flank.',
+        highlights: ['e2'],
+        conceptTag: 'Centralization'
+      },
+      {
+        move: 'Kf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black moves the king.',
+        conceptTag: ''
+      },
+      {
+        move: 'Kd3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Further centralization, controlling key squares.',
+        conceptTag: ''
+      }
+    ],
+    summary: 'In endgames, centralization is crucial. Centralized kings and pieces control the board and can quickly respond to threats anywhere.',
+    keyTakeaways: [
+      'Centralize pieces in endgames',
+      'Central pieces have maximum mobility',
+      'Control the center for endgame success',
+      'Centralized pieces support all plans'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: 'Endgame principles'
   });
   
   return patterns;
@@ -697,6 +827,71 @@ function generateKingActivityPatterns(): EnhancedPattern[] {
     source: 'Endgame principles'
   });
   
+  // Pattern 2: King Attacking Pawns
+  patterns.push({
+    id: 'king-activity-attacking-pawns',
+    category: 'KING_ACTIVITY',
+    title: 'King Attacking Weak Pawns',
+    subtitle: 'Using the king as an attacker',
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: 'In endgames, the king can attack enemy pawns directly. An active king that attacks weaknesses is a powerful weapon.',
+    keyIdeas: [
+      'Use the king to attack weak pawns',
+      'Active kings decide endgames',
+      'Attack enemy pawns with your king',
+      'Centralize the king to reach all areas'
+    ],
+    mainLine: [
+      {
+        move: 'Kf1',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Moving the king toward the center and Black\'s pawns.',
+        conceptTag: 'King Activity'
+      },
+      {
+        move: 'Kg8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black moves the king.',
+        conceptTag: ''
+      },
+      {
+        move: 'Ke2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Continuing centralization.',
+        conceptTag: ''
+      },
+      {
+        move: 'Kf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black moves the king.',
+        conceptTag: ''
+      },
+      {
+        move: 'Kd3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Our king is now centralized and ready to attack Black\'s pawns on either flank. Active kings are key to endgame success.',
+        highlights: ['d3'],
+        conceptTag: 'King Activity'
+      }
+    ],
+    summary: 'In endgames, use your king actively to attack enemy pawns. An active king that attacks weaknesses is far superior to a passive king.',
+    keyTakeaways: [
+      'Active kings attack weak pawns',
+      'Centralize the king in endgames',
+      'Use the king as an attacking piece',
+      'King activity often decides endgames'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: 'King activity in endgames'
+  });
+  
   return patterns;
 }
 
@@ -834,6 +1029,71 @@ function generateBlockadePatterns(): EnhancedPattern[] {
     source: 'Nimzowitsch blockade theory'
   });
   
+  // Pattern 2: Blockading Backward Pawn
+  patterns.push({
+    id: 'blockade-backward-pawn',
+    category: 'BLOCKADE',
+    title: 'Blockading a Backward Pawn',
+    subtitle: 'Stopping a weak pawn advance',
+    fen: 'r1bqkb1r/ppp2ppp/2n2n2/2p1p3/2P1P3/2N2N2/PP1P1PPP/R1BQKB1R w KQkq c6 0 6',
+    toMove: 'white',
+    introduction: 'A backward pawn is a pawn that cannot be supported by other pawns. Blockading it prevents it from advancing and fixes the weakness.',
+    keyIdeas: [
+      'Block backward pawns to fix the weakness',
+      'Use knights or other pieces to blockade',
+      'Prevent pawn advances with blockaders',
+      'Control squares in front of weak pawns'
+    ],
+    mainLine: [
+      {
+        move: 'Be2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Developing, preparing to castle.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'Be7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White castles for king safety.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles as well.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Our knight blockades Black\'s backward pawn on d6, preventing it from advancing and fixing the weakness.',
+        highlights: ['d5'],
+        conceptTag: 'Blockade'
+      }
+    ],
+    summary: 'Blockading backward pawns fixes them as weaknesses. The blockader controls squares and prevents the pawn from advancing to safety.',
+    keyTakeaways: [
+      'Backward pawns are chronic weaknesses',
+      'Blockade them to prevent advances',
+      'Knights are excellent blockading pieces',
+      'The blockader gains control of key squares'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Pawn structure theory'
+  });
+  
   return patterns;
 }
 
@@ -911,6 +1171,70 @@ function generateExchangeStrategyPatterns(): EnhancedPattern[] {
     source: 'Exchange strategy principles'
   });
   
+  // Pattern 2: Simplifying with Exchanges
+  patterns.push({
+    id: 'exchange-simplifying-position',
+    category: 'EXCHANGE_STRATEGY',
+    title: 'Simplifying to a Better Endgame',
+    subtitle: 'Trading to convert an advantage',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'When you have a positional advantage, sometimes the best plan is to simplify by exchanging pieces. This reduces your opponent\'s counterplay and brings you closer to the endgame.',
+    keyIdeas: [
+      'Exchange pieces when you have an advantage',
+      'Simplify to convert positional advantages',
+      'Reduce opponent\'s counterplay with exchanges',
+      'Trade toward favorable endgames'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling to safety first.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White develops the knight.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nxe5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We exchange knights, simplifying the position. This reduces Black\'s counterplay while maintaining our central control.',
+        conceptTag: 'Exchange'
+      }
+    ],
+    summary: 'Strategic exchanges can simplify positions and convert advantages. When ahead, trade pieces to reduce counterplay and reach favorable endgames.',
+    keyTakeaways: [
+      'Exchange when you have an advantage',
+      'Simplify to reduce counterplay',
+      'Trade toward better endgames',
+      'Keep your advantage through simplification'
+    ],
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: 'Strategic exchange principles'
+  });
+  
   return patterns;
 }
 
@@ -973,6 +1297,71 @@ function generatePawnBreaksPatterns(): EnhancedPattern[] {
     difficulty: 3,
     estimatedMinutes: 5,
     source: 'Pawn break principles'
+  });
+  
+  // Pattern 2: d5 Pawn Break
+  patterns.push({
+    id: 'pawn-break-d5-break',
+    category: 'PAWN_BREAKS',
+    title: 'The d5 Pawn Break',
+    subtitle: 'Challenging the center',
+    fen: 'r1bqkb1r/ppp2ppp/2n2n2/3p4/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq e3 0 6',
+    toMove: 'black',
+    introduction: 'The d5 pawn break challenges White\'s pawn center and opens lines for Black\'s pieces. Timing and preparation are crucial for effective pawn breaks.',
+    keyIdeas: [
+      'Use pawn breaks to challenge central structures',
+      'Prepare breaks with piece development',
+      'Time breaks for maximum effect',
+      'Open files for your pieces'
+    ],
+    mainLine: [
+      {
+        move: 'Be7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'Be2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White develops.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White castles as well.',
+        conceptTag: ''
+      },
+      {
+        move: 'd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The pawn break! This challenges White\'s center and opens the d-file for Black\'s pieces.',
+        highlights: ['d5'],
+        conceptTag: 'Pawn Break'
+      }
+    ],
+    summary: 'Pawn breaks like d5 challenge central pawn structures and open lines. Properly timed breaks can completely change the character of the position.',
+    keyTakeaways: [
+      'Pawn breaks challenge central structures',
+      'Prepare breaks with development',
+      'Timing is crucial for effective breaks',
+      'Breaks open lines for piece activity'
+    ],
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: 'Pawn break theory'
   });
   
   return patterns;
@@ -1046,12 +1435,91 @@ function generatePieceCoordinationPatterns(): EnhancedPattern[] {
     source: 'Piece coordination principles'
   });
   
+  // Pattern 2: Coordinating Rooks on Same Rank
+  patterns.push({
+    id: 'piece-coordination-doubled-rooks',
+    category: 'PIECE_COORDINATION',
+    title: 'Doubling Rooks on an Open File',
+    subtitle: 'Maximum pressure with rooks',
+    fen: 'r2qkb1r/ppp2ppp/2np1n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: 'Doubling rooks on an open file is one of the most powerful forms of piece coordination. The two rooks support each other and create maximum pressure.',
+    keyIdeas: [
+      'Double rooks on open files',
+      'Rooks support each other when doubled',
+      'Create maximum pressure with coordinated rooks',
+      'Use doubled rooks to penetrate to the 7th rank'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling and activating the rook.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Be7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'd4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White opens the d-file.',
+        conceptTag: 'Center'
+      },
+      {
+        move: 'exd4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black captures, opening the d-file.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nxd4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White recaptures.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      },
+      {
+        move: 'Rd1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We place our rook on the d-file, coordinating with the other rook for potential doubling.',
+        highlights: ['d1'],
+        conceptTag: 'Piece Coordination'
+      }
+    ],
+    summary: 'Doubled rooks on an open file create tremendous pressure. Coordinate your rooks to work together, especially on open files and the 7th rank.',
+    keyTakeaways: [
+      'Double rooks on open files for maximum pressure',
+      'Coordinated rooks are extremely powerful',
+      'Use doubled rooks to penetrate enemy territory',
+      'Support rooks with other pieces'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Rook coordination principles'
+  });
+  
   return patterns;
 }
 
 // Main generation function
 async function generateAndValidatePatterns() {
-  console.log('🎯 Starting AI-Assisted Pattern Generation - Batch 4\n');
+  console.log('🎯 Starting AI-Assisted Pattern Generation - Batch 5\n');
   console.log('Generating patterns with immediate validation...\n');
   
   const allPatterns: EnhancedPattern[] = [];
@@ -1074,8 +1542,8 @@ async function generateAndValidatePatterns() {
     { name: 'PIECE_COORDINATION', fn: generatePieceCoordinationPatterns },
   ];
   
-  console.log('Note: Batch 4 - Adding CRITICAL categories.');
-  console.log('Focus: BLOCKADE, EXCHANGE_STRATEGY, PAWN_BREAKS, PIECE_COORDINATION\n');
+  console.log('Note: Batch 5 - Expanding patterns in all categories.');
+  console.log('Focus: Adding 2nd patterns to BLOCKADE, EXCHANGE_STRATEGY, PAWN_BREAKS, PIECE_COORDINATION, KNIGHT_PLACEMENT, CENTRALIZATION, KING_ACTIVITY\n');
   
   for (const { name, fn } of generators) {
     console.log(`\n📦 Generating ${name} patterns...`);
