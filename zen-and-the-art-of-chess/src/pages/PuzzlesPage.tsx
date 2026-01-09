@@ -1204,9 +1204,9 @@ export function PuzzlesPage() {
         </div>
 
         {/* Rating & Level Card */}
-        <div className="card p-3 sm:p-6">
-          <div className="flex items-center justify-between mb-3 sm:mb-4">
-            <div className="flex items-center gap-2 sm:gap-4">
+        <div className="card p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-5">
+            <div className="flex items-center gap-3 sm:gap-4">
               {/* Level Badge - Chess.com style */}
               <div 
                 className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center font-bold text-xl sm:text-2xl shrink-0"
@@ -1217,25 +1217,25 @@ export function PuzzlesPage() {
               >
                 <span className="text-white">{levelInfo.level}</span>
               </div>
-              <div>
-                <div className="text-[10px] sm:text-sm" style={{ color: 'var(--text-muted)' }}>Rating</div>
-                <div className="text-xl sm:text-3xl font-display font-bold" style={{ color: tierConfig.color }}>
+              <div className="min-w-0">
+                <div className="text-[10px] sm:text-sm mb-0.5" style={{ color: 'var(--text-muted)' }}>Rating</div>
+                <div className="text-xl sm:text-3xl font-display font-bold truncate" style={{ color: tierConfig.color }}>
                   {stats.rating.toLocaleString()}
                 </div>
-                <div className="text-[10px] sm:text-sm" style={{ color: tierConfig.color }}>
+                <div className="text-[10px] sm:text-sm mt-0.5 break-words" style={{ color: tierConfig.color }}>
                   {tierConfig.name} • Level {levelInfo.level}
                 </div>
               </div>
             </div>
-            <div className="text-right">
+            <div className="text-right shrink-0 ml-2">
               <div className="stat-value text-gradient text-lg sm:text-2xl">{stats.puzzlesSolved}</div>
               <div className="stat-label text-[10px] sm:text-xs">Solved</div>
             </div>
           </div>
 
           {/* XP Progress to next level - Chess.com style */}
-          <div className="mb-3">
-            <div className="flex justify-between text-xs mb-1.5" style={{ color: 'var(--text-muted)' }}>
+          <div className="mb-3 sm:mb-4 px-1">
+            <div className="flex justify-between text-xs mb-1.5 sm:mb-2" style={{ color: 'var(--text-muted)' }}>
               <span>Level {levelInfo.level}</span>
               <span>{levelInfo.currentXp}/{levelInfo.xpForNextLevel} XP</span>
             </div>
@@ -1248,21 +1248,21 @@ export function PuzzlesPage() {
                 }}
               />
             </div>
-            <div className="text-right text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+            <div className="text-right text-xs mt-1 sm:mt-1.5" style={{ color: 'var(--text-muted)' }}>
               {levelInfo.xpForNextLevel - levelInfo.currentXp} XP to Level {levelInfo.level + 1}
             </div>
           </div>
 
           {/* Progress to next tier */}
           {nextTierConfig && (
-            <div className="pt-3 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
-              <div className="flex justify-between text-xs mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                <span>{tierConfig.name}</span>
-                <span>{nextTierConfig.name} ({nextTierConfig.minRating})</span>
+            <div className="pt-3 sm:pt-4 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+              <div className="flex justify-between text-xs mb-1.5 sm:mb-2 px-1" style={{ color: 'var(--text-muted)' }}>
+                <span className="truncate">{tierConfig.name}</span>
+                <span className="ml-2 whitespace-nowrap">{nextTierConfig.name} ({nextTierConfig.minRating})</span>
               </div>
-              <div className="progress-bar">
+              <div className="progress-bar h-2 sm:h-2.5">
                 <div 
-                  className="progress-bar-fill"
+                  className="progress-bar-fill h-full"
                   style={{ width: `${Math.min(100, progressToNextTier)}%`, background: tierConfig.color }}
                 />
               </div>
@@ -1271,50 +1271,50 @@ export function PuzzlesPage() {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-4 gap-1.5 sm:gap-4">
-          <div className="stat-card p-2 sm:p-4">
-            <div className="stat-value text-sm sm:text-xl" style={{ color: '#4ade80' }}>{accuracy}%</div>
-            <div className="stat-label text-[9px] sm:text-xs">Accuracy</div>
+        <div className="grid grid-cols-4 gap-2 sm:gap-4">
+          <div className="stat-card p-3 sm:p-4 flex flex-col items-center justify-center min-h-[80px] sm:min-h-[100px]">
+            <div className="stat-value text-base sm:text-xl mb-1" style={{ color: '#4ade80' }}>{accuracy}%</div>
+            <div className="stat-label text-[10px] sm:text-xs text-center">ACCURACY</div>
           </div>
-          <div className="stat-card p-2 sm:p-4">
-            <div className="stat-value text-sm sm:text-xl text-gradient">{stats.currentStreak}</div>
-            <div className="stat-label text-[9px] sm:text-xs">Streak</div>
+          <div className="stat-card p-3 sm:p-4 flex flex-col items-center justify-center min-h-[80px] sm:min-h-[100px]">
+            <div className="stat-value text-base sm:text-xl text-gradient mb-1">{stats.currentStreak}</div>
+            <div className="stat-label text-[10px] sm:text-xs text-center">STREAK</div>
           </div>
-          <div className="stat-card p-2 sm:p-4">
-            <div className="stat-value text-sm sm:text-xl" style={{ color: '#f59e0b' }}>{stats.bestStreak}</div>
-            <div className="stat-label text-[9px] sm:text-xs">Best</div>
+          <div className="stat-card p-3 sm:p-4 flex flex-col items-center justify-center min-h-[80px] sm:min-h-[100px]">
+            <div className="stat-value text-base sm:text-xl mb-1" style={{ color: '#f59e0b' }}>{stats.bestStreak}</div>
+            <div className="stat-label text-[10px] sm:text-xs text-center">BEST</div>
           </div>
-          <div className="stat-card p-2 sm:p-4">
-            <div className="stat-value text-sm sm:text-xl" style={{ color: '#ec4899' }}>{stats.rushHighScore}</div>
-            <div className="stat-label text-[9px] sm:text-xs">Rush</div>
+          <div className="stat-card p-3 sm:p-4 flex flex-col items-center justify-center min-h-[80px] sm:min-h-[100px]">
+            <div className="stat-value text-base sm:text-xl mb-1" style={{ color: '#ec4899' }}>{stats.rushHighScore}</div>
+            <div className="stat-label text-[10px] sm:text-xs text-center">RUSH</div>
           </div>
         </div>
 
         {/* Mode Selection */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {/* Rated Puzzles */}
           <button
             onClick={() => startMode('rated')}
-            className="card-interactive p-3 sm:p-6 text-left group"
+            className="card-interactive p-4 sm:p-6 text-left group min-h-[120px] sm:min-h-[160px]"
           >
-            <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className="flex items-start justify-between mb-3 sm:mb-4">
               <div 
-                className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-xl sm:text-2xl"
+                className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-xl sm:text-2xl shrink-0"
                 style={{ background: 'rgba(74, 222, 128, 0.1)' }}
               >
                 ♟️
               </div>
-              <svg className="w-4 h-4 sm:w-5 sm:h-5 opacity-50 sm:opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#4ade80' }}>
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 opacity-50 sm:opacity-0 group-hover:opacity-100 transition-opacity shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#4ade80' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-            <h3 className="text-sm sm:text-xl font-display mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
+            <h3 className="text-base sm:text-xl font-display mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
               Rated
             </h3>
-            <p className="text-[10px] sm:text-sm font-display italic mb-1 sm:mb-2" style={{ color: '#4ade80' }}>
+            <p className="text-xs sm:text-sm font-display italic mb-1 sm:mb-2" style={{ color: '#4ade80' }}>
               Adaptive
             </p>
-            <p className="text-[10px] sm:text-sm hidden sm:block" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-xs sm:text-sm hidden sm:block" style={{ color: 'var(--text-tertiary)' }}>
               Puzzles adapt to your skill level
             </p>
           </button>
@@ -1322,26 +1322,26 @@ export function PuzzlesPage() {
           {/* Puzzle Rush */}
           <button
             onClick={() => startMode('rush')}
-            className="card-interactive p-3 sm:p-6 text-left group"
+            className="card-interactive p-4 sm:p-6 text-left group min-h-[120px] sm:min-h-[160px]"
           >
-            <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className="flex items-start justify-between mb-3 sm:mb-4">
               <div 
-                className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-xl sm:text-2xl"
+                className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-xl sm:text-2xl shrink-0"
                 style={{ background: 'rgba(249, 115, 22, 0.1)' }}
               >
                 🔥
               </div>
-              <svg className="w-4 h-4 sm:w-5 sm:h-5 opacity-50 sm:opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#f97316' }}>
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 opacity-50 sm:opacity-0 group-hover:opacity-100 transition-opacity shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#f97316' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-            <h3 className="text-sm sm:text-xl font-display mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
+            <h3 className="text-base sm:text-xl font-display mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
               Rush
             </h3>
-            <p className="text-[10px] sm:text-sm font-display italic mb-1 sm:mb-2" style={{ color: '#f97316' }}>
+            <p className="text-xs sm:text-sm font-display italic mb-1 sm:mb-2" style={{ color: '#f97316' }}>
               3 min, 3 strikes
             </p>
-            <p className="text-[10px] sm:text-sm hidden sm:block" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-xs sm:text-sm hidden sm:block" style={{ color: 'var(--text-tertiary)' }}>
               Race against time!
             </p>
           </button>
@@ -1349,26 +1349,26 @@ export function PuzzlesPage() {
           {/* Puzzle Streak */}
           <button
             onClick={() => startMode('streak')}
-            className="card-interactive p-3 sm:p-6 text-left group"
+            className="card-interactive p-4 sm:p-6 text-left group min-h-[120px] sm:min-h-[160px]"
           >
-            <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className="flex items-start justify-between mb-3 sm:mb-4">
               <div 
-                className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-xl sm:text-2xl"
+                className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-xl sm:text-2xl shrink-0"
                 style={{ background: 'rgba(236, 72, 153, 0.1)' }}
               >
                 ⚡
               </div>
-              <svg className="w-4 h-4 sm:w-5 sm:h-5 opacity-50 sm:opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#ec4899' }}>
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 opacity-50 sm:opacity-0 group-hover:opacity-100 transition-opacity shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#ec4899' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-            <h3 className="text-sm sm:text-xl font-display mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
+            <h3 className="text-base sm:text-xl font-display mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
               Streak
             </h3>
-            <p className="text-[10px] sm:text-sm font-display italic mb-1 sm:mb-2" style={{ color: '#ec4899' }}>
+            <p className="text-xs sm:text-sm font-display italic mb-1 sm:mb-2" style={{ color: '#ec4899' }}>
               Don't fail!
             </p>
-            <p className="text-[10px] sm:text-sm hidden sm:block" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-xs sm:text-sm hidden sm:block" style={{ color: 'var(--text-tertiary)' }}>
               One mistake ends it
             </p>
           </button>
@@ -1376,31 +1376,31 @@ export function PuzzlesPage() {
           {/* Daily Puzzle */}
           <button
             onClick={() => startMode('daily')}
-            className="card-interactive p-3 sm:p-6 text-left group"
+            className="card-interactive p-4 sm:p-6 text-left group min-h-[120px] sm:min-h-[160px]"
             disabled={stats.dailyPuzzleSolved && stats.dailyPuzzleDate === new Date().toISOString().split('T')[0]}
           >
-            <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className="flex items-start justify-between mb-3 sm:mb-4">
               <div 
-                className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-xl sm:text-2xl"
+                className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-xl sm:text-2xl shrink-0"
                 style={{ background: 'rgba(99, 102, 241, 0.1)' }}
               >
                 📅
               </div>
               {stats.dailyPuzzleSolved && stats.dailyPuzzleDate === new Date().toISOString().split('T')[0] ? (
-                <span className="badge badge-green text-[10px] sm:text-xs">✓</span>
+                <span className="badge badge-green text-xs sm:text-sm shrink-0">✓</span>
               ) : (
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 opacity-50 sm:opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#6366f1' }}>
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 opacity-50 sm:opacity-0 group-hover:opacity-100 transition-opacity shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#6366f1' }}>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               )}
             </div>
-            <h3 className="text-sm sm:text-xl font-display mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
+            <h3 className="text-base sm:text-xl font-display mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
               Daily
             </h3>
-            <p className="text-[10px] sm:text-sm font-display italic mb-1 sm:mb-2" style={{ color: '#6366f1' }}>
+            <p className="text-xs sm:text-sm font-display italic mb-1 sm:mb-2" style={{ color: '#6366f1' }}>
               New daily
             </p>
-            <p className="text-[10px] sm:text-sm hidden sm:block" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-xs sm:text-sm hidden sm:block" style={{ color: 'var(--text-tertiary)' }}>
               Fresh challenge every day
             </p>
           </button>

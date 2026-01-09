@@ -698,44 +698,47 @@ export function FlashTrainingPage() {
         </header>
         
         {/* Stats Overview */}
-        <div className="grid grid-cols-4 gap-1.5 sm:gap-4">
-          <div className="stat-card p-2 sm:p-4">
-            <div className="stat-value text-gradient text-sm sm:text-xl">{stats.totalSessions}</div>
-            <div className="stat-label text-[9px] sm:text-xs">Sessions</div>
+        <div className="grid grid-cols-4 gap-2 sm:gap-4">
+          <div className="stat-card p-3 sm:p-4 flex flex-col items-center justify-center min-h-[80px] sm:min-h-[100px]">
+            <div className="stat-value text-gradient text-base sm:text-xl mb-1">{stats.totalSessions}</div>
+            <div className="stat-label text-[10px] sm:text-xs text-center">SESSIONS</div>
           </div>
-          <div className="stat-card p-2 sm:p-4">
-            <div className="stat-value text-sm sm:text-xl" style={{ color: '#4ade80' }}>{accuracy}%</div>
-            <div className="stat-label text-[9px] sm:text-xs">Accuracy</div>
+          <div className="stat-card p-3 sm:p-4 flex flex-col items-center justify-center min-h-[80px] sm:min-h-[100px]">
+            <div className="stat-value text-base sm:text-xl mb-1" style={{ color: '#4ade80' }}>{accuracy}%</div>
+            <div className="stat-label text-[10px] sm:text-xs text-center">ACCURACY</div>
           </div>
-          <div className="stat-card p-2 sm:p-4">
-            <div className="stat-value" style={{ color: '#f59e0b' }}>{stats.bestStreak}</div>
-            <div className="stat-label">Best Streak</div>
+          <div className="stat-card p-3 sm:p-4 flex flex-col items-center justify-center min-h-[80px] sm:min-h-[100px]">
+            <div className="stat-value text-base sm:text-xl mb-1" style={{ color: '#f59e0b' }}>{stats.bestStreak}</div>
+            <div className="stat-label text-[10px] sm:text-xs text-center break-words">BEST STREAK</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-value" style={{ color: '#a855f7' }}>{stats.totalQuestions}</div>
-            <div className="stat-label">Questions</div>
+          <div className="stat-card p-3 sm:p-4 flex flex-col items-center justify-center min-h-[80px] sm:min-h-[100px]">
+            <div className="stat-value text-base sm:text-xl mb-1" style={{ color: '#a855f7' }}>{stats.totalQuestions}</div>
+            <div className="stat-label text-[10px] sm:text-xs text-center">QUESTIONS</div>
           </div>
         </div>
         
         {/* Difficulty Selection */}
-        <div className="card p-3 sm:p-6">
-          <h3 className="text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4" style={{ color: 'var(--text-muted)' }}>
+        <div className="card p-4 sm:p-6">
+          <h3 className="text-xs sm:text-sm uppercase tracking-wider mb-4 sm:mb-5" style={{ color: 'var(--text-muted)' }}>
             Difficulty
           </h3>
-          <div className="grid grid-cols-4 gap-1.5 sm:gap-3">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3">
             {(Object.keys(DIFFICULTY_SETTINGS) as Difficulty[]).map(d => (
               <button
                 key={d}
                 onClick={() => setDifficulty(d)}
-                className={`p-2 sm:p-4 rounded-lg sm:rounded-xl text-left transition-all ${
+                className={`p-3 sm:p-4 rounded-lg sm:rounded-xl text-center transition-all min-h-[64px] sm:min-h-[80px] flex flex-col items-center justify-center ${
                   difficulty === d ? 'ring-2 ring-[var(--accent-primary)]' : ''
                 }`}
-                style={{ background: difficulty === d ? 'var(--accent-primary)' + '20' : 'var(--bg-tertiary)' }}
+                style={{ 
+                  background: difficulty === d ? 'var(--accent-primary)' + '20' : 'var(--bg-tertiary)',
+                  border: difficulty === d ? '1px solid var(--accent-primary)' : '1px solid transparent'
+                }}
               >
-                <div className="font-medium capitalize text-xs sm:text-base mb-0.5 sm:mb-1" style={{ color: 'var(--text-primary)' }}>
-                  {d.slice(0, 3)}
+                <div className="font-medium capitalize text-xs sm:text-base mb-1 sm:mb-1.5" style={{ color: 'var(--text-primary)' }}>
+                  {d.slice(0, 3).toUpperCase()}
                 </div>
-                <div className="text-[9px] sm:text-xs" style={{ color: 'var(--text-muted)' }}>
+                <div className="text-[10px] sm:text-xs" style={{ color: 'var(--text-muted)' }}>
                   {DIFFICULTY_SETTINGS[d].flashTime / 1000}s
                 </div>
               </button>
@@ -744,41 +747,43 @@ export function FlashTrainingPage() {
         </div>
         
         {/* Study Options */}
-        <div className="card p-3 sm:p-6">
-          <h3 className="text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4" style={{ color: 'var(--text-muted)' }}>
+        <div className="card p-4 sm:p-6">
+          <h3 className="text-xs sm:text-sm uppercase tracking-wider mb-4 sm:mb-5" style={{ color: 'var(--text-muted)' }}>
             Learning Options
           </h3>
-          <div className="space-y-3">
-            <label className="flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-[var(--bg-tertiary)] transition-colors" style={{ background: studyMode ? 'var(--accent-primary)' + '20' : 'var(--bg-tertiary)' }}>
-              <div>
-                <div className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>📚 Study Mode</div>
-                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Keep board visible while answering</div>
+          <div className="space-y-3 sm:space-y-4">
+            <label className="flex items-center justify-between p-3 sm:p-4 rounded-lg cursor-pointer hover:bg-[var(--bg-hover)] transition-colors gap-3 sm:gap-4" style={{ background: studyMode ? 'var(--accent-primary)' + '20' : 'var(--bg-tertiary)' }}>
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-sm sm:text-base mb-1" style={{ color: 'var(--text-primary)' }}>📚 Study Mode</div>
+                <div className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>Keep board visible while answering</div>
               </div>
               <input
                 type="checkbox"
                 checked={studyMode}
                 onChange={(e) => setStudyMode(e.target.checked)}
-                className="w-5 h-5 rounded"
+                className="w-5 h-5 sm:w-6 sm:h-6 rounded shrink-0"
+                style={{ minWidth: '20px', minHeight: '20px' }}
               />
             </label>
-            <label className="flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-[var(--bg-tertiary)] transition-colors" style={{ background: showHints ? 'var(--accent-primary)' + '20' : 'var(--bg-tertiary)' }}>
-              <div>
-                <div className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>💡 Observation Hints</div>
-                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>Show what to look for during viewing</div>
+            <label className="flex items-center justify-between p-3 sm:p-4 rounded-lg cursor-pointer hover:bg-[var(--bg-hover)] transition-colors gap-3 sm:gap-4" style={{ background: showHints ? 'var(--accent-primary)' + '20' : 'var(--bg-tertiary)' }}>
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-sm sm:text-base mb-1" style={{ color: 'var(--text-primary)' }}>💡 Observation Hints</div>
+                <div className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>Show what to look for during viewing</div>
               </div>
               <input
                 type="checkbox"
                 checked={showHints}
                 onChange={(e) => setShowHints(e.target.checked)}
-                className="w-5 h-5 rounded"
+                className="w-5 h-5 sm:w-6 sm:h-6 rounded shrink-0"
+                style={{ minWidth: '20px', minHeight: '20px' }}
               />
             </label>
           </div>
         </div>
         
         {/* Training Modes */}
-        <div className="space-y-3 sm:space-y-4">
-          <div className="flex items-center justify-between">
+        <div className="space-y-4 sm:space-y-5 pb-4 sm:pb-6" style={{ paddingBottom: 'calc(var(--safe-area-inset-bottom, 0px) + 2rem)' }}>
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
             <h3 className="text-xs sm:text-sm uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
               Training Modes
             </h3>
@@ -788,13 +793,19 @@ export function FlashTrainingPage() {
                 setMode('piece-count');
                 startSession('piece-count');
               }}
-              className="text-xs px-3 py-1 rounded-full font-medium"
-              style={{ background: 'var(--accent-primary)', color: 'white' }}
+              className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-medium shrink-0 min-h-[36px] sm:min-h-[44px] transition-all hover:scale-105"
+              style={{ 
+                background: 'var(--accent-primary)', 
+                color: 'white',
+                minHeight: '44px', // Minimum tap target
+              }}
             >
-              🎓 Learning Path
+              <span className="mr-1">🎓</span>
+              <span className="hidden sm:inline">Learning Path</span>
+              <span className="sm:hidden">Path</span>
             </button>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {(Object.entries(MODE_INFO) as [FlashMode, typeof MODE_INFO[FlashMode]][])
               .filter(([key]) => key !== 'menu')
               .map(([key, info]) => {
@@ -807,25 +818,25 @@ export function FlashTrainingPage() {
                   <button
                     key={key}
                     onClick={() => { setMode(key); startSession(key); }}
-                    className="card-interactive p-5 text-left group"
+                    className="card-interactive p-4 sm:p-5 text-left group min-h-[140px] sm:min-h-[160px]"
                   >
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start justify-between mb-3 sm:mb-4">
                       <div 
-                        className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-2xl shrink-0"
                         style={{ background: info.color + '20' }}
                       >
                         {info.icon}
                       </div>
                       {modeStats?.total > 0 && (
-                        <span className="text-xs font-mono" style={{ color: modeAccuracy >= 70 ? '#4ade80' : '#f59e0b' }}>
+                        <span className="text-xs sm:text-sm font-mono shrink-0 ml-2" style={{ color: modeAccuracy >= 70 ? '#4ade80' : '#f59e0b' }}>
                           {modeAccuracy}%
                         </span>
                       )}
                     </div>
-                    <h3 className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+                    <h3 className="font-medium text-sm sm:text-base mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
                       {info.name}
                     </h3>
-                    <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                    <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
                       {info.description}
                     </p>
                   </button>
@@ -1632,11 +1643,25 @@ export function FlashTrainingPage() {
   }
   
   // If no render condition matches, show menu (fallback)
+  // Use useEffect to handle mode change to avoid JSX rendering issue
+  useEffect(() => {
+    if (!sessionActive && !reviewMode && positionsCompleted === 0) {
+      // Only reset to menu if we're not already in menu
+      const currentMode = mode as FlashMode;
+      if (currentMode !== 'menu') {
+        setMode('menu');
+      }
+    }
+  }, [sessionActive, reviewMode, positionsCompleted, mode]);
+
   if (!sessionActive && !reviewMode && positionsCompleted === 0) {
+    // Check mode before TypeScript narrowing happens
+    const currentMode = mode as FlashMode;
+    if (currentMode !== 'menu') {
+      return null; // Return null while useEffect updates mode
+    }
     return (
       <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
-        {/* Redirect to menu */}
-        {mode !== 'menu' && setMode('menu')}
         <div className="text-center" style={{ color: 'var(--text-muted)' }}>
           Loading...
         </div>

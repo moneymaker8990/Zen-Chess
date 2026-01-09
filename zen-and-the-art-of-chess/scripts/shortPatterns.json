@@ -1,0 +1,446 @@
+[
+  {
+    "id": "outpost-knight-d5",
+    "startLine": 277,
+    "endLine": 421,
+    "moveCount": 0
+  },
+  {
+    "id": "outpost-creation-e5",
+    "startLine": 450,
+    "endLine": 489,
+    "moveCount": 0
+  },
+  {
+    "id": "outpost-e5-sicilian-deep",
+    "startLine": 581,
+    "endLine": 742,
+    "moveCount": 0
+  },
+  {
+    "id": "outpost-c5-queenside-deep",
+    "startLine": 771,
+    "endLine": 928,
+    "moveCount": 0
+  },
+  {
+    "id": "outpost-f5-kingside-deep",
+    "startLine": 954,
+    "endLine": 1136,
+    "moveCount": 0
+  },
+  {
+    "id": "outpost-e6-deep-penetration",
+    "startLine": 1162,
+    "endLine": 1340,
+    "moveCount": 0
+  },
+  {
+    "id": "outpost-bishop-long-diagonal",
+    "startLine": 1369,
+    "endLine": 1558,
+    "moveCount": 0
+  },
+  {
+    "id": "weak-iqp-blockade",
+    "startLine": 1587,
+    "endLine": 1743,
+    "moveCount": 0
+  },
+  {
+    "id": "weak-backward-pawn-deep",
+    "startLine": 1772,
+    "endLine": 1926,
+    "moveCount": 0
+  },
+  {
+    "id": "weak-doubled-pawns-deep",
+    "startLine": 1955,
+    "endLine": 2089,
+    "moveCount": 0
+  },
+  {
+    "id": "weak-hanging-pawns-deep",
+    "startLine": 2115,
+    "endLine": 2276,
+    "moveCount": 0
+  },
+  {
+    "id": "weak-pawns-tripled-pawns-deep",
+    "startLine": 2302,
+    "endLine": 2452,
+    "moveCount": 0
+  },
+  {
+    "id": "weak-pawns-endgame-exploitation",
+    "startLine": 2481,
+    "endLine": 2657,
+    "moveCount": 0
+  },
+  {
+    "id": "structure-minority-attack",
+    "startLine": 2686,
+    "endLine": 2719,
+    "moveCount": 0
+  },
+  {
+    "id": "minority-attack-timing-deep",
+    "startLine": 2917,
+    "endLine": 3073,
+    "moveCount": 0
+  },
+  {
+    "id": "minority-attack-exploitation-deep",
+    "startLine": 3102,
+    "endLine": 3255,
+    "moveCount": 0
+  },
+  {
+    "id": "minority-attack-queenside-breakthrough-deep",
+    "startLine": 3281,
+    "endLine": 3455,
+    "moveCount": 0
+  },
+  {
+    "id": "minority-attack-structural-damage-deep",
+    "startLine": 3481,
+    "endLine": 3640,
+    "moveCount": 0
+  },
+  {
+    "id": "minority-attack-endgame-exploitation-deep",
+    "startLine": 3669,
+    "endLine": 3825,
+    "moveCount": 0
+  },
+  {
+    "id": "structure-benoni-deep",
+    "startLine": 3851,
+    "endLine": 4026,
+    "moveCount": 0
+  },
+  {
+    "id": "structure-french-chain-deep",
+    "startLine": 4055,
+    "endLine": 4214,
+    "moveCount": 0
+  },
+  {
+    "id": "structure-carlsbad-deep",
+    "startLine": 4243,
+    "endLine": 4396,
+    "moveCount": 0
+  },
+  {
+    "id": "structure-stonewall-deep",
+    "startLine": 4422,
+    "endLine": 4601,
+    "moveCount": 0
+  },
+  {
+    "id": "structure-hedgehog-deep",
+    "startLine": 4630,
+    "endLine": 4813,
+    "moveCount": 0
+  },
+  {
+    "id": "prophylaxis-prevent-break",
+    "startLine": 4842,
+    "endLine": 4881,
+    "moveCount": 0
+  },
+  {
+    "id": "prophylaxis-prevent-e5-deep",
+    "startLine": 5034,
+    "endLine": 5187,
+    "moveCount": 0
+  },
+  {
+    "id": "prophylaxis-petrosian-deep",
+    "startLine": 5216,
+    "endLine": 5374,
+    "moveCount": 0
+  },
+  {
+    "id": "prophylaxis-prevent-activity-deep",
+    "startLine": 5400,
+    "endLine": 5556,
+    "moveCount": 0
+  },
+  {
+    "id": "prophylaxis-preventing-counterplay-deep",
+    "startLine": 5582,
+    "endLine": 5725,
+    "moveCount": 0
+  },
+  {
+    "id": "prophylaxis-preventing-tactics-deep",
+    "startLine": 5754,
+    "endLine": 5916,
+    "moveCount": 0
+  },
+  {
+    "id": "open-files-seventh-rank",
+    "startLine": 5945,
+    "endLine": 5979,
+    "moveCount": 0
+  },
+  {
+    "id": "open-files-control-first",
+    "startLine": 6176,
+    "endLine": 6330,
+    "moveCount": 0
+  },
+  {
+    "id": "open-files-attack-deep",
+    "startLine": 6359,
+    "endLine": 6515,
+    "moveCount": 0
+  },
+  {
+    "id": "open-files-doubled-rooks-deep",
+    "startLine": 6541,
+    "endLine": 6714,
+    "moveCount": 0
+  },
+  {
+    "id": "open-files-queen-rook-battery-deep",
+    "startLine": 6740,
+    "endLine": 6885,
+    "moveCount": 0
+  },
+  {
+    "id": "open-files-diagonal-control-deep",
+    "startLine": 6914,
+    "endLine": 7079,
+    "moveCount": 0
+  },
+  {
+    "id": "bishop-pair-open-position",
+    "startLine": 7108,
+    "endLine": 7141,
+    "moveCount": 0
+  },
+  {
+    "id": "bishop-pair-endgame-deep",
+    "startLine": 7312,
+    "endLine": 7471,
+    "moveCount": 0
+  },
+  {
+    "id": "bishop-pair-middlegame-deep",
+    "startLine": 7500,
+    "endLine": 7657,
+    "moveCount": 0
+  },
+  {
+    "id": "bishop-pair-diagonal-control-deep",
+    "startLine": 7683,
+    "endLine": 7860,
+    "moveCount": 0
+  },
+  {
+    "id": "bishop-pair-endgame-technique-deep",
+    "startLine": 7886,
+    "endLine": 8045,
+    "moveCount": 0
+  },
+  {
+    "id": "bishop-pair-middlegame-technique-deep",
+    "startLine": 8074,
+    "endLine": 8240,
+    "moveCount": 0
+  },
+  {
+    "id": "king-activity-endgame",
+    "startLine": 8269,
+    "endLine": 8309,
+    "moveCount": 0
+  },
+  {
+    "id": "king-activity-march-deep",
+    "startLine": 8464,
+    "endLine": 8620,
+    "moveCount": 0
+  },
+  {
+    "id": "good-bad-bishop-french",
+    "startLine": 8649,
+    "endLine": 8683,
+    "moveCount": 0
+  },
+  {
+    "id": "good-bad-bishop-trade",
+    "startLine": 8865,
+    "endLine": 9021,
+    "moveCount": 0
+  },
+  {
+    "id": "good-bad-bishop-improve",
+    "startLine": 9050,
+    "endLine": 9212,
+    "moveCount": 0
+  },
+  {
+    "id": "good-bad-bishop-attack-deep",
+    "startLine": 9238,
+    "endLine": 9414,
+    "moveCount": 0
+  },
+  {
+    "id": "good-bad-bishop-transformation-deep",
+    "startLine": 9440,
+    "endLine": 9603,
+    "moveCount": 0
+  },
+  {
+    "id": "good-bad-bishop-exploiting-deep",
+    "startLine": 9632,
+    "endLine": 9790,
+    "moveCount": 0
+  },
+  {
+    "id": "space-advantage-restrict",
+    "startLine": 9819,
+    "endLine": 9851,
+    "moveCount": 0
+  },
+  {
+    "id": "space-maroczy-bind-deep",
+    "startLine": 10018,
+    "endLine": 10169,
+    "moveCount": 0
+  },
+  {
+    "id": "space-pawn-chain-deep",
+    "startLine": 10198,
+    "endLine": 10353,
+    "moveCount": 0
+  },
+  {
+    "id": "space-advantage-squeeze-deep",
+    "startLine": 10379,
+    "endLine": 10553,
+    "moveCount": 0
+  },
+  {
+    "id": "space-advantage-piece-activity-deep",
+    "startLine": 10579,
+    "endLine": 10753,
+    "moveCount": 0
+  },
+  {
+    "id": "space-advantage-closed-positions-deep",
+    "startLine": 10782,
+    "endLine": 10946,
+    "moveCount": 0
+  },
+  {
+    "id": "centralization-pieces",
+    "startLine": 10975,
+    "endLine": 11015,
+    "moveCount": 0
+  },
+  {
+    "id": "centralization-queen-deep",
+    "startLine": 11192,
+    "endLine": 11349,
+    "moveCount": 0
+  },
+  {
+    "id": "outpost-b5-ruy-lopez-deep",
+    "startLine": 11380,
+    "endLine": 11557,
+    "moveCount": 0
+  },
+  {
+    "id": "weak-pawn-chain-french-deep",
+    "startLine": 11584,
+    "endLine": 11756,
+    "moveCount": 0
+  },
+  {
+    "id": "structure-kings-indian-deep",
+    "startLine": 11783,
+    "endLine": 11951,
+    "moveCount": 0
+  },
+  {
+    "id": "open-files-rook-endgame-deep",
+    "startLine": 11978,
+    "endLine": 12149,
+    "moveCount": 0
+  },
+  {
+    "id": "bishop-pair-kingside-attack-deep",
+    "startLine": 12176,
+    "endLine": 12350,
+    "moveCount": 0
+  },
+  {
+    "id": "good-bad-bishop-endgame-deep",
+    "startLine": 12377,
+    "endLine": 12537,
+    "moveCount": 0
+  },
+  {
+    "id": "knight-placement-rim-deep",
+    "startLine": 12564,
+    "endLine": 12598,
+    "moveCount": 0
+  },
+  {
+    "id": "space-advantage-pawn-storm-deep",
+    "startLine": 12750,
+    "endLine": 12932,
+    "moveCount": 0
+  },
+  {
+    "id": "piece-coordination-all-pieces-deep",
+    "startLine": 12959,
+    "endLine": 13138,
+    "moveCount": 2
+  },
+  {
+    "id": "prophylaxis-preventing-breakthrough-deep",
+    "startLine": 13165,
+    "endLine": 13340,
+    "moveCount": 0
+  },
+  {
+    "id": "minority-attack-with-pieces-deep",
+    "startLine": 13367,
+    "endLine": 13539,
+    "moveCount": 0
+  },
+  {
+    "id": "pawn-breaks-central-deep",
+    "startLine": 13566,
+    "endLine": 13738,
+    "moveCount": 2
+  },
+  {
+    "id": "king-activity-queenside-march-deep",
+    "startLine": 13765,
+    "endLine": 13948,
+    "moveCount": 0
+  },
+  {
+    "id": "exchange-strategy-simplify-deep",
+    "startLine": 13975,
+    "endLine": 14130,
+    "moveCount": 2
+  },
+  {
+    "id": "blockade-with-pieces-deep",
+    "startLine": 14157,
+    "endLine": 14321,
+    "moveCount": 0
+  },
+  {
+    "id": "centralization-endgame-deep",
+    "startLine": 14348,
+    "endLine": 14522,
+    "moveCount": 0
+  }
+]

@@ -30,11 +30,21 @@ interface ButtonPosition {
 }
 
 // Default positions
-const getDefaultPosition = (): ButtonPosition => ({
-  x: typeof window !== 'undefined' ? window.innerWidth - 60 : 0,
-  y: typeof window !== 'undefined' ? window.innerHeight - 140 : 0,
-  side: 'right',
-});
+const getDefaultPosition = (): ButtonPosition => {
+  if (typeof window === 'undefined') return { x: 0, y: 0, side: 'right' };
+  
+  // On mobile (narrow screens), position higher to avoid overlapping CTAs
+  const isMobile = window.innerWidth <= 768;
+  const safeAreaBottom = isMobile ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom')) || 0 : 0;
+  const bottomNavHeight = isMobile ? 88 : 64; // Bottom navigation height
+  const defaultOffset = isMobile ? 100 : 140; // Higher on mobile
+  
+  return {
+    x: window.innerWidth - 60,
+    y: window.innerHeight - defaultOffset - bottomNavHeight - safeAreaBottom,
+    side: 'right',
+  };
+};
 
 // Load saved position from localStorage
 const loadSavedPosition = (): ButtonPosition | null => {
@@ -125,10 +135,24 @@ export function AskAnything({
   const contentRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   
-  // Load saved position on mount
+  // Load saved position on mount - adjust for mobile if needed
   useEffect(() => {
     const saved = loadSavedPosition();
     if (saved) {
+      // Adjust saved position for mobile screens if on mobile
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        const safeAreaBottom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom')) || 0;
+        const bottomNavHeight = 88;
+        const buttonHeight = 44;
+        const padding = 8;
+        const maxY = window.innerHeight - bottomNavHeight - buttonHeight - padding - safeAreaBottom;
+        
+        // If saved position would overlap, adjust it
+        if (saved.y > maxY) {
+          saved.y = maxY;
+        }
+      }
       setButtonPosition(saved);
     }
   }, []);
@@ -137,11 +161,20 @@ export function AskAnything({
   useEffect(() => {
     const handleResize = () => {
       setButtonPosition(prev => {
-        const maxX = window.innerWidth - 48;
-        const maxY = window.innerHeight - 100;
+        const isMobile = window.innerWidth <= 768;
+        const safeAreaBottom = isMobile ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom')) || 0 : 0;
+        const bottomNavHeight = isMobile ? 88 : 64;
+        const buttonHeight = 44;
+        const padding = 8;
+        
+        const maxX = window.innerWidth - buttonHeight - padding;
+        // Ensure FAB doesn't overlap bottom nav or CTAs - higher minimum on mobile
+        const minY = 60; // Below header
+        const maxY = window.innerHeight - bottomNavHeight - buttonHeight - padding - safeAreaBottom;
+        
         return {
-          x: Math.min(Math.max(8, prev.x), maxX),
-          y: Math.min(Math.max(60, prev.y), maxY),
+          x: Math.min(Math.max(padding, prev.x), maxX),
+          y: Math.min(Math.max(minY, prev.y), maxY),
           side: prev.x < window.innerWidth / 2 ? 'left' : 'right',
         };
       });
@@ -159,6 +192,9 @@ export function AskAnything({
     const padding = 8;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
+    const isMobile = viewportWidth <= 768;
+    const safeAreaBottom = isMobile ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom')) || 0 : 0;
+    const bottomNavHeight = isMobile ? 88 : 64;
     
     // Calculate final position
     let finalX = buttonPosition.x + info.offset.x;
@@ -168,9 +204,9 @@ export function AskAnything({
     const side: 'left' | 'right' = finalX < viewportWidth / 2 ? 'left' : 'right';
     finalX = side === 'left' ? padding : viewportWidth - buttonSize - padding;
     
-    // Clamp Y position
+    // Clamp Y position - ensure FAB doesn't overlap bottom nav or CTAs
     const minY = 60; // Below header
-    const maxY = viewportHeight - 100; // Above bottom nav
+    const maxY = viewportHeight - bottomNavHeight - buttonSize - padding - safeAreaBottom;
     finalY = Math.min(Math.max(minY, finalY), maxY);
     
     const newPosition: ButtonPosition = { x: finalX, y: finalY, side };
@@ -282,12 +318,21 @@ export function AskAnything({
           left: buttonPosition.x,
           top: buttonPosition.y,
           cursor: isDragging ? 'grabbing' : 'grab',
+          bottom: 'auto', // Ensure bottom is not set when using top positioning
         }}
         whileHover={{ scale: isDragging ? 1 : 1.1 }}
         whileTap={{ scale: 0.95 }}
         initial={false}
         animate={isOpen ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
         aria-label="Ask Chess Genius (drag to reposition)"
+        tabIndex={0}
+        onFocus={(e) => {
+          e.currentTarget.style.outline = '2px solid var(--accent-primary)';
+          e.currentTarget.style.outlineOffset = '2px';
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.outline = 'none';
+        }}
       >
         <motion.span
           className="text-lg pointer-events-none"

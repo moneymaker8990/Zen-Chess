@@ -15,7 +15,7 @@ import {
 import { LEGEND_STYLES, type GuessMoveResult, type LegendId } from '@/lib/legendTypes';
 import { useNotesStore, useStudyStore, useLegendGameReviewStore } from '@/state/notesStore';
 import type { BotLevel } from '@/engine/humanizedStockfish';
-import { useBoardSize } from '@/hooks/useBoardSize';
+import { useBoardSize, useContainerBoardSize } from '@/hooks/useBoardSize';
 import { parseUciMove, isValidFen } from '@/lib/moveValidation';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 import { logger } from '@/lib/logger';
@@ -29,7 +29,15 @@ export function LegendDetailPage() {
   const { addNote } = useNotesStore();
   const { recordGamePlayed, recordPuzzleSolved } = useStudyStore();
   const { markGameReviewed, isGameReviewed, getGameReview, getLegendStats } = useLegendGameReviewStore();
-  const boardSize = useBoardSize(480, 32);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  // Use container-based sizing to make board fit the card container
+  // The ref should point to the card container, not the inner board div
+  // Account for card padding (16px each side = 32px total)
+  const rawBoardSize = useContainerBoardSize(boardContainerRef, 480, 32);
+  // rawBoardSize returns 0 when container hasn't mounted yet (valid "not ready" state)
+  // Only apply minimum constraint if we have a valid size (> 0) to avoid visual jank
+  // The board won't render until boardSize > 0 due to the conditional render check
+  const boardSize = rawBoardSize > 0 ? Math.max(280, rawBoardSize) : 0;
   
   const legend = legendId as LegendId;
   const legendData = legend ? LEGEND_STYLES[legend] : null;
@@ -628,27 +636,31 @@ export function LegendDetailPage() {
           {/* Game Area - Board and Controls */}
           <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden">
             {/* Chessboard */}
-            <div className="card p-4 w-full">
-              <div className="w-full flex justify-center overflow-hidden">
-                <div style={{ width: '100%', maxWidth: boardSize, aspectRatio: '1' }}>
-                  <Chessboard
-                    position={game.fen()}
-                    onSquareClick={onSquareClick}
-                    onPieceDrop={onDrop}
-                    boardOrientation={playerColor}
-                    customSquareStyles={{
-                      ...optionSquares,
-                      ...(lastMove && {
-                        [lastMove.from]: { backgroundColor: 'rgba(168, 85, 247, 0.3)' },
-                        [lastMove.to]: { backgroundColor: 'rgba(168, 85, 247, 0.4)' },
-                      }),
-                    }}
-                    customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                    customLightSquareStyle={boardStyles.customLightSquareStyle}
-                    animationDuration={boardStyles.animationDuration}
-                    arePiecesDraggable={!isThinking}
-                    boardWidth={boardSize}
-                  />
+            <div className="card p-4 w-full overflow-hidden" ref={boardContainerRef}>
+              <div className="w-full flex justify-center" style={{ maxWidth: '100%' }}>
+                <div 
+                  style={{ width: boardSize, maxWidth: '100%', aspectRatio: '1', position: 'relative', minWidth: 280 }}
+                >
+                  {boardSize > 0 && (
+                    <Chessboard
+                      position={game.fen()}
+                      onSquareClick={onSquareClick}
+                      onPieceDrop={onDrop}
+                      boardOrientation={playerColor}
+                      customSquareStyles={{
+                        ...optionSquares,
+                        ...(lastMove && {
+                          [lastMove.from]: { backgroundColor: 'rgba(168, 85, 247, 0.3)' },
+                          [lastMove.to]: { backgroundColor: 'rgba(168, 85, 247, 0.4)' },
+                        }),
+                      }}
+                      customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                      customLightSquareStyle={boardStyles.customLightSquareStyle}
+                      animationDuration={boardStyles.animationDuration}
+                      arePiecesDraggable={!isThinking}
+                      boardWidth={boardSize}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -905,10 +917,13 @@ export function LegendDetailPage() {
             </div>
           ) : (
             <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
-              <div className="card p-4 w-full">
-                <div className="w-full flex justify-center overflow-hidden">
-                  <div style={{ width: '100%', maxWidth: boardSize, aspectRatio: '1' }} className="relative">
-                    {guessChess && (
+              <div className="card p-4 w-full overflow-hidden" ref={boardContainerRef}>
+                <div className="w-full flex justify-center" style={{ maxWidth: '100%' }}>
+                  <div 
+                    style={{ width: boardSize, maxWidth: '100%', aspectRatio: '1', minWidth: 280 }} 
+                    className="relative"
+                  >
+                    {guessChess && boardSize > 0 && (
                       <Chessboard
                         position={guessChess.fen()}
                         onPieceDrop={(source, target) => {

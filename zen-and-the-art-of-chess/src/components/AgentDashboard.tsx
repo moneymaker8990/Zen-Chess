@@ -45,17 +45,18 @@ export function AgentsOverviewCard() {
     >
       <button 
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-4 flex items-center justify-between"
+        className="w-full p-3 sm:p-4 flex items-center justify-between gap-2 sm:gap-4 min-h-[60px] sm:min-h-[64px]"
+        style={{ minHeight: '60px' }} // Minimum tap target
       >
-        <div className="flex items-center gap-3">
-          <div className="flex -space-x-2">
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+          <div className="flex -space-x-2 shrink-0">
             {primaryAgents.slice(0, 4).map(agentId => {
               const personality = AGENT_PERSONALITIES[agentId];
               const hasMessages = (messagesByAgent[agentId]?.length || 0) > 0;
               return (
                 <div
                   key={agentId}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm border-2"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-sm border-2 relative"
                   style={{ 
                     background: `${personality.color}30`,
                     borderColor: 'var(--bg-secondary)',
@@ -70,16 +71,16 @@ export function AgentsOverviewCard() {
               );
             })}
           </div>
-          <div>
-            <span className="font-medium" style={{ color: 'var(--text-primary)' }}>
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+            <span className="font-medium text-sm sm:text-base truncate" style={{ color: 'var(--text-primary)' }}>
               AI Coaching System
             </span>
-            <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400">
+            <span className="text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-green-500/20 text-green-400 whitespace-nowrap shrink-0">
               {enabledAgents.length} Active
             </span>
           </div>
         </div>
-        <span className="text-lg">{expanded ? '▲' : '▼'}</span>
+        <span className="text-base sm:text-lg shrink-0 ml-2">{expanded ? '▲' : '▼'}</span>
       </button>
 
       <AnimatePresence>
@@ -375,7 +376,8 @@ export function AgentInsightsSummary() {
       
       if (flowMemory) {
         const flow = JSON.parse(flowMemory);
-        focusScore = flow.flowScore || 100;
+        // Round Flow State to 1 decimal place to avoid long decimals like 40.090811111111111111%
+        focusScore = Math.round((flow.flowScore || 100) * 10) / 10;
       }
       
       if (insightMemory) {
@@ -402,7 +404,7 @@ export function AgentInsightsSummary() {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
       <InsightCard
         icon="🕐"
         label="Best Time"
@@ -418,7 +420,7 @@ export function AgentInsightsSummary() {
       <InsightCard
         icon="🌊"
         label="Flow State"
-        value={`${insights.focusScore}%`}
+        value={`${insights.focusScore.toFixed(1)}%`}
         color="#06b6d4"
       />
       <InsightCard
@@ -433,14 +435,14 @@ export function AgentInsightsSummary() {
 
 function InsightCard({ icon, label, value, color }: { icon: string; label: string; value: string; color: string }) {
   return (
-    <div className="card p-4" style={{ background: `${color}10` }}>
-      <div className="flex items-center gap-2 mb-1">
-        <span className="text-lg">{icon}</span>
-        <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+    <div className="card p-3 sm:p-4 min-h-[100px] sm:min-h-[120px] flex flex-col justify-between" style={{ background: `${color}10` }}>
+      <div className="flex items-center gap-2 mb-2 sm:mb-3">
+        <span className="text-base sm:text-lg shrink-0">{icon}</span>
+        <span className="text-[10px] sm:text-xs uppercase tracking-wider break-words" style={{ color: 'var(--text-muted)' }}>
           {label}
         </span>
       </div>
-      <div className="text-lg font-medium" style={{ color }}>
+      <div className="text-base sm:text-lg font-medium truncate" style={{ color }}>
         {value}
       </div>
     </div>

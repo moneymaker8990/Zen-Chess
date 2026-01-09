@@ -192,6 +192,9 @@ html, body {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   transition: all 0.2s ease;
+  /* Minimum tap target size for mobile accessibility */
+  min-height: 44px;
+  min-width: 44px;
 }
 
 .btn-primary:hover {
@@ -535,4 +538,76 @@ html, body {
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* ============================================
+   MOBILE ACCESSIBILITY & SPACING
+   ============================================ */
+
+/* Minimum tap target sizes for mobile (WCAG 2.1 AA requires 44x44px) */
+button,
+a,
+[role="button"],
+input[type="checkbox"],
+input[type="radio"],
+label[for],
+.selectable {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Allow exceptions for inline elements that are part of larger interactive areas */
+button.small,
+a.small,
+[role="button"].small {
+  min-height: 32px;
+  min-width: 32px;
+}
+
+/* Consistent mobile padding for main containers */
+@media (max-width: 768px) {
+  .page-content,
+  main > div {
+    padding-inline: 1rem;
+  }
+  
+  /* Ensure headings have proper hierarchy */
+  h1 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Ensure body text doesn't sit against card edges */
+  .card p,
+  .card span,
+  .card div {
+    padding-inline: 0.25rem;
+  }
+}
+
+/* Prevent horizontal scrolling on mobile */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+  
+  * {
+    max-width: 100%;
+  }
 }

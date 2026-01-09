@@ -371,44 +371,72 @@ export function StudyPlanPage() {
 
         {/* Customization */}
         {selectedPreset && (
-          <div className="card p-6 space-y-4">
-            <h3 className="font-medium mb-4" style={{ color: 'var(--text-primary)' }}>
+          <div className="card p-4 sm:p-6 space-y-4 sm:space-y-6 pb-8 sm:pb-12" style={{ paddingBottom: 'calc(var(--safe-area-inset-bottom, 0px) + 3rem)' }}>
+            <h3 className="font-medium text-lg sm:text-xl mb-2 sm:mb-4" style={{ color: 'var(--text-primary)' }}>
               Customize Your Plan
             </h3>
             
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
+            <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
                   Plan Name
                 </label>
                 <input
                   type="text"
                   value={customName}
                   onChange={(e) => setCustomName(e.target.value)}
-                  className="zen-input"
-                  placeholder="My Study Plan"
+                  className="zen-input w-full px-4 py-3 rounded-lg text-sm sm:text-base"
+                  style={{
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-primary)',
+                  }}
+                  placeholder="Rising Player"
                 />
+                {!customName.trim() && customName.length > 0 && (
+                  <p className="text-xs text-red-400 mt-1">Plan name cannot be empty</p>
+                )}
               </div>
               
-              <div>
-                <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
                   Daily Duration (minutes)
                 </label>
                 <input
                   type="number"
                   value={customDuration}
-                  onChange={(e) => setCustomDuration(Number(e.target.value))}
-                  className="zen-input"
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 15 && val <= 180) {
+                      setCustomDuration(val);
+                    } else if (val > 180) {
+                      setCustomDuration(180);
+                    } else if (val < 15 && val > 0) {
+                      setCustomDuration(15);
+                    }
+                  }}
+                  className="zen-input w-full px-4 py-3 rounded-lg text-sm sm:text-base"
+                  style={{
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-primary)',
+                  }}
                   min={15}
                   max={180}
                 />
+                {(customDuration < 15 || customDuration > 180) && (
+                  <p className="text-xs text-red-400 mt-1">Duration must be between 15 and 180 minutes</p>
+                )}
               </div>
             </div>
 
             <button
               onClick={handleCreatePlan}
-              disabled={!customName}
-              className="zen-button w-full mt-4"
+              disabled={!customName.trim() || customDuration < 15 || customDuration > 180}
+              className="zen-button w-full mt-4 sm:mt-6 py-3 sm:py-4 text-sm sm:text-base font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+              style={{
+                minHeight: '44px', // Minimum tap target size
+              }}
             >
               Create Study Plan
             </button>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 // UI heights to account for when calculating board size
 const HEADER_HEIGHT = 64; // Mobile header
@@ -125,29 +125,47 @@ export function useContainerBoardSize(
   maxWidth: number = 520,
   padding: number = 16
 ): number {
-  const [boardSize, setBoardSize] = useState(Math.min(maxWidth, 400));
+  // Initialize to 0 to indicate container hasn't mounted yet
+  const [boardSize, setBoardSize] = useState(0);
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const calculateSize = () => {
       if (containerRef.current) {
         const containerWidth = containerRef.current.offsetWidth;
-        setBoardSize(Math.min(maxWidth, containerWidth - padding));
+        // Ensure we never get negative values - use minimum of 280px
+        const calculatedSize = Math.max(280, Math.min(maxWidth, containerWidth - padding));
+        setBoardSize(calculatedSize);
       } else {
         const viewportWidth = window.innerWidth;
-        setBoardSize(Math.min(maxWidth, viewportWidth - 32));
+        const calculatedSize = Math.max(280, Math.min(maxWidth, viewportWidth - 32));
+        setBoardSize(calculatedSize);
       }
     };
 
-    calculateSize();
+    // Small delay to ensure container is mounted
+    const timeoutId = setTimeout(calculateSize, 0);
     
     // Use ResizeObserver for container changes
-    const resizeObserver = new ResizeObserver(calculateSize);
+    const resizeObserver = new ResizeObserver(() => {
+      // Clear any pending debounce timeout before creating a new one
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      // Debounce resize calculations
+      debounceTimeoutRef.current = setTimeout(calculateSize, 10);
+    });
+    
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }
     
     window.addEventListener('resize', calculateSize);
     return () => {
+      clearTimeout(timeoutId);
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
       resizeObserver.disconnect();
       window.removeEventListener('resize', calculateSize);
     };
