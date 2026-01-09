@@ -752,6 +752,74 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'blockade-passed-pawn',
+    category: 'BLOCKADE',
+    title: "Blockading a Passed Pawn",
+    subtitle: "Stopping a dangerous passer",
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: "In endgames, passed pawns are extremely dangerous. Blockading them is often the only way to stop their advance and save the game.",
+    keyIdeas: [
+      "Blockade passed pawns immediately",
+      "Place the king or pieces in front of passers",
+      "Prevent pawn advances with blockaders",
+      "Control squares in front of dangerous pawns"
+    ],
+    mainLine: [
+      {
+        move: "Kf1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Moving the king toward the center to help with the blockade.",
+        conceptTag: "King Activity"
+      },
+      {
+        move: "Kg8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Further centralization to support the blockade.",
+        conceptTag: ""
+      },
+      {
+        move: "Kf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black continues king activity.",
+        conceptTag: ""
+      },
+      {
+        move: "Kd3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our king is now positioned to block Black's passed pawn on e5 if it advances. Blockading passers is crucial in endgames.",
+        highlights: [
+          "d3",
+          "e5"
+        ],
+        conceptTag: "Blockade"
+      }
+    ],
+    summary: "In endgames, blockading passed pawns is essential. The blockader stops the pawn from advancing and often decides the outcome.",
+    keyTakeaways: [
+      "Blockade passed pawns immediately",
+      "Use the king to blockade in endgames",
+      "The blockader prevents pawn promotion",
+      "Control squares in front of passers"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Endgame blockade theory",
+  },
+
+  {
     id: 'exchange-trading-bad-pieces',
     category: 'EXCHANGE_STRATEGY',
     title: "Exchanging Bad Pieces for Good",
@@ -884,6 +952,70 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 3,
     estimatedMinutes: 5,
     source: "Strategic exchange principles",
+  },
+
+  {
+    id: 'exchange-removing-defenders',
+    category: 'EXCHANGE_STRATEGY',
+    title: "Exchanging to Remove Defenders",
+    subtitle: "Trading away opponent's key pieces",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Sometimes you exchange pieces to remove defenders from key squares. This can create weaknesses or tactical opportunities.",
+    keyIdeas: [
+      "Exchange pieces to remove defenders",
+      "Trade to expose weaknesses",
+      "Remove key defensive pieces",
+      "Create tactical opportunities with exchanges"
+    ],
+    mainLine: [
+      {
+        move: "d3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Supporting e4 and developing.",
+        conceptTag: "Development"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White castles.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles as well.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxe5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We exchange knights, removing Black's defender of key squares. This strategic exchange simplifies and may create weaknesses.",
+        conceptTag: "Exchange"
+      }
+    ],
+    summary: "Exchanging pieces to remove defenders is a powerful strategic tool. Trade away opponent's key defensive pieces to expose weaknesses.",
+    keyTakeaways: [
+      "Exchange to remove defenders",
+      "Trade key defensive pieces",
+      "Expose weaknesses with exchanges",
+      "Create tactical opportunities"
+    ],
+    
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Exchange strategy principles",
   },
 
   {
