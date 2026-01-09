@@ -86,6 +86,209 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 3,
     estimatedMinutes: 6,
     source: "Italian Game theory",
+  },
+
+  {
+    id: 'pawn-structure-pawn-chain',
+    category: 'PAWN_STRUCTURE',
+    title: "The Pawn Chain",
+    subtitle: "Building a strong pawn structure",
+    fen: 'rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 0 5',
+    toMove: 'black',
+    introduction: "A pawn chain is a diagonal formation of pawns. Understanding pawn chains is crucial - attack the base, not the head.",
+    keyIdeas: [
+      "Identify the pawn chain structure",
+      "Attack the base of opponent pawn chains",
+      "Defend your own pawn chain base",
+      "Use pawn breaks to undermine chains"
+    ],
+    mainLine: [
+      {
+        move: "c5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Black attacks the base of White's pawn chain (d4). This is the correct strategic approach.",
+        highlights: [
+          "d4"
+        ],
+        conceptTag: "Pawn Chain"
+      },
+      {
+        move: "e3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White solidifies the center.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing and increasing pressure on d4.",
+        conceptTag: "Development"
+      },
+      {
+        move: "Be2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops, preparing to castle.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Pawn chains define the structure of the position. Remember: attack the base, not the head of the chain. The base is the most vulnerable point.",
+    keyTakeaways: [
+      "Pawn chains form diagonal structures",
+      "Attack the base of enemy pawn chains",
+      "The base is weaker than the head",
+      "Use pawn breaks strategically"
+    ],
+    memoryTip: "Attack the base, not the head!",
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: "Nimzowitsch pawn chain theory",
+  },
+
+  {
+    id: 'knight-centralization',
+    category: 'KNIGHT_PLACEMENT',
+    title: "Centralizing the Knight",
+    subtitle: "Maximum control from the center",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "A centralized knight controls the most squares. From e4 or d5, a knight can reach 8 squares, compared to only 2 from a corner.",
+    keyIdeas: [
+      "Place knights in the center when possible",
+      "Knights control maximum squares from center",
+      "Use knights to control key squares",
+      "Centralized knights support attacks"
+    ],
+    mainLine: [
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing the knight toward the center.",
+        conceptTag: "Development"
+      },
+      {
+        move: "Bb4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops with tempo.",
+        conceptTag: ""
+      },
+      {
+        move: "Bd2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "We break the pin.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "Nd5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our knight reaches the ideal central square d5, controlling key squares and pressuring Black's position.",
+        highlights: [
+          "d5"
+        ],
+        arrows: [
+          {
+            from: "d5",
+            to: "b4",
+            color: "green"
+          },
+          {
+            from: "d5",
+            to: "f6",
+            color: "green"
+          }
+        ],
+        conceptTag: "Centralization"
+      }
+    ],
+    summary: "Central knights are powerful knights. A knight on d5 or e4 controls many squares and supports both attack and defense.",
+    keyTakeaways: [
+      "Central knights control the most squares",
+      "Aim for d5, e5, d4, or e4 squares",
+      "A knight on the rim is dim",
+      "Central knights support all plans"
+    ],
+    memoryTip: "Center knights = maximum might!",
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: "Classical principles",
+  },
+
+  {
+    id: 'centralization-piece-activity',
+    category: 'CENTRALIZATION',
+    title: "Centralizing Your Pieces",
+    subtitle: "Controlling the center with pieces",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Centralized pieces have maximum influence over the board. From the center, pieces can quickly reach any part of the board.",
+    keyIdeas: [
+      "Place pieces on central squares",
+      "Control the center with pieces, not just pawns",
+      "Centralized pieces have maximum mobility",
+      "Use central control to launch attacks"
+    ],
+    mainLine: [
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Centralizing the knight.",
+        conceptTag: "Centralization"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops actively.",
+        conceptTag: ""
+      },
+      {
+        move: "Be2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "We develop, preparing to castle.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "We castle as well.",
+        conceptTag: "King Safety"
+      }
+    ],
+    summary: "Central piece placement provides maximum flexibility and control. Well-placed central pieces can influence the entire board.",
+    keyTakeaways: [
+      "Centralized pieces are more active",
+      "Control the center with both pawns and pieces",
+      "Central control enables flank attacks",
+      "Flexibility comes from central placement"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: "Central control principles",
   }
 ];
 

@@ -275,22 +275,308 @@ function generateWeakPawnsPatterns(): EnhancedPattern[] {
   return patterns;
 }
 
+// Generate patterns for BISHOP_PAIR category
+function generateBishopPairPatterns(): EnhancedPattern[] {
+  const patterns: EnhancedPattern[] = [];
+  
+  patterns.push({
+    id: 'bishop-pair-open-position',
+    category: 'BISHOP_PAIR',
+    title: 'Bishop Pair in Open Positions',
+    subtitle: 'Dominating with two bishops',
+    fen: 'r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: 'The bishop pair is especially powerful in open positions where both bishops have long diagonals to control. The key is to keep the position open and avoid trading bishops.',
+    keyIdeas: [
+      'Keep the position open with pawn breaks',
+      'Control long diagonals with both bishops',
+      'Avoid trading your bishops for knights',
+      'Use the bishops to attack on both flanks'
+    ],
+    mainLine: [
+      {
+        move: 'd4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Opening the center to activate our bishops.',
+        conceptTag: 'Center'
+      },
+      {
+        move: 'exd4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black captures in the center.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nxd4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Recapturing with the knight.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nxd4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black trades knights.',
+        conceptTag: ''
+      },
+      {
+        move: 'Bxd4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Our bishop takes a central square, and we maintain the bishop pair advantage.',
+        highlights: ['d4'],
+        conceptTag: 'Bishop Pair'
+      }
+    ],
+    summary: 'In open positions, the bishop pair controls key diagonals and provides long-range power. Keep the position open and use both bishops to dominate the board.',
+    keyTakeaways: [
+      'Bishop pairs are strongest in open positions',
+      'Control multiple diagonals simultaneously',
+      'Avoid unnecessary bishop trades',
+      'Open lines with pawn breaks'
+    ],
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: 'Bishop pair theory'
+  });
+  
+  return patterns;
+}
+
+// Generate patterns for PAWN_STRUCTURE category
+function generatePawnStructurePatterns(): EnhancedPattern[] {
+  const patterns: EnhancedPattern[] = [];
+  
+  patterns.push({
+    id: 'pawn-structure-pawn-chain',
+    category: 'PAWN_STRUCTURE',
+    title: 'The Pawn Chain',
+    subtitle: 'Building a strong pawn structure',
+    fen: 'rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 0 5',
+    toMove: 'black',
+    introduction: 'A pawn chain is a diagonal formation of pawns. Understanding pawn chains is crucial - attack the base, not the head.',
+    keyIdeas: [
+      'Identify the pawn chain structure',
+      'Attack the base of opponent pawn chains',
+      'Defend your own pawn chain base',
+      'Use pawn breaks to undermine chains'
+    ],
+    mainLine: [
+      {
+        move: 'c5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Black attacks the base of White\'s pawn chain (d4). This is the correct strategic approach.',
+        highlights: ['d4'],
+        conceptTag: 'Pawn Chain'
+      },
+      {
+        move: 'e3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White solidifies the center.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nc6',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Developing and increasing pressure on d4.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'Be2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White develops, preparing to castle.',
+        conceptTag: ''
+      }
+    ],
+    summary: 'Pawn chains define the structure of the position. Remember: attack the base, not the head of the chain. The base is the most vulnerable point.',
+    keyTakeaways: [
+      'Pawn chains form diagonal structures',
+      'Attack the base of enemy pawn chains',
+      'The base is weaker than the head',
+      'Use pawn breaks strategically'
+    ],
+    memoryTip: 'Attack the base, not the head!',
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: 'Nimzowitsch pawn chain theory'
+  });
+  
+  return patterns;
+}
+
+// Generate patterns for KNIGHT_PLACEMENT category
+function generateKnightPlacementPatterns(): EnhancedPattern[] {
+  const patterns: EnhancedPattern[] = [];
+  
+  patterns.push({
+    id: 'knight-centralization',
+    category: 'KNIGHT_PLACEMENT',
+    title: 'Centralizing the Knight',
+    subtitle: 'Maximum control from the center',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'A centralized knight controls the most squares. From e4 or d5, a knight can reach 8 squares, compared to only 2 from a corner.',
+    keyIdeas: [
+      'Place knights in the center when possible',
+      'Knights control maximum squares from center',
+      'Use knights to control key squares',
+      'Centralized knights support attacks'
+    ],
+    mainLine: [
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Developing the knight toward the center.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'Bb4',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops with tempo.',
+        conceptTag: ''
+      },
+      {
+        move: 'Bd2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'We break the pin.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nd5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Our knight reaches the ideal central square d5, controlling key squares and pressuring Black\'s position.',
+        highlights: ['d5'],
+        arrows: [
+          { from: 'd5', to: 'b4', color: 'green' },
+          { from: 'd5', to: 'f6', color: 'green' }
+        ],
+        conceptTag: 'Centralization'
+      }
+    ],
+    summary: 'Central knights are powerful knights. A knight on d5 or e4 controls many squares and supports both attack and defense.',
+    keyTakeaways: [
+      'Central knights control the most squares',
+      'Aim for d5, e5, d4, or e4 squares',
+      'A knight on the rim is dim',
+      'Central knights support all plans'
+    ],
+    memoryTip: 'Center knights = maximum might!',
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: 'Classical principles'
+  });
+  
+  return patterns;
+}
+
+// Generate patterns for CENTRALIZATION category
+function generateCentralizationPatterns(): EnhancedPattern[] {
+  const patterns: EnhancedPattern[] = [];
+  
+  patterns.push({
+    id: 'centralization-piece-activity',
+    category: 'CENTRALIZATION',
+    title: 'Centralizing Your Pieces',
+    subtitle: 'Controlling the center with pieces',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'Centralized pieces have maximum influence over the board. From the center, pieces can quickly reach any part of the board.',
+    keyIdeas: [
+      'Place pieces on central squares',
+      'Control the center with pieces, not just pawns',
+      'Centralized pieces have maximum mobility',
+      'Use central control to launch attacks'
+    ],
+    mainLine: [
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Centralizing the knight.',
+        conceptTag: 'Centralization'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops actively.',
+        conceptTag: ''
+      },
+      {
+        move: 'Be2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'We develop, preparing to castle.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'We castle as well.',
+        conceptTag: 'King Safety'
+      }
+    ],
+    summary: 'Central piece placement provides maximum flexibility and control. Well-placed central pieces can influence the entire board.',
+    keyTakeaways: [
+      'Centralized pieces are more active',
+      'Control the center with both pawns and pieces',
+      'Central control enables flank attacks',
+      'Flexibility comes from central placement'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: 'Central control principles'
+  });
+  
+  return patterns;
+}
+
 // Main generation function
 async function generateAndValidatePatterns() {
-  console.log('🎯 Starting AI-Assisted Pattern Generation\n');
+  console.log('🎯 Starting AI-Assisted Pattern Generation - Batch 2\n');
   console.log('Generating patterns with immediate validation...\n');
   
   const allPatterns: EnhancedPattern[] = [];
   const errors: Array<{ id: string; error: string }> = [];
   
-  // Generate patterns for each category (will be expanded)
+  // Generate patterns for each category (expanding to more categories)
   const generators = [
     { name: 'OUTPOSTS', fn: generateOutpostPatterns },
     { name: 'WEAK_PAWNS', fn: generateWeakPawnsPatterns },
+    { name: 'BISHOP_PAIR', fn: generateBishopPairPatterns },
+    { name: 'PAWN_STRUCTURE', fn: generatePawnStructurePatterns },
+    { name: 'KNIGHT_PLACEMENT', fn: generateKnightPlacementPatterns },
+    { name: 'CENTRALIZATION', fn: generateCentralizationPatterns },
   ];
   
-  console.log('Note: This is batch 1. We\'ll generate 2-3 patterns per category initially.');
-  console.log('More patterns will be added in subsequent batches.\n');
+  console.log('Note: Batch 2 - Adding patterns for 6 categories.');
+  console.log('Focus: OUTPOSTS, WEAK_PAWNS, BISHOP_PAIR, PAWN_STRUCTURE, KNIGHT_PLACEMENT, CENTRALIZATION\n');
   
   for (const { name, fn } of generators) {
     console.log(`\n📦 Generating ${name} patterns...`);
