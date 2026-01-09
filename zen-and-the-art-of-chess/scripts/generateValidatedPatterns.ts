@@ -749,6 +749,71 @@ function generateCentralizationPatterns(): EnhancedPattern[] {
     source: 'Endgame principles'
   });
   
+  // Pattern 3: Centralizing in Middlegame
+  patterns.push({
+    id: 'centralization-middlegame',
+    category: 'CENTRALIZATION',
+    title: 'Centralizing Pieces in the Middlegame',
+    subtitle: 'Bringing pieces to the center',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'In the middlegame, centralizing pieces gives them maximum influence. Central pieces control key squares and support all plans.',
+    keyIdeas: [
+      'Centralize pieces in the middlegame',
+      'Central pieces have maximum activity',
+      'Control key squares from the center',
+      'Use centralized pieces to support plans'
+    ],
+    mainLine: [
+      {
+        move: 'd3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Supporting e4 and developing.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White castles.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles as well.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We develop the knight to c3, a central square. Our pieces on e4, d3, c3, and c4 are all centralized, giving maximum control.',
+        highlights: ['e4', 'd3', 'c3', 'c4'],
+        conceptTag: 'Centralization'
+      }
+    ],
+    summary: 'In the middlegame, centralize your pieces to gain maximum activity and control. Central pieces support both attack and defense.',
+    keyTakeaways: [
+      'Centralize pieces in the middlegame',
+      'Central pieces have maximum influence',
+      'Control key squares from the center',
+      'Use centralization to support all plans'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Middlegame principles'
+  });
+  
   return patterns;
 }
 
@@ -955,6 +1020,71 @@ function generateKingActivityPatterns(): EnhancedPattern[] {
     difficulty: 2,
     estimatedMinutes: 4,
     source: 'King activity in endgames'
+  });
+  
+  // Pattern 3: King in the Center in Endgame
+  patterns.push({
+    id: 'king-activity-center-endgame',
+    category: 'KING_ACTIVITY',
+    title: 'King in the Center',
+    subtitle: 'Centralized king dominates',
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: 'In endgames, a centralized king dominates the board. The king should move to the center as quickly as possible when the queens are off.',
+    keyIdeas: [
+      'Centralize the king in endgames',
+      'A central king reaches all areas quickly',
+      'Use the king actively in endgames',
+      'The king is a powerful piece in endgames'
+    ],
+    mainLine: [
+      {
+        move: 'Kf1',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Moving the king toward the center.',
+        conceptTag: 'King Activity'
+      },
+      {
+        move: 'Kg8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black moves the king.',
+        conceptTag: ''
+      },
+      {
+        move: 'Ke2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Continuing centralization.',
+        conceptTag: ''
+      },
+      {
+        move: 'Kf8',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black moves the king.',
+        conceptTag: ''
+      },
+      {
+        move: 'Kd3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'Our king reaches a central square. From d3, it can quickly reach any part of the board, supporting pawns and attacking Black\'s pawns.',
+        highlights: ['d3'],
+        conceptTag: 'King Activity'
+      }
+    ],
+    summary: 'In endgames, centralize your king immediately. A central king has maximum mobility and can influence the entire board.',
+    keyTakeaways: [
+      'Centralize the king in endgames',
+      'A central king has maximum mobility',
+      'Use the king actively as a fighting piece',
+      'King centralization often decides endgames'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: 'Endgame king activity'
   });
   
   return patterns;
@@ -1609,6 +1739,71 @@ function generatePawnBreaksPatterns(): EnhancedPattern[] {
     source: 'Pawn break principles'
   });
   
+  // Pattern 4: e5 Pawn Break
+  patterns.push({
+    id: 'pawn-break-e5-advance',
+    category: 'PAWN_BREAKS',
+    title: 'The e5 Pawn Break',
+    subtitle: 'Advancing in the center',
+    fen: 'r1bqkb1r/ppp2ppp/2n2n2/3p4/3PP3/2N2N2/PPP2PPP/R1BQKB1R w KQkq d6 0 6',
+    toMove: 'white',
+    introduction: 'The e5 pawn break is a powerful central advance that challenges Black\'s pawn structure and opens lines for White\'s pieces.',
+    keyIdeas: [
+      'Use pawn breaks to advance in the center',
+      'Challenge opponent\'s pawn chains',
+      'Open lines with central pawn advances',
+      'Prepare breaks with piece development'
+    ],
+    mainLine: [
+      {
+        move: 'Be2',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Developing, preparing to castle.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'Be7',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White castles.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles as well.',
+        conceptTag: ''
+      },
+      {
+        move: 'e5',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The pawn break! This central advance challenges Black\'s pawn structure and opens lines for White\'s pieces.',
+        highlights: ['e5'],
+        conceptTag: 'Pawn Break'
+      }
+    ],
+    summary: 'The e5 pawn break is a standard way to challenge Black\'s center and create piece activity. Central pawn breaks are crucial for opening closed positions.',
+    keyTakeaways: [
+      'Use central pawn breaks to open positions',
+      'Challenge pawn chains with advances',
+      'Prepare breaks with development',
+      'Central breaks create piece activity'
+    ],
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: 'Pawn break principles'
+  });
+  
   return patterns;
 }
 
@@ -1817,12 +2012,70 @@ function generatePieceCoordinationPatterns(): EnhancedPattern[] {
     source: 'Piece coordination principles'
   });
   
+  // Pattern 4: Coordinating Rooks and Bishops
+  patterns.push({
+    id: 'piece-coordination-rooks-bishops',
+    category: 'PIECE_COORDINATION',
+    title: 'Coordinating Rooks and Bishops',
+    subtitle: 'Long-range piece harmony',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'Rooks and bishops coordinate excellently on open files and diagonals. When they work together, they control key squares and create powerful threats.',
+    keyIdeas: [
+      'Coordinate rooks and bishops on open lines',
+      'Use rooks to support bishop activity',
+      'Control files and diagonals together',
+      'Create threats with long-range pieces'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling to safety and activating the rook.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'Re1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We place the rook on the e-file, and now our rook on e1 and bishop on c4 coordinate, controlling key squares on the e-file and the long diagonal.',
+        highlights: ['e1', 'c4'],
+        conceptTag: 'Piece Coordination'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      }
+    ],
+    summary: 'Coordinating rooks and bishops creates powerful long-range control. Use them together to control files and diagonals simultaneously.',
+    keyTakeaways: [
+      'Coordinate rooks and bishops on open lines',
+      'Long-range pieces support each other',
+      'Control files and diagonals together',
+      'Create threats with coordinated long-range pieces'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Piece coordination principles'
+  });
+  
   return patterns;
 }
 
 // Main generation function
 async function generateAndValidatePatterns() {
-  console.log('🎯 Starting AI-Assisted Pattern Generation - Batch 7\n');
+  console.log('🎯 Starting AI-Assisted Pattern Generation - Batch 8\n');
   console.log('Generating patterns with immediate validation...\n');
   
   const allPatterns: EnhancedPattern[] = [];
@@ -1845,8 +2098,8 @@ async function generateAndValidatePatterns() {
     { name: 'PIECE_COORDINATION', fn: generatePieceCoordinationPatterns },
   ];
   
-  console.log('Note: Batch 7 - Adding more patterns to categories needing them.');
-  console.log('Focus: PAWN_BREAKS, PIECE_COORDINATION, KNIGHT_PLACEMENT, CENTRALIZATION, KING_ACTIVITY\n');
+  console.log('Note: Batch 8 - Adding 4th patterns to key categories.');
+  console.log('Focus: PAWN_BREAKS, PIECE_COORDINATION, CENTRALIZATION, KING_ACTIVITY\n');
   
   for (const { name, fn } of generators) {
     console.log(`\n📦 Generating ${name} patterns...`);
