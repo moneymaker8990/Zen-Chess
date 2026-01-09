@@ -417,6 +417,272 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 3,
     estimatedMinutes: 5,
     source: "Aron Nimzowitsch principles",
+  },
+
+  {
+    id: 'blockade-isolated-pawn',
+    category: 'BLOCKADE',
+    title: "Blockading an Isolated Pawn",
+    subtitle: "Placing pieces in front of weak pawns",
+    fen: 'r1bqkb1r/ppp2ppp/2n2n2/3p4/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "A blockading piece placed in front of an isolated pawn is extremely powerful. The blockader controls squares in front of the pawn and prevents its advance.",
+    keyIdeas: [
+      "Place pieces in front of isolated pawns",
+      "Knights are ideal blockading pieces",
+      "The blockader controls squares ahead",
+      "Prevent pawn advances with blockade"
+    ],
+    mainLine: [
+      {
+        move: "Be2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing, preparing to castle.",
+        conceptTag: "Development"
+      },
+      {
+        move: "Be6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White castles for king safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Qd7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the queen.",
+        conceptTag: ""
+      },
+      {
+        move: "Nd5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our knight occupies the ideal blockading square d5, preventing Black's isolated d5 pawn from advancing and controlling key squares.",
+        highlights: [
+          "d5"
+        ],
+        conceptTag: "Blockade"
+      }
+    ],
+    summary: "Blockading isolated pawns with knights is a classic technique. The blockader stops the pawn advance and controls important squares.",
+    keyTakeaways: [
+      "Blockaders stop weak pawns from advancing",
+      "Knights are excellent blockading pieces",
+      "Blockade the pawn, don't attack it yet",
+      "Control squares in front of the weakness"
+    ],
+    memoryTip: "Block the block with a knight!",
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Nimzowitsch blockade theory",
+  },
+
+  {
+    id: 'exchange-trading-bad-pieces',
+    category: 'EXCHANGE_STRATEGY',
+    title: "Exchanging Bad Pieces for Good",
+    subtitle: "Trading your worst piece",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "When you have a bad bishop (blocked by your own pawns), exchange it for your opponent's active piece. This improves your position.",
+    keyIdeas: [
+      "Trade bad pieces for good pieces",
+      "Exchange passive pieces for active ones",
+      "Simplify when you have weaknesses",
+      "Remove your worst placed piece"
+    ],
+    mainLine: [
+      {
+        move: "d3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Supporting e4 and developing.",
+        conceptTag: "Development"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop actively.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White castles.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles as well.",
+        conceptTag: ""
+      },
+      {
+        move: "Bxf7+",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We exchange our bishop for Black's knight after the capture. This tactical exchange damages Black's pawn structure and demonstrates strategic piece exchanges.",
+        conceptTag: "Exchange"
+      },
+      {
+        move: "Rxf7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures with the rook, but the pawn structure is now damaged.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Exchanging pieces strategically can improve your position. Trade bad pieces for good ones, especially when you have passive pieces.",
+    keyTakeaways: [
+      "Trade bad pieces for good pieces",
+      "Exchange when you have weaknesses",
+      "Remove your worst placed piece",
+      "Simplify with exchanges"
+    ],
+    
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Exchange strategy principles",
+  },
+
+  {
+    id: 'pawn-break-f5-advance',
+    category: 'PAWN_BREAKS',
+    title: "The f5 Pawn Break",
+    subtitle: "Breaking open the position",
+    fen: 'rnbqkb1r/ppp2ppp/3p1n2/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq e6 0 4',
+    toMove: 'white',
+    introduction: "Pawn breaks open up closed positions. The e5 pawn break challenges Black's center and opens lines.",
+    keyIdeas: [
+      "Use pawn breaks to open lines",
+      "Break when you're ready to attack",
+      "Pawn breaks require preparation",
+      "Open files for your pieces"
+    ],
+    mainLine: [
+      {
+        move: "dxe5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The pawn break! Opening the d-file and challenging Black's central structure.",
+        highlights: [
+          "e5"
+        ],
+        conceptTag: "Pawn Break"
+      },
+      {
+        move: "dxe5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures, opening the d-file for both sides.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops, preparing to use the open file.",
+        conceptTag: "Development"
+      },
+      {
+        move: "Nc6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the knight.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Pawn breaks are crucial for opening closed positions. The f5 break is a standard way to challenge central pawn structures and activate pieces.",
+    keyTakeaways: [
+      "Pawn breaks open lines for pieces",
+      "Timing is crucial for breaks",
+      "Prepare breaks with piece development",
+      "Breaks change the character of the position"
+    ],
+    
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Pawn break principles",
+  },
+
+  {
+    id: 'piece-coordination-queen-rook',
+    category: 'PIECE_COORDINATION',
+    title: "Coordinating Queen and Rook",
+    subtitle: "Working pieces together",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Coordinated pieces are much stronger than individual pieces. When pieces work together, they create threats that single pieces cannot.",
+    keyIdeas: [
+      "Coordinate pieces to work together",
+      "Use pieces to support each other",
+      "Create multiple threats simultaneously",
+      "Maximize piece activity together"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety and activating the rook.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop actively.",
+        conceptTag: ""
+      },
+      {
+        move: "Re1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Placing the rook on the e-file, supporting e4.",
+        conceptTag: "Rook Activity"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles for king safety.",
+        conceptTag: ""
+      },
+      {
+        move: "Qd2",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our queen and rook now coordinate, with the queen supporting the rook on e1. This creates threats along the e-file and prepares tactical possibilities.",
+        highlights: [
+          "e1",
+          "d2"
+        ],
+        conceptTag: "Piece Coordination"
+      }
+    ],
+    summary: "Coordinated pieces create powerful threats. Place pieces so they support each other and attack together, not individually.",
+    keyTakeaways: [
+      "Coordinated pieces are much stronger",
+      "Use pieces to support each other",
+      "Create multiple threats at once",
+      "Think about piece harmony"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Piece coordination principles",
   }
 ];
 
