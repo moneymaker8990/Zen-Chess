@@ -630,7 +630,7 @@ export function LegendDetailPage() {
           {/* Game Area - Board and Controls */}
           <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden">
             {/* Chessboard */}
-            <div className="card p-4 w-full overflow-hidden">
+            <div className="card p-0 sm:p-4 w-full overflow-hidden">
               <div className="board-container" ref={boardContainerRef}>
                 <div className="board-wrapper">
                   <Chessboard
@@ -907,7 +907,7 @@ export function LegendDetailPage() {
             </div>
           ) : (
             <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
-              <div className="card p-4 w-full overflow-hidden">
+              <div className="card p-0 sm:p-4 w-full overflow-hidden">
                 <div className="board-container" ref={boardContainerRef}>
                   <div className="board-wrapper">
                     {guessChess && (
