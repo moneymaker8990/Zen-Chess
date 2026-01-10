@@ -14,7 +14,7 @@ export function useBoardSize(
   containerRef: RefObject<HTMLElement>,
   maxWidth: number = 480
 ): number {
-  const [size, setSize] = useState(0);
+  const [size, setSize] = useState(Math.min(maxWidth, 320));
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
