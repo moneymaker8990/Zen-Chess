@@ -75,7 +75,7 @@ export function MoveTrainer({
   currentPatternIndex = 0,
   totalPatterns = 1,
 }: MoveTrainerProps) {
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   
   // Game State
   const [game, setGame] = useState(() => {
@@ -714,7 +714,7 @@ export function MoveTrainer({
         <div className="space-y-4 w-full max-w-full flex flex-col items-center lg:items-start overflow-hidden">
           {/* Chessboard */}
           <div className="board-container">
-            <div className="board-wrapper overflow-hidden shadow-2xl" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+            <div className="board-wrapper overflow-hidden shadow-2xl">
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}

@@ -184,7 +184,7 @@ function getRandomPieceFromPosition(chess: Chess): PiecePosition | null {
 
 export function BlindfoldTrainerPage() {
   const navigate = useNavigate();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   
   // State
   const [mode, setMode] = useState<TrainingMode>('menu');
@@ -735,7 +735,7 @@ export function BlindfoldTrainerPage() {
           {/* Board Area */}
           <div className="board-container">
             {showBoard ? (
-              <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+              <div className="board-wrapper">
                 <Chessboard
                   position={currentFen}
                   boardOrientation="white"

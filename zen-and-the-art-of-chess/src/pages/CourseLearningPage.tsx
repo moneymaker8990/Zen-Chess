@@ -271,7 +271,7 @@ export default function CourseLearningPage() {
   const navigate = useNavigate();
   const goBack = useBackNavigation(`/courses/${courseId}`);
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
 
   // Course data
   const [course, setCourse] = useState<Course | null>(null);
@@ -806,7 +806,7 @@ export default function CourseLearningPage() {
               animate={{ opacity: 1, scale: 1 }}
               className="board-container"
             >
-              <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+              <div className="board-wrapper">
                 <Chessboard
                   position={game.fen()}
                   onPieceDrop={handleMove}

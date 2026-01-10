@@ -1,180 +1,100 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 /**
+ * Calculate mobile-safe board size based on viewport width.
+ * This is the SINGLE SOURCE OF TRUTH for board sizing.
+ */
+function getMobileSize(vw: number, maxWidth: number): number {
+  if (vw < 400) {
+    // Small phones: 32px total margin (16px each side)
+    return Math.min(maxWidth, vw - 32);
+  }
+  if (vw < 640) {
+    // Standard mobile: 48px total margin
+    return Math.min(maxWidth, vw - 48);
+  }
+  if (vw < 1024) {
+    // Tablet: 64px margin, cap at 480
+    return Math.min(maxWidth, vw - 64, 480);
+  }
+  // Desktop: use max width
+  return maxWidth;
+}
+
+/**
  * Hook to calculate responsive chessboard size based on viewport.
  * Returns the optimal board width in pixels.
  * 
- * Mobile-first approach with conservative breakpoints to prevent overflow.
+ * @param maxWidth - Maximum board size (default 520)
+ * @returns Board width in pixels that fits the current viewport
  */
-export function useBoardSize(
-  maxWidth: number = 520,
-  padding: number = 32
-): number {
-  const calculateInitialSize = useCallback(() => {
-    if (typeof window === 'undefined') return Math.min(maxWidth, 300);
-    
-    const vw = window.innerWidth;
-    
-    // Mobile-first: VERY conservative to prevent any overflow
-    // Must match CSS breakpoints in index.css for .board-wrapper
-    let size: number;
-    
-    if (vw < 360) {
-      // Very small phones (iPhone SE, small Android)
-      size = vw - 40;
-    } else if (vw < 480) {
-      // Small/standard mobile (360-480px)
-      size = vw - 48;
-    } else if (vw < 640) {
-      // Large mobile (480-640px)
-      size = vw - 64;
-    } else if (vw < 1024) {
-      // Tablet
-      size = Math.min(vw - 80, 480);
-    } else {
-      // Desktop: use max width
-      size = maxWidth;
-    }
-    
-    return Math.min(maxWidth, size);
+export function useBoardSize(maxWidth: number = 520): number {
+  const getSize = useCallback(() => {
+    if (typeof window === 'undefined') return Math.min(maxWidth, 320);
+    return getMobileSize(window.innerWidth, maxWidth);
   }, [maxWidth]);
 
-  const [boardSize, setBoardSize] = useState(calculateInitialSize);
+  const [boardSize, setBoardSize] = useState(getSize);
 
   useEffect(() => {
-    const calculateSize = () => {
-      const viewportWidth = window.innerWidth;
-      
-      let size: number;
-      
-      // Mobile: VERY conservative width - must match CSS breakpoints
-      if (viewportWidth < 360) {
-        // Very small phones - maximum margin
-        size = viewportWidth - 40;
-      }
-      else if (viewportWidth < 480) {
-        // Small/standard mobile (360-480px)
-        size = viewportWidth - 48;
-      }
-      else if (viewportWidth < 640) {
-        // Large mobile (480-640px)
-        size = viewportWidth - 64;
-      }
-      // Tablet: constrained width
-      else if (viewportWidth < 1024) {
-        size = Math.min(viewportWidth - 80, 480);
-      }
-      // Desktop: use max width
-      else {
-        size = maxWidth;
-      }
-      
-      // Apply max width constraint
-      const finalSize = Math.min(maxWidth, size);
-      
-      setBoardSize(finalSize);
+    const handleResize = () => {
+      setBoardSize(getMobileSize(window.innerWidth, maxWidth));
     };
 
-    calculateSize();
-    window.addEventListener('resize', calculateSize);
+    // Calculate on mount
+    handleResize();
     
-    // Also handle orientation changes for mobile
-    const handleOrientationChange = () => {
-      setTimeout(calculateSize, 150); // Wait for orientation change to complete
-    };
-    window.addEventListener('orientationchange', handleOrientationChange);
+    // Listen for resize
+    window.addEventListener('resize', handleResize);
     
-    // Handle visual viewport changes (keyboard, etc)
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', calculateSize);
-    }
+    // Handle orientation changes
+    window.addEventListener('orientationchange', () => {
+      // Delay to let orientation change complete
+      setTimeout(handleResize, 100);
+    });
     
     return () => {
-      window.removeEventListener('resize', calculateSize);
-      window.removeEventListener('orientationchange', handleOrientationChange);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', calculateSize);
-      }
+      window.removeEventListener('resize', handleResize);
     };
-  }, [maxWidth, padding]);
+  }, [maxWidth]);
 
   return boardSize;
 }
 
 /**
  * Hook for board size that responds to a container ref.
- * Useful when the board is in a flex/grid container.
- * 
- * Mobile-optimized: uses viewport-based fallback with conservative margins.
+ * Uses the smaller of: container width or viewport-safe size.
  */
 export function useContainerBoardSize(
   containerRef: React.RefObject<HTMLElement>,
   maxWidth: number = 520,
   padding: number = 16
 ): number {
-  // Initialize to 0 to indicate container hasn't mounted yet
   const [boardSize, setBoardSize] = useState(0);
-  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const calculateSize = () => {
+      const vw = window.innerWidth;
+      const mobileMax = getMobileSize(vw, maxWidth);
+      
       if (containerRef.current) {
-        const containerWidth = containerRef.current.offsetWidth;
-        // Subtract padding and ensure minimum size
-        const calculatedSize = Math.min(maxWidth, containerWidth - padding);
-        
-        // For mobile, also check viewport constraints to prevent overflow
-        // Must match CSS breakpoints
-        const vw = window.innerWidth;
-        let mobileMax: number;
-        
-        if (vw < 360) {
-          mobileMax = vw - 40;
-        } else if (vw < 480) {
-          mobileMax = vw - 48;
-        } else if (vw < 640) {
-          mobileMax = vw - 64;
-        } else {
-          mobileMax = maxWidth;
-        }
-        
-        // Use the smaller of container-based and mobile constraints
-        const finalSize = Math.min(calculatedSize, mobileMax);
-        
-        // Only set if we have a valid positive size
-        if (finalSize > 0) {
-          setBoardSize(finalSize);
-        }
+        const containerWidth = containerRef.current.offsetWidth - padding;
+        // Use the smaller of container width or mobile-safe size
+        setBoardSize(Math.max(200, Math.min(containerWidth, mobileMax)));
       } else {
-        // Fallback to viewport-based calculation - match CSS breakpoints
-        const viewportWidth = window.innerWidth;
-        let size: number;
-        
-        if (viewportWidth < 360) {
-          size = viewportWidth - 40;
-        } else if (viewportWidth < 480) {
-          size = viewportWidth - 48;
-        } else if (viewportWidth < 640) {
-          size = viewportWidth - 64;
-        } else {
-          size = Math.min(maxWidth, viewportWidth - 80);
-        }
-        
-        setBoardSize(Math.min(maxWidth, size));
+        // Fallback to viewport-based
+        setBoardSize(mobileMax);
       }
     };
 
-    // Small delay to ensure container is mounted
+    // Initial calculation with small delay for mount
     const timeoutId = setTimeout(calculateSize, 0);
     
-    // Use ResizeObserver for container changes
+    // ResizeObserver for container changes
     const resizeObserver = new ResizeObserver(() => {
-      // Clear any pending debounce timeout before creating a new one
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
-      // Debounce resize calculations
-      debounceTimeoutRef.current = setTimeout(calculateSize, 10);
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(calculateSize, 10);
     });
     
     if (containerRef.current) {
@@ -182,11 +102,10 @@ export function useContainerBoardSize(
     }
     
     window.addEventListener('resize', calculateSize);
+    
     return () => {
       clearTimeout(timeoutId);
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
+      if (debounceRef.current) clearTimeout(debounceRef.current);
       resizeObserver.disconnect();
       window.removeEventListener('resize', calculateSize);
     };
@@ -196,4 +115,3 @@ export function useContainerBoardSize(
 }
 
 export default useBoardSize;
-

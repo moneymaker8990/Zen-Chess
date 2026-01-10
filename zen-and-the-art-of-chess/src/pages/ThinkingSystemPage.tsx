@@ -491,7 +491,7 @@ type ViewMode = 'overview' | 'lesson' | 'practice' | 'reference';
 
 export function ThinkingSystemPage() {
   const navigate = useNavigate();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
@@ -850,14 +850,14 @@ export function ThinkingSystemPage() {
           {isOnExample && currentLesson.examples[exampleIndex] && (
             <div className="grid lg:grid-cols-2 gap-8 items-center">
               <div className="board-container">
-                <div className="board-wrapper" style={{ width: '400px', maxWidth: '100%' }}>
+                <div className="board-wrapper">
                   <Chessboard
                     position={currentLesson.examples[exampleIndex].fen}
                     boardOrientation="white"
                     customDarkSquareStyle={{ backgroundColor: '#779556' }}
                     customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
                     arePiecesDraggable={false}
-                    boardWidth={400}
+                    boardWidth={boardSize}
                   customSquareStyles={
                     currentLesson.examples[exampleIndex].highlightSquares?.reduce((acc, sq) => ({
                       ...acc,
@@ -939,7 +939,7 @@ export function ThinkingSystemPage() {
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
           <div className="board-container">
-            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+            <div className="board-wrapper">
               <Chessboard
                 position={question.fen}
                 boardOrientation={new Chess(question.fen).turn() === 'w' ? 'white' : 'black'}

@@ -260,7 +260,7 @@ export function PuzzlesPage() {
   const triggerAgent = useAgentTrigger();
   const puzzleStartTime = useRef<number>(Date.now());
   const puzzleStreakRef = useRef<number>(0);
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   
   // Navigation State
   const [mode, setMode] = useState<PuzzleMode>('menu');
@@ -1695,7 +1695,7 @@ export function PuzzlesPage() {
         {/* Board Area - takes remaining space */}
         <div className="flex-1 flex items-center justify-center px-2 py-2 overflow-hidden min-h-0">
           <div className="board-container">
-            <div className="board-wrapper" style={{ width: boardSize > 0 ? Math.min(boardSize, 500) : '100%' }}>
+            <div className="board-wrapper">
               <Chessboard
                 position={game.fen()}
                 onSquareClick={isAnimatingSetup ? undefined : onSquareClick}

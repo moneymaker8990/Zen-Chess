@@ -10,6 +10,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, type Square } from 'chess.js';
 import { enhancedPatterns, type EnhancedPattern } from '@/data/positional/enhancedPatterns';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import { 
   validatePatternById, 
   validateEnhancedPatterns,
@@ -166,6 +167,7 @@ function PatternListView() {
 function PatternDetailView({ pattern }: { pattern: EnhancedPattern }) {
   const navigate = useNavigate();
   const boardStyles = useBoardStyles();
+  const boardSize = useBoardSize(400);
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [validationResult, setValidationResult] = useState<PatternValidationResult | null>(null);
   
@@ -300,10 +302,11 @@ function PatternDetailView({ pattern }: { pattern: EnhancedPattern }) {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Board */}
         <div>
-          <div className="max-w-[400px] mx-auto">
+          <div className="board-container">
+            <div className="board-wrapper">
             <Chessboard
               position={gameState.fen()}
-              boardWidth={400}
+              boardWidth={boardSize}
               customDarkSquareStyle={boardStyles.customDarkSquareStyle}
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               customSquareStyles={customSquareStyles}
@@ -311,6 +314,7 @@ function PatternDetailView({ pattern }: { pattern: EnhancedPattern }) {
               arePiecesDraggable={false}
               boardOrientation={pattern.toMove}
             />
+            </div>
           </div>
           
           {/* Move Navigation */}

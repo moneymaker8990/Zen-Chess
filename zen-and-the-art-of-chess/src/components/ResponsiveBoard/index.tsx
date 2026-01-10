@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Chessboard } from 'react-chessboard';
 import type { Square } from 'chess.js';
 import type { BoardOrientation } from 'react-chessboard/dist/chessboard/types';
+import { useBoardSize } from '@/hooks/useBoardSize';
 
 interface ResponsiveBoardProps {
   position: string; // FEN string
@@ -14,7 +15,6 @@ interface ResponsiveBoardProps {
   animationDuration?: number;
   arePiecesDraggable?: boolean;
   maxWidth?: number;
-  minWidth?: number;
   children?: ReactNode; // For overlays
   showCoordinates?: boolean;
   onPieceClick?: (piece: string, square: Square) => void;
@@ -28,8 +28,10 @@ interface ResponsiveBoardProps {
 }
 
 /**
- * A responsive chessboard wrapper that automatically sizes to fit its container
+ * A responsive chessboard wrapper that automatically sizes to fit the viewport
  * and prevents overflow on mobile devices.
+ * 
+ * Uses the centralized useBoardSize hook for consistent mobile sizing.
  */
 export function ResponsiveBoard({
   position,
@@ -42,7 +44,6 @@ export function ResponsiveBoard({
   animationDuration = 200,
   arePiecesDraggable = true,
   maxWidth = 520,
-  minWidth = 280,
   children,
   showCoordinates = true,
   onPieceClick,
@@ -54,55 +55,12 @@ export function ResponsiveBoard({
   boardId,
   snapToCursor = true,
 }: ResponsiveBoardProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [boardWidth, setBoardWidth] = useState(Math.min(maxWidth, 400));
-
-  useEffect(() => {
-    const calculateSize = () => {
-      if (!containerRef.current) return;
-      
-      // Get container width
-      const containerWidth = containerRef.current.offsetWidth;
-      
-      // Calculate board size with padding considerations
-      const padding = 0; // Container handles padding
-      const availableWidth = containerWidth - padding;
-      
-      // Clamp to min/max
-      const newWidth = Math.max(minWidth, Math.min(maxWidth, availableWidth));
-      
-      setBoardWidth(newWidth);
-    };
-
-    // Initial calculation
-    calculateSize();
-
-    // Use ResizeObserver for responsive updates
-    const resizeObserver = new ResizeObserver(() => {
-      // Use requestAnimationFrame to avoid layout thrashing
-      requestAnimationFrame(calculateSize);
-    });
-
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    // Also listen for window resize as a fallback
-    window.addEventListener('resize', calculateSize);
-
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', calculateSize);
-    };
-  }, [maxWidth, minWidth]);
+  // Use centralized hook for mobile-safe sizing
+  const boardWidth = useBoardSize(maxWidth);
 
   return (
-    <div 
-      ref={containerRef}
-      className="board-container"
-      style={{ maxWidth: `${maxWidth}px` }}
-    >
-      <div className="board-wrapper" style={{ width: boardWidth > 0 ? boardWidth : '100%' }}>
+    <div className="board-container">
+      <div className="board-wrapper">
         <Chessboard
           id={boardId}
           position={position}
@@ -132,9 +90,3 @@ export function ResponsiveBoard({
 }
 
 export default ResponsiveBoard;
-
-
-
-
-
-

@@ -323,7 +323,7 @@ export function ZenChessboard({
   
   return (
     <div className="board-container">
-      <div className="board-wrapper zen-chessboard" style={{ width: boardWidth > 0 ? boardWidth : '100%' }}>
+      <div className="board-wrapper zen-chessboard">
         <Chessboard
         position={position}
         onSquareClick={handleSquareClick}

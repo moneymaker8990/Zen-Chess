@@ -637,7 +637,7 @@ export function LegendDetailPage() {
             {/* Chessboard */}
             <div className="card p-4 w-full overflow-hidden" ref={boardContainerRef}>
               <div className="board-container">
-                <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+                <div className="board-wrapper">
                   {boardSize > 0 && (
                     <Chessboard
                       position={game.fen()}
@@ -916,7 +916,7 @@ export function LegendDetailPage() {
             <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
               <div className="card p-4 w-full overflow-hidden" ref={boardContainerRef}>
                 <div className="board-container">
-                  <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+                  <div className="board-wrapper">
                     {guessChess && boardSize > 0 && (
                       <Chessboard
                         position={guessChess.fen()}

@@ -1728,7 +1728,7 @@ export function DailyChallengesPage() {
   const today = getDayOfWeek();
   const todayTheme = DAY_THEMES[today];
   const dateString = getDateString();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
@@ -2217,7 +2217,7 @@ export function DailyChallengesPage() {
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
           <div className="board-container">
-            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+            <div className="board-wrapper">
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}
@@ -2497,7 +2497,7 @@ export function DailyChallengesPage() {
         
         {/* Board */}
         <div className="board-container px-2 sm:px-0">
-          <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+          <div className="board-wrapper">
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}

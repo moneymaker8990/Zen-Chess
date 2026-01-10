@@ -10,7 +10,7 @@ type Category = 'all' | 'e4' | 'd4' | 'c4' | 'nf3';
 
 export function OpeningTrainer() {
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [selectedOpening, setSelectedOpening] = useState<OpeningLine | null>(null);
   const [game, setGame] = useState(new Chess());

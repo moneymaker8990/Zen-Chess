@@ -55,7 +55,7 @@ export function ChessBoardPanel({
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
   const [moveCount, setMoveCount] = useState(0);
   const [isAnimatingSetup, setIsAnimatingSetup] = useState(false);
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
 
   const { gameState, setEvaluation, makeMove } = useGameStore();
   const { recordGamePlayed, recordPuzzleSolved, recordPuzzleFailed } = useStudyStore();
@@ -451,7 +451,7 @@ export function ChessBoardPanel({
 
   return (
     <div className="board-container">
-      <div className="board-wrapper chessboard-container relative" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+      <div className="board-wrapper chessboard-container relative">
         {/* Engine thinking overlay */}
         {isThinking && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-zen-900/30 pointer-events-none">

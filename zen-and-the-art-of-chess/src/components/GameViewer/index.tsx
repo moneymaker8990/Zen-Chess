@@ -24,7 +24,7 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [loadedFromLegend, setLoadedFromLegend] = useState<string | null>(null);
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   
   // Use loaded moves if game has no moves
   const effectiveMoves = game.moves.length > 0 ? game.moves : loadedMoves;

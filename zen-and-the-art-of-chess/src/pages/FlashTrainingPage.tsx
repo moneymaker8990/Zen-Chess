@@ -213,7 +213,7 @@ const getObservationHints = (questionType: FlashQuestion['type'], difficulty: Di
 
 export function FlashTrainingPage() {
   const navigate = useNavigate();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   const boardStyles = useBoardStyles();
   
   // State
@@ -1114,7 +1114,7 @@ export function FlashTrainingPage() {
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0 max-w-full">
           {/* Board */}
           <div className="board-container">
-            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+            <div className="board-wrapper">
               <div className="relative w-full h-full">
                 {/* Show board during position flash, result, or study mode during questions */}
                 {(showingPosition || showResult || (studyMode && showingQuestion)) && (
@@ -1374,7 +1374,7 @@ export function FlashTrainingPage() {
             <div 
               className="board-container"
             >
-              <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+              <div className="board-wrapper">
                 <Chessboard
                   position={currentReview.position.fen}
                   boardOrientation={new Chess(currentReview.position.fen).turn() === 'w' ? 'white' : 'black'}

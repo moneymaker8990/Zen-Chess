@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Chess, Square } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import { stockfish } from '@/engine/stockfish';
 import { parseUciMove } from '@/lib/moveValidation';
 import type { Tradition } from '@/lib/types';
@@ -63,9 +64,10 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
   const { recordEvent, recordMindfulness, recordReflection } = useCoachStore();
   const sessionStartTime = useRef<number>(Date.now());
   
-  // Board settings
+// Board settings
   const boardStyles = useBoardStyles();
-  
+  const boardSize = useBoardSize(480);
+
   // Session state
   const [sessionPhase, setSessionPhase] = useState<SessionPhase>('WELCOME');
   const [selectedIntention, setSelectedIntention] = useState<string | null>(null);
@@ -807,8 +809,9 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
             </div>
           )}
 
-          <div className="overflow-hidden shadow-2xl shadow-violet-500/10"
-            style={{ border: '1px solid rgba(167, 139, 250, 0.1)', width: Math.min(480, typeof window !== 'undefined' ? window.innerWidth - 48 : 480), maxWidth: '100%' }}>
+          <div className="board-container">
+          <div className="board-wrapper overflow-hidden shadow-2xl shadow-violet-500/10"
+            style={{ border: '1px solid rgba(167, 139, 250, 0.1)' }}>
             <Chessboard
               position={game.fen()}
               onSquareClick={onSquareClick}
@@ -819,8 +822,9 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={300}
               arePiecesDraggable={!isThinking && game.turn() === 'w' && !showPreMoveBreath}
-              boardWidth={Math.min(480, typeof window !== 'undefined' ? window.innerWidth - 48 : 480)}
+              boardWidth={boardSize}
             />
+          </div>
           </div>
 
           {/* Game over - very gentle */}

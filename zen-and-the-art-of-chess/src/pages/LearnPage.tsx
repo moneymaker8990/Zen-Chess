@@ -182,7 +182,7 @@ export function LearnPage() {
                 <div 
                   className="board-container"
                 >
-                  <div className="board-wrapper rounded-xl overflow-hidden shadow-2xl" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+                  <div className="board-wrapper rounded-xl overflow-hidden shadow-2xl">
                     <Chessboard
                       position={currentStep.fen}
                       boardWidth={boardSize}

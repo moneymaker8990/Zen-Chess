@@ -380,7 +380,7 @@ export function OpeningsPage() {
   
   // Board settings and sizing - use the same hook as PlayPage
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
 
   // Calculate lines count for each course - separate learning vs database
   const coursesWithCounts = useMemo(() => {
@@ -1039,7 +1039,7 @@ export function OpeningsPage() {
 
             {/* Chessboard */}
             <div className="board-container">
-              <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+              <div className="board-wrapper">
                 <Chessboard
                   position={game.fen()}
                   onSquareClick={onSquareClick}

@@ -32,7 +32,7 @@ export function LiveGamePage() {
   const { gameId } = useParams<{ gameId: string }>();
   const { user } = useAuthStore();
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(500, 32);
+  const boardSize = useBoardSize(500);
 
   // Game engine
   const engineRef = useRef<MultiplayerGameEngine | null>(null);
@@ -379,7 +379,7 @@ export function LiveGamePage() {
         {/* Center - Board */}
         <div className="flex flex-col items-center">
           <div className="board-container">
-            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+            <div className="board-wrapper">
               <Chessboard
                 position={position}
                 onSquareClick={onSquareClick}

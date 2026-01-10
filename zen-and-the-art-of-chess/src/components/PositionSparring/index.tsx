@@ -12,7 +12,7 @@ import type { SparringPosition } from '@/lib/trainingTypes';
 export function PositionSparring() {
   const { positions, addPosition, recordResult, getRecommendedPositions, deletePosition } = usePositionSparringStore();
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   
   const [selectedPosition, setSelectedPosition] = useState<SparringPosition | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);

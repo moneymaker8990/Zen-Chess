@@ -241,7 +241,7 @@ const POSITIONS: EvaluatedPosition[] = [
 
 export function IntuitionTrainerPage() {
   const navigate = useNavigate();
-  const boardSize = useBoardSize(480, 32);
+  const boardSize = useBoardSize(480);
   
   // State
   const [stats, setStats] = useState<IntuitionStats>(() => {
@@ -669,7 +669,7 @@ export function IntuitionTrainerPage() {
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
           <div className="board-container">
-            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+            <div className="board-wrapper">
               <Chessboard
                 position={currentPosition.fen}
                 boardOrientation="white"
