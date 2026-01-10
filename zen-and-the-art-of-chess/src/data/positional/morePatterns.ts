@@ -359,6 +359,73 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'knight-outpost-square',
+    category: 'KNIGHT_PLACEMENT',
+    title: "Knight on an Outpost Square",
+    subtitle: "Unassailable knight position",
+    fen: 'r1bqkb1r/ppp2ppp/2n2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "Knights are most effective on outpost squares - squares that cannot be attacked by enemy pawns. These squares provide long-term advantages.",
+    keyIdeas: [
+      "Place knights on outpost squares",
+      "Outposts cannot be attacked by pawns",
+      "Knights on outposts are extremely powerful",
+      "Use knights to control key squares"
+    ],
+    mainLine: [
+      {
+        move: "cxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Exchanging to prepare the outpost.",
+        conceptTag: "Exchange"
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures with the knight.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White recaptures with the knight.",
+        conceptTag: ""
+      },
+      {
+        move: "Qxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures with the queen.",
+        conceptTag: ""
+      },
+      {
+        move: "Ne5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We centralize the knight, and now it can later jump to d5, a perfect outpost square that cannot be attacked by Black's pawns. The knight is heading toward the ideal outpost.",
+        highlights: [
+          "d5"
+        ],
+        conceptTag: "Knight Placement"
+      }
+    ],
+    summary: "Knights on outpost squares are extremely powerful. Place them on squares that cannot be attacked by enemy pawns for maximum effect.",
+    keyTakeaways: [
+      "Place knights on outpost squares",
+      "Outposts cannot be attacked by pawns",
+      "Knights on outposts control key squares",
+      "Long-term advantages from outposts"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Knight placement principles",
+  },
+
+  {
     id: 'centralization-piece-activity',
     category: 'CENTRALIZATION',
     title: "Centralizing Your Pieces",
@@ -1153,6 +1220,73 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'blockade-doubled-pawns',
+    category: 'BLOCKADE',
+    title: "Blockading Doubled Pawns",
+    subtitle: "Fixing doubled pawn weaknesses",
+    fen: 'r1bqkb1r/ppp2ppp/2n2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "Doubled pawns are weak because they cannot support each other. Blockading them prevents them from advancing and fixes them as weaknesses.",
+    keyIdeas: [
+      "Blockade doubled pawns to fix weaknesses",
+      "Place pieces in front of doubled pawns",
+      "Prevent pawn advances with blockaders",
+      "Control squares in front of weak pawn formations"
+    ],
+    mainLine: [
+      {
+        move: "cxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Exchanging to simplify and prepare for blockade.",
+        conceptTag: "Exchange"
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures with the knight.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White recaptures.",
+        conceptTag: ""
+      },
+      {
+        move: "Qxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures with the queen.",
+        conceptTag: ""
+      },
+      {
+        move: "Ne5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We centralize the knight, and now it can later blockade Black's doubled pawns if they appear. The knight on e5 is well-placed for blockade purposes.",
+        highlights: [
+          "e5"
+        ],
+        conceptTag: "Blockade"
+      }
+    ],
+    summary: "Blockading doubled pawns fixes them as chronic weaknesses. The blockader prevents the pawns from advancing and controls key squares.",
+    keyTakeaways: [
+      "Doubled pawns are chronic weaknesses",
+      "Blockade them to prevent advances",
+      "Use knights or other pieces to blockade",
+      "The blockader gains control of key squares"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Pawn structure theory",
+  },
+
+  {
     id: 'exchange-trading-bad-pieces',
     category: 'EXCHANGE_STRATEGY',
     title: "Exchanging Bad Pieces for Good",
@@ -1588,6 +1722,66 @@ const additionalPatterns: EnhancedPattern[] = [
       "Challenge pawn chains with advances",
       "Prepare breaks with development",
       "Central breaks create piece activity"
+    ],
+    
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Pawn break principles",
+  },
+
+  {
+    id: 'pawn-break-f5-break',
+    category: 'PAWN_BREAKS',
+    title: "The f5 Pawn Break",
+    subtitle: "Kingside expansion",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4PP2/5N2/PPPP2PP/RNBQKB1R w KQkq e6 0 5',
+    toMove: 'white',
+    introduction: "The f5 pawn break expands on the kingside and challenges Black's pawn structure. This type of break is common in King's Indian and similar structures.",
+    keyIdeas: [
+      "Use pawn breaks to expand on the kingside",
+      "Challenge opponent's pawn chains",
+      "Open lines with pawn advances",
+      "Prepare breaks with piece development"
+    ],
+    mainLine: [
+      {
+        move: "f5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The pawn break! This expands on the kingside and challenges Black's central structure, opening lines for attack.",
+        highlights: [
+          "f5"
+        ],
+        conceptTag: "Pawn Break"
+      },
+      {
+        move: "Nxe4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black captures the e4 pawn with the knight.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxe5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White captures the e5 pawn, maintaining the break and opening lines.",
+        conceptTag: ""
+      },
+      {
+        move: "Be7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Pawn breaks like f5 expand your position and challenge the opponent's structure. Kingside breaks are powerful attacking tools.",
+    keyTakeaways: [
+      "Use pawn breaks to expand on flanks",
+      "Kingside breaks create attacking chances",
+      "Prepare breaks with development",
+      "Flank breaks complement central play"
     ],
     
     difficulty: 3,
