@@ -617,48 +617,32 @@ a.small,
  * CRITICAL: Use viewport units on mobile to guarantee fit.
  */
 .board-container {
-  width: 100%;
-  /* On mobile: viewport width minus page padding (16px each side = 32px) */
-  max-width: min(480px, calc(100vw - 32px));
+  /* Force the container to take full available width */
+  width: calc(100vw - 32px);
+  max-width: 480px;
   margin: 0 auto;
   overflow: hidden;
 }
 
 @media (max-width: 640px) {
   .board-container {
-    /* Even more aggressive on small screens - account for all possible padding */
-    max-width: calc(100vw - 48px);
+    /* On small screens - viewport minus padding */
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
   }
 }
 
 /* 
- * Wrapper for the board - fills container width.
- * The Chessboard component renders at exact boardWidth pixels.
- * CRITICAL: Multiple overflow constraints to prevent pieces escaping.
+ * Wrapper for the board - contains the chessboard.
+ * Keep it simple - just clip overflow, don't mess with internal layout.
  */
 .board-wrapper {
   width: 100%;
-  max-width: 100%;
   position: relative;
-  overflow: hidden !important;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
 }
 
+/* Clip any pieces that escape the board boundaries */
 .board-wrapper > div {
-  max-width: 100% !important;
-  overflow: hidden !important;
-}
-
-/* Force all chessboard children to respect container bounds */
-.board-wrapper * {
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-/* Target the react-chessboard div specifically */
-.board-wrapper > div > div {
-  max-width: 100% !important;
-  overflow: hidden !important;
+  overflow: hidden;
 }

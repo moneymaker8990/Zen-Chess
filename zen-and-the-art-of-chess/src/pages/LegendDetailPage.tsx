@@ -29,9 +29,14 @@ export function LegendDetailPage() {
   const { addNote } = useNotesStore();
   const { recordGamePlayed, recordPuzzleSolved } = useStudyStore();
   const { markGameReviewed, isGameReviewed, getGameReview, getLegendStats } = useLegendGameReviewStore();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  // Use container-based sizing to make board fit
-  const boardSize = useBoardSize(boardContainerRef, 480);
+  
+  // Separate refs for each tab's board to ensure proper sizing
+  const playBoardRef = useRef<HTMLDivElement>(null);
+  const guessBoardRef = useRef<HTMLDivElement>(null);
+  
+  // Separate size hooks for each board
+  const playBoardSize = useBoardSize(playBoardRef, 480);
+  const guessBoardSize = useBoardSize(guessBoardRef, 480);
   
   const legend = legendId as LegendId;
   const legendData = legend ? LEGEND_STYLES[legend] : null;
@@ -630,8 +635,8 @@ export function LegendDetailPage() {
           {/* Game Area - Board and Controls */}
           <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden -mx-2 sm:mx-0">
             {/* Chessboard - full bleed on mobile */}
-            <div className="w-full sm:card sm:p-4 overflow-hidden flex justify-center">
-              <div className="board-container" ref={boardContainerRef}>
+            <div className="w-full sm:card sm:p-4 overflow-hidden">
+              <div className="board-container" ref={playBoardRef}>
                 <div className="board-wrapper">
                   <Chessboard
                     position={game.fen()}
@@ -649,7 +654,7 @@ export function LegendDetailPage() {
                     customLightSquareStyle={boardStyles.customLightSquareStyle}
                     animationDuration={boardStyles.animationDuration}
                     arePiecesDraggable={!isThinking}
-                    boardWidth={boardSize}
+                    boardWidth={playBoardSize}
                   />
                 </div>
               </div>
@@ -907,8 +912,8 @@ export function LegendDetailPage() {
             </div>
           ) : (
             <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden -mx-2 sm:mx-0">
-              <div className="w-full sm:card sm:p-4 overflow-hidden flex justify-center">
-                <div className="board-container" ref={boardContainerRef}>
+              <div className="w-full sm:card sm:p-4 overflow-hidden">
+                <div className="board-container" ref={guessBoardRef}>
                   <div className="board-wrapper">
                     {guessChess && (
                       <Chessboard
@@ -922,7 +927,7 @@ export function LegendDetailPage() {
                         customLightSquareStyle={boardStyles.customLightSquareStyle}
                         animationDuration={boardStyles.animationDuration}
                         arePiecesDraggable={!showFeedback && !guessAnimating}
-                        boardWidth={boardSize}
+                        boardWidth={guessBoardSize}
                       />
                     )}
                     
