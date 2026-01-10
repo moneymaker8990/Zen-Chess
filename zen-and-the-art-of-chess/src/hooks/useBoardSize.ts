@@ -14,20 +14,25 @@ export function useBoardSize(
   containerRef: RefObject<HTMLElement>,
   maxWidth: number = 480
 ): number {
-  const [size, setSize] = useState(Math.min(maxWidth, 320));
+  // Initial size based on viewport to prevent flicker - will be updated by measurement
+  const [size, setSize] = useState(() => {
+    if (typeof window === 'undefined') return 300;
+    // On mobile, use viewport width minus padding as initial guess
+    const vw = window.innerWidth;
+    if (vw < 640) return Math.min(vw - 48, maxWidth);
+    return Math.min(maxWidth, 400);
+  });
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     const measure = () => {
       if (!containerRef.current) return;
       
-      // Use clientWidth to get the actual available space (excludes scrollbars/borders)
+      // Use clientWidth to get the actual available space
       const containerWidth = containerRef.current.clientWidth;
-      // Subtract a larger buffer (16px) to ensure board NEVER exceeds container
-      // This accounts for any unexpected padding, borders, or rendering quirks
-      const availableWidth = containerWidth - 16;
-      // Use the smaller of available width or maxWidth
-      const newSize = Math.max(Math.min(availableWidth, maxWidth), 200); // Minimum 200px
+      // Use container width directly - CSS now handles the constraints
+      // Only subtract 4px for any sub-pixel rendering issues
+      const newSize = Math.max(Math.floor(containerWidth - 4), 200);
       
       // Only update if changed to prevent unnecessary re-renders
       setSize(prev => prev !== newSize ? newSize : prev);

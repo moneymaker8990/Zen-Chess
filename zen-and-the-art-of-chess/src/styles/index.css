@@ -614,14 +614,21 @@ a.small,
 
 /* 
  * Container that determines board size.
- * Uses 100% width (up to max) - the JS hook measures this to set boardWidth.
- * This is the Lichess approach: container determines size, not viewport math.
+ * CRITICAL: Use viewport units on mobile to guarantee fit.
  */
 .board-container {
   width: 100%;
-  max-width: 480px;
+  /* On mobile: viewport width minus page padding (16px each side = 32px) */
+  max-width: min(480px, calc(100vw - 32px));
   margin: 0 auto;
   overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .board-container {
+    /* Even more aggressive on small screens - account for all possible padding */
+    max-width: calc(100vw - 48px);
+  }
 }
 
 /* 

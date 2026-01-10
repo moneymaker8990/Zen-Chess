@@ -628,9 +628,9 @@ export function LegendDetailPage() {
       {activeTab === 'play' && (
         <div className="space-y-6">
           {/* Game Area - Board and Controls */}
-          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden">
-            {/* Chessboard */}
-            <div className="card p-0 sm:p-4 w-full overflow-hidden">
+          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden -mx-2 sm:mx-0">
+            {/* Chessboard - full bleed on mobile */}
+            <div className="w-full sm:card sm:p-4 overflow-hidden flex justify-center">
               <div className="board-container" ref={boardContainerRef}>
                 <div className="board-wrapper">
                   <Chessboard
@@ -906,8 +906,8 @@ export function LegendDetailPage() {
               )}
             </div>
           ) : (
-            <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
-              <div className="card p-0 sm:p-4 w-full overflow-hidden">
+            <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden -mx-2 sm:mx-0">
+              <div className="w-full sm:card sm:p-4 overflow-hidden flex justify-center">
                 <div className="board-container" ref={boardContainerRef}>
                   <div className="board-wrapper">
                     {guessChess && (
