@@ -21,9 +21,12 @@ export function useBoardSize(
     const measure = () => {
       if (!containerRef.current) return;
       
-      const containerWidth = containerRef.current.offsetWidth;
-      // Use the smaller of container width or maxWidth
-      const newSize = Math.min(containerWidth, maxWidth);
+      // Use clientWidth to get the actual available space (excludes scrollbars/borders)
+      const containerWidth = containerRef.current.clientWidth;
+      // Subtract a small buffer (8px) to ensure board never exceeds container
+      const availableWidth = containerWidth - 8;
+      // Use the smaller of available width or maxWidth
+      const newSize = Math.min(availableWidth, maxWidth);
       
       // Only update if changed to prevent unnecessary re-renders
       setSize(prev => prev !== newSize ? newSize : prev);

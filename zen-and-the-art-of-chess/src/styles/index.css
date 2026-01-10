@@ -621,6 +621,7 @@ a.small,
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 /* 
@@ -629,5 +630,15 @@ a.small,
  */
 .board-wrapper {
   width: 100%;
+  max-width: 100%;
   position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board-wrapper > div {
+  max-width: 100%;
+  overflow: hidden;
 }
