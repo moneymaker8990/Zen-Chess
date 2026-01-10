@@ -75,7 +75,8 @@ export function MoveTrainer({
   currentPatternIndex = 0,
   totalPatterns = 1,
 }: MoveTrainerProps) {
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
   
   // Game State
   const [game, setGame] = useState(() => {
@@ -713,7 +714,7 @@ export function MoveTrainer({
         {/* Board Section */}
         <div className="space-y-4 w-full max-w-full flex flex-col items-center lg:items-start overflow-hidden">
           {/* Chessboard */}
-          <div className="board-container">
+          <div className="board-container" ref={boardContainerRef}>
             <div className="board-wrapper overflow-hidden shadow-2xl">
               <Chessboard
                 position={game.fen()}

@@ -213,7 +213,8 @@ const getObservationHints = (questionType: FlashQuestion['type'], difficulty: Di
 
 export function FlashTrainingPage() {
   const navigate = useNavigate();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
   const boardStyles = useBoardStyles();
   
   // State
@@ -1113,7 +1114,7 @@ export function FlashTrainingPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0 max-w-full">
           {/* Board */}
-          <div className="board-container">
+          <div className="board-container" ref={boardContainerRef}>
             <div className="board-wrapper">
               <div className="relative w-full h-full">
                 {/* Show board during position flash, result, or study mode during questions */}
@@ -1371,8 +1372,8 @@ export function FlashTrainingPage() {
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0 max-w-full">
           {/* Board - Always Visible in Review */}
           <div className="flex justify-center items-start">
-            <div 
-              className="board-container"
+<div
+              className="board-container" ref={boardContainerRef}
             >
               <div className="board-wrapper">
                 <Chessboard

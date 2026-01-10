@@ -38,7 +38,8 @@ const BLUNDER_THRESHOLD = 150;
 
 export function PlayPage() {
   const navigate = useNavigate();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
   const [engineReady, setEngineReady] = useState(false);
   const [engineLoading, setEngineLoading] = useState(true);
   const [selectedMode, setSelectedMode] = useState<GameMode>('FREE_PLAY');
@@ -776,7 +777,7 @@ export function PlayPage() {
             {status.text}
           </div>
 
-          <div className="board-container">
+          <div className="board-container" ref={boardContainerRef}>
             <div className="board-wrapper">
               <Chessboard
                 position={game.fen()}

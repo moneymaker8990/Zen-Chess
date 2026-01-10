@@ -10,7 +10,8 @@ type Category = 'all' | 'e4' | 'd4' | 'c4' | 'nf3';
 
 export function OpeningTrainer() {
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [selectedOpening, setSelectedOpening] = useState<OpeningLine | null>(null);
   const [game, setGame] = useState(new Chess());
@@ -306,7 +307,8 @@ export function OpeningTrainer() {
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_350px] gap-4 lg:gap-6 px-2 sm:px-0">
           {/* Board */}
           <div className="relative flex justify-center">
-            <div style={{ width: boardSize, maxWidth: '100%' }}>
+            <div className="board-container" ref={boardContainerRef}>
+              <div className="board-wrapper">
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}
@@ -320,6 +322,7 @@ export function OpeningTrainer() {
                 arePiecesDraggable={isUserTurn && feedback !== 'complete'}
                 boardWidth={boardSize}
               />
+              </div>
             </div>
             
             {/* Correct Move Feedback */}

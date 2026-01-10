@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { useBoardSize } from '@/hooks/useBoardSize';
@@ -24,7 +24,8 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [loadedFromLegend, setLoadedFromLegend] = useState<string | null>(null);
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
   
   // Use loaded moves if game has no moves
   const effectiveMoves = game.moves.length > 0 ? game.moves : loadedMoves;
@@ -177,7 +178,8 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
       <div className="flex flex-col lg:grid lg:grid-cols-[1fr_400px] gap-4 lg:gap-6 px-2 sm:px-0">
         {/* Board and controls */}
         <div className="space-y-4 flex flex-col items-center lg:items-start">
-          <div style={{ width: boardSize, maxWidth: '100%' }}>
+          <div className="board-container" ref={boardContainerRef}>
+            <div className="board-wrapper">
             <Chessboard
               position={getCurrentFen()}
               boardOrientation="white"
@@ -186,6 +188,7 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
               arePiecesDraggable={false}
               boardWidth={boardSize}
             />
+            </div>
           </div>
 
           {/* Navigation controls */}

@@ -66,7 +66,8 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
   
 // Board settings
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
 
   // Session state
   const [sessionPhase, setSessionPhase] = useState<SessionPhase>('WELCOME');
@@ -809,7 +810,7 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
             </div>
           )}
 
-          <div className="board-container">
+          <div className="board-container" ref={boardContainerRef}>
           <div className="board-wrapper overflow-hidden shadow-2xl shadow-violet-500/10"
             style={{ border: '1px solid rgba(167, 139, 250, 0.1)' }}>
             <Chessboard

@@ -1,119 +1,104 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef, RefObject } from 'react';
 
 /**
- * Calculate mobile-safe board size based on viewport width.
- * This is the SINGLE SOURCE OF TRUTH for board sizing.
+ * Hook to calculate responsive chessboard size by MEASURING the actual container.
  * 
- * Margins account for page padding, container padding, and safe area.
- */
-function getMobileSize(vw: number, maxWidth: number): number {
-  if (vw < 400) {
-    // Small phones: 48px margin (accounts for page px-2 + container padding)
-    return Math.min(maxWidth, vw - 48);
-  }
-  if (vw < 640) {
-    // Standard mobile: 64px margin
-    return Math.min(maxWidth, vw - 64);
-  }
-  if (vw < 1024) {
-    // Tablet: 80px margin, cap at 480
-    return Math.min(maxWidth, vw - 80, 480);
-  }
-  // Desktop: use max width
-  return maxWidth;
-}
-
-/**
- * Hook to calculate responsive chessboard size based on viewport.
- * Returns the optimal board width in pixels.
+ * This is the Lichess approach: let the container determine the size,
+ * don't guess based on viewport width.
  * 
- * @param maxWidth - Maximum board size (default 520)
- * @returns Board width in pixels that fits the current viewport
+ * @param containerRef - Ref to the container element that holds the board
+ * @param maxWidth - Maximum board size (default 480)
+ * @returns Board width in pixels that fits the container
  */
-export function useBoardSize(maxWidth: number = 520): number {
-  const getSize = useCallback(() => {
-    if (typeof window === 'undefined') return Math.min(maxWidth, 320);
-    return getMobileSize(window.innerWidth, maxWidth);
-  }, [maxWidth]);
-
-  const [boardSize, setBoardSize] = useState(getSize);
+export function useBoardSize(
+  containerRef: RefObject<HTMLElement>,
+  maxWidth: number = 480
+): number {
+  const [size, setSize] = useState(0);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const handleResize = () => {
-      setBoardSize(getMobileSize(window.innerWidth, maxWidth));
+    const measure = () => {
+      if (!containerRef.current) return;
+      
+      const containerWidth = containerRef.current.offsetWidth;
+      // Use the smaller of container width or maxWidth
+      const newSize = Math.min(containerWidth, maxWidth);
+      
+      // Only update if changed to prevent unnecessary re-renders
+      setSize(prev => prev !== newSize ? newSize : prev);
     };
 
-    // Calculate on mount
-    handleResize();
-    
-    // Listen for resize
-    window.addEventListener('resize', handleResize);
+    // Initial measurement after mount
+    // Use RAF to ensure DOM has painted
+    rafRef.current = requestAnimationFrame(() => {
+      measure();
+    });
+
+    // ResizeObserver for container changes
+    const observer = new ResizeObserver(() => {
+      // Debounce with RAF
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(measure);
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    // Also listen for window resize as backup
+    window.addEventListener('resize', measure);
     
     // Handle orientation changes
-    window.addEventListener('orientationchange', () => {
-      // Delay to let orientation change complete
-      setTimeout(handleResize, 100);
-    });
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
+    const handleOrientation = () => {
+      setTimeout(measure, 100);
     };
-  }, [maxWidth]);
+    window.addEventListener('orientationchange', handleOrientation);
 
-  return boardSize;
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('orientationchange', handleOrientation);
+    };
+  }, [containerRef, maxWidth]);
+
+  return size;
 }
 
 /**
- * Hook for board size that responds to a container ref.
- * Uses the smaller of: container width or viewport-safe size.
+ * Legacy hook for backward compatibility.
+ * Provides a viewport-based fallback when no container ref is available.
+ * 
+ * @deprecated Use useBoardSize with containerRef instead
  */
-export function useContainerBoardSize(
-  containerRef: React.RefObject<HTMLElement>,
-  maxWidth: number = 520,
-  padding: number = 16
-): number {
-  const [boardSize, setBoardSize] = useState(0);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+export function useBoardSizeViewport(maxWidth: number = 480): number {
+  const [size, setSize] = useState(() => {
+    if (typeof window === 'undefined') return Math.min(maxWidth, 320);
+    const vw = window.innerWidth;
+    if (vw < 400) return Math.min(maxWidth, vw - 48);
+    if (vw < 640) return Math.min(maxWidth, vw - 64);
+    if (vw < 1024) return Math.min(maxWidth, vw - 80, 480);
+    return maxWidth;
+  });
 
   useEffect(() => {
-    const calculateSize = () => {
+    const calculate = () => {
       const vw = window.innerWidth;
-      const mobileMax = getMobileSize(vw, maxWidth);
-      
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.offsetWidth - padding;
-        // Use the smaller of container width or mobile-safe size
-        setBoardSize(Math.max(200, Math.min(containerWidth, mobileMax)));
-      } else {
-        // Fallback to viewport-based
-        setBoardSize(mobileMax);
-      }
+      let newSize: number;
+      if (vw < 400) newSize = Math.min(maxWidth, vw - 48);
+      else if (vw < 640) newSize = Math.min(maxWidth, vw - 64);
+      else if (vw < 1024) newSize = Math.min(maxWidth, vw - 80, 480);
+      else newSize = maxWidth;
+      setSize(newSize);
     };
 
-    // Initial calculation with small delay for mount
-    const timeoutId = setTimeout(calculateSize, 0);
-    
-    // ResizeObserver for container changes
-    const resizeObserver = new ResizeObserver(() => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(calculateSize, 10);
-    });
-    
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-    
-    window.addEventListener('resize', calculateSize);
-    
-    return () => {
-      clearTimeout(timeoutId);
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', calculateSize);
-    };
-  }, [containerRef, maxWidth, padding]);
+    calculate();
+    window.addEventListener('resize', calculate);
+    return () => window.removeEventListener('resize', calculate);
+  }, [maxWidth]);
 
-  return boardSize;
+  return size;
 }
 
 export default useBoardSize;

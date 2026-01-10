@@ -55,7 +55,8 @@ export function ChessBoardPanel({
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
   const [moveCount, setMoveCount] = useState(0);
   const [isAnimatingSetup, setIsAnimatingSetup] = useState(false);
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
 
   const { gameState, setEvaluation, makeMove } = useGameStore();
   const { recordGamePlayed, recordPuzzleSolved, recordPuzzleFailed } = useStudyStore();
@@ -450,7 +451,7 @@ export function ChessBoardPanel({
   const boardOrientation = vsEngine ? playerColor : gameState.orientation;
 
   return (
-    <div className="board-container">
+    <div className="board-container" ref={boardContainerRef}>
       <div className="board-wrapper chessboard-container relative">
         {/* Engine thinking overlay */}
         {isThinking && (

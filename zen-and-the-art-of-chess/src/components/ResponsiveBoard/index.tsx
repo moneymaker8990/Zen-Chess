@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import type { Square } from 'chess.js';
 import type { BoardOrientation } from 'react-chessboard/dist/chessboard/types';
@@ -28,10 +28,10 @@ interface ResponsiveBoardProps {
 }
 
 /**
- * A responsive chessboard wrapper that automatically sizes to fit the viewport
+ * A responsive chessboard wrapper that automatically sizes to fit its container
  * and prevents overflow on mobile devices.
  * 
- * Uses the centralized useBoardSize hook for consistent mobile sizing.
+ * Uses ResizeObserver to measure actual container width.
  */
 export function ResponsiveBoard({
   position,
@@ -43,7 +43,7 @@ export function ResponsiveBoard({
   customLightSquareStyle,
   animationDuration = 200,
   arePiecesDraggable = true,
-  maxWidth = 520,
+  maxWidth = 480,
   children,
   showCoordinates = true,
   onPieceClick,
@@ -55,11 +55,11 @@ export function ResponsiveBoard({
   boardId,
   snapToCursor = true,
 }: ResponsiveBoardProps) {
-  // Use centralized hook for mobile-safe sizing
-  const boardWidth = useBoardSize(maxWidth);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const boardWidth = useBoardSize(containerRef, maxWidth);
 
   return (
-    <div className="board-container">
+    <div className="board-container" ref={containerRef}>
       <div className="board-wrapper">
         <Chessboard
           id={boardId}
@@ -72,7 +72,7 @@ export function ResponsiveBoard({
           customLightSquareStyle={customLightSquareStyle}
           animationDuration={animationDuration}
           arePiecesDraggable={arePiecesDraggable}
-          boardWidth={boardWidth}
+          boardWidth={boardWidth || 320}
           showBoardNotation={showCoordinates}
           onPieceClick={onPieceClick}
           onPieceDragBegin={onPieceDragBegin}

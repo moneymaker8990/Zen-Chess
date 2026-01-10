@@ -3,7 +3,7 @@
 // Enhanced with Claude AI coaching
 // ============================================
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Chessboard } from 'react-chessboard';
@@ -271,7 +271,8 @@ export default function CourseLearningPage() {
   const navigate = useNavigate();
   const goBack = useBackNavigation(`/courses/${courseId}`);
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
 
   // Course data
   const [course, setCourse] = useState<Course | null>(null);
@@ -805,6 +806,7 @@ export default function CourseLearningPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="board-container"
+              ref={boardContainerRef}
             >
               <div className="board-wrapper">
                 <Chessboard

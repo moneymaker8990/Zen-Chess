@@ -4,7 +4,7 @@
 // Inspired by Remote Chess Academy's systematic approach
 // ============================================
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
@@ -491,7 +491,8 @@ type ViewMode = 'overview' | 'lesson' | 'practice' | 'reference';
 
 export function ThinkingSystemPage() {
   const navigate = useNavigate();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
   
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
@@ -849,7 +850,7 @@ export function ThinkingSystemPage() {
           {/* Example slides */}
           {isOnExample && currentLesson.examples[exampleIndex] && (
             <div className="grid lg:grid-cols-2 gap-8 items-center">
-              <div className="board-container">
+              <div className="board-container" ref={boardContainerRef}>
                 <div className="board-wrapper">
                   <Chessboard
                     position={currentLesson.examples[exampleIndex].fen}
@@ -938,7 +939,7 @@ export function ThinkingSystemPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="board-container">
+          <div className="board-container" ref={boardContainerRef}>
             <div className="board-wrapper">
               <Chessboard
                 position={question.fen}

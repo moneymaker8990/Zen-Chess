@@ -12,7 +12,8 @@ import type { SparringPosition } from '@/lib/trainingTypes';
 export function PositionSparring() {
   const { positions, addPosition, recordResult, getRecommendedPositions, deletePosition } = usePositionSparringStore();
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
   
   const [selectedPosition, setSelectedPosition] = useState<SparringPosition | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -297,7 +298,8 @@ export function PositionSparring() {
               </div>
             )}
 
-            <div style={{ width: boardSize, maxWidth: '100%' }}>
+            <div className="board-container" ref={boardContainerRef}>
+              <div className="board-wrapper">
               <Chessboard
                 position={game?.fen() || selectedPosition?.fen || ''}
                 onPieceDrop={onDrop}
@@ -309,6 +311,7 @@ export function PositionSparring() {
                 arePiecesDraggable={isPlaying && !isThinking && !gameResult}
                 boardWidth={boardSize}
               />
+              </div>
             </div>
           </div>
 

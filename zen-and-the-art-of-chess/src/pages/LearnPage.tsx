@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Chessboard } from 'react-chessboard';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useContainerBoardSize } from '@/hooks/useBoardSize';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import { BackButton } from '@/components/BackButton';
 import { CURRICULUM } from '@/data/curriculum';
 import type { Lesson, LessonStep } from '@/data/curriculum';
@@ -16,7 +16,7 @@ export function LearnPage() {
   const navigate = useNavigate();
   const boardStyles = useBoardStyles();
   const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useContainerBoardSize(boardContainerRef, 360, 16);
+  const boardSize = useBoardSize(boardContainerRef, 360);
   
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
@@ -174,13 +174,12 @@ export function LearnPage() {
         <div className="flex flex-col md:flex-row gap-4 sm:gap-8">
           {/* Top on mobile, Right on desktop: Chessboard */}
           <div 
-            ref={boardContainerRef}
             className="md:sticky md:top-24 self-start flex-shrink-0 w-full md:w-[360px] md:order-2 max-w-full overflow-hidden"
           >
             {currentStep?.fen ? (
               <div className="animate-fade-in flex justify-center">
                 <div 
-                  className="board-container"
+                  className="board-container" ref={boardContainerRef}
                 >
                   <div className="board-wrapper rounded-xl overflow-hidden shadow-2xl">
                     <Chessboard

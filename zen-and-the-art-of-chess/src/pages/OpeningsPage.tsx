@@ -378,9 +378,10 @@ export function OpeningsPage() {
   const autoPlayTimeout = useRef<ReturnType<typeof setTimeout>>();
   const [showDatabaseLines, setShowDatabaseLines] = useState(false);
   
-  // Board settings and sizing - use the same hook as PlayPage
+  // Board settings and sizing - use container-based measurement
   const boardStyles = useBoardStyles();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
 
   // Calculate lines count for each course - separate learning vs database
   const coursesWithCounts = useMemo(() => {
@@ -1038,7 +1039,7 @@ export function OpeningsPage() {
             </div>
 
             {/* Chessboard */}
-            <div className="board-container">
+            <div className="board-container" ref={boardContainerRef}>
               <div className="board-wrapper">
                 <Chessboard
                   position={game.fen()}

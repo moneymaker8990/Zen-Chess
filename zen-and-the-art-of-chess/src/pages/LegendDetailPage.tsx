@@ -15,7 +15,7 @@ import {
 import { LEGEND_STYLES, type GuessMoveResult, type LegendId } from '@/lib/legendTypes';
 import { useNotesStore, useStudyStore, useLegendGameReviewStore } from '@/state/notesStore';
 import type { BotLevel } from '@/engine/humanizedStockfish';
-import { useBoardSize, useContainerBoardSize } from '@/hooks/useBoardSize';
+import { useBoardSize } from '@/hooks/useBoardSize';
 import { parseUciMove, isValidFen } from '@/lib/moveValidation';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 import { logger } from '@/lib/logger';
@@ -30,13 +30,8 @@ export function LegendDetailPage() {
   const { recordGamePlayed, recordPuzzleSolved } = useStudyStore();
   const { markGameReviewed, isGameReviewed, getGameReview, getLegendStats } = useLegendGameReviewStore();
   const boardContainerRef = useRef<HTMLDivElement>(null);
-  // Use container-based sizing to make board fit the card container
-  // The ref should point to the card container, not the inner board div
-  // Account for card padding (16px each side = 32px total)
-  const rawBoardSize = useContainerBoardSize(boardContainerRef, 480, 32);
-  // rawBoardSize returns 0 when container hasn't mounted yet (valid "not ready" state)
-  // Don't apply additional constraints - the hook handles mobile sizing
-  const boardSize = rawBoardSize;
+  // Use container-based sizing to make board fit
+  const boardSize = useBoardSize(boardContainerRef, 480);
   
   const legend = legendId as LegendId;
   const legendData = legend ? LEGEND_STYLES[legend] : null;
@@ -635,8 +630,8 @@ export function LegendDetailPage() {
           {/* Game Area - Board and Controls */}
           <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden">
             {/* Chessboard */}
-            <div className="card p-4 w-full overflow-hidden" ref={boardContainerRef}>
-              <div className="board-container">
+            <div className="card p-4 w-full overflow-hidden">
+              <div className="board-container" ref={boardContainerRef}>
                 <div className="board-wrapper">
                   {boardSize > 0 && (
                     <Chessboard

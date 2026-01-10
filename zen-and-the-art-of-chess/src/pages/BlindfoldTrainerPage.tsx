@@ -4,7 +4,7 @@
 // The skill that separates masters from amateurs
 // ============================================
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
@@ -184,7 +184,8 @@ function getRandomPieceFromPosition(chess: Chess): PiecePosition | null {
 
 export function BlindfoldTrainerPage() {
   const navigate = useNavigate();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
   
   // State
   const [mode, setMode] = useState<TrainingMode>('menu');
@@ -733,7 +734,7 @@ export function BlindfoldTrainerPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board Area */}
-          <div className="board-container">
+          <div className="board-container" ref={boardContainerRef}>
             {showBoard ? (
               <div className="board-wrapper">
                 <Chessboard

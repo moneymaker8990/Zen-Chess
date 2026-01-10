@@ -613,22 +613,21 @@ a.small,
    ============================================ */
 
 /* 
- * Simple container for centering boards.
- * The JS hook controls the actual size via boardWidth prop.
- * DO NOT add width constraints here - they fight with react-chessboard.
+ * Container that determines board size.
+ * Uses 100% width (up to max) - the JS hook measures this to set boardWidth.
+ * This is the Lichess approach: container determines size, not viewport math.
  */
 .board-container {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 /* 
- * Wrapper for the board - just positioning, no size constraints.
+ * Wrapper for the board - fills container width.
  * The Chessboard component renders at exact boardWidth pixels.
  */
 .board-wrapper {
+  width: 100%;
   position: relative;
-  flex-shrink: 0;
 }

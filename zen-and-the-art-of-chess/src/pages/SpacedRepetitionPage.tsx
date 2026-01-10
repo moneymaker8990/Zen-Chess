@@ -71,7 +71,8 @@ const THEME_LABELS: Record<string, string> = {
 
 export function SpacedRepetitionPage() {
   const navigate = useNavigate();
-  const boardSize = useBoardSize(480);
+  const boardContainerRef = useRef<HTMLDivElement>(null);
+  const boardSize = useBoardSize(boardContainerRef, 480);
   
   // Load state from localStorage
   const [srsState, setSrsState] = useState<SRSState>(() => {
@@ -679,7 +680,7 @@ export function SpacedRepetitionPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="board-container">
+          <div className="board-container" ref={boardContainerRef}>
             <div className="board-wrapper">
               <Chessboard
                 position={game.fen()}
