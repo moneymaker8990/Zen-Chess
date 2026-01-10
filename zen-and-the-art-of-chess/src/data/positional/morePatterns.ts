@@ -560,6 +560,66 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'centralization-rooks',
+    category: 'CENTRALIZATION',
+    title: "Centralizing Rooks",
+    subtitle: "Rooks belong in the center",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Rooks are most effective when centralized, especially in the middlegame. Central rooks control key files and support all plans.",
+    keyIdeas: [
+      "Centralize rooks in the middlegame",
+      "Central rooks control key files",
+      "Place rooks on central files",
+      "Use central rooks to support plans"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety and activating the rook.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Re1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We place the rook on the central e-file. Centralized rooks control key files and support all plans, from attack to defense.",
+        highlights: [
+          "e1"
+        ],
+        conceptTag: "Centralization"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Centralize rooks in the middlegame by placing them on central files. Central rooks have maximum influence and support all plans.",
+    keyTakeaways: [
+      "Centralize rooks on central files",
+      "Central rooks control key squares",
+      "Use rooks to support all plans",
+      "Maximum influence from central rooks"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Rook centralization principles",
+  },
+
+  {
     id: 'king-activity-endgame',
     category: 'KING_ACTIVITY',
     title: "The Active King in Endgames",
@@ -758,6 +818,75 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 4,
     source: "Endgame king activity",
+  },
+
+  {
+    id: 'king-activity-supporting-pawns',
+    category: 'KING_ACTIVITY',
+    title: "King Supporting Pawns",
+    subtitle: "Active king in pawn endgames",
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: "In pawn endgames, the king must actively support its pawns. An active king that supports its pawns is far superior to a passive king.",
+    keyIdeas: [
+      "Use the king to support pawns in endgames",
+      "Active kings decide pawn endgames",
+      "Centralize the king to support pawns",
+      "The king is a fighting piece in endgames"
+    ],
+    mainLine: [
+      {
+        move: "Kf1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Moving the king toward the center to support the pawns.",
+        conceptTag: "King Activity"
+      },
+      {
+        move: "Kg8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Further centralization to support the e-pawn.",
+        conceptTag: ""
+      },
+      {
+        move: "Kf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Kd3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our king is now centralized and can support both the e-pawn and f-pawn. An active king supporting pawns is crucial in endgames.",
+        highlights: [
+          "d3",
+          "e4",
+          "f3"
+        ],
+        conceptTag: "King Activity"
+      }
+    ],
+    summary: "In pawn endgames, use your king actively to support your pawns. An active king that supports pawns often decides the game.",
+    keyTakeaways: [
+      "Use the king to support pawns in endgames",
+      "Active kings support all pawns",
+      "Centralize the king in pawn endgames",
+      "King activity decides pawn endgames"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 4,
+    source: "Pawn endgame principles",
   },
 
   {
@@ -1223,6 +1352,70 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'exchange-reach-endgame',
+    category: 'EXCHANGE_STRATEGY',
+    title: "Exchanging to Reach Favorable Endgame",
+    subtitle: "Trading toward winning endgames",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "When you have an endgame advantage (like better pawn structure), exchange pieces to reach the endgame where your advantage will be decisive.",
+    keyIdeas: [
+      "Exchange pieces when you have endgame advantages",
+      "Trade toward favorable endgames",
+      "Simplify when your structure is better",
+      "Remove opponent's attacking pieces"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops the knight.",
+        conceptTag: "Development"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxe5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We exchange knights, simplifying toward the endgame. If we have a structural advantage, this helps us reach a winning endgame.",
+        conceptTag: "Exchange"
+      }
+    ],
+    summary: "Exchange pieces strategically to reach favorable endgames. When you have structural advantages, simplify to convert them.",
+    keyTakeaways: [
+      "Exchange when you have endgame advantages",
+      "Trade toward favorable endgames",
+      "Simplify with better structure",
+      "Remove opponent's active pieces"
+    ],
+    
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Exchange strategy principles",
+  },
+
+  {
     id: 'pawn-break-f5-advance',
     category: 'PAWN_BREAKS',
     title: "The f5 Pawn Break",
@@ -1588,6 +1781,69 @@ const additionalPatterns: EnhancedPattern[] = [
     ],
     
     difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Piece coordination principles",
+  },
+
+  {
+    id: 'piece-coordination-all-pieces',
+    category: 'PIECE_COORDINATION',
+    title: "Coordinating All Pieces",
+    subtitle: "Maximum piece harmony",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "When all your pieces coordinate, they become extremely powerful. Each piece supports the others, creating threats that are difficult to defend against.",
+    keyIdeas: [
+      "Coordinate all pieces together",
+      "Use pieces to support each other",
+      "Create multiple threats simultaneously",
+      "Maximum piece harmony wins games"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety and activating the rook.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops the knight, and now all pieces coordinate: bishop on c4, knight on c3, rook on f1, and pawns on e4 and d2.",
+        highlights: [
+          "c3",
+          "c4",
+          "f1",
+          "e4"
+        ],
+        conceptTag: "Piece Coordination"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "When all pieces coordinate, they create maximum pressure. Each piece supports the others, making the position extremely difficult to defend.",
+    keyTakeaways: [
+      "Coordinate all pieces together",
+      "Each piece supports the others",
+      "Create multiple threats at once",
+      "Maximum harmony creates winning positions"
+    ],
+    
+    difficulty: 3,
     estimatedMinutes: 5,
     source: "Piece coordination principles",
   }
