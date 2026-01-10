@@ -530,6 +530,7 @@ export function ChessBoardPanel({
           ☯ Breathe
         </div>
       )}
+      </div>
     </div>
   );
 }
