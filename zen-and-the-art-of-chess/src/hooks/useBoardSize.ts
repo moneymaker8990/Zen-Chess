@@ -3,19 +3,21 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 /**
  * Calculate mobile-safe board size based on viewport width.
  * This is the SINGLE SOURCE OF TRUTH for board sizing.
+ * 
+ * Margins account for page padding, container padding, and safe area.
  */
 function getMobileSize(vw: number, maxWidth: number): number {
   if (vw < 400) {
-    // Small phones: 32px total margin (16px each side)
-    return Math.min(maxWidth, vw - 32);
-  }
-  if (vw < 640) {
-    // Standard mobile: 48px total margin
+    // Small phones: 48px margin (accounts for page px-2 + container padding)
     return Math.min(maxWidth, vw - 48);
   }
+  if (vw < 640) {
+    // Standard mobile: 64px margin
+    return Math.min(maxWidth, vw - 64);
+  }
   if (vw < 1024) {
-    // Tablet: 64px margin, cap at 480
-    return Math.min(maxWidth, vw - 64, 480);
+    // Tablet: 80px margin, cap at 480
+    return Math.min(maxWidth, vw - 80, 480);
   }
   // Desktop: use max width
   return maxWidth;
