@@ -426,6 +426,66 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'knight-fork-potential',
+    category: 'KNIGHT_PLACEMENT',
+    title: "Placing Knights for Forking Opportunities",
+    subtitle: "Knights create tactical threats",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Knights excel at creating forks - attacking two pieces simultaneously. Place knights on squares where they can threaten multiple enemy pieces.",
+    keyIdeas: [
+      "Place knights to create fork opportunities",
+      "Knights excel at attacking multiple pieces",
+      "Look for squares that attack key enemy pieces",
+      "Use knights tactically to win material"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We develop the knight, and now it can later jump to squares like d5 or e5, where it might create fork opportunities against Black's pieces.",
+        highlights: [
+          "c3"
+        ],
+        conceptTag: "Knight Placement"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Place knights on squares where they can create fork opportunities. Knights that threaten multiple enemy pieces are extremely dangerous.",
+    keyTakeaways: [
+      "Place knights to create fork opportunities",
+      "Knights excel at attacking multiple pieces",
+      "Look for squares that attack key pieces",
+      "Use knights tactically for material gains"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Knight tactical principles",
+  },
+
+  {
     id: 'centralization-piece-activity',
     category: 'CENTRALIZATION',
     title: "Centralizing Your Pieces",
@@ -684,6 +744,66 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 5,
     source: "Rook centralization principles",
+  },
+
+  {
+    id: 'centralization-bishops',
+    category: 'CENTRALIZATION',
+    title: "Centralizing Bishops",
+    subtitle: "Bishops on long diagonals",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Bishops are most effective when centralized on long diagonals. Central bishops control key squares and support both attack and defense.",
+    keyIdeas: [
+      "Centralize bishops on long diagonals",
+      "Central bishops control key squares",
+      "Place bishops on active diagonals",
+      "Use central bishops to support plans"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "d3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We support e4, and now our bishop on c4 is centralized on a long diagonal, controlling key squares and supporting our position.",
+        highlights: [
+          "c4"
+        ],
+        conceptTag: "Centralization"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Centralize bishops on long diagonals for maximum activity. Central bishops control key squares and support all plans.",
+    keyTakeaways: [
+      "Centralize bishops on long diagonals",
+      "Central bishops control key squares",
+      "Place bishops on active diagonals",
+      "Maximum influence from central bishops"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Bishop centralization principles",
   },
 
   {
@@ -954,6 +1074,73 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 4,
     source: "Pawn endgame principles",
+  },
+
+  {
+    id: 'king-activity-opposition',
+    category: 'KING_ACTIVITY',
+    title: "The Opposition",
+    subtitle: "King activity in pawn endgames",
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: "The opposition is a crucial concept in pawn endgames. The player with the opposition can control key squares and often win.",
+    keyIdeas: [
+      "The opposition controls key squares",
+      "Use the opposition to advance your pawns",
+      "Active kings gain the opposition",
+      "The opposition often decides endgames"
+    ],
+    mainLine: [
+      {
+        move: "Kf1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Moving the king toward the center.",
+        conceptTag: "King Activity"
+      },
+      {
+        move: "Kg8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Further centralization.",
+        conceptTag: ""
+      },
+      {
+        move: "Kf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Kd3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our king reaches a central square. Understanding the opposition helps control key squares in pawn endgames.",
+        highlights: [
+          "d3"
+        ],
+        conceptTag: "King Activity"
+      }
+    ],
+    summary: "The opposition is crucial in pawn endgames. The player with the opposition controls key squares and can often win.",
+    keyTakeaways: [
+      "The opposition controls key squares",
+      "Use the opposition to advance pawns",
+      "Active kings gain the opposition",
+      "The opposition often decides endgames"
+    ],
+    
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Endgame opposition principles",
   },
 
   {
@@ -1287,6 +1474,73 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'blockade-hanging-pawns',
+    category: 'BLOCKADE',
+    title: "Blockading Hanging Pawns",
+    subtitle: "Controlling weak pawn duo",
+    fen: 'r1bqkb1r/ppp2ppp/2n2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "Hanging pawns (two pawns side by side) can be blockaded effectively. The blockader prevents their advance and fixes them as weaknesses.",
+    keyIdeas: [
+      "Blockade hanging pawns to fix weaknesses",
+      "Place pieces in front of hanging pawns",
+      "Prevent pawn advances with blockaders",
+      "Control squares in front of weak pawn formations"
+    ],
+    mainLine: [
+      {
+        move: "cxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Exchanging to simplify and prepare for blockade.",
+        conceptTag: "Exchange"
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures with the knight.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White recaptures.",
+        conceptTag: ""
+      },
+      {
+        move: "Qxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures with the queen.",
+        conceptTag: ""
+      },
+      {
+        move: "Ne5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We centralize the knight, and now it can later blockade Black's hanging pawns if they appear. The blockade prevents pawn advances.",
+        highlights: [
+          "e5"
+        ],
+        conceptTag: "Blockade"
+      }
+    ],
+    summary: "Blockading hanging pawns fixes them as weaknesses. The blockader prevents the pawns from advancing and controls key squares.",
+    keyTakeaways: [
+      "Hanging pawns are weak formations",
+      "Blockade them to prevent advances",
+      "Use knights or other pieces to blockade",
+      "The blockader gains control of key squares"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Pawn structure theory",
+  },
+
+  {
     id: 'exchange-trading-bad-pieces',
     category: 'EXCHANGE_STRATEGY',
     title: "Exchanging Bad Pieces for Good",
@@ -1550,6 +1804,77 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'exchange-reach-endgame-simple',
+    category: 'EXCHANGE_STRATEGY',
+    title: "Exchanging to Reach Endgame",
+    subtitle: "Trading pieces to simplify",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "When you have an endgame advantage, exchanging pieces simplifies the position and brings you closer to a winning endgame.",
+    keyIdeas: [
+      "Exchange pieces when you have endgame advantages",
+      "Trade pieces to simplify positions",
+      "Bring the game to endgames where you excel",
+      "Remove opponent's attacking potential"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety first.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops the knight.",
+        conceptTag: "Development"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxe5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We exchange knights, simplifying toward the endgame. If we have structural advantages, this helps convert them.",
+        conceptTag: "Exchange"
+      },
+      {
+        move: "Nxe5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Exchanging pieces strategically simplifies positions and can lead to favorable endgames. Trade pieces when you have endgame advantages.",
+    keyTakeaways: [
+      "Exchange pieces when you have endgame advantages",
+      "Trade pieces to simplify positions",
+      "Remove opponent's attacking potential",
+      "Convert advantages through simplification"
+    ],
+    
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Exchange strategy principles",
+  },
+
+  {
     id: 'pawn-break-f5-advance',
     category: 'PAWN_BREAKS',
     title: "The f5 Pawn Break",
@@ -1777,6 +2102,66 @@ const additionalPatterns: EnhancedPattern[] = [
       }
     ],
     summary: "Pawn breaks like f5 expand your position and challenge the opponent's structure. Kingside breaks are powerful attacking tools.",
+    keyTakeaways: [
+      "Use pawn breaks to expand on flanks",
+      "Kingside breaks create attacking chances",
+      "Prepare breaks with development",
+      "Flank breaks complement central play"
+    ],
+    
+    difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Pawn break principles",
+  },
+
+  {
+    id: 'pawn-break-g4-break',
+    category: 'PAWN_BREAKS',
+    title: "The g4 Pawn Break",
+    subtitle: "Flank expansion",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4PP2/5N2/PPPP2PP/RNBQKB1R w KQkq e6 0 5',
+    toMove: 'white',
+    introduction: "The g4 pawn break expands on the kingside and can create attacking chances. This type of break is often used to undermine the opponent's pawn structure.",
+    keyIdeas: [
+      "Use pawn breaks to expand on the kingside",
+      "Challenge opponent's pawn structures",
+      "Create attacking chances with flank breaks",
+      "Open lines with pawn advances"
+    ],
+    mainLine: [
+      {
+        move: "g4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The pawn break! This expands on the kingside and challenges Black's pawn structure, potentially opening lines for attack.",
+        highlights: [
+          "g4"
+        ],
+        conceptTag: "Pawn Break"
+      },
+      {
+        move: "h6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black defends with h6.",
+        conceptTag: ""
+      },
+      {
+        move: "h3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White prepares to continue expansion.",
+        conceptTag: ""
+      },
+      {
+        move: "Be7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Pawn breaks like g4 expand your position and can create attacking chances. Kingside breaks are often used to undermine the opponent's structure.",
     keyTakeaways: [
       "Use pawn breaks to expand on flanks",
       "Kingside breaks create attacking chances",
@@ -2038,6 +2423,67 @@ const additionalPatterns: EnhancedPattern[] = [
     ],
     
     difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Piece coordination principles",
+  },
+
+  {
+    id: 'piece-coordination-knights-bishops',
+    category: 'PIECE_COORDINATION',
+    title: "Coordinating Knights and Bishops",
+    subtitle: "Minor piece harmony",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Knights and bishops coordinate excellently together. Knights control squares the bishops can't reach, and vice versa, creating comprehensive control.",
+    keyIdeas: [
+      "Coordinate knights and bishops together",
+      "Knights and bishops complement each other",
+      "Create comprehensive square control",
+      "Use minor pieces to support each other"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We develop the knight, and now our knight on c3 and bishop on c4 coordinate perfectly. The knight controls squares the bishop can't, and vice versa.",
+        highlights: [
+          "c3",
+          "c4"
+        ],
+        conceptTag: "Piece Coordination"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Coordinating knights and bishops creates comprehensive square control. Each piece supports the other's strengths.",
+    keyTakeaways: [
+      "Coordinate knights and bishops together",
+      "Minor pieces complement each other",
+      "Create comprehensive square control",
+      "Use pieces to support each other's strengths"
+    ],
+    
+    difficulty: 2,
     estimatedMinutes: 5,
     source: "Piece coordination principles",
   }
