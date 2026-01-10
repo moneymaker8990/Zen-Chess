@@ -16,24 +16,21 @@ export function useBoardSize(
     const vw = window.innerWidth;
     
     // Mobile-first: VERY conservative to prevent any overflow
-    // Removed height constraints - they were causing issues on mobile
+    // Must match CSS breakpoints in index.css for .board-wrapper
     let size: number;
     
     if (vw < 360) {
       // Very small phones (iPhone SE, small Android)
       size = vw - 40;
-    } else if (vw < 400) {
-      // Small screens (360-400px)
-      size = vw - 36;
     } else if (vw < 480) {
-      // Standard small mobile (400-480px)
-      size = vw - 32;
-    } else if (vw < 640) {
-      // Large mobile (480-640px) - account for card padding
+      // Small/standard mobile (360-480px)
       size = vw - 48;
+    } else if (vw < 640) {
+      // Large mobile (480-640px)
+      size = vw - 64;
     } else if (vw < 1024) {
       // Tablet
-      size = Math.min(vw - 64, 480);
+      size = Math.min(vw - 80, 480);
     } else {
       // Desktop: use max width
       size = maxWidth;
@@ -50,26 +47,22 @@ export function useBoardSize(
       
       let size: number;
       
-      // Mobile: VERY conservative width - must fit within viewport with all margins/padding
+      // Mobile: VERY conservative width - must match CSS breakpoints
       if (viewportWidth < 360) {
         // Very small phones - maximum margin
         size = viewportWidth - 40;
       }
-      else if (viewportWidth < 400) {
-        // Small screens (360-400px)
-        size = viewportWidth - 36;
-      }
       else if (viewportWidth < 480) {
-        // Standard small mobile (400-480px)
-        size = viewportWidth - 32;
+        // Small/standard mobile (360-480px)
+        size = viewportWidth - 48;
       }
       else if (viewportWidth < 640) {
-        // Large mobile (480-640px) - account for card padding
-        size = viewportWidth - 48;
+        // Large mobile (480-640px)
+        size = viewportWidth - 64;
       }
       // Tablet: constrained width
       else if (viewportWidth < 1024) {
-        size = Math.min(viewportWidth - 64, 480);
+        size = Math.min(viewportWidth - 80, 480);
       }
       // Desktop: use max width
       else {
@@ -131,17 +124,16 @@ export function useContainerBoardSize(
         const calculatedSize = Math.min(maxWidth, containerWidth - padding);
         
         // For mobile, also check viewport constraints to prevent overflow
+        // Must match CSS breakpoints
         const vw = window.innerWidth;
         let mobileMax: number;
         
         if (vw < 360) {
           mobileMax = vw - 40;
-        } else if (vw < 400) {
-          mobileMax = vw - 36;
         } else if (vw < 480) {
-          mobileMax = vw - 32;
-        } else if (vw < 640) {
           mobileMax = vw - 48;
+        } else if (vw < 640) {
+          mobileMax = vw - 64;
         } else {
           mobileMax = maxWidth;
         }
@@ -154,20 +146,18 @@ export function useContainerBoardSize(
           setBoardSize(finalSize);
         }
       } else {
-        // Fallback to viewport-based calculation
+        // Fallback to viewport-based calculation - match CSS breakpoints
         const viewportWidth = window.innerWidth;
         let size: number;
         
         if (viewportWidth < 360) {
           size = viewportWidth - 40;
-        } else if (viewportWidth < 400) {
-          size = viewportWidth - 36;
         } else if (viewportWidth < 480) {
-          size = viewportWidth - 32;
-        } else if (viewportWidth < 640) {
           size = viewportWidth - 48;
+        } else if (viewportWidth < 640) {
+          size = viewportWidth - 64;
         } else {
-          size = Math.min(maxWidth, viewportWidth - 64);
+          size = Math.min(maxWidth, viewportWidth - 80);
         }
         
         setBoardSize(Math.min(maxWidth, size));
