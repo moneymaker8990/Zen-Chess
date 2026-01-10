@@ -668,15 +668,17 @@ export function IntuitionTrainerPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="flex justify-center">
-            <Chessboard
-              position={currentPosition.fen}
-              boardOrientation="white"
-              customDarkSquareStyle={{ backgroundColor: '#779556' }}
-              customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
-              arePiecesDraggable={false}
-              boardWidth={boardSize}
-            />
+          <div className="board-container">
+            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+              <Chessboard
+                position={currentPosition.fen}
+                boardOrientation="white"
+                customDarkSquareStyle={{ backgroundColor: '#779556' }}
+                customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                arePiecesDraggable={false}
+                boardWidth={boardSize}
+              />
+            </div>
           </div>
           
           {/* Evaluation Options */}

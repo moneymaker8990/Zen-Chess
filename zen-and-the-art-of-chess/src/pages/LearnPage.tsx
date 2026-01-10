@@ -180,15 +180,15 @@ export function LearnPage() {
             {currentStep?.fen ? (
               <div className="animate-fade-in flex justify-center">
                 <div 
-                  className="rounded-xl overflow-hidden shadow-2xl"
-                  style={{ maxWidth: '100%', width: `${boardSize}px` }}
+                  className="board-container"
                 >
-                  <Chessboard
-                    position={currentStep.fen}
-                    boardWidth={boardSize}
-                    arePiecesDraggable={false}
-                    customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                    customLightSquareStyle={boardStyles.customLightSquareStyle}
+                  <div className="board-wrapper rounded-xl overflow-hidden shadow-2xl" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+                    <Chessboard
+                      position={currentStep.fen}
+                      boardWidth={boardSize}
+                      arePiecesDraggable={false}
+                      customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                      customLightSquareStyle={boardStyles.customLightSquareStyle}
                     customSquareStyles={
                       currentStep.highlights?.reduce((acc, sq) => ({
                         ...acc,
@@ -199,6 +199,7 @@ export function LearnPage() {
                       currentStep.arrows?.map(([from, to]) => [from, to, 'rgba(0, 150, 255, 0.8)']) as any
                     }
                   />
+                  </div>
                 </div>
               </div>
             ) : (

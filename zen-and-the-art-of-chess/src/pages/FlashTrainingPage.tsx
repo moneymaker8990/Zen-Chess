@@ -1165,6 +1165,7 @@ export function FlashTrainingPage() {
                   </div>
                 </div>
               )}
+              </div>
             </div>
           </div>
           
@@ -1382,6 +1383,7 @@ export function FlashTrainingPage() {
                   arePiecesDraggable={false}
                 boardWidth={boardSize}
               />
+              </div>
             </div>
           </div>
           

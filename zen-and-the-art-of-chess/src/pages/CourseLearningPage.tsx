@@ -804,15 +804,15 @@ export default function CourseLearningPage() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex justify-center overflow-hidden shadow-2xl"
+              className="board-container"
             >
-              <div style={{ width: boardSize, maxWidth: '100%' }}>
-              <Chessboard
-                position={game.fen()}
-                onPieceDrop={handleMove}
-                onSquareClick={handleSquareClick}
-                boardOrientation={currentVariation.toMove === 'white' ? 'white' : 'black'}
-                boardWidth={boardSize}
+              <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+                <Chessboard
+                  position={game.fen()}
+                  onPieceDrop={handleMove}
+                  onSquareClick={handleSquareClick}
+                  boardOrientation={currentVariation.toMove === 'white' ? 'white' : 'black'}
+                  boardWidth={boardSize}
                 customArrows={customArrows}
                 customSquareStyles={customSquareStyles}
                 customDarkSquareStyle={boardStyles.customDarkSquareStyle}

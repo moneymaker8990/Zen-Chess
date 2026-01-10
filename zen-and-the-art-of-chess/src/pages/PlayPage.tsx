@@ -776,8 +776,8 @@ export function PlayPage() {
             {status.text}
           </div>
 
-          <div className="w-full flex justify-center overflow-hidden">
-            <div style={{ width: boardSize, maxWidth: '100%' }}>
+          <div className="board-container">
+            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}

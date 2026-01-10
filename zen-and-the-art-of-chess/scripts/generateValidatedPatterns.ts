@@ -795,6 +795,64 @@ function generateKnightPlacementPatterns(): EnhancedPattern[] {
     source: 'Knight placement principles'
   });
   
+  // Pattern 7: Knight Defending Key Squares
+  patterns.push({
+    id: 'knight-defending-squares',
+    category: 'KNIGHT_PLACEMENT',
+    title: 'Knights Defending Key Squares',
+    subtitle: 'Defensive knight placement',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: 'Knights are excellent defensive pieces. Place knights on squares where they defend key squares and support your position.',
+    keyIdeas: [
+      'Place knights to defend key squares',
+      'Knights excel at defensive roles',
+      'Defend weaknesses with knights',
+      'Use knights to support other pieces'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling to safety.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nbd2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We develop the knight to d2, where it defends key squares like e4 and supports our position. Knights on defensive squares are very useful.',
+        highlights: ['d2'],
+        conceptTag: 'Knight Placement'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      }
+    ],
+    summary: 'Place knights on squares where they defend key squares. Knights are excellent defensive pieces that support your position effectively.',
+    keyTakeaways: [
+      'Place knights to defend key squares',
+      'Knights excel at defensive roles',
+      'Defend weaknesses with knights',
+      'Use knights to support other pieces'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Knight placement principles'
+  });
+  
   return patterns;
 }
 
@@ -1109,6 +1167,64 @@ function generateCentralizationPatterns(): EnhancedPattern[] {
     difficulty: 2,
     estimatedMinutes: 5,
     source: 'Bishop centralization principles'
+  });
+  
+  // Pattern 6: Centralizing the Queen
+  patterns.push({
+    id: 'centralization-queen',
+    category: 'CENTRALIZATION',
+    title: 'Centralizing the Queen',
+    subtitle: 'Queen in the center',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'The queen is most effective when centralized. A central queen controls key squares, supports all plans, and creates powerful threats.',
+    keyIdeas: [
+      'Centralize the queen for maximum activity',
+      'Central queen controls key squares',
+      'Place queen on active squares',
+      'Use central queen to support all plans'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling to safety.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'Qe2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We develop the queen to a central square, where it controls key squares and supports our position. A central queen is very powerful.',
+        highlights: ['e2'],
+        conceptTag: 'Centralization'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      }
+    ],
+    summary: 'Centralize the queen for maximum activity. A central queen controls key squares and supports all plans effectively.',
+    keyTakeaways: [
+      'Centralize the queen for maximum activity',
+      'Central queen controls key squares',
+      'Place queen on active squares',
+      'Maximum influence from central queen'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Queen centralization principles'
   });
   
   return patterns;
@@ -1512,6 +1628,71 @@ function generateKingActivityPatterns(): EnhancedPattern[] {
     difficulty: 3,
     estimatedMinutes: 5,
     source: 'Endgame opposition principles'
+  });
+  
+  // Pattern 6: King Activity in Middlegame
+  patterns.push({
+    id: 'king-activity-middlegame',
+    category: 'KING_ACTIVITY',
+    title: 'King Activity in Middlegame',
+    subtitle: 'Active king when safe',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: 'In the middlegame, the king should remain safe, but once castled, the king can sometimes move forward to support the position when safe.',
+    keyIdeas: [
+      'Keep the king safe in middlegame',
+      'King can support position when safe',
+      'Active king helps coordinate pieces',
+      'Use king to support plans when possible'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling to safety first.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White develops the knight.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      },
+      {
+        move: 'Kh1',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We move the king to h1, making it active while keeping it safe. An active king can sometimes support the position when the center is closed.',
+        highlights: ['h1'],
+        conceptTag: 'King Activity'
+      }
+    ],
+    summary: 'In the middlegame, keep the king safe, but make it active when possible. An active king can support the position effectively.',
+    keyTakeaways: [
+      'Keep the king safe in middlegame',
+      'King can support position when safe',
+      'Active king helps coordinate pieces',
+      'Use king to support plans when possible'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'King activity principles'
   });
   
   return patterns;
@@ -1969,6 +2150,64 @@ function generateBlockadePatterns(): EnhancedPattern[] {
     source: 'Pawn structure theory'
   });
   
+  // Pattern 7: Blockading with Bishop
+  patterns.push({
+    id: 'blockade-bishop-blockade',
+    category: 'BLOCKADE',
+    title: 'Blockading with Bishop',
+    subtitle: 'Long-range blockade',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: 'Bishops can blockade pawns from a distance on long diagonals. This type of blockade controls key squares and prevents pawn advances.',
+    keyIdeas: [
+      'Bishops can blockade from long range',
+      'Control squares with bishops on diagonals',
+      'Prevent pawn advances with long-range pieces',
+      'Bishops control multiple squares'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling to safety.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'Bb3',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We move the bishop to b3, where it can control squares like d5 and e6, blockading Black\'s pawn structure from a distance. The bishop blockade prevents advances.',
+        highlights: ['b3'],
+        conceptTag: 'Blockade'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      }
+    ],
+    summary: 'Bishops can blockade pawns from long range on diagonals. This type of blockade controls key squares and prevents pawn advances effectively.',
+    keyTakeaways: [
+      'Bishops can blockade from long range',
+      'Control squares with bishops on diagonals',
+      'Prevent pawn advances with long-range pieces',
+      'Bishops provide flexible blockade control'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Pawn structure theory'
+  });
+  
   return patterns;
 }
 
@@ -2362,6 +2601,70 @@ function generateExchangeStrategyPatterns(): EnhancedPattern[] {
       'Simplify by removing threats'
     ],
     difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Exchange strategy principles'
+  });
+  
+  // Pattern 7: Exchanging to Win Material
+  patterns.push({
+    id: 'exchange-win-material',
+    category: 'EXCHANGE_STRATEGY',
+    title: 'Exchanging to Win Material',
+    subtitle: 'Trading favorably',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'When you can exchange pieces favorably to win material, do so. Exchanging a knight for a bishop or vice versa at the right time can gain material.',
+    keyIdeas: [
+      'Exchange pieces when you gain material',
+      'Trade pieces favorably',
+      'Use exchanges to win material',
+      'Calculate exchanges carefully'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling to safety.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'd3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Supporting e4.',
+        conceptTag: ''
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      },
+      {
+        move: 'Bxf7+',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We exchange the bishop for a pawn and check, gaining material and weakening Black\'s king position. This is a favorable exchange.',
+        conceptTag: 'Exchange'
+      }
+    ],
+    summary: 'Exchanging pieces favorably to win material is a key strategy. Calculate exchanges carefully to ensure you gain material or create advantages.',
+    keyTakeaways: [
+      'Exchange pieces when you gain material',
+      'Trade pieces favorably',
+      'Use exchanges to win material',
+      'Calculate exchanges carefully'
+    ],
+    difficulty: 3,
     estimatedMinutes: 5,
     source: 'Exchange strategy principles'
   });
@@ -2777,6 +3080,64 @@ function generatePawnBreaksPatterns(): EnhancedPattern[] {
     keyTakeaways: [
       'Use pawn breaks to expand on flanks',
       'Kingside breaks create attacking chances',
+      'Prepare breaks with proper development',
+      'Pawn advances can open files'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Pawn break principles'
+  });
+  
+  // Pattern 8: b4 Pawn Break
+  patterns.push({
+    id: 'pawn-break-b4-queenside',
+    category: 'PAWN_BREAKS',
+    title: 'The b4 Pawn Break',
+    subtitle: 'Queenside expansion',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2P1P3/3P1N2/PP3PPP/RNBQKB1R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: 'The b4 pawn break expands on the queenside and can create attacking chances. This advance challenges Black\'s pawn structure and opens lines.',
+    keyIdeas: [
+      'Use pawn breaks to expand on the queenside',
+      'b4 advance can open files',
+      'Create attacking chances with queenside breaks',
+      'Prepare breaks with proper development'
+    ],
+    mainLine: [
+      {
+        move: 'b4',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'The pawn break! This advance challenges Black\'s pawn structure on the queenside and can open lines for White\'s rooks and pieces.',
+        highlights: ['b4'],
+        conceptTag: 'Pawn Break'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White develops the knight.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      }
+    ],
+    summary: 'Pawn breaks like b4 expand on the queenside and create attacking chances. Properly prepared breaks can open files and create pressure.',
+    keyTakeaways: [
+      'Use pawn breaks to expand on flanks',
+      'Queenside breaks create attacking chances',
       'Prepare breaks with proper development',
       'Pawn advances can open files'
     ],
@@ -3225,12 +3586,77 @@ function generatePieceCoordinationPatterns(): EnhancedPattern[] {
     source: 'Piece coordination principles'
   });
   
+  // Pattern 8: Coordinating Queen and Knight
+  patterns.push({
+    id: 'piece-coordination-queen-knight',
+    category: 'PIECE_COORDINATION',
+    title: 'Coordinating Queen and Knight',
+    subtitle: 'Tactical combination',
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: 'The queen and knight coordinate excellently in tactical situations. The knight can create threats that the queen supports, or vice versa.',
+    keyIdeas: [
+      'Coordinate queen and knight together',
+      'Use queen and knight for tactical combinations',
+      'Knights support queens in attack',
+      'Create threats with queen-knight coordination'
+    ],
+    mainLine: [
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Castling to safety.',
+        conceptTag: 'King Safety'
+      },
+      {
+        move: 'Bc5',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black develops the bishop.',
+        conceptTag: ''
+      },
+      {
+        move: 'Nc3',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'White develops the knight.',
+        conceptTag: 'Development'
+      },
+      {
+        move: 'O-O',
+        isMainLine: true,
+        annotation: '',
+        explanation: 'Black castles.',
+        conceptTag: ''
+      },
+      {
+        move: 'Qe2',
+        isMainLine: true,
+        annotation: '!',
+        explanation: 'We develop the queen, and now it coordinates with our knight on c3. Together they can create tactical threats and support each other.',
+        highlights: ['e2', 'c3'],
+        conceptTag: 'Piece Coordination'
+      }
+    ],
+    summary: 'Coordinating queen and knight creates powerful tactical possibilities. They support each other and can create decisive threats.',
+    keyTakeaways: [
+      'Coordinate queen and knight together',
+      'Use pieces for tactical combinations',
+      'Knights support queens in attack',
+      'Create threats with coordinated pieces'
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: 'Piece coordination principles'
+  });
+  
   return patterns;
 }
 
 // Main generation function
 async function generateAndValidatePatterns() {
-  console.log('🎯 Starting AI-Assisted Pattern Generation - Batch 12\n');
+  console.log('🎯 Starting AI-Assisted Pattern Generation - Batch 13\n');
   console.log('Generating patterns with immediate validation...\n');
   
   const allPatterns: EnhancedPattern[] = [];
@@ -3253,8 +3679,8 @@ async function generateAndValidatePatterns() {
     { name: 'PIECE_COORDINATION', fn: generatePieceCoordinationPatterns },
   ];
   
-  console.log('Note: Batch 12 - Adding 7th patterns to categories with 6 patterns.');
-  console.log('Focus: BLOCKADE, EXCHANGE_STRATEGY, KNIGHT_PLACEMENT, PAWN_BREAKS, PIECE_COORDINATION\n');
+  console.log('Note: Batch 13 - Adding 8th patterns to categories with 7 patterns.');
+  console.log('Focus: PAWN_BREAKS, PIECE_COORDINATION, CENTRALIZATION, KING_ACTIVITY\n');
   
   for (const { name, fn } of generators) {
     console.log(`\n📦 Generating ${name} patterns...`);

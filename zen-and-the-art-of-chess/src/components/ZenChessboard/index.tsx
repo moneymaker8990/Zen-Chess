@@ -322,16 +322,9 @@ export function ZenChessboard({
   };
   
   return (
-    <div 
-      className="zen-chessboard relative" 
-      style={{ 
-        width: boardWidth, 
-        maxWidth: '100%',
-        aspectRatio: '1',
-        overflow: 'hidden',
-      }}
-    >
-      <Chessboard
+    <div className="board-container">
+      <div className="board-wrapper zen-chessboard" style={{ width: boardWidth > 0 ? boardWidth : '100%' }}>
+        <Chessboard
         position={position}
         onSquareClick={handleSquareClick}
         onSquareRightClick={handleSquareRightClick}
@@ -346,6 +339,7 @@ export function ZenChessboard({
         showBoardNotation={showBoardNotation && boardStyles.showCoordinates}
         customArrows={arrows}
       />
+      </div>
     </div>
   );
 }

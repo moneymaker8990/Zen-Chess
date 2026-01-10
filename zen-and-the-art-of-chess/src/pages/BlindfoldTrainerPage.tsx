@@ -733,9 +733,9 @@ export function BlindfoldTrainerPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board Area */}
-          <div className="relative flex justify-center">
+          <div className="board-container">
             {showBoard ? (
-              <div>
+              <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
                 <Chessboard
                   position={currentFen}
                   boardOrientation="white"

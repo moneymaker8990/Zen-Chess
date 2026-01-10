@@ -1694,15 +1694,8 @@ export function PuzzlesPage() {
         
         {/* Board Area - takes remaining space */}
         <div className="flex-1 flex items-center justify-center px-2 py-2 overflow-hidden min-h-0">
-          <div className="relative w-full h-full flex items-center justify-center">
-            <div 
-              className="relative"
-              style={{ 
-                width: `min(100%, ${Math.min(boardSize, 500)}px)`,
-                maxHeight: '100%',
-                aspectRatio: '1'
-              }}
-            >
+          <div className="board-container">
+            <div className="board-wrapper" style={{ width: boardSize > 0 ? Math.min(boardSize, 500) : '100%' }}>
               <Chessboard
                 position={game.fen()}
                 onSquareClick={isAnimatingSetup ? undefined : onSquareClick}

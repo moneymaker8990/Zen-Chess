@@ -713,8 +713,8 @@ export function MoveTrainer({
         {/* Board Section */}
         <div className="space-y-4 w-full max-w-full flex flex-col items-center lg:items-start overflow-hidden">
           {/* Chessboard */}
-          <div className="relative w-full max-w-full flex justify-center lg:justify-start">
-            <div className="overflow-hidden shadow-2xl" style={{ width: boardSize, maxWidth: '100%' }}>
+          <div className="board-container">
+            <div className="board-wrapper overflow-hidden shadow-2xl" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
               <Chessboard
                 position={game.fen()}
                 onSquareClick={onSquareClick}

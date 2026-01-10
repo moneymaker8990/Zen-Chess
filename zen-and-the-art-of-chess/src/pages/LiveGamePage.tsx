@@ -378,19 +378,21 @@ export function LiveGamePage() {
 
         {/* Center - Board */}
         <div className="flex flex-col items-center">
-          <div style={{ maxWidth: `${boardSize}px`, width: '100%' }}>
-            <Chessboard
-              position={position}
-              onSquareClick={onSquareClick}
-              onPieceDrop={onDrop}
-              boardOrientation={orientation}
-              customSquareStyles={customSquareStyles}
+          <div className="board-container">
+            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+              <Chessboard
+                position={position}
+                onSquareClick={onSquareClick}
+                onPieceDrop={onDrop}
+                boardOrientation={orientation}
+                customSquareStyles={customSquareStyles}
               customDarkSquareStyle={boardStyles.customDarkSquareStyle}
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={150}
               arePiecesDraggable={isMyTurn}
               boardWidth={boardSize}
             />
+            </div>
           </div>
         </div>
 

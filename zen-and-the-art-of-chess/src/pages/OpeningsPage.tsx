@@ -1038,8 +1038,8 @@ export function OpeningsPage() {
             </div>
 
             {/* Chessboard */}
-            <div className="w-full flex justify-center">
-              <div className="relative" style={{ width: boardSize, height: boardSize, maxWidth: '100%' }}>
+            <div className="board-container">
+              <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
                 <Chessboard
                   position={game.fen()}
                   onSquareClick={onSquareClick}

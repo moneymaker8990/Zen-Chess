@@ -849,14 +849,15 @@ export function ThinkingSystemPage() {
           {/* Example slides */}
           {isOnExample && currentLesson.examples[exampleIndex] && (
             <div className="grid lg:grid-cols-2 gap-8 items-center">
-              <div className="chessboard-container">
-                <Chessboard
-                  position={currentLesson.examples[exampleIndex].fen}
-                  boardOrientation="white"
-                  customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                  customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
-                  arePiecesDraggable={false}
-                  boardWidth={400}
+              <div className="board-container">
+                <div className="board-wrapper" style={{ width: '400px', maxWidth: '100%' }}>
+                  <Chessboard
+                    position={currentLesson.examples[exampleIndex].fen}
+                    boardOrientation="white"
+                    customDarkSquareStyle={{ backgroundColor: '#779556' }}
+                    customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                    arePiecesDraggable={false}
+                    boardWidth={400}
                   customSquareStyles={
                     currentLesson.examples[exampleIndex].highlightSquares?.reduce((acc, sq) => ({
                       ...acc,
@@ -864,6 +865,7 @@ export function ThinkingSystemPage() {
                     }), {})
                   }
                 />
+                </div>
               </div>
               <div>
                 <h3 className="text-xl font-medium mb-4" style={{ color: 'var(--text-primary)' }}>
@@ -936,14 +938,15 @@ export function ThinkingSystemPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="flex justify-center">
-            <Chessboard
-              position={question.fen}
-              boardOrientation={new Chess(question.fen).turn() === 'w' ? 'white' : 'black'}
-              customDarkSquareStyle={{ backgroundColor: '#779556' }}
-              customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
-              arePiecesDraggable={false}
-              boardWidth={boardSize}
+          <div className="board-container">
+            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+              <Chessboard
+                position={question.fen}
+                boardOrientation={new Chess(question.fen).turn() === 'w' ? 'white' : 'black'}
+                customDarkSquareStyle={{ backgroundColor: '#779556' }}
+                customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                arePiecesDraggable={false}
+                boardWidth={boardSize}
               customSquareStyles={
                 question.highlightSquares?.reduce((acc, sq) => ({
                   ...acc,
@@ -951,6 +954,7 @@ export function ThinkingSystemPage() {
                 }), {})
               }
             />
+            </div>
           </div>
           
           {/* Question */}
