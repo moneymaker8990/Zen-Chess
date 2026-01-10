@@ -627,18 +627,31 @@ a.small,
 /* 
  * Wrapper for the board - fills container width.
  * The Chessboard component renders at exact boardWidth pixels.
+ * CRITICAL: Multiple overflow constraints to prevent pieces escaping.
  */
 .board-wrapper {
   width: 100%;
   max-width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: hidden !important;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .board-wrapper > div {
-  max-width: 100%;
-  overflow: hidden;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Force all chessboard children to respect container bounds */
+.board-wrapper * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Target the react-chessboard div specifically */
+.board-wrapper > div > div {
+  max-width: 100% !important;
+  overflow: hidden !important;
 }

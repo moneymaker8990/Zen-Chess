@@ -23,10 +23,11 @@ export function useBoardSize(
       
       // Use clientWidth to get the actual available space (excludes scrollbars/borders)
       const containerWidth = containerRef.current.clientWidth;
-      // Subtract a small buffer (8px) to ensure board never exceeds container
-      const availableWidth = containerWidth - 8;
+      // Subtract a larger buffer (16px) to ensure board NEVER exceeds container
+      // This accounts for any unexpected padding, borders, or rendering quirks
+      const availableWidth = containerWidth - 16;
       // Use the smaller of available width or maxWidth
-      const newSize = Math.min(availableWidth, maxWidth);
+      const newSize = Math.max(Math.min(availableWidth, maxWidth), 200); // Minimum 200px
       
       // Only update if changed to prevent unnecessary re-renders
       setSize(prev => prev !== newSize ? newSize : prev);
