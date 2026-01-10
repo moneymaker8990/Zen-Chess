@@ -630,26 +630,28 @@ export function LegendDetailPage() {
           {/* Game Area - Board and Controls */}
           <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden">
             {/* Chessboard */}
-            <div className="card p-4 w-full overflow-hidden" ref={boardContainerRef}>
-              <div className="board-wrapper">
-                <Chessboard
-                  position={game.fen()}
-                  onSquareClick={onSquareClick}
-                  onPieceDrop={onDrop}
-                  boardOrientation={playerColor}
-                  customSquareStyles={{
-                    ...optionSquares,
-                    ...(lastMove && {
-                      [lastMove.from]: { backgroundColor: 'rgba(168, 85, 247, 0.3)' },
-                      [lastMove.to]: { backgroundColor: 'rgba(168, 85, 247, 0.4)' },
-                    }),
-                  }}
-                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                  customLightSquareStyle={boardStyles.customLightSquareStyle}
-                  animationDuration={boardStyles.animationDuration}
-                  arePiecesDraggable={!isThinking}
-                  boardWidth={boardSize}
-                />
+            <div className="card p-4 w-full overflow-hidden">
+              <div className="board-container" ref={boardContainerRef}>
+                <div className="board-wrapper">
+                  <Chessboard
+                    position={game.fen()}
+                    onSquareClick={onSquareClick}
+                    onPieceDrop={onDrop}
+                    boardOrientation={playerColor}
+                    customSquareStyles={{
+                      ...optionSquares,
+                      ...(lastMove && {
+                        [lastMove.from]: { backgroundColor: 'rgba(168, 85, 247, 0.3)' },
+                        [lastMove.to]: { backgroundColor: 'rgba(168, 85, 247, 0.4)' },
+                      }),
+                    }}
+                    customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                    customLightSquareStyle={boardStyles.customLightSquareStyle}
+                    animationDuration={boardStyles.animationDuration}
+                    arePiecesDraggable={!isThinking}
+                    boardWidth={boardSize}
+                  />
+                </div>
               </div>
 
               {game.isGameOver() && (
@@ -905,41 +907,43 @@ export function LegendDetailPage() {
             </div>
           ) : (
             <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
-              <div className="card p-4 w-full overflow-hidden" ref={boardContainerRef}>
-                <div className="board-wrapper">
-                  {guessChess && (
-                    <Chessboard
-                      position={guessChess.fen()}
-                      onPieceDrop={(source, target) => {
-                        handleGuessMove(source, target);
-                        return !showFeedback;
-                      }}
-                      boardOrientation={guessSession?.legendColor || 'white'}
-                      customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                      customLightSquareStyle={boardStyles.customLightSquareStyle}
-                      animationDuration={boardStyles.animationDuration}
-                      arePiecesDraggable={!showFeedback && !guessAnimating}
-                      boardWidth={boardSize}
-                    />
-                  )}
-                  
-                  {/* Feedback overlay - shows on correct/wrong guess */}
-                  {lastGuessCorrect !== null && !showFeedback && (
-                    <div 
-                      className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 rounded-sm ${
-                        guessAnimating ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      style={{ 
-                        background: lastGuessCorrect 
-                          ? 'rgba(74, 222, 128, 0.3)' 
-                          : 'rgba(239, 68, 68, 0.3)'
-                      }}
-                    >
-                      <div className={`text-6xl ${guessAnimating ? 'animate-bounce' : ''}`}>
-                        {lastGuessCorrect ? '✓' : '✗'}
+              <div className="card p-4 w-full overflow-hidden">
+                <div className="board-container" ref={boardContainerRef}>
+                  <div className="board-wrapper">
+                    {guessChess && (
+                      <Chessboard
+                        position={guessChess.fen()}
+                        onPieceDrop={(source, target) => {
+                          handleGuessMove(source, target);
+                          return !showFeedback;
+                        }}
+                        boardOrientation={guessSession?.legendColor || 'white'}
+                        customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                        customLightSquareStyle={boardStyles.customLightSquareStyle}
+                        animationDuration={boardStyles.animationDuration}
+                        arePiecesDraggable={!showFeedback && !guessAnimating}
+                        boardWidth={boardSize}
+                      />
+                    )}
+                    
+                    {/* Feedback overlay - shows on correct/wrong guess */}
+                    {lastGuessCorrect !== null && !showFeedback && (
+                      <div 
+                        className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 rounded-sm ${
+                          guessAnimating ? 'opacity-100' : 'opacity-0'
+                        }`}
+                        style={{ 
+                          background: lastGuessCorrect 
+                            ? 'rgba(74, 222, 128, 0.3)' 
+                            : 'rgba(239, 68, 68, 0.3)'
+                        }}
+                      >
+                        <div className={`text-6xl ${guessAnimating ? 'animate-bounce' : ''}`}>
+                          {lastGuessCorrect ? '✓' : '✗'}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
                 
                 {/* Move prompt with attempt counter */}
