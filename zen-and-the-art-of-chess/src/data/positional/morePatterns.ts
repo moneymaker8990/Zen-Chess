@@ -486,6 +486,66 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'knight-outpost-placement',
+    category: 'KNIGHT_PLACEMENT',
+    title: "Placing Knights on Outposts",
+    subtitle: "Knights on protected squares",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "Knights on outposts (advanced squares that cannot be attacked by enemy pawns) are extremely powerful. They control key squares and are difficult to dislodge.",
+    keyIdeas: [
+      "Place knights on outpost squares",
+      "Knights on outposts are very strong",
+      "Look for protected advanced squares",
+      "Use outposts to control key squares"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nbd2",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We develop the knight, preparing to move it to an outpost square like e5 or d5. Knights on outposts are powerful and difficult to dislodge.",
+        highlights: [
+          "d2"
+        ],
+        conceptTag: "Knight Placement"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Place knights on outpost squares whenever possible. Knights on outposts control key squares and are extremely difficult to dislodge.",
+    keyTakeaways: [
+      "Place knights on outpost squares",
+      "Knights on outposts are very strong",
+      "Look for protected advanced squares",
+      "Use outposts to control key squares"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Knight placement principles",
+  },
+
+  {
     id: 'centralization-piece-activity',
     category: 'CENTRALIZATION',
     title: "Centralizing Your Pieces",
@@ -1541,6 +1601,66 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'blockade-weak-pawn-chain',
+    category: 'BLOCKADE',
+    title: "Blockading Weak Pawn Chains",
+    subtitle: "Controlling pawn chain weaknesses",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "Weak pawn chains can be blockaded effectively. The blockader prevents the entire chain from advancing and creates weaknesses.",
+    keyIdeas: [
+      "Blockade weak pawn chains to prevent advances",
+      "Place pieces in front of the chain",
+      "Prevent pawn advances with blockaders",
+      "Control squares in front of weak chains"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We develop the knight, and it can later move to d5 or e5 to blockade Black's pawn chain. The blockade prevents the chain from advancing.",
+        highlights: [
+          "c3"
+        ],
+        conceptTag: "Blockade"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Blockading weak pawn chains fixes them as weaknesses. The blockader prevents the entire chain from advancing and controls key squares.",
+    keyTakeaways: [
+      "Blockade weak pawn chains to prevent advances",
+      "Use knights or other pieces to blockade",
+      "The blockader gains control of key squares",
+      "Prevent pawn chain advances with blockaders"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Pawn structure theory",
+  },
+
+  {
     id: 'exchange-trading-bad-pieces',
     category: 'EXCHANGE_STRATEGY',
     title: "Exchanging Bad Pieces for Good",
@@ -1875,6 +1995,63 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'exchange-remove-threats',
+    category: 'EXCHANGE_STRATEGY',
+    title: "Exchanging to Remove Threats",
+    subtitle: "Trading to eliminate dangers",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "When your opponent has active pieces creating threats, exchanging them removes the threats and simplifies the position.",
+    keyIdeas: [
+      "Exchange pieces that create threats",
+      "Trade active opponent pieces",
+      "Remove attacking potential through exchanges",
+      "Simplify positions by removing threats"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop actively.",
+        conceptTag: ""
+      },
+      {
+        move: "Bxf7+",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We exchange bishops, removing Black's active bishop and simplifying the position. This eliminates threats and reduces complexity.",
+        conceptTag: "Exchange"
+      },
+      {
+        move: "Kxf7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures, but loses castling rights.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Exchanging pieces that create threats simplifies positions and removes dangers. Trade active opponent pieces to neutralize threats.",
+    keyTakeaways: [
+      "Exchange pieces that create threats",
+      "Trade active opponent pieces",
+      "Remove attacking potential through exchanges",
+      "Simplify by removing threats"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Exchange strategy principles",
+  },
+
+  {
     id: 'pawn-break-f5-advance',
     category: 'PAWN_BREAKS',
     title: "The f5 Pawn Break",
@@ -2170,6 +2347,66 @@ const additionalPatterns: EnhancedPattern[] = [
     ],
     
     difficulty: 3,
+    estimatedMinutes: 5,
+    source: "Pawn break principles",
+  },
+
+  {
+    id: 'pawn-break-h5-advance',
+    category: 'PAWN_BREAKS',
+    title: "The h5 Pawn Break",
+    subtitle: "Kingside expansion",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "The h5 pawn break expands on the kingside and can create attacking chances. This advance can open lines for rooks and create pressure.",
+    keyIdeas: [
+      "Use pawn breaks to expand on the kingside",
+      "h5 advance can open files",
+      "Create attacking chances with kingside breaks",
+      "Prepare breaks with proper development"
+    ],
+    mainLine: [
+      {
+        move: "h4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Preparing the h5 pawn break.",
+        conceptTag: "Pawn Break"
+      },
+      {
+        move: "h6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black prepares to defend.",
+        conceptTag: ""
+      },
+      {
+        move: "h5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The pawn break! This advance challenges Black's kingside structure and can open lines for White's rooks and pieces.",
+        highlights: [
+          "h5"
+        ],
+        conceptTag: "Pawn Break"
+      },
+      {
+        move: "Be7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Pawn breaks like h5 expand on the kingside and create attacking chances. Properly prepared breaks can open files and create pressure.",
+    keyTakeaways: [
+      "Use pawn breaks to expand on flanks",
+      "Kingside breaks create attacking chances",
+      "Prepare breaks with proper development",
+      "Pawn advances can open files"
+    ],
+    
+    difficulty: 2,
     estimatedMinutes: 5,
     source: "Pawn break principles",
   },
@@ -2481,6 +2718,67 @@ const additionalPatterns: EnhancedPattern[] = [
       "Minor pieces complement each other",
       "Create comprehensive square control",
       "Use pieces to support each other's strengths"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Piece coordination principles",
+  },
+
+  {
+    id: 'piece-coordination-queen-bishop',
+    category: 'PIECE_COORDINATION',
+    title: "Coordinating Queen and Bishop",
+    subtitle: "Battery on diagonals",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "The queen and bishop coordinate excellently on diagonals, creating powerful batteries. They can attack together and create decisive threats.",
+    keyIdeas: [
+      "Coordinate queen and bishop on diagonals",
+      "Create batteries with queen and bishop",
+      "Use queen and bishop to attack together",
+      "Batteries create powerful threats"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Qe2",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We develop the queen, and now it coordinates with our bishop on c4. Together they control key diagonals and create threats.",
+        highlights: [
+          "e2",
+          "c4"
+        ],
+        conceptTag: "Piece Coordination"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Coordinating queen and bishop on diagonals creates powerful batteries. They attack together and create decisive threats.",
+    keyTakeaways: [
+      "Coordinate queen and bishop on diagonals",
+      "Create batteries with queen and bishop",
+      "Use pieces to support each other",
+      "Batteries create powerful threats"
     ],
     
     difficulty: 2,
