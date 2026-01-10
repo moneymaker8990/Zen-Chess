@@ -629,7 +629,7 @@ a.small,
 /* Board wrapper - maintains aspect ratio and handles responsive sizing */
 .board-wrapper {
   width: 100%;
-  max-width: 100%;
+  max-width: 100% !important;
   aspect-ratio: 1;
   position: relative;
 }
@@ -637,20 +637,23 @@ a.small,
 /* Very small phones - extra constraints to prevent overflow */
 @media (max-width: 360px) {
   .board-wrapper {
-    max-width: calc(100vw - 40px);
+    max-width: calc(100vw - 40px) !important;
+    width: calc(100vw - 40px) !important;
   }
 }
 
 /* Small to standard mobile - account for padding and margins */
 @media (min-width: 361px) and (max-width: 480px) {
   .board-wrapper {
-    max-width: calc(100vw - 48px);
+    max-width: calc(100vw - 48px) !important;
+    width: calc(100vw - 48px) !important;
   }
 }
 
 /* Larger mobile - ensure room for UI elements */
 @media (min-width: 481px) and (max-width: 640px) {
   .board-wrapper {
-    max-width: calc(100vw - 64px);
+    max-width: calc(100vw - 64px) !important;
+    width: calc(100vw - 64px) !important;
   }
 }
