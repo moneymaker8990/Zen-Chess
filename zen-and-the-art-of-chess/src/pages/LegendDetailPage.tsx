@@ -35,9 +35,8 @@ export function LegendDetailPage() {
   // Account for card padding (16px each side = 32px total)
   const rawBoardSize = useContainerBoardSize(boardContainerRef, 480, 32);
   // rawBoardSize returns 0 when container hasn't mounted yet (valid "not ready" state)
-  // Only apply minimum constraint if we have a valid size (> 0) to avoid visual jank
-  // The board won't render until boardSize > 0 due to the conditional render check
-  const boardSize = rawBoardSize > 0 ? Math.max(280, rawBoardSize) : 0;
+  // Don't apply additional constraints - the hook handles mobile sizing
+  const boardSize = rawBoardSize;
   
   const legend = legendId as LegendId;
   const legendData = legend ? LEGEND_STYLES[legend] : null;
@@ -637,10 +636,8 @@ export function LegendDetailPage() {
           <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_300px] gap-4 lg:gap-6 items-start w-full max-w-full overflow-hidden">
             {/* Chessboard */}
             <div className="card p-4 w-full overflow-hidden" ref={boardContainerRef}>
-              <div className="w-full flex justify-center" style={{ maxWidth: '100%' }}>
-                <div 
-                  style={{ width: boardSize, maxWidth: '100%', aspectRatio: '1', position: 'relative', minWidth: 280 }}
-                >
+              <div className="board-container">
+                <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
                   {boardSize > 0 && (
                     <Chessboard
                       position={game.fen()}
@@ -918,11 +915,8 @@ export function LegendDetailPage() {
           ) : (
             <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,1fr)_1fr] gap-4 lg:gap-6 w-full max-w-full overflow-hidden">
               <div className="card p-4 w-full overflow-hidden" ref={boardContainerRef}>
-                <div className="w-full flex justify-center" style={{ maxWidth: '100%' }}>
-                  <div 
-                    style={{ width: boardSize, maxWidth: '100%', aspectRatio: '1', minWidth: 280 }} 
-                    className="relative"
-                  >
+                <div className="board-container">
+                  <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
                     {guessChess && boardSize > 0 && (
                       <Chessboard
                         position={guessChess.fen()}

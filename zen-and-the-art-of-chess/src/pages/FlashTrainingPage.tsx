@@ -1113,45 +1113,43 @@ export function FlashTrainingPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0 max-w-full">
           {/* Board */}
-          <div className="flex justify-center items-start">
-            <div 
-              className="relative"
-              style={{ width: boardSize, maxWidth: '100%', height: boardSize }}
-            >
-              {/* Show board during position flash, result, or study mode during questions */}
-              {(showingPosition || showResult || (studyMode && showingQuestion)) && (
-                <div 
-                  className={`transition-all duration-500 ease-out ${
-                    transitionPhase === 'fading-out' ? 'opacity-50 scale-[0.98]' : 
-                    transitionPhase === 'fading-in' ? 'opacity-100 scale-100' :
-                    'opacity-100'
-                  } ${countdownWarning ? 'ring-4 ring-amber-400/50 animate-pulse' : ''}`}
-                >
-                  <Chessboard
-                    position={currentPosition.fen}
-                    boardOrientation={new Chess(currentPosition.fen).turn() === 'w' ? 'white' : 'black'}
-                    customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                    customLightSquareStyle={boardStyles.customLightSquareStyle}
-                    arePiecesDraggable={false}
-                    boardWidth={boardSize}
-                  />
+          <div className="board-container">
+            <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+              <div className="relative w-full h-full">
+                {/* Show board during position flash, result, or study mode during questions */}
+                {(showingPosition || showResult || (studyMode && showingQuestion)) && (
+                  <div 
+                    className={`transition-all duration-500 ease-out ${
+                      transitionPhase === 'fading-out' ? 'opacity-50 scale-[0.98]' : 
+                      transitionPhase === 'fading-in' ? 'opacity-100 scale-100' :
+                      'opacity-100'
+                    } ${countdownWarning ? 'ring-4 ring-amber-400/50 animate-pulse' : ''}`}
+                  >
+                    <Chessboard
+                      position={currentPosition.fen}
+                      boardOrientation={new Chess(currentPosition.fen).turn() === 'w' ? 'white' : 'black'}
+                      customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                      customLightSquareStyle={boardStyles.customLightSquareStyle}
+                      arePiecesDraggable={false}
+                      boardWidth={boardSize}
+                    />
                   
-                  {/* Countdown warning overlay */}
-                  {countdownWarning && showingPosition && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="text-8xl font-bold animate-pulse" style={{ 
-                        color: 'rgba(251, 191, 36, 0.9)',
-                        textShadow: '0 0 40px rgba(251, 191, 36, 0.5)'
-                      }}>
-                        {Math.ceil(timeRemaining / 1000)}
+                    {/* Countdown warning overlay */}
+                    {countdownWarning && showingPosition && (
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="text-8xl font-bold animate-pulse" style={{ 
+                          color: 'rgba(251, 191, 36, 0.9)',
+                          textShadow: '0 0 40px rgba(251, 191, 36, 0.5)'
+                        }}>
+                          {Math.ceil(timeRemaining / 1000)}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              )}
+                    )}
+                  </div>
+                )}
 
-              {/* Flash overlay - position hidden (when study mode is off during questions) */}
-              {showingQuestion && !showResult && !studyMode && transitionPhase !== 'fading-out' && (
+                {/* Flash overlay - position hidden (when study mode is off during questions) */}
+                {showingQuestion && !showResult && !studyMode && transitionPhase !== 'fading-out' && (
                 <div
                   className="absolute inset-0 flex items-center justify-center animate-fade-in rounded-xl shadow-2xl"
                   style={{ background: 'linear-gradient(135deg, var(--bg-primary), var(--bg-secondary))', border: '3px solid var(--accent-primary)' + '40' }}
@@ -1373,15 +1371,15 @@ export function FlashTrainingPage() {
           {/* Board - Always Visible in Review */}
           <div className="flex justify-center items-start">
             <div 
-              className="relative"
-              style={{ width: boardSize, maxWidth: '100%', height: boardSize }}
+              className="board-container"
             >
-              <Chessboard
-                position={currentReview.position.fen}
-                boardOrientation={new Chess(currentReview.position.fen).turn() === 'w' ? 'white' : 'black'}
-                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                customLightSquareStyle={boardStyles.customLightSquareStyle}
-                arePiecesDraggable={false}
+              <div className="board-wrapper" style={{ width: boardSize > 0 ? boardSize : '100%' }}>
+                <Chessboard
+                  position={currentReview.position.fen}
+                  boardOrientation={new Chess(currentReview.position.fen).turn() === 'w' ? 'white' : 'black'}
+                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                  customLightSquareStyle={boardStyles.customLightSquareStyle}
+                  arePiecesDraggable={false}
                 boardWidth={boardSize}
               />
             </div>
