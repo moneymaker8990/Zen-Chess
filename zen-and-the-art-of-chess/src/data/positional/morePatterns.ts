@@ -606,6 +606,66 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'knight-central-square',
+    category: 'KNIGHT_PLACEMENT',
+    title: "Knight on Central Square",
+    subtitle: "Controlling the center",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Knights on central squares control many squares and are very powerful. Place knights on central squares whenever possible.",
+    keyIdeas: [
+      "Place knights on central squares",
+      "Central knights control many squares",
+      "Knights on central squares are powerful",
+      "Control the center with knights"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We develop the knight to c3, a central square. From here, the knight controls many squares and supports our position effectively.",
+        highlights: [
+          "c3"
+        ],
+        conceptTag: "Knight Placement"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Place knights on central squares whenever possible. Central knights control many squares and are very powerful.",
+    keyTakeaways: [
+      "Place knights on central squares",
+      "Central knights control many squares",
+      "Knights on central squares are powerful",
+      "Control the center with knights"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Knight placement principles",
+  },
+
+  {
     id: 'centralization-piece-activity',
     category: 'CENTRALIZATION',
     title: "Centralizing Your Pieces",
@@ -984,6 +1044,75 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 5,
     source: "Queen centralization principles",
+  },
+
+  {
+    id: 'centralization-all-pieces',
+    category: 'CENTRALIZATION',
+    title: "Centralizing All Pieces",
+    subtitle: "Maximum central control",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "When all pieces are centralized, they control the center and support each other. Centralized pieces create maximum pressure and coordination.",
+    keyIdeas: [
+      "Centralize all pieces for maximum control",
+      "Central pieces support each other",
+      "Control the center with all pieces",
+      "Maximum coordination from centralization"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops the knight to a central square.",
+        conceptTag: "Development"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "Qe2",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We develop the queen to a central square. Now our bishop on c4, knight on c3, and queen on e2 are all centralized, creating maximum control and coordination.",
+        highlights: [
+          "c4",
+          "c3",
+          "e2"
+        ],
+        conceptTag: "Centralization"
+      }
+    ],
+    summary: "Centralize all pieces for maximum control. Centralized pieces support each other and create maximum pressure and coordination.",
+    keyTakeaways: [
+      "Centralize all pieces for maximum control",
+      "Central pieces support each other",
+      "Control the center with all pieces",
+      "Maximum coordination from centralization"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Centralization principles",
   },
 
   {
@@ -1388,6 +1517,73 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 5,
     source: "King activity principles",
+  },
+
+  {
+    id: 'king-activity-endgame-advanced',
+    category: 'KING_ACTIVITY',
+    title: "Advanced King Activity in Endgame",
+    subtitle: "King as active piece",
+    fen: '8/5pk1/5p2/4p3/4P3/5P2/5PK1/8 w - - 0 1',
+    toMove: 'white',
+    introduction: "In endgames, the king becomes a powerful active piece. Use the king to support pawns, attack enemy pawns, and control key squares.",
+    keyIdeas: [
+      "King is a powerful piece in endgames",
+      "Use king to support pawns",
+      "Attack enemy pawns with king",
+      "Control key squares with active king"
+    ],
+    mainLine: [
+      {
+        move: "Kf1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Moving the king toward the center.",
+        conceptTag: "King Activity"
+      },
+      {
+        move: "Kg8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Further centralization.",
+        conceptTag: ""
+      },
+      {
+        move: "Kf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black moves the king.",
+        conceptTag: ""
+      },
+      {
+        move: "Kd3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our king reaches a central square, where it can support our pawns and attack Black's pawns. An active king is crucial in endgames.",
+        highlights: [
+          "d3"
+        ],
+        conceptTag: "King Activity"
+      }
+    ],
+    summary: "In endgames, use the king as an active piece. Support your pawns, attack enemy pawns, and control key squares with an active king.",
+    keyTakeaways: [
+      "King is a powerful piece in endgames",
+      "Use king to support pawns",
+      "Attack enemy pawns with king",
+      "Control key squares with active king"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Endgame king activity principles",
   },
 
   {
@@ -1908,6 +2104,66 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'blockade-rook-blockade',
+    category: 'BLOCKADE',
+    title: "Blockading with Rook",
+    subtitle: "Rook on blockade square",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "Rooks can blockade pawns effectively, especially on open files. A rook on a blockade square prevents pawn advances and controls key squares.",
+    keyIdeas: [
+      "Rooks can blockade pawns effectively",
+      "Place rooks on blockade squares",
+      "Prevent pawn advances with rooks",
+      "Rooks control files and ranks"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Re1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We place the rook on e1, where it can later move to e5 or e6 to blockade Black's pawn structure. Rooks on blockade squares are very effective.",
+        highlights: [
+          "e1"
+        ],
+        conceptTag: "Blockade"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Rooks can blockade pawns effectively, especially on open files. A rook on a blockade square prevents pawn advances and controls key squares.",
+    keyTakeaways: [
+      "Rooks can blockade pawns effectively",
+      "Place rooks on blockade squares",
+      "Prevent pawn advances with rooks",
+      "Rooks provide powerful blockade control"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Pawn structure theory",
+  },
+
+  {
     id: 'exchange-trading-bad-pieces',
     category: 'EXCHANGE_STRATEGY',
     title: "Exchanging Bad Pieces for Good",
@@ -2363,6 +2619,77 @@ const additionalPatterns: EnhancedPattern[] = [
   },
 
   {
+    id: 'exchange-improve-position',
+    category: 'EXCHANGE_STRATEGY',
+    title: "Exchanging to Improve Position",
+    subtitle: "Trading for positional gains",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Sometimes exchanging pieces improves your position even without material gain. Trade pieces when it improves your structure or piece placement.",
+    keyIdeas: [
+      "Exchange pieces to improve position",
+      "Trade for positional advantages",
+      "Improve structure through exchanges",
+      "Use exchanges to activate pieces"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops the knight.",
+        conceptTag: "Development"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxe5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We exchange knights, improving our position by centralizing our remaining pieces and creating better piece coordination.",
+        conceptTag: "Exchange"
+      },
+      {
+        move: "Nxe5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Exchanging pieces to improve position is a key strategy. Trade pieces when it improves your structure, piece placement, or coordination.",
+    keyTakeaways: [
+      "Exchange pieces to improve position",
+      "Trade for positional advantages",
+      "Improve structure through exchanges",
+      "Use exchanges to activate pieces"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Exchange strategy principles",
+  },
+
+  {
     id: 'pawn-break-f5-advance',
     category: 'PAWN_BREAKS',
     title: "The f5 Pawn Break",
@@ -2775,6 +3102,66 @@ const additionalPatterns: EnhancedPattern[] = [
       "Queenside breaks create attacking chances",
       "Prepare breaks with proper development",
       "Pawn advances can open files"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Pawn break principles",
+  },
+
+  {
+    id: 'pawn-break-c5-break',
+    category: 'PAWN_BREAKS',
+    title: "The c5 Pawn Break",
+    subtitle: "Queenside central break",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2P1P3/3P1N2/PP3PPP/RNBQKB1R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "The c5 pawn break challenges Black's central structure and can open lines. This break is often used to undermine the opponent's pawn structure.",
+    keyIdeas: [
+      "Use pawn breaks to challenge central structures",
+      "c5 break can open lines",
+      "Create attacking chances with central breaks",
+      "Prepare breaks with proper development"
+    ],
+    mainLine: [
+      {
+        move: "c5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The pawn break! This advance challenges Black's pawn structure and can open lines for White's pieces.",
+        highlights: [
+          "c5"
+        ],
+        conceptTag: "Pawn Break"
+      },
+      {
+        move: "Bxc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black captures the pawn with the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops the knight.",
+        conceptTag: "Development"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Pawn breaks like c5 challenge central structures and create attacking chances. Properly prepared breaks can open lines and create pressure.",
+    keyTakeaways: [
+      "Use pawn breaks to challenge central structures",
+      "Central breaks create attacking chances",
+      "Prepare breaks with proper development",
+      "Pawn advances can open lines"
     ],
     
     difficulty: 2,
@@ -3218,6 +3605,67 @@ const additionalPatterns: EnhancedPattern[] = [
       "Use pieces for tactical combinations",
       "Knights support queens in attack",
       "Create threats with coordinated pieces"
+    ],
+    
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Piece coordination principles",
+  },
+
+  {
+    id: 'piece-coordination-rooks-knights',
+    category: 'PIECE_COORDINATION',
+    title: "Coordinating Rooks and Knights",
+    subtitle: "Rook and knight harmony",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Rooks and knights coordinate excellently together. Rooks control files and ranks, while knights control squares, creating comprehensive control.",
+    keyIdeas: [
+      "Coordinate rooks and knights together",
+      "Rooks and knights complement each other",
+      "Create comprehensive control",
+      "Use rooks and knights to support each other"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety and activating the rook.",
+        conceptTag: "King Safety"
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "We develop the knight, and now our rook on f1 (after castling) and knight on c3 coordinate perfectly. Together they control key squares and files.",
+        highlights: [
+          "f1",
+          "c3"
+        ],
+        conceptTag: "Piece Coordination"
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      }
+    ],
+    summary: "Coordinating rooks and knights creates comprehensive control. They complement each other and create powerful threats together.",
+    keyTakeaways: [
+      "Coordinate rooks and knights together",
+      "Rooks and knights complement each other",
+      "Create comprehensive control",
+      "Use pieces to support each other"
     ],
     
     difficulty: 2,

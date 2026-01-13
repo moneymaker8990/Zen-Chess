@@ -613,36 +613,19 @@ a.small,
    ============================================ */
 
 /* 
- * Container that determines board size.
- * CRITICAL: Use viewport units on mobile to guarantee fit.
+ * Container for the chessboard.
+ * react-chessboard auto-sizes to fill this container when no boardWidth is set.
  */
 .board-container {
-  /* Force the container to take full available width */
-  width: calc(100vw - 32px);
+  width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  overflow: hidden;
-}
-
-@media (max-width: 640px) {
-  .board-container {
-    /* On small screens - viewport minus padding */
-    width: calc(100vw - 24px);
-    max-width: calc(100vw - 24px);
-  }
 }
 
 /* 
- * Wrapper for the board - contains the chessboard.
- * Keep it simple - just clip overflow, don't mess with internal layout.
+ * Wrapper for the board - simple container.
  */
 .board-wrapper {
   width: 100%;
   position: relative;
-  overflow: hidden;
-}
-
-/* Clip any pieces that escape the board boundaries */
-.board-wrapper > div {
-  overflow: hidden;
 }
