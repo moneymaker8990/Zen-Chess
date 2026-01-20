@@ -4,11 +4,10 @@
 // Build GM-level position assessment at a glance
 // ============================================
 
-import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 
 // ============================================
@@ -242,10 +241,8 @@ const POSITIONS: EvaluatedPosition[] = [
 
 export function IntuitionTrainerPage() {
   const navigate = useNavigate();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
   const boardStyles = useBoardStyles();
-  
+
   // State
   const [stats, setStats] = useState<IntuitionStats>(() => {
     const saved = localStorage.getItem('zenChessIntuitionStats');
@@ -671,7 +668,7 @@ export function IntuitionTrainerPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="board-container" ref={boardContainerRef}>
+          <div className="board-container">
             <div className="board-wrapper">
               <Chessboard
                 position={currentPosition.fen}

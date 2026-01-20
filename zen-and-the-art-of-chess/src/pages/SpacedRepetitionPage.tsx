@@ -4,11 +4,10 @@
 // Uses Lichess puzzles from Supabase
 // ============================================
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { 
@@ -73,10 +72,8 @@ const THEME_LABELS: Record<string, string> = {
 
 export function SpacedRepetitionPage() {
   const navigate = useNavigate();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
   const boardStyles = useBoardStyles();
-  
+
   // Load state from localStorage
   const [srsState, setSrsState] = useState<SRSState>(() => {
     const saved = localStorage.getItem('zenChessSRSState');
@@ -683,7 +680,7 @@ export function SpacedRepetitionPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="board-container" ref={boardContainerRef}>
+          <div className="board-container">
             <div className="board-wrapper">
               <Chessboard
                 position={game.fen()}

@@ -11,7 +11,6 @@ import { Chess } from 'chess.js';
 import type { Square } from 'chess.js';
 import { useAuthStore } from '@/state/useAuthStore';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { ChessSounds, playSmartMoveSound } from '@/lib/soundSystem';
 import {
   MultiplayerGameEngine,
@@ -32,8 +31,6 @@ export function LiveGamePage() {
   const { gameId } = useParams<{ gameId: string }>();
   const { user } = useAuthStore();
   const boardStyles = useBoardStyles();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 500);
 
   // Game engine
   const engineRef = useRef<MultiplayerGameEngine | null>(null);
@@ -379,7 +376,7 @@ export function LiveGamePage() {
 
         {/* Center - Board */}
         <div className="flex flex-col items-center">
-          <div className="board-container" ref={boardContainerRef}>
+          <div className="board-container">
             <div className="board-wrapper">
               <Chessboard
                 position={position}

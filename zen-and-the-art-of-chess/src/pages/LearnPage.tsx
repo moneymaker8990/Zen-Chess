@@ -1,8 +1,7 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Chessboard } from 'react-chessboard';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { BackButton } from '@/components/BackButton';
 import { CURRICULUM } from '@/data/curriculum';
 import type { Lesson, LessonStep } from '@/data/curriculum';
@@ -15,9 +14,7 @@ export function LearnPage() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const boardStyles = useBoardStyles();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 360);
-  
+
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
   
@@ -178,9 +175,7 @@ export function LearnPage() {
           >
             {currentStep?.fen ? (
               <div className="animate-fade-in flex justify-center">
-                <div 
-                  className="board-container" ref={boardContainerRef}
-                >
+                <div className="board-container">
                   <div className="board-wrapper rounded-xl overflow-hidden shadow-2xl">
                     <Chessboard
                       position={currentStep.fen}

@@ -104,45 +104,4 @@ export function useBoardSize(
   return size;
 }
 
-/**
- * Legacy hook for backward compatibility.
- * Provides a viewport-based fallback when no container ref is available.
- * 
- * @deprecated Use useBoardSize with containerRef instead
- */
-export function useBoardSizeViewport(maxWidth: number = 480): number {
-  const [size, setSize] = useState(() => {
-    if (typeof window === 'undefined') return Math.min(maxWidth, 320);
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    // On mobile, use at most 55% of viewport height
-    const heightBased = Math.floor(vh * 0.55);
-    if (vw < 400) return Math.min(maxWidth, vw - 48, heightBased);
-    if (vw < 640) return Math.min(maxWidth, vw - 64, heightBased);
-    if (vw < 1024) return Math.min(maxWidth, vw - 80, 480);
-    return maxWidth;
-  });
-
-  useEffect(() => {
-    const calculate = () => {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const heightBased = Math.floor(vh * 0.55);
-      let newSize: number;
-      // On mobile, use at most 55% of viewport height
-      if (vw < 400) newSize = Math.min(maxWidth, vw - 48, heightBased);
-      else if (vw < 640) newSize = Math.min(maxWidth, vw - 64, heightBased);
-      else if (vw < 1024) newSize = Math.min(maxWidth, vw - 80, 480);
-      else newSize = maxWidth;
-      setSize(newSize);
-    };
-
-    calculate();
-    window.addEventListener('resize', calculate);
-    return () => window.removeEventListener('resize', calculate);
-  }, [maxWidth]);
-
-  return size;
-}
-
 export default useBoardSize;

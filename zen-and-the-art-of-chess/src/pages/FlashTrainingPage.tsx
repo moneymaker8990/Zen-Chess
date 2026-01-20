@@ -4,7 +4,7 @@
 // Builds "at a glance" intuition that separates masters from amateurs
 // ============================================
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,6 @@ import {
   type FlashPosition,
   type FlashQuestion
 } from '@/data/flashPositions';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { logger } from '@/lib/logger';
 
@@ -214,10 +213,8 @@ const getObservationHints = (questionType: FlashQuestion['type'], difficulty: Di
 
 export function FlashTrainingPage() {
   const navigate = useNavigate();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
   const boardStyles = useBoardStyles();
-  
+
   // State
   const [mode, setMode] = useState<FlashMode>('menu');
   const [difficulty, setDifficulty] = useState<Difficulty>('intermediate');
@@ -1373,8 +1370,7 @@ export function FlashTrainingPage() {
           {/* Board - Always Visible in Review */}
           <div className="flex justify-center items-start">
 <div
-              className="board-container" ref={boardContainerRef}
-            >
+              className="board-container"             >
               <div className="board-wrapper">
                 <Chessboard
                   position={currentReview.position.fen}

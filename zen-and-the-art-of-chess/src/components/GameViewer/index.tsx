@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { ZenChessboard } from '@/components/ZenChessboard';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import type { InstructiveGame, AnnotatedMove } from '@/data/instructiveGames/types';
 import { 
   fetchLegendGames, 
@@ -23,9 +22,7 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
   const [loadedMoves, setLoadedMoves] = useState<AnnotatedMove[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadedFromLegend, setLoadedFromLegend] = useState<string | null>(null);
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
-  
+
   // Use loaded moves if game has no moves
   const effectiveMoves = game.moves.length > 0 ? game.moves : loadedMoves;
   
@@ -177,7 +174,7 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
       <div className="flex flex-col lg:grid lg:grid-cols-[1fr_400px] gap-4 lg:gap-6 px-2 sm:px-0">
         {/* Board and controls */}
         <div className="space-y-4 flex flex-col items-center lg:items-start">
-          <div ref={boardContainerRef}>
+          <div className="board-container">
             <ZenChessboard
               position={getCurrentFen()}
               orientation="white"

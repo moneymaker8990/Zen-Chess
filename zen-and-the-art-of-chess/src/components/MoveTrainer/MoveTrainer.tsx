@@ -8,7 +8,6 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { BOARD_COLORS } from '@/lib/constants';
 import type { EnhancedPattern, AnnotatedMove } from '@/data/positional/enhancedPatterns';
 import { logger } from '@/lib/logger';
@@ -76,9 +75,6 @@ export function MoveTrainer({
   currentPatternIndex = 0,
   totalPatterns = 1,
 }: MoveTrainerProps) {
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
-  
   // Game State
   const [game, setGame] = useState(() => {
     try {
@@ -715,7 +711,7 @@ export function MoveTrainer({
         {/* Board Section */}
         <div className="space-y-4 w-full max-w-full flex flex-col items-center lg:items-start overflow-hidden">
           {/* Chessboard */}
-          <div className="board-container" ref={boardContainerRef}>
+          <div className="board-container">
             <div className="board-wrapper overflow-hidden shadow-2xl">
               <Chessboard
                 position={game.fen()}

@@ -9,7 +9,6 @@ import { AgentWatching, ContextualAgentTip } from '@/components/AgentPresence';
 import { PuzzleGeniusPanel } from '@/components/PuzzleGeniusPanel';
 import { UISounds, playSmartMoveSound } from '@/lib/soundSystem';
 import { MOVE_HINT_STYLES } from '@/lib/constants';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import {
   getPuzzleStats,
   submitPuzzleResult,
@@ -261,9 +260,6 @@ export function PuzzlesPage() {
   const triggerAgent = useAgentTrigger();
   const puzzleStartTime = useRef<number>(Date.now());
   const puzzleStreakRef = useRef<number>(0);
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
-  
   // Navigation State
   const [mode, setMode] = useState<PuzzleMode>('menu');
   
@@ -1700,7 +1696,7 @@ export function PuzzlesPage() {
         
         {/* Board Area - takes remaining space */}
         <div className="flex-1 flex items-center justify-center px-2 py-2 overflow-hidden min-h-0">
-          <div className="board-container" ref={boardContainerRef}>
+          <div className="board-container">
             <div className="board-wrapper">
               <Chessboard
                 position={game.fen()}

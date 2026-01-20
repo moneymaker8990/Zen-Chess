@@ -10,7 +10,6 @@ import { Chessboard } from 'react-chessboard';
 import type { Square } from 'chess.js';
 import { Chess } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { useBackNavigation } from '@/components/BackButton';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 import { logger } from '@/lib/logger';
@@ -272,8 +271,6 @@ export default function CourseLearningPage() {
   const navigate = useNavigate();
   const goBack = useBackNavigation(`/courses/${courseId}`);
   const boardStyles = useBoardStyles();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
 
   // Course data
   const [course, setCourse] = useState<Course | null>(null);
@@ -807,7 +804,6 @@ export default function CourseLearningPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="board-container"
-              ref={boardContainerRef}
             >
               <div className="board-wrapper">
                 <Chessboard

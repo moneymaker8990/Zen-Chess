@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { usePositionSparringStore } from '@/state/trainingStore';
 import { stockfish } from '@/engine/stockfish';
 import { PageHeader } from '@/components/Tutorial';
@@ -13,9 +12,7 @@ import type { SparringPosition } from '@/lib/trainingTypes';
 export function PositionSparring() {
   const { positions, addPosition, recordResult, getRecommendedPositions, deletePosition } = usePositionSparringStore();
   const boardStyles = useBoardStyles();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
-  
+
   const [selectedPosition, setSelectedPosition] = useState<SparringPosition | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [game, setGame] = useState<Chess | null>(null);
@@ -299,7 +296,7 @@ export function PositionSparring() {
               </div>
             )}
 
-            <div className="board-container" ref={boardContainerRef}>
+            <div className="board-container">
               <div className="board-wrapper">
               <Chessboard
                 position={game?.fen() || selectedPosition?.fen || ''}

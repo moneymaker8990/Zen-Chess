@@ -9,7 +9,6 @@ import { useProgressStore } from '@/state/useStore';
 import { useTiltDetection } from '@/hooks/useTiltDetection';
 import { useCoachStore } from '@/state/coachStore';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { createSimpleGameMetrics } from '@/lib/coachTypes';
 import { stockfish } from '@/engine/stockfish';
 import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
@@ -38,8 +37,6 @@ const BLUNDER_THRESHOLD = 150;
 
 export function PlayPage() {
   const navigate = useNavigate();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
   const [engineReady, setEngineReady] = useState(false);
   const [engineLoading, setEngineLoading] = useState(true);
   const [selectedMode, setSelectedMode] = useState<GameMode>('FREE_PLAY');
@@ -782,7 +779,7 @@ export function PlayPage() {
             {status.text}
           </div>
 
-          <div className="board-container" ref={boardContainerRef}>
+          <div className="board-container">
             <div className="board-wrapper">
               <Chessboard
                 position={game.fen()}

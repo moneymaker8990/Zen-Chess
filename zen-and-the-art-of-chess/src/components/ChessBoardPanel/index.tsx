@@ -4,7 +4,6 @@ import { Chess, Square } from 'chess.js';
 import { useGameStore } from '@/state/useStore';
 import { useStudyStore } from '@/state/notesStore';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { stockfish } from '@/engine/stockfish';
 import { playSmartMoveSound, UISounds } from '@/lib/soundSystem';
 import { logger } from '@/lib/logger';
@@ -55,8 +54,6 @@ export function ChessBoardPanel({
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
   const [moveCount, setMoveCount] = useState(0);
   const [isAnimatingSetup, setIsAnimatingSetup] = useState(false);
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
 
   const { gameState, setEvaluation, makeMove } = useGameStore();
   const { recordGamePlayed, recordPuzzleSolved, recordPuzzleFailed } = useStudyStore();
@@ -451,7 +448,7 @@ export function ChessBoardPanel({
   const boardOrientation = vsEngine ? playerColor : gameState.orientation;
 
   return (
-    <div className="board-container" ref={boardContainerRef}>
+    <div className="board-container">
       <div className="board-wrapper chessboard-container relative">
         {/* Engine thinking overlay */}
         {isThinking && (

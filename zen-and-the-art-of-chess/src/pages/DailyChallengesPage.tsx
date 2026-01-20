@@ -5,11 +5,10 @@
 // Thursday: GM Analysis | Friday: Speed Rush | Weekend: Legends
 // ============================================
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 
@@ -1729,8 +1728,6 @@ export function DailyChallengesPage() {
   const today = getDayOfWeek();
   const todayTheme = DAY_THEMES[today];
   const dateString = getDateString();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 480);
   const boardStyles = useBoardStyles();
 
   // State
@@ -2219,7 +2216,7 @@ export function DailyChallengesPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="board-container" ref={boardContainerRef}>
+          <div className="board-container">
             <div className="board-wrapper">
               <Chessboard
                 position={game.fen()}
@@ -2498,7 +2495,7 @@ export function DailyChallengesPage() {
         </div>
         
         {/* Board */}
-        <div className="board-container px-2 sm:px-0" ref={boardContainerRef}>
+        <div className="board-container px-2 sm:px-0">
           <div className="board-wrapper">
             <Chessboard
               position={game.fen()}

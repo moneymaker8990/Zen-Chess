@@ -4,13 +4,12 @@
 // Route: /_dev/patterns/:id
 // ============================================
 
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Chessboard } from 'react-chessboard';
 import { Chess, type Square } from 'chess.js';
 import { enhancedPatterns, type EnhancedPattern } from '@/data/positional/enhancedPatterns';
 import { useBoardStyles } from '@/state/boardSettingsStore';
-import { useBoardSize } from '@/hooks/useBoardSize';
 import { 
   validatePatternById, 
   validateEnhancedPatterns,
@@ -167,8 +166,6 @@ function PatternListView() {
 function PatternDetailView({ pattern }: { pattern: EnhancedPattern }) {
   const navigate = useNavigate();
   const boardStyles = useBoardStyles();
-  const boardContainerRef = useRef<HTMLDivElement>(null);
-  const boardSize = useBoardSize(boardContainerRef, 400);
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [validationResult, setValidationResult] = useState<PatternValidationResult | null>(null);
   
@@ -303,7 +300,7 @@ function PatternDetailView({ pattern }: { pattern: EnhancedPattern }) {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Board */}
         <div>
-          <div className="board-container" ref={boardContainerRef}>
+          <div className="board-container">
             <div className="board-wrapper">
             <Chessboard
               position={gameState.fen()}
