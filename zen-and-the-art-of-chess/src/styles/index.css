@@ -650,10 +650,10 @@ a.small,
 /* Mobile: Ensure board fits within viewport with safe padding */
 @media (max-width: 640px) {
   .board-container {
-    /* Account for page padding and safe areas */
-    max-width: calc(100vw - 1rem);
-    /* Respect safe area insets on notched devices */
-    max-width: calc(100vw - max(0.5rem, env(safe-area-inset-left)) - max(0.5rem, env(safe-area-inset-right)));
+    /* Account for Layout p-4 padding (1rem each side = 2rem total) + safe areas */
+    max-width: calc(100vw - 2rem);
+    /* Respect safe area insets on notched devices - add extra padding for them */
+    max-width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
   }
 }
 
