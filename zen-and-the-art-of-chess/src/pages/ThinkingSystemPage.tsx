@@ -860,7 +860,6 @@ export function ThinkingSystemPage() {
                     customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                     customLightSquareStyle={boardStyles.customLightSquareStyle}
                     arePiecesDraggable={false}
-                    boardWidth={boardSize}
                   customSquareStyles={
                     currentLesson.examples[exampleIndex].highlightSquares?.reduce((acc, sq) => ({
                       ...acc,
@@ -949,7 +948,6 @@ export function ThinkingSystemPage() {
                 customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
                 arePiecesDraggable={false}
-                boardWidth={boardSize}
               customSquareStyles={
                 question.highlightSquares?.reduce((acc, sq) => ({
                   ...acc,

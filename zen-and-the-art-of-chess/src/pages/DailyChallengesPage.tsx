@@ -2239,10 +2239,9 @@ export function DailyChallengesPage() {
                 }}
                 arePiecesDraggable={!solved}
                 onPieceDrop={(from, to) => handleMove(from as Square, to as Square)}
-                boardWidth={boardSize}
               />
             </div>
-            
+
             {/* Correct Move Feedback Overlay */}
             {showCorrectFeedback && !solved && (
               <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full animate-bounce-in" 
@@ -2516,9 +2515,8 @@ export function DailyChallengesPage() {
               }}
               arePiecesDraggable={rushActive}
               onPieceDrop={(from, to) => handleMove(from as Square, to as Square)}
-              boardWidth={boardSize}
             />
-            
+
             {/* Correct Move Feedback */}
             {showCorrectFeedback && (
               <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full animate-bounce-in" 
