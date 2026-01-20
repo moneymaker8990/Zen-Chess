@@ -27,13 +27,20 @@ export function useBoardSize(
   useEffect(() => {
     const measure = () => {
       if (!containerRef.current) return;
-      
+
       // Use clientWidth to get the actual available space
       const containerWidth = containerRef.current.clientWidth;
-      // Use container width directly - CSS now handles the constraints
-      // Only subtract 4px for any sub-pixel rendering issues
-      const newSize = Math.max(Math.floor(containerWidth - 4), 200);
-      
+
+      // Calculate the maximum safe width on mobile
+      // Account for Layout p-4 padding (32px total) plus some buffer
+      const vw = window.innerWidth;
+      const mobileSafeMax = vw < 640 ? vw - 32 : vw;
+
+      // Use the smaller of: container width, mobile safe max, or maxWidth
+      // Subtract 4px for sub-pixel rendering issues
+      const constrainedWidth = Math.min(containerWidth, mobileSafeMax, maxWidth);
+      const newSize = Math.max(Math.floor(constrainedWidth - 4), 200);
+
       // Only update if changed to prevent unnecessary re-renders
       setSize(prev => prev !== newSize ? newSize : prev);
     };
