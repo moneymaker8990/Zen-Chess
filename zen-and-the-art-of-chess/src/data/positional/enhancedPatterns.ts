@@ -2,6 +2,38 @@
 // ENHANCED POSITIONAL PATTERNS - MOVETRAINER FORMAT
 // Dense, educational content with full move sequences
 // ============================================
+//
+// PATTERN COVERAGE AUDIT (2026-01-19):
+// =====================================
+// Total: 126/240 patterns (52.5%)
+// Target: 15 patterns per category, 16 categories
+//
+// CATEGORY STATUS:
+// ----------------
+// 9/15: PIECE_COORDINATION, PAWN_BREAKS, KNIGHT_PLACEMENT,
+//       KING_ACTIVITY, EXCHANGE_STRATEGY, CENTRALIZATION, BLOCKADE
+// 8/15: OUTPOSTS
+// 7/15: WEAK_PAWNS, PROPHYLAXIS, PAWN_STRUCTURE, OPEN_FILES,
+//       MINORITY_ATTACK, GOOD_BAD_BISHOP, BISHOP_PAIR
+// 6/15: SPACE_ADVANTAGE
+//
+// RECOMMENDED STRATEGY:
+// ---------------------
+// Option A: Reduce target to 10/category (160 total, gap = 34)
+//   - More achievable, quality over quantity
+//   - Focus on filling 6/10 categories first
+//
+// Option B: Prioritize key categories for immediate impact:
+//   1. SPACE_ADVANTAGE (+9 needed) - fundamental concept
+//   2. BISHOP_PAIR (+8 needed) - common in modern play
+//   3. WEAK_PAWNS (+8 needed) - essential for all levels
+//
+// CONTENT SOURCES:
+// - Classic GM games (Capablanca, Nimzowitsch, Karpov)
+// - Modern super-GM games with clear positional themes
+// - Use scripts/generateValidatedPatterns.ts for AI-assisted generation
+//
+// ============================================
 
 import type { PatternType } from '@/lib/types';
 

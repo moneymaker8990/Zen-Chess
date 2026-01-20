@@ -10,6 +10,7 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import type { Profile } from '@/lib/database.types';
 import type { SubscriptionTier, PremiumFeature } from '@/lib/premium';
 import { TIER_LIMITS, getRemainingUsage } from '@/lib/premium';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // TYPES
@@ -165,7 +166,7 @@ export const useAuthStore = create<AuthState>()(
             }
           });
         } catch (error) {
-          console.error('Auth initialization error:', error);
+          logger.error('Auth initialization error:', error);
           set({ isLoading: false, isInitialized: true });
         }
       },

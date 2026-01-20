@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/state/useAuthStore';
+import { logger } from '@/lib/logger';
 
 /**
  * Auth callback page - handles email confirmation and OAuth redirects
@@ -22,7 +23,7 @@ export function AuthCallbackPage() {
         const errorDescription = hashParams.get('error_description');
 
         if (error) {
-          console.error('Auth error:', error, errorDescription);
+          logger.error('Auth error:', error, errorDescription);
           navigate('/auth?error=' + encodeURIComponent(errorDescription || error));
           return;
         }
@@ -36,7 +37,7 @@ export function AuthCallbackPage() {
           });
 
           if (sessionError) {
-            console.error('Session error:', sessionError);
+            logger.error('Session error:', sessionError);
             navigate('/auth?error=' + encodeURIComponent(sessionError.message));
             return;
           }
@@ -60,7 +61,7 @@ export function AuthCallbackPage() {
           }
         }
       } catch (err) {
-        console.error('Auth callback error:', err);
+        logger.error('Auth callback error:', err);
         navigate('/auth?error=' + encodeURIComponent('An error occurred during authentication'));
       }
     };

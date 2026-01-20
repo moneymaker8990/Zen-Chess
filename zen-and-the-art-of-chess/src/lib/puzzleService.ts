@@ -2,6 +2,41 @@
 // PUZZLE SERVICE
 // Chess.com-style adaptive puzzle system
 // ============================================
+//
+// SERVER-SIDE RATING EVALUATION (2026-01-19):
+// ==========================================
+// Current: Client-side Elo calculation using standard formula
+// Status: LOCAL-ONLY rating is ACCEPTABLE for this use case
+//
+// WHY SERVER-SIDE RATING IS NOT RECOMMENDED:
+//
+// 1. COMPLEXITY vs BENEFIT:
+//    - Server-side would require Supabase Edge Functions or backend
+//    - Current client-side Elo is mathematically identical to server
+//    - No competitive leaderboard = no need for tamper-proofing
+//
+// 2. LATENCY CONCERNS:
+//    - Server round-trip would slow puzzle flow
+//    - Users expect instant feedback on solve/fail
+//    - Client-side calculation is synchronous
+//
+// 3. OFFLINE SUPPORT:
+//    - PWA should work offline
+//    - Client-side rating allows full offline functionality
+//    - Server-side would require complex queueing
+//
+// 4. TRUST MODEL:
+//    - This is a learning app, not competitive
+//    - Users are motivated to improve, not inflate stats
+//    - Cheating only hurts the user's learning
+//
+// IF SERVER-SIDE IS NEEDED LATER:
+// - Add Supabase RPC function for rating calculation
+// - Call: supabase.rpc('update_puzzle_rating', { puzzle_id, solved })
+// - Function validates result and returns new rating
+// - Keep client-side as fallback for offline mode
+//
+// ============================================
 
 import { supabase, isSupabaseConfigured } from './supabase';
 import { logger } from './logger';
@@ -257,8 +292,8 @@ export async function getNextPuzzleAnonymous(
 ): Promise<PuzzleWithMeta | null> {
   // Try Supabase first if configured
   if (!isSupabaseConfigured) {
-    logger.error('⚠️ SUPABASE NOT CONFIGURED - Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env');
-    console.error('🚫 Puzzle System: Supabase not configured. Cannot load puzzles.');
+    logger.error('SUPABASE NOT CONFIGURED - Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env');
+    logger.error('Puzzle System: Supabase not configured. Cannot load puzzles.');
     return null;
   }
   
@@ -369,7 +404,7 @@ export async function getNextPuzzleAnonymous(
     return null;
   } catch (err) {
     logger.error('Failed to get puzzle from Supabase:', err);
-    console.error('🚫 Puzzle fetch failed. Check your Supabase connection and ensure the project is online.');
+    logger.error('Puzzle fetch failed. Check your Supabase connection and ensure the project is online.');
     return null;
   }
 }

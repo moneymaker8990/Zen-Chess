@@ -1,16 +1,32 @@
+/**
+ * CORE GAME STATE STORES
+ *
+ * This file contains the primary Zustand stores for game and progress management.
+ *
+ * Stores:
+ * - useGameStore: Current chess game state, move history, board orientation
+ * - useProgressStore: User progress, streaks, XP, achievements (persisted to localStorage)
+ *
+ * Related stores:
+ * - boardSettingsStore: Visual board preferences (theme, pieces, hints)
+ * - trainingStore: Pattern training and mistake tracking
+ * - coachStore: AI coaching history and preferences
+ */
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { 
-  GameState, 
-  UserProgress, 
-  TiltLevel, 
+import type {
+  GameState,
+  UserProgress,
+  TiltLevel,
   GameMode,
   EngineEvaluation,
-  MoveInfo 
+  MoveInfo
 } from '@/lib/types';
 
 // ============================================
 // GAME STORE
+// Manages current chess position, move history, and analysis state
 // ============================================
 
 interface GameStore {
@@ -136,6 +152,50 @@ export const useGameStore = create<GameStore>((set) => ({
 
 // ============================================
 // USER PROGRESS STORE
+// ============================================
+//
+// SUPABASE PERSISTENCE IMPLEMENTATION NOTES (2026-01-19):
+// =======================================================
+// Currently: Progress is stored in localStorage via Zustand persist
+//
+// TO ADD SUPABASE CLOUD SYNC:
+// 1. Database Schema (create in Supabase SQL Editor):
+//    ```sql
+//    CREATE TABLE user_progress (
+//      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+//      user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+//      current_day INTEGER DEFAULT 1,
+//      completed_days INTEGER[] DEFAULT '{}',
+//      puzzles_solved INTEGER DEFAULT 0,
+//      puzzles_failed INTEGER DEFAULT 0,
+//      streak_days INTEGER DEFAULT 0,
+//      last_active_date DATE,
+//      meditation_minutes INTEGER DEFAULT 0,
+//      settings JSONB DEFAULT '{}',
+//      completed_openings TEXT[] DEFAULT '{}',
+//      opening_streak INTEGER DEFAULT 0,
+//      last_opening_date DATE,
+//      updated_at TIMESTAMPTZ DEFAULT NOW(),
+//      UNIQUE(user_id)
+//    );
+//
+//    -- Enable RLS
+//    ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
+//
+//    -- Policy: Users can only access their own data
+//    CREATE POLICY "Users can CRUD own progress"
+//      ON user_progress FOR ALL
+//      USING (auth.uid() = user_id)
+//      WITH CHECK (auth.uid() = user_id);
+//    ```
+//
+// 2. Sync Logic (add to this store):
+//    - On login: Fetch from Supabase, merge with localStorage
+//    - On change: Debounced upsert to Supabase
+//    - On logout: Keep localStorage copy
+//    - Conflict resolution: Server wins (more recent updated_at)
+//
+// 3. Use supabase.from('user_progress').upsert() for syncing
 // ============================================
 
 interface ProgressStore {

@@ -158,7 +158,7 @@ export function LegendDetailPage() {
         setAvailableGames(games);
         // Don't auto-select - let user browse the game library first
       }).catch((err) => {
-        console.warn('Could not load games:', err);
+        logger.warn('Could not load games:', err);
         setAvailableGames([]);
       });
     }
@@ -209,7 +209,7 @@ export function LegendDetailPage() {
       // Validate the UCI move format
       const parsed = parseUciMove(move);
       if (!parsed) {
-        console.error('Invalid move format from legend engine:', move);
+        logger.error('Invalid move format from legend engine:', move);
         setIsThinking(false);
         return;
       }
@@ -235,10 +235,10 @@ export function LegendDetailPage() {
           window.scrollTo(0, scrollY);
         });
       } else {
-        console.error('Legend move was not legal:', move, 'in position', gameToUse.fen());
+        logger.error('Legend move was not legal:', move, 'in position', gameToUse.fen());
       }
     } catch (err) {
-      console.error('Error making legend move:', err);
+      logger.error('Error making legend move:', err);
     } finally {
       setIsThinking(false);
     }

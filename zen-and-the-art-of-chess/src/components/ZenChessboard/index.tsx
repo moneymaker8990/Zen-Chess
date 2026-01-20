@@ -1,19 +1,112 @@
 // ============================================
 // ZEN CHESSBOARD
 // Unified chessboard wrapper with sounds, consistent styling,
-// and world-class UX across all pages
+// accessibility, and world-class UX across all pages
 // ============================================
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { Chessboard, Square as BoardSquare } from 'react-chessboard';
 import { Chess, Square, Move } from 'chess.js';
 import { useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
 import { ChessSounds } from '@/lib/soundSystem';
 import { BOARD_COLORS } from '@/lib/constants';
+import { logger } from '@/lib/logger';
+import { useChessboardKeyboard } from '@/hooks/useChessboardKeyboard';
+import { useLiveRegion } from '@/components/LiveRegion';
+
+// ============================================
+// CHECK INDICATOR COMPONENT
+// Visual indicator (icon + animation) for check/checkmate - not color-only
+// ============================================
+
+interface CheckIndicatorProps {
+  type: 'check' | 'checkmate';
+  kingSquare: Square;
+  boardWidth: number;
+  orientation: 'white' | 'black';
+}
+
+function CheckIndicator({ type, kingSquare, boardWidth, orientation }: CheckIndicatorProps) {
+  // Calculate position based on square and board orientation
+  const squareSize = boardWidth / 8;
+  const file = kingSquare.charCodeAt(0) - 97; // 'a' = 0, 'h' = 7
+  const rank = parseInt(kingSquare[1]) - 1; // '1' = 0, '8' = 7
+
+  // Adjust for board orientation
+  const x = orientation === 'white' ? file : 7 - file;
+  const y = orientation === 'white' ? 7 - rank : rank;
+
+  const left = x * squareSize + squareSize / 2;
+  const top = y * squareSize + squareSize / 2;
+
+  return (
+    <div
+      className="check-indicator"
+      style={{
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${top}px`,
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none',
+        zIndex: 100,
+      }}
+      role="img"
+      aria-label={type === 'checkmate' ? 'Checkmate!' : 'Check!'}
+    >
+      {/* Pulsing ring animation */}
+      <div
+        style={{
+          width: squareSize * 0.9,
+          height: squareSize * 0.9,
+          borderRadius: '50%',
+          border: `3px solid ${type === 'checkmate' ? '#dc2626' : '#f59e0b'}`,
+          animation: 'check-pulse 1s ease-in-out infinite',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}
+      />
+      {/* Icon */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontSize: squareSize * 0.3,
+          color: type === 'checkmate' ? '#dc2626' : '#f59e0b',
+          fontWeight: 'bold',
+          textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+          animation: 'check-bounce 0.5s ease-in-out',
+        }}
+      >
+        {type === 'checkmate' ? '✗' : '!'}
+      </div>
+      {/* CSS keyframes */}
+      <style>{`
+        @keyframes check-pulse {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+          50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.7; }
+        }
+        @keyframes check-bounce {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); }
+          50% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 // ============================================
 // TYPES
 // ============================================
+
+/**
+ * Semantic board modes for different use cases.
+ * Affects default behaviors like sounds, colors, and interactions.
+ */
+export type BoardMode = 'game' | 'puzzle' | 'learning' | 'calm' | 'analysis';
 
 interface ZenChessboardProps {
   // Core props
@@ -21,34 +114,48 @@ interface ZenChessboardProps {
   onMove?: (from: Square, to: Square, promotion?: string) => boolean | void;
   onSquareClick?: (square: Square) => void;
   onSquareRightClick?: (square: Square) => void;
-  
+
   // Display options
   orientation?: 'white' | 'black';
   boardWidth?: number;
   showBoardNotation?: boolean;
   arePiecesDraggable?: boolean;
-  
+
   // Highlighting
   lastMove?: { from: Square; to: Square } | null;
   selectedSquare?: Square | null;
   highlightSquares?: Record<string, React.CSSProperties>;
   optionSquares?: Record<string, React.CSSProperties>;
-  
+
   // Feedback states
   feedbackState?: 'correct' | 'incorrect' | 'check' | null;
-  
+
   // Arrows and annotations
   arrows?: [BoardSquare, BoardSquare][];
-  
-  // Advanced
+
+  // Advanced - custom styles override settings store
   customSquareStyles?: Record<string, React.CSSProperties>;
+  customDarkSquareStyle?: React.CSSProperties;
+  customLightSquareStyle?: React.CSSProperties;
   animationDuration?: number;
-  
+
   // Game reference for sound detection
   game?: Chess;
-  
+
   // Disable sounds (for specific use cases)
   disableSounds?: boolean;
+
+  /** Semantic mode - affects default behaviors */
+  mode?: BoardMode;
+
+  /** Show engine thinking overlay */
+  showEngineThinking?: boolean;
+
+  // Accessibility
+  /** Enable keyboard navigation (arrow keys, Enter to select/move) */
+  enableKeyboard?: boolean;
+  /** ARIA label for the board */
+  ariaLabel?: string;
 }
 
 // ============================================
@@ -118,13 +225,78 @@ export function ZenChessboard({
   feedbackState = null,
   arrows = [],
   customSquareStyles: externalCustomStyles = {},
+  customDarkSquareStyle,
+  customLightSquareStyle,
   animationDuration: customAnimationDuration,
   game,
   disableSounds = false,
+  mode,
+  showEngineThinking = false,
+  enableKeyboard = false,
+  ariaLabel,
 }: ZenChessboardProps) {
-  // Get centralized board styles
+  // Get centralized board styles from settings store
   const boardStyles = useBoardStyles();
+
+  // Allow prop overrides for custom styles (useful for calm mode, custom themes)
+  const darkSquareStyle = customDarkSquareStyle ?? boardStyles.customDarkSquareStyle;
+  const lightSquareStyle = customLightSquareStyle ?? boardStyles.customLightSquareStyle;
   const { getMoveOptionsStyle, showMoveHints } = useMoveOptions();
+
+  // Live region for screen reader announcements
+  const { announce, LiveRegion } = useLiveRegion();
+
+  // Create a game instance for keyboard nav if not provided
+  const keyboardGame = useRef<Chess | null>(null);
+  if (enableKeyboard && !keyboardGame.current) {
+    try {
+      keyboardGame.current = new Chess(position);
+    } catch {
+      keyboardGame.current = new Chess();
+    }
+  }
+
+  // Update keyboard game when position changes
+  useEffect(() => {
+    if (enableKeyboard && keyboardGame.current) {
+      try {
+        keyboardGame.current.load(position);
+      } catch {
+        // Invalid FEN, keep current state
+      }
+    }
+  }, [position, enableKeyboard]);
+
+  // Keyboard navigation hook
+  const {
+    focusedSquare,
+    selectedSquare: keyboardSelectedSquare,
+    handlers: keyboardHandlers,
+    getFocusStyles,
+  } = useChessboardKeyboard({
+    game: keyboardGame.current ?? new Chess(),
+    onMove: enableKeyboard ? (from, to) => {
+      const result = onMove?.(from, to);
+      if (result !== false) {
+        announce(`Moved from ${from} to ${to}`);
+      }
+      return result !== false;
+    } : undefined,
+    orientation,
+    disabled: !enableKeyboard,
+    onSquareSelect: onSquareClick,
+  });
+
+  // Announce feedback changes
+  useEffect(() => {
+    if (feedbackState === 'correct') {
+      announce('Correct move!');
+    } else if (feedbackState === 'incorrect') {
+      announce('Incorrect move. Try again.');
+    } else if (feedbackState === 'check') {
+      announce('Check!');
+    }
+  }, [feedbackState, announce]);
   
   // Dev-mode assertion: Warn if using legacy green colors
   if (import.meta.env.DEV) {
@@ -132,7 +304,7 @@ export function ZenChessboard({
     const darkBg = boardStyles.customDarkSquareStyle.backgroundColor;
     const lightBg = boardStyles.customLightSquareStyle.backgroundColor;
     if (knownGreenDefaults.includes(darkBg) || knownGreenDefaults.includes(lightBg)) {
-      console.warn('[ZenChessboard] Board using legacy green colors - check theme settings', {
+      logger.warn('[ZenChessboard] Board using legacy green colors - check theme settings', {
         dark: darkBg,
         light: lightBg,
       });
@@ -282,27 +454,48 @@ export function ZenChessboard({
   // COMBINED SQUARE STYLES
   // ============================================
   
+  // Build keyboard focus styles for all squares
+  const keyboardFocusStyles: Record<string, React.CSSProperties> = {};
+  if (enableKeyboard) {
+    const squares = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    const ranks = ['1', '2', '3', '4', '5', '6', '7', '8'];
+    for (const file of squares) {
+      for (const rank of ranks) {
+        const sq = `${file}${rank}` as Square;
+        const style = getFocusStyles(sq);
+        if (style) {
+          keyboardFocusStyles[sq] = style;
+        }
+      }
+    }
+  }
+
   const combinedSquareStyles: Record<string, React.CSSProperties> = {
     // Option squares (move hints - purple dots)
     ...optionSquares,
-    
+
     // Right-clicked annotation squares
     ...rightClickedSquares,
-    
+
     // Last move highlighting (purple)
     ...(lastMove && {
       [lastMove.from]: { backgroundColor: BOARD_COLORS.lastMove },
       [lastMove.to]: { backgroundColor: BOARD_COLORS.highlight },
     }),
-    
+
     // Selected square (if any)
     ...(selectedSquare && {
       [selectedSquare]: { backgroundColor: BOARD_COLORS.selected },
     }),
-    
+
+    // Keyboard selected square
+    ...(keyboardSelectedSquare && {
+      [keyboardSelectedSquare]: { backgroundColor: BOARD_COLORS.selected },
+    }),
+
     // Custom highlights passed in
     ...highlightSquares,
-    
+
     // Feedback states
     ...(feedbackState === 'correct' && lastMove && {
       [lastMove.to]: { backgroundColor: BOARD_COLORS.correctMove },
@@ -311,34 +504,122 @@ export function ZenChessboard({
       [lastMove.to]: { backgroundColor: BOARD_COLORS.incorrectMove },
     }),
     ...(feedbackState === 'check' && lastMove && {
-      [lastMove.to]: { 
+      [lastMove.to]: {
         backgroundColor: 'rgba(239, 68, 68, 0.5)',
         boxShadow: 'inset 0 0 0 3px rgba(239, 68, 68, 0.8)',
       },
     }),
-    
+
+    // Keyboard focus styles
+    ...keyboardFocusStyles,
+
     // External custom styles (highest priority)
     ...externalCustomStyles,
   };
-  
+
+  // Generate description of current position for screen readers
+  const getBoardDescription = () => {
+    if (!game) return ariaLabel || 'Chess board';
+    const turn = game.turn() === 'w' ? 'White' : 'Black';
+    const inCheck = game.inCheck() ? ', in check' : '';
+    return ariaLabel || `Chess board. ${turn} to move${inCheck}. Use arrow keys to navigate, Enter to select or move pieces.`;
+  };
+
+  // Find king square when in check (for visual indicator)
+  const kingInCheckSquare = useMemo(() => {
+    if (!game) return null;
+    if (!game.inCheck()) return null;
+
+    // Find the king of the side to move
+    const turn = game.turn();
+    const board = game.board();
+    for (let rank = 0; rank < 8; rank++) {
+      for (let file = 0; file < 8; file++) {
+        const piece = board[rank][file];
+        if (piece && piece.type === 'k' && piece.color === turn) {
+          const fileChar = String.fromCharCode(97 + file);
+          const rankNum = 8 - rank;
+          return `${fileChar}${rankNum}` as Square;
+        }
+      }
+    }
+    return null;
+  }, [game, position]); // Re-compute when game or position changes
+
+  const isCheckmate = game?.isCheckmate() ?? false;
+
   return (
     <div className="board-container">
-      <div className="board-wrapper zen-chessboard">
+      {/* Screen reader live region for announcements */}
+      <LiveRegion aria-live="polite" />
+
+      <div
+        className="board-wrapper zen-chessboard"
+        role="application"
+        aria-label={getBoardDescription()}
+        aria-roledescription="chess board"
+        tabIndex={enableKeyboard ? 0 : -1}
+        {...(enableKeyboard ? keyboardHandlers : {})}
+        style={{ position: 'relative' }}
+      >
         <Chessboard
-        position={position}
-        onSquareClick={handleSquareClick}
-        onSquareRightClick={handleSquareRightClick}
-        onPieceDrop={handlePieceDrop}
-        boardOrientation={orientation}
-        customSquareStyles={combinedSquareStyles}
-        customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-        customLightSquareStyle={boardStyles.customLightSquareStyle}
-        animationDuration={animationDuration}
-        arePiecesDraggable={arePiecesDraggable}
-        boardWidth={boardWidth}
-        showBoardNotation={showBoardNotation && boardStyles.showCoordinates}
-        customArrows={arrows}
-      />
+          position={position}
+          onSquareClick={handleSquareClick}
+          onSquareRightClick={handleSquareRightClick}
+          onPieceDrop={handlePieceDrop}
+          boardOrientation={orientation}
+          customSquareStyles={combinedSquareStyles}
+          customDarkSquareStyle={darkSquareStyle}
+          customLightSquareStyle={lightSquareStyle}
+          animationDuration={animationDuration}
+          arePiecesDraggable={arePiecesDraggable && !showEngineThinking}
+          boardWidth={boardWidth}
+          showBoardNotation={showBoardNotation && boardStyles.showCoordinates}
+          customArrows={arrows}
+        />
+
+        {/* Visual check/checkmate indicator - icon + animation (not color-only) */}
+        {kingInCheckSquare && (
+          <CheckIndicator
+            type={isCheckmate ? 'checkmate' : 'check'}
+            kingSquare={kingInCheckSquare}
+            boardWidth={boardWidth}
+            orientation={orientation}
+          />
+        )}
+
+        {/* Engine thinking overlay */}
+        {showEngineThinking && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 'var(--radius-md)',
+              pointerEvents: 'none',
+            }}
+            aria-label="Engine is thinking"
+          >
+            <div
+              style={{
+                width: 32,
+                height: 32,
+                border: '3px solid var(--accent-primary)',
+                borderTopColor: 'transparent',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite',
+              }}
+            />
+            <style>{`
+              @keyframes spin {
+                to { transform: rotate(360deg); }
+              }
+            `}</style>
+          </div>
+        )}
       </div>
     </div>
   );

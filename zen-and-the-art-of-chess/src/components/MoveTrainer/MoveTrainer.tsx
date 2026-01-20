@@ -11,6 +11,7 @@ import { useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
 import { useBoardSize } from '@/hooks/useBoardSize';
 import { BOARD_COLORS } from '@/lib/constants';
 import type { EnhancedPattern, AnnotatedMove } from '@/data/positional/enhancedPatterns';
+import { logger } from '@/lib/logger';
 
 // Arrow color mapping from string names to theme-consistent colors
 const ARROW_COLORS: Record<string, string> = {
@@ -84,7 +85,7 @@ export function MoveTrainer({
       const chess = new Chess(pattern.fen);
       return chess;
     } catch (error) {
-      console.error('Invalid FEN for pattern:', pattern.id, pattern.fen, error);
+      logger.error('Invalid FEN for pattern:', pattern.id, pattern.fen, error);
       // Fallback to starting position
       return new Chess();
     }
@@ -350,7 +351,7 @@ export function MoveTrainer({
     if (mode === 'learn' && currentMove) {
       const moveSuccess = executeMove(currentMove.move);
       if (!moveSuccess) {
-        console.warn('Invalid move in pattern:', pattern.id, 'move:', currentMove.move, 'at index:', currentMoveIndex);
+        logger.warn('Invalid move in pattern:', pattern.id, 'move:', currentMove.move, 'at index:', currentMoveIndex);
         // Skip invalid moves - just advance the index
       }
     }
@@ -371,13 +372,13 @@ export function MoveTrainer({
         try {
           newGame.move(pattern.mainLine[i].move);
         } catch (error) {
-          console.warn('Invalid move when going back:', pattern.id, 'move:', pattern.mainLine[i].move, 'at index:', i);
+          logger.warn('Invalid move when going back:', pattern.id, 'move:', pattern.mainLine[i].move, 'at index:', i);
           // Skip invalid moves
         }
       }
       setGame(newGame);
     } catch (error) {
-      console.error('Error rebuilding position:', pattern.id, error);
+      logger.error('Error rebuilding position:', pattern.id, error);
       // Fallback to starting position
       setGame(new Chess(pattern.fen));
     }
@@ -398,7 +399,7 @@ export function MoveTrainer({
     try {
       setGame(new Chess(pattern.fen));
     } catch (error) {
-      console.error('Invalid FEN when starting training:', pattern.id, pattern.fen, error);
+      logger.error('Invalid FEN when starting training:', pattern.id, pattern.fen, error);
       setGame(new Chess());
     }
     setStats({ correctMoves: 0, incorrectMoves: 0, hintsUsed: 0, timeSpent: 0 });
@@ -422,7 +423,7 @@ export function MoveTrainer({
       // Exit the training view after completing
       onExit();
     } catch (error) {
-      console.error('Error completing training:', error);
+      logger.error('Error completing training:', error);
       // Still exit even if there's an error
       onExit();
     }

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Chessboard } from 'react-chessboard';
-import { useBoardStyles } from '@/state/boardSettingsStore';
+import { ZenChessboard } from '@/components/ZenChessboard';
 import { useBoardSize } from '@/hooks/useBoardSize';
 import type { InstructiveGame, AnnotatedMove } from '@/data/instructiveGames/types';
 import { 
@@ -10,6 +9,7 @@ import {
   getPlayerLegendId,
   LEGEND_IDS 
 } from '@/lib/pgnParser';
+import { logger } from '@/lib/logger';
 
 interface GameViewerProps {
   game: InstructiveGame;
@@ -23,7 +23,6 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
   const [loadedMoves, setLoadedMoves] = useState<AnnotatedMove[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadedFromLegend, setLoadedFromLegend] = useState<string | null>(null);
-  const boardStyles = useBoardStyles();
   const boardContainerRef = useRef<HTMLDivElement>(null);
   const boardSize = useBoardSize(boardContainerRef, 480);
   
@@ -65,7 +64,7 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
             }
           }
         } catch (error) {
-          console.warn(`Failed to load from ${legendId}:`, error);
+          logger.warn(`Failed to load from ${legendId}:`, error);
         }
       }
       
@@ -178,17 +177,16 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
       <div className="flex flex-col lg:grid lg:grid-cols-[1fr_400px] gap-4 lg:gap-6 px-2 sm:px-0">
         {/* Board and controls */}
         <div className="space-y-4 flex flex-col items-center lg:items-start">
-          <div className="board-container" ref={boardContainerRef}>
-            <div className="board-wrapper">
-            <Chessboard
+          <div ref={boardContainerRef}>
+            <ZenChessboard
               position={getCurrentFen()}
-              boardOrientation="white"
-              customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-              customLightSquareStyle={boardStyles.customLightSquareStyle}
+              orientation="white"
               arePiecesDraggable={false}
               boardWidth={boardSize}
+              mode="analysis"
+              disableSounds
+              ariaLabel={`Game viewer: ${game.white} vs ${game.black}. Move ${currentMoveIndex + 1} of ${effectiveMoves.length}`}
             />
-            </div>
           </div>
 
           {/* Navigation controls */}

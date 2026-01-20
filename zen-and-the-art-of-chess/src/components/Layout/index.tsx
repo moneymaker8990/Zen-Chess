@@ -229,8 +229,11 @@ export function Layout({ children }: LayoutProps) {
       </a>
       
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 z-40" 
-        style={{ background: 'var(--bg-secondary)', borderRight: '1px solid var(--border-subtle)' }}>
+      <aside
+        className="hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 z-40"
+        style={{ background: 'var(--bg-secondary)', borderRight: '1px solid var(--border-subtle)' }}
+        aria-label="Main navigation"
+      >
         {/* Logo */}
         <div className="h-16 flex items-center px-6" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
           <NavLink to="/" className="flex items-center gap-3 group">
@@ -245,7 +248,7 @@ export function Layout({ children }: LayoutProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 overflow-y-auto hide-scrollbar">
+        <nav className="flex-1 px-3 py-4 overflow-y-auto hide-scrollbar" aria-label="Site navigation">
           {navSections.map((section, sectionIndex) => (
             <div key={sectionIndex} className={section.title ? 'mt-6 first:mt-0' : ''}>
               {section.title && (
@@ -289,7 +292,12 @@ export function Layout({ children }: LayoutProps) {
         </nav>
 
         {/* Bottom section */}
-        <div className="p-4 space-y-3" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+        <div
+          className="p-4 space-y-3"
+          style={{ borderTop: '1px solid var(--border-subtle)' }}
+          role="region"
+          aria-label="User account and settings"
+        >
           {/* Agent Notification + Streak Row */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -404,7 +412,7 @@ export function Layout({ children }: LayoutProps) {
         </div>
 
         {/* Mobile navigation - scrollable */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto overscroll-contain hide-scrollbar">
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto overscroll-contain hide-scrollbar" aria-label="Site navigation">
           {navItems.map((item) => (
             <NavLink
               key={item.path}

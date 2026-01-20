@@ -109,10 +109,10 @@ export function PlayPage() {
           stockfish.setStrength(progress.settings.engineStrength);
           logger.debug('Engine initialized successfully');
         } else {
-          console.error('Engine failed to initialize');
+          logger.error('Engine failed to initialize');
         }
       } catch (error) {
-        console.error('Failed to initialize engine:', error);
+        logger.error('Failed to initialize engine:', error);
       } finally {
         setEngineLoading(false);
       }
@@ -499,7 +499,7 @@ export function PlayPage() {
         // Validate UCI move format
         const parsed = parseUciMove(bestMove);
         if (!parsed) {
-          console.error('Invalid move format from engine:', bestMove);
+          logger.error('Invalid move format from engine:', bestMove);
           setIsThinking(false);
           return;
         }
@@ -528,10 +528,10 @@ export function PlayPage() {
             window.scrollTo(0, scrollY);
           });
         } else {
-          console.error('Engine move was not legal:', bestMove, 'in position', game.fen());
+          logger.error('Engine move was not legal:', bestMove, 'in position', game.fen());
         }
       } catch (e) {
-        console.error('Engine move error:', e);
+        logger.error('Engine move error:', e);
       } finally {
         setIsThinking(false);
       }
@@ -609,7 +609,7 @@ export function PlayPage() {
         setLastMove(null);
         setCustomFen('');
       } catch (e) {
-        console.error('Invalid FEN:', e);
+        logger.error('Invalid FEN:', e);
         alert('Invalid FEN position');
       }
     }
@@ -686,15 +686,17 @@ export function PlayPage() {
           <button
             onClick={() => navigate('/play/friend')}
             className="btn-primary text-xs sm:text-sm px-2 sm:px-4"
+            aria-label="Play chess with a friend locally"
           >
-            <span>👥</span>
+            <span aria-hidden="true">👥</span>
             <span className="hidden sm:inline">Play Friend</span>
           </button>
           <button
             onClick={() => navigate('/calm-play')}
             className="btn-secondary text-xs sm:text-sm px-2 sm:px-4"
+            aria-label="Play in calm mode with mindfulness features"
           >
-            <span>☯</span>
+            <span aria-hidden="true">☯</span>
             <span className="hidden sm:inline">Calm Play</span>
           </button>
         </div>
@@ -706,7 +708,7 @@ export function PlayPage() {
       </div>
 
       {/* Mode selector */}
-      <div className="flex gap-2 sm:gap-3 flex-wrap">
+      <div className="flex gap-2 sm:gap-3 flex-wrap" role="group" aria-label="Game mode selection">
         {modes.map(({ mode, label, icon, description }) => (
           <button
             key={mode}
@@ -714,14 +716,17 @@ export function PlayPage() {
             className={`card p-2 sm:p-4 text-left transition-all flex items-center gap-2 sm:gap-4 ${
               selectedMode === mode ? 'ring-2' : ''
             }`}
-            style={{ 
+            style={{
               borderColor: selectedMode === mode ? 'var(--accent-primary)' : 'transparent',
               background: selectedMode === mode ? 'rgba(168, 85, 247, 0.1)' : 'var(--bg-secondary)'
             }}
+            aria-label={`${label}: ${description}`}
+            aria-pressed={selectedMode === mode}
           >
-            <div 
+            <div
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-lg sm:text-xl shrink-0"
               style={{ background: selectedMode === mode ? 'rgba(168, 85, 247, 0.2)' : 'var(--bg-elevated)' }}
+              aria-hidden="true"
             >
               {icon}
             </div>
@@ -798,7 +803,7 @@ export function PlayPage() {
         {/* Side panel */}
         <div className="space-y-4">
           {/* Controls */}
-          <div className="card p-4">
+          <div className="card p-4" role="region" aria-label="Game controls">
             <h3 className="text-xs uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
               Controls
             </h3>
@@ -806,21 +811,23 @@ export function PlayPage() {
               <button
                 onClick={resetGame}
                 className="btn-primary w-full"
+                aria-label="Start a new chess game"
               >
                 New Game
               </button>
               <button
                 onClick={flipBoard}
                 className="btn-ghost w-full"
+                aria-label="Flip the board orientation"
               >
-                🔄 Flip Board
+                <span aria-hidden="true">🔄</span> Flip Board
               </button>
             </div>
           </div>
 
           {/* FEN loader */}
-          <div className="card p-4">
-            <h3 className="text-xs uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
+          <div className="card p-4" role="region" aria-label="Load position from FEN">
+            <h3 id="fen-loader-label" className="text-xs uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
               Load Position
             </h3>
             <input
@@ -829,16 +836,19 @@ export function PlayPage() {
               onChange={(e) => setCustomFen(e.target.value)}
               placeholder="Paste FEN..."
               className="w-full text-sm px-3 py-2 rounded-lg mb-2"
-              style={{ 
-                background: 'var(--bg-elevated)', 
+              style={{
+                background: 'var(--bg-elevated)',
                 border: '1px solid var(--border-default)',
                 color: 'var(--text-primary)'
               }}
+              aria-label="FEN notation input"
+              aria-describedby="fen-loader-label"
             />
             <button
               onClick={handleLoadFen}
               disabled={!customFen.trim()}
               className="btn-secondary w-full text-sm disabled:opacity-50"
+              aria-label="Load position from FEN notation"
             >
               Load FEN
             </button>

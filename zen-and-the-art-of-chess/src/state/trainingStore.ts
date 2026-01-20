@@ -1,3 +1,53 @@
+/**
+ * TRAINING STORES
+ *
+ * Manages all training-related state including:
+ * - Mistake library: Track and review past mistakes
+ * - Pattern training: Track pattern recognition proficiency
+ * - Opening repertoire: Manage opening study progress
+ * - Cognitive metrics: Track focus, time management, etc.
+ *
+ * Multiple stores in one file:
+ * - useMistakeLibraryStore: Mistake cataloging and review
+ * - usePatternRecognitionStore: Pattern recognition progress
+ * - useOpeningRepertoireStore: Opening line mastery with spaced repetition
+ * - usePositionSparringStore: Practice position management
+ * - useCognitiveMetricsStore: Game performance metrics
+ *
+ * All stores persisted to localStorage.
+ *
+ * ============================================
+ * ARCHITECTURE NOTE: trainingStore vs coachStore
+ * ============================================
+ *
+ * These stores are intentionally SEPARATE with distinct responsibilities:
+ *
+ * trainingStore (this file) = "WHAT TO PRACTICE"
+ *   - Skill improvement data
+ *   - Catalogued mistakes for targeted review
+ *   - Pattern proficiency tracking
+ *   - Opening repertoire mastery (spaced repetition)
+ *   - Raw cognitive metrics (accuracy by phase)
+ *   - Focus: Building chess knowledge & skills
+ *
+ * coachStore = "HOW/WHEN TO COACH"
+ *   - Behavioral/emotional data
+ *   - Session management & mood tracking
+ *   - Tilt detection & intervention recommendations
+ *   - Daily coaching plans
+ *   - Flow state detection
+ *   - Focus: Personalized coaching & motivation
+ *
+ * OVERLAP EXPLANATION:
+ * Both stores track game phase accuracy and tilt signals, but for
+ * different purposes:
+ *   - CognitiveMetricsStore: "You're weak in endgames - practice these"
+ *   - CoachStore: "You're tilting after 3 losses - take a break"
+ *
+ * Do NOT merge these stores. The separation maintains clean
+ * boundaries between skill-building and behavioral coaching.
+ */
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
@@ -16,6 +66,7 @@ import type {
 
 // ============================================
 // MISTAKE LIBRARY STORE
+// Track and analyze game mistakes for targeted improvement
 // ============================================
 
 interface MistakeLibraryState {

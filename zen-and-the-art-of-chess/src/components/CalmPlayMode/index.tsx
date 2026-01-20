@@ -7,6 +7,7 @@ import { stockfish } from '@/engine/stockfish';
 import { parseUciMove } from '@/lib/moveValidation';
 import type { Tradition } from '@/lib/types';
 import { useCoachStore } from '@/state/coachStore';
+import { logger } from '@/lib/logger';
 
 interface CalmPlayModeProps {
   onExit?: () => void;
@@ -219,7 +220,7 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
           // Validate UCI move format
           const parsed = parseUciMove(bestMove);
           if (!parsed) {
-            console.error('Invalid move format from engine:', bestMove);
+            logger.error('Invalid move format from engine:', bestMove);
             setIsThinking(false);
             return;
           }
@@ -241,10 +242,10 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
           // Restore scroll position
           requestAnimationFrame(() => window.scrollTo(0, scrollY));
         } else {
-          console.error('Engine move was not legal:', bestMove, 'in position', currentGame.fen());
+          logger.error('Engine move was not legal:', bestMove, 'in position', currentGame.fen());
         }
       } catch (e) {
-        console.error('Engine move error:', e);
+        logger.error('Engine move error:', e);
       } finally {
         setIsThinking(false);
       }

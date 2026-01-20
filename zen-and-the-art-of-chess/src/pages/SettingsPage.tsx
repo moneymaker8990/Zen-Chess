@@ -458,11 +458,14 @@ function AIPreferencesSection() {
         {/* Ask Anything Button */}
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-zen-300">🧠 Ask Anything Button</div>
+            <div className="text-zen-300" id="ask-anything-label">🧠 Ask Anything Button</div>
             <div className="text-zen-600 text-sm">Floating AI help available everywhere</div>
           </div>
           <button
             onClick={() => toggleFeature('showAskAnything')}
+            role="switch"
+            aria-checked={showAskAnything}
+            aria-labelledby="ask-anything-label"
             className={`w-12 h-6 rounded-full transition-colors ${
               showAskAnything ? 'bg-gold-500' : 'bg-zen-700'
             }`}
@@ -476,11 +479,14 @@ function AIPreferencesSection() {
         {/* Whispers */}
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-zen-300">💭 Contextual Whispers</div>
+            <div className="text-zen-300" id="whispers-label">💭 Contextual Whispers</div>
             <div className="text-zen-600 text-sm">Subtle AI tips based on your activity</div>
           </div>
           <button
             onClick={() => toggleFeature('showWhispers')}
+            role="switch"
+            aria-checked={showWhispers}
+            aria-labelledby="whispers-label"
             className={`w-12 h-6 rounded-full transition-colors ${
               showWhispers ? 'bg-gold-500' : 'bg-zen-700'
             }`}
@@ -494,11 +500,14 @@ function AIPreferencesSection() {
         {/* Puzzle Insights */}
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-zen-300">🧩 Puzzle Deep Insights</div>
+            <div className="text-zen-300" id="puzzle-insights-label">🧩 Puzzle Deep Insights</div>
             <div className="text-zen-600 text-sm">Genius-level explanations after puzzles</div>
           </div>
           <button
             onClick={() => toggleFeature('showPuzzleInsights')}
+            role="switch"
+            aria-checked={showPuzzleInsights}
+            aria-labelledby="puzzle-insights-label"
             className={`w-12 h-6 rounded-full transition-colors ${
               showPuzzleInsights ? 'bg-gold-500' : 'bg-zen-700'
             }`}
@@ -512,11 +521,14 @@ function AIPreferencesSection() {
         {/* Auto Puzzle Analysis */}
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-zen-300">⚡ Auto-Analyze Puzzles</div>
+            <div className="text-zen-300" id="auto-analyze-label">⚡ Auto-Analyze Puzzles</div>
             <div className="text-zen-600 text-sm">Automatically explain completed puzzles</div>
           </div>
           <button
             onClick={() => toggleFeature('autoPuzzleAnalysis')}
+            role="switch"
+            aria-checked={autoPuzzleAnalysis}
+            aria-labelledby="auto-analyze-label"
             className={`w-12 h-6 rounded-full transition-colors ${
               autoPuzzleAnalysis ? 'bg-gold-500' : 'bg-zen-700'
             }`}
@@ -530,11 +542,14 @@ function AIPreferencesSection() {
         {/* Move Explanations */}
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-zen-300">♟️ Move Explanations</div>
+            <div className="text-zen-300" id="move-explain-label">♟️ Move Explanations</div>
             <div className="text-zen-600 text-sm">AI explains moves during games</div>
           </div>
           <button
             onClick={() => toggleFeature('showMoveExplanations')}
+            role="switch"
+            aria-checked={showMoveExplanations}
+            aria-labelledby="move-explain-label"
             className={`w-12 h-6 rounded-full transition-colors ${
               showMoveExplanations ? 'bg-gold-500' : 'bg-zen-700'
             }`}
@@ -548,11 +563,14 @@ function AIPreferencesSection() {
         {/* Opening Insights */}
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-zen-300">📖 Opening Insights</div>
+            <div className="text-zen-300" id="opening-insights-label">📖 Opening Insights</div>
             <div className="text-zen-600 text-sm">Deep opening knowledge and ideas</div>
           </div>
           <button
             onClick={() => toggleFeature('showOpeningInsights')}
+            role="switch"
+            aria-checked={showOpeningInsights}
+            aria-labelledby="opening-insights-label"
             className={`w-12 h-6 rounded-full transition-colors ${
               showOpeningInsights ? 'bg-gold-500' : 'bg-zen-700'
             }`}
@@ -566,11 +584,14 @@ function AIPreferencesSection() {
         {/* Agent Presence */}
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-zen-300">👁️ Agent Presence</div>
+            <div className="text-zen-300" id="agent-presence-label">👁️ Agent Presence</div>
             <div className="text-zen-600 text-sm">Show which AI agents are watching</div>
           </div>
           <button
             onClick={() => toggleFeature('showAgentPresence')}
+            role="switch"
+            aria-checked={showAgentPresence}
+            aria-labelledby="agent-presence-label"
             className={`w-12 h-6 rounded-full transition-colors ${
               showAgentPresence ? 'bg-gold-500' : 'bg-zen-700'
             }`}
@@ -662,11 +683,14 @@ export function SettingsPage() {
           {/* Auto analysis */}
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-zen-300">Auto Analysis</div>
+              <div className="text-zen-300" id="auto-analysis-label">Auto Analysis</div>
               <div className="text-zen-600 text-sm">Analyze positions automatically in analysis mode</div>
             </div>
             <button
               onClick={() => updateSettings({ autoAnalysis: !settings.autoAnalysis })}
+              role="switch"
+              aria-checked={settings.autoAnalysis}
+              aria-labelledby="auto-analysis-label"
               className={`w-12 h-6 rounded-full transition-colors ${
                 settings.autoAnalysis ? 'bg-gold-500' : 'bg-zen-700'
               }`}
@@ -680,11 +704,14 @@ export function SettingsPage() {
           {/* Sound */}
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-zen-300">Sound Effects</div>
+              <div className="text-zen-300" id="sound-effects-label">Sound Effects</div>
               <div className="text-zen-600 text-sm">Play sounds for moves and notifications</div>
             </div>
             <button
               onClick={() => updateSettings({ soundEnabled: !settings.soundEnabled })}
+              role="switch"
+              aria-checked={settings.soundEnabled}
+              aria-labelledby="sound-effects-label"
               className={`w-12 h-6 rounded-full transition-colors ${
                 settings.soundEnabled ? 'bg-gold-500' : 'bg-zen-700'
               }`}
@@ -793,11 +820,14 @@ export function SettingsPage() {
           {/* Board Coordinates */}
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-zen-300">Show Coordinates</div>
+              <div className="text-zen-300" id="show-coordinates-label">Show Coordinates</div>
               <div className="text-zen-600 text-sm">Display a-h and 1-8 on the board</div>
             </div>
             <button
               onClick={() => setShowCoordinates(!boardSettings.showCoordinates)}
+              role="switch"
+              aria-checked={boardSettings.showCoordinates}
+              aria-labelledby="show-coordinates-label"
               className={`w-12 h-6 rounded-full transition-colors ${
                 boardSettings.showCoordinates ? 'bg-gold-500' : 'bg-zen-700'
               }`}

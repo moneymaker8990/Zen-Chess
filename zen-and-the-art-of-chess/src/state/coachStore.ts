@@ -1,7 +1,21 @@
-// ============================================
-// ZEN CHESS AI COACH STORE
-// Zustand store for the personalized AI coach
-// ============================================
+/**
+ * AI COACH STORE
+ *
+ * Manages the personalized AI coaching system state.
+ *
+ * Responsibilities:
+ * - Tracks user behavioral patterns (time of day, win/loss streaks, etc.)
+ * - Manages emotional state and tilt detection
+ * - Generates personalized coaching recommendations
+ * - Maintains session history and daily coaching plans
+ *
+ * Key concepts:
+ * - FlowState: Tracks user engagement level (bored, flow, anxious)
+ * - SessionMood: Current emotional state affecting coaching tone
+ * - CoachRecommendation: Action suggestions based on behavior analysis
+ *
+ * Persisted to localStorage via zustand/persist.
+ */
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';

@@ -25,6 +25,7 @@ import {
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import type { MoveHintStyle } from '@/lib/constants';
 import type { PatternType } from '@/lib/types';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // TYPES & CONSTANTS
@@ -513,7 +514,7 @@ export function PuzzlesPage() {
             });
           } catch (e) {
             // If move fails, just use FEN directly
-            console.error('Setup move failed:', setupMove, e);
+            logger.error('Setup move failed:', setupMove, e);
           }
         }
         
@@ -598,7 +599,7 @@ export function PuzzlesPage() {
         setPuzzleError('Unable to load puzzle. Please check your connection.');
       }
     } catch (err) {
-      console.error('Failed to start puzzle mode:', err);
+      logger.error('Failed to start puzzle mode:', err);
       setPuzzleError('Failed to load puzzle. Please try again.');
     } finally {
       setIsLoadingPuzzle(false);
@@ -859,7 +860,7 @@ export function PuzzlesPage() {
       
       // Debug logging for puzzle solving
       if (!isCorrect) {
-        console.log('[Puzzle Debug]', {
+        logger.debug('[Puzzle Debug]', {
           playerMove,
           playerUCI: `${from}${to}`,
           playerSAN: result.san,
@@ -1007,7 +1008,7 @@ export function PuzzlesPage() {
         startPuzzle(puzzle);
       }
     } catch (err) {
-      console.error('Failed to get next puzzle:', err);
+      logger.error('Failed to get next puzzle:', err);
     } finally {
       setIsLoadingPuzzle(false);
     }
@@ -1292,11 +1293,12 @@ export function PuzzlesPage() {
         </div>
 
         {/* Mode Selection */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4" role="group" aria-label="Puzzle mode selection">
           {/* Rated Puzzles */}
           <button
             onClick={() => startMode('rated')}
             className="card-interactive p-4 sm:p-6 text-left group min-h-[120px] sm:min-h-[160px]"
+            aria-label="Rated puzzles - adaptive difficulty based on your skill level"
           >
             <div className="flex items-start justify-between mb-3 sm:mb-4">
               <div 
@@ -1324,6 +1326,7 @@ export function PuzzlesPage() {
           <button
             onClick={() => startMode('rush')}
             className="card-interactive p-4 sm:p-6 text-left group min-h-[120px] sm:min-h-[160px]"
+            aria-label="Puzzle Rush - 3 minute time limit, 3 strikes allowed"
           >
             <div className="flex items-start justify-between mb-3 sm:mb-4">
               <div 
@@ -1351,6 +1354,7 @@ export function PuzzlesPage() {
           <button
             onClick={() => startMode('streak')}
             className="card-interactive p-4 sm:p-6 text-left group min-h-[120px] sm:min-h-[160px]"
+            aria-label="Puzzle Streak - one mistake ends your streak"
           >
             <div className="flex items-start justify-between mb-3 sm:mb-4">
               <div 
@@ -1379,6 +1383,7 @@ export function PuzzlesPage() {
             onClick={() => startMode('daily')}
             className="card-interactive p-4 sm:p-6 text-left group min-h-[120px] sm:min-h-[160px]"
             disabled={stats.dailyPuzzleSolved && stats.dailyPuzzleDate === new Date().toISOString().split('T')[0]}
+            aria-label={`Daily puzzle - ${stats.dailyPuzzleSolved && stats.dailyPuzzleDate === new Date().toISOString().split('T')[0] ? 'already completed today' : 'fresh challenge every day'}`}
           >
             <div className="flex items-start justify-between mb-3 sm:mb-4">
               <div 

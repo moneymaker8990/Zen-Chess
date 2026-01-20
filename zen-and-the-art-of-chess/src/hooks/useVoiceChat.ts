@@ -5,6 +5,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useAICoach, type AgentId } from './useAICoach';
+import { logger } from '@/lib/logger';
 
 interface UseVoiceChatOptions {
   agentId?: AgentId;
@@ -117,7 +118,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     };
 
     recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
+      logger.error('Speech recognition error:', event.error);
       setIsListening(false);
     };
 
@@ -213,7 +214,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
         speak(response);
       }
     } catch (error) {
-      console.error('Failed to get AI response:', error);
+      logger.error('Failed to get AI response:', error);
       speak("I'm having trouble responding right now. Please try again.");
     }
 

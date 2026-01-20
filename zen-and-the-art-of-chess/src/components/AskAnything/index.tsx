@@ -8,6 +8,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence, useDragControls, PanInfo } from 'framer-motion';
 import { useAICoach } from '@/hooks/useAICoach';
 import { useChessGenius } from '@/hooks/useChessGenius';
+import { logger } from '@/lib/logger';
 
 interface AskAnythingProps {
   /** Current position FEN for position-aware questions */
@@ -63,7 +64,7 @@ const loadSavedPosition = (): ButtonPosition | null => {
       };
     }
   } catch (e) {
-    console.warn('Failed to load button position:', e);
+    logger.warn('Failed to load button position:', e);
   }
   return null;
 };
@@ -74,7 +75,7 @@ const savePosition = (pos: ButtonPosition) => {
   try {
     localStorage.setItem(POSITION_STORAGE_KEY, JSON.stringify(pos));
   } catch (e) {
-    console.warn('Failed to save button position:', e);
+    logger.warn('Failed to save button position:', e);
   }
 };
 
@@ -238,7 +239,7 @@ export function AskAnything({
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      logger.error('Failed to copy:', err);
     }
   }, [persistedAnswer, currentResponse]);
 
@@ -271,7 +272,7 @@ export function AskAnything({
         setPersistedAnswer(response);
       }
     } catch (error) {
-      console.error('Ask failed:', error);
+      logger.error('Ask failed:', error);
       setPersistedAnswer("I'm having trouble connecting right now. Please try again.");
     } finally {
       setIsThinking(false);

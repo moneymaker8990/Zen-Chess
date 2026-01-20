@@ -4,11 +4,12 @@
 // ============================================
 
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
-import type { 
-  GameInvite, 
-  TimeControlType, 
+import { logger } from '@/lib/logger';
+import type {
+  GameInvite,
+  TimeControlType,
   InviteStatus,
-  PlayerProfile 
+  PlayerProfile
 } from './types';
 
 // ============================================
@@ -56,7 +57,7 @@ export async function createInvite(
     .single();
 
   if (error || !data) {
-    console.error('Failed to create invite:', error);
+    logger.error('Failed to create invite:', error);
     return null;
   }
 
@@ -95,13 +96,13 @@ export async function acceptInvite(
       });
 
     if (error) {
-      console.error('Failed to accept invite:', error);
+      logger.error('Failed to accept invite:', error);
       return null;
     }
 
     return data as string;
   } catch (e) {
-    console.error('Error accepting invite:', e);
+    logger.error('Error accepting invite:', e);
     return null;
   }
 }
@@ -124,13 +125,13 @@ export async function acceptInviteByCode(
     .single();
 
   if (!invite) {
-    console.error('Invite not found or already used');
+    logger.error('Invite not found or already used');
     return null;
   }
 
   // Can't accept your own invite
   if (invite.from_user_id === acceptingUserId) {
-    console.error('Cannot accept your own invite');
+    logger.error('Cannot accept your own invite');
     return null;
   }
 

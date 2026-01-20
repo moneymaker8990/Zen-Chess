@@ -13,6 +13,7 @@ import { useBoardStyles } from '@/state/boardSettingsStore';
 import { useBoardSize } from '@/hooks/useBoardSize';
 import { useBackNavigation } from '@/components/BackButton';
 import { playSmartMoveSound } from '@/lib/soundSystem';
+import { logger } from '@/lib/logger';
 import { 
   getCourseById, 
   type Course, 
@@ -59,7 +60,7 @@ function saveCourseProgress(courseId: string, progress: CourseProgress) {
     allProgress[courseId] = progress;
     localStorage.setItem('courseProgress', JSON.stringify(allProgress));
   } catch {
-    console.error('Failed to save progress');
+    logger.error('Failed to save progress');
   }
 }
 
@@ -105,7 +106,7 @@ function AICoachPanel({ fen, currentMove, variationTitle, onClose }: AICoachPane
       });
       setAiInsight(insight);
     } catch (error) {
-      console.error('AI insight error:', error);
+      logger.error('AI insight error:', error);
     } finally {
       setLoading(false);
     }
@@ -375,7 +376,7 @@ export default function CourseLearningPage() {
           requestAnimationFrame(() => window.scrollTo(0, scrollY));
         }
       } catch {
-        console.error('Invalid move:', move.move);
+        logger.error('Invalid move:', move.move);
       }
     } else {
       // Variation complete!
@@ -453,7 +454,7 @@ export default function CourseLearningPage() {
                     }
                   }
                 } catch {
-                  console.error('Computer move failed');
+                  logger.error('Computer move failed');
                 }
               }
             }, 600);

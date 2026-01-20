@@ -8,13 +8,14 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ALL_FLASH_POSITIONS, 
+import {
+  ALL_FLASH_POSITIONS,
   type FlashPosition,
-  type FlashQuestion 
+  type FlashQuestion
 } from '@/data/flashPositions';
 import { useBoardSize } from '@/hooks/useBoardSize';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // UTILITY FUNCTIONS
@@ -305,7 +306,7 @@ export function FlashTrainingPage() {
   
   // Temporary debug: clear localStorage position on mount to test randomization
   useEffect(() => {
-    console.log('[Flash Training] Clearing localStorage position for debug');
+    logger.debug('[Flash Training] Clearing localStorage position for debug');
     localStorage.removeItem(LAST_POSITION_STORAGE_KEY);
   }, []);
   
@@ -359,13 +360,13 @@ export function FlashTrainingPage() {
         
         if (prev <= 100) {
           clearInterval(timerRef.current);
-          console.log('[Timer] Position viewing complete, transitioning to question...');
-          console.log('[Timer] studyMode:', studyMode);
+          logger.debug('[Timer] Position viewing complete, transitioning to question...');
+          logger.debug('[Timer] studyMode:', studyMode);
           setTransitionPhase('transitioning');
           
           // Smooth transition pause before showing question
           setTimeout(() => {
-            console.log('[Timer] Setting states: showingPosition=', !studyMode, ', showingQuestion=true');
+            logger.debug('[Timer] Setting states: showingPosition=', !studyMode, ', showingQuestion=true');
             // In study mode, keep position visible
             if (!studyMode) {
               setShowingPosition(false);
@@ -377,7 +378,7 @@ export function FlashTrainingPage() {
             
             setTimeout(() => {
               setTransitionPhase('none');
-              console.log('[Timer] Transition complete');
+              logger.debug('[Timer] Transition complete');
             }, 300);
           }, 400);
           
@@ -395,7 +396,7 @@ export function FlashTrainingPage() {
     const activeMode = modeOverride || mode;
     const positions = getPositionsForMode(activeMode);
     if (positions.length === 0) {
-      console.warn(`No positions found for mode: ${activeMode}`);
+      logger.warn(`No positions found for mode: ${activeMode}`);
       return;
     }
     
@@ -424,7 +425,7 @@ export function FlashTrainingPage() {
     saveLastShownPosition(randomPos.fen);
     
     // Debug logging - expanded for visibility
-    console.log('[Position Selection]', {
+    logger.debug('[Position Selection]', {
       mode: activeMode,
       totalInDatabase: positions.length,
       seenThisSession: seenPositions.size,
@@ -473,8 +474,8 @@ export function FlashTrainingPage() {
     setSessionMistakes([]); // Reset mistake tracking
     setMistakesToReview([]); // Clear review list
     
-    console.log('[Session Start] Mode:', startMode, 'Learning Path:', learningPathMode);
-    console.log('[Session Start] Cleared seen positions for better variety');
+    logger.debug('[Session Start] Mode:', startMode, 'Learning Path:', learningPathMode);
+    logger.debug('[Session Start] Cleared seen positions for better variety');
     
     if (learningPathMode) {
       setMode('piece-count');

@@ -272,9 +272,10 @@ export function CoachPage() {
           <button
             onClick={() => navigate(message.action.route)}
             className="w-full p-4 rounded-xl font-medium text-white transition-all hover:scale-[1.02] hover:brightness-110"
-            style={{ 
+            style={{
               background: 'linear-gradient(135deg, #a855f7, #3b82f6)',
             }}
+            aria-label={`Coach recommendation: ${message.action.label}`}
           >
             {message.action.label}
           </button>
@@ -296,14 +297,16 @@ export function CoachPage() {
           <button
             onClick={() => setShowAIChat(!showAIChat)}
             className="w-full p-4 rounded-xl font-medium transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
-            style={{ 
-              background: showAIChat 
-                ? 'linear-gradient(135deg, #10b981, #059669)' 
+            style={{
+              background: showAIChat
+                ? 'linear-gradient(135deg, #10b981, #059669)'
                 : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
               color: 'white',
             }}
+            aria-expanded={showAIChat}
+            aria-label={showAIChat ? 'Hide AI coach chat interface' : 'Open AI coach chat powered by Claude'}
           >
-            <span className="text-xl">🧘</span>
+            <span className="text-xl" aria-hidden="true">🧘</span>
             {showAIChat ? 'Hide AI Coach Chat' : '✨ Talk to AI Coach (Powered by Claude)'}
           </button>
         </div>
@@ -330,7 +333,7 @@ export function CoachPage() {
           <p className="text-xs uppercase tracking-wider text-center" style={{ color: 'var(--text-muted)' }}>
             Or choose your own path
           </p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3" role="group" aria-label="Quick navigation options">
             <QuickOption label="Play a Game" icon="⚔" onClick={() => navigate('/play')} />
             <QuickOption label="Solve Puzzles" icon="♟" onClick={() => navigate('/train')} />
             <QuickOption label="Study Openings" icon="📖" onClick={() => navigate('/openings')} />
@@ -507,12 +510,13 @@ function QuickOption({ label, icon, onClick }: { label: string; icon: string; on
     <button
       onClick={onClick}
       className="flex items-center gap-3 p-4 rounded-xl transition-all hover:scale-[1.02]"
-      style={{ 
+      style={{
         background: 'var(--bg-secondary)',
         border: '1px solid var(--border-subtle)',
       }}
+      aria-label={label}
     >
-      <span className="text-xl">{icon}</span>
+      <span className="text-xl" aria-hidden="true">{icon}</span>
       <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
         {label}
       </span>

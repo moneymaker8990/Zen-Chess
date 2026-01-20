@@ -4,6 +4,7 @@ import { useProgressStore } from '@/state/useStore';
 import { useCoachStore } from '@/state/coachStore';
 import type { PatternType } from '@/lib/types';
 import { getPuzzlesByTheme, getNextPuzzleAnonymous, type PuzzleWithMeta } from '@/lib/puzzleService';
+import { logger } from '@/lib/logger';
 
 interface PatternTrainerProps {
   patternType?: PatternType;
@@ -106,7 +107,7 @@ export function PatternTrainer({
         puzzleStartTime.current = Date.now();
       }
     } catch (err) {
-      console.error('Failed to fetch puzzle:', err);
+      logger.error('Failed to fetch puzzle:', err);
     } finally {
       setIsLoading(false);
     }

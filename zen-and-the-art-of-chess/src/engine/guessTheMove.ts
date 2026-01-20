@@ -3,11 +3,12 @@
 // Step through a legend's game, trying to guess their moves
 // ============================================
 
-import { Chess } from 'chess.js';
+import { Chess, type Move as ChessJsMove, type Square } from 'chess.js';
 import { stockfish } from './stockfish';
 import { getLegendGame } from './legendEngine';
 import { logger } from '@/lib/logger';
-import type { GuessMoveResult, GuessSessionSummary, LegendId } from '@/lib/legendTypes';
+import type { GuessMoveResult, GuessSessionSummary, LegendId, LegendGame } from '@/lib/legendTypes';
+import type { VerboseMove } from '@/lib/chessTypes';
 
 /**
  * Score a user's guess against the legend's actual move
@@ -134,7 +135,7 @@ export async function scoreGuessMove(args: {
       tags.push('engine-best');
     }
   } catch (err) {
-    console.warn('Could not check engine move:', err);
+    logger.warn('Could not check engine move:', err);
   }
 
   // Additional tagging based on move characteristics
@@ -234,7 +235,7 @@ function detectLegendColor(legend: LegendId, whiteName: string, blackName: strin
   if (blackLower.includes(legendLower)) return 'b';
   
   // Default to white if we can't determine (shouldn't happen with proper data)
-  console.warn(`Could not determine legend color for ${legend}. White: "${whiteName}", Black: "${blackName}"`);
+  logger.warn(`Could not determine legend color for ${legend}. White: "${whiteName}", Black: "${blackName}"`);
   return 'w';
 }
 
@@ -245,7 +246,7 @@ export async function createGuessSessionFromGame(
   legend: LegendId,
   gameId: string
 ): Promise<{
-  game: any;
+  game: LegendGame;
   positions: Array<{ fen: string; move: string; moveNumber: number }>;
   legendColor: 'white' | 'black';
 } | null> {
@@ -301,7 +302,7 @@ export async function createGuessSessionFromGame(
     }
 
     if (positions.length === 0) {
-      console.warn(`No legend positions found in game ${gameId} - legend may not be in this game`);
+      logger.warn(`No legend positions found in game ${gameId} - legend may not be in this game`);
       return null;
     }
     
@@ -309,7 +310,7 @@ export async function createGuessSessionFromGame(
 
     return { game, positions, legendColor: isLegendWhite ? 'white' : 'black' };
   } catch (error) {
-    console.warn(`Failed to load PGN for game ${gameId}, trying move-by-move parsing:`, error);
+    logger.warn(`Failed to load PGN for game ${gameId}, trying move-by-move parsing:`, error);
     // Try parsing move by move, skipping invalid moves
     try {
       const cleanedPgn = game.pgn
@@ -329,7 +330,7 @@ export async function createGuessSessionFromGame(
       
       // Parse moves one by one
       const board = new Chess();
-      const validMoves: any[] = [];
+      const validMoves: ChessJsMove[] = [];
       
       // Extract move tokens (handles "1. e4 e5 2. Nf3" format)
       const moveTokens = movesLine
@@ -350,25 +351,25 @@ export async function createGuessSessionFromGame(
       /**
        * Try to disambiguate an ambiguous move by checking which piece can legally move
        */
-      const tryDisambiguateMove = (moveStr: string, currentBoard: Chess): any | null => {
+      const tryDisambiguateMove = (moveStr: string, currentBoard: Chess): ChessJsMove | null => {
         // Pattern: R, N, B, Q, K followed by optional disambiguation (file/rank) and target square
         const piecePattern = /^([RNBQK])([a-h]?[1-8]?)([a-h][1-8])(=?[RNBQ]?)$/;
         const match = moveStr.match(piecePattern);
-        
+
         if (!match) return null;
-        
+
         const [, pieceType, disambiguation, targetSquare, promotion] = match;
-        const target = targetSquare as any;
-        
+        const target = targetSquare as Square;
+
         // Get all legal moves for the current position
         const legalMoves = currentBoard.moves({ verbose: true });
-        
+
         // Find all moves that match: same piece type, same target square
-        const candidateMoves = legalMoves.filter(m => 
-          m.piece === pieceType.toLowerCase() && 
+        const candidateMoves = legalMoves.filter(m =>
+          m.piece === pieceType.toLowerCase() &&
           m.to === target
         );
-        
+
         // If disambiguation is provided, use it
         if (disambiguation) {
           if (disambiguation.length === 1) {
@@ -378,9 +379,9 @@ export async function createGuessSessionFromGame(
             if (matching) {
               try {
                 return currentBoard.move({
-                  from: matching.from as any,
-                  to: matching.to as any,
-                  promotion: promotion ? promotion[1] as any : undefined,
+                  from: matching.from,
+                  to: matching.to,
+                  promotion: promotion ? promotion[1] as 'q' | 'r' | 'b' | 'n' : undefined,
                 });
               } catch {
                 return null;
@@ -388,14 +389,14 @@ export async function createGuessSessionFromGame(
             }
           } else if (disambiguation.length === 2) {
             // Full disambiguation (e.g., "R1d8")
-            const from = disambiguation as any;
+            const from = disambiguation as Square;
             const matching = candidateMoves.find(m => m.from === from);
             if (matching) {
               try {
                 return currentBoard.move({
-                  from: matching.from as any,
-                  to: matching.to as any,
-                  promotion: promotion ? promotion[1] as any : undefined,
+                  from: matching.from,
+                  to: matching.to,
+                  promotion: promotion ? promotion[1] as 'q' | 'r' | 'b' | 'n' : undefined,
                 });
               } catch {
                 return null;
@@ -403,21 +404,21 @@ export async function createGuessSessionFromGame(
             }
           }
         }
-        
+
         // If no disambiguation or disambiguation didn't work, try the first candidate
         if (candidateMoves.length === 1) {
           const move = candidateMoves[0];
           try {
             return currentBoard.move({
-              from: move.from as any,
-              to: move.to as any,
-              promotion: promotion ? promotion[1] as any : undefined,
+              from: move.from,
+              to: move.to,
+              promotion: promotion ? promotion[1] as 'q' | 'r' | 'b' | 'n' : undefined,
             });
           } catch {
             return null;
           }
         }
-        
+
         // Multiple candidates but no disambiguation - can't resolve
         return null;
       };
@@ -447,11 +448,11 @@ export async function createGuessSessionFromGame(
             consecutiveFailures = 0;
           } else {
             consecutiveFailures++;
-            console.warn(`Skipping invalid move "${moveToken}" in game ${gameId}`);
+            logger.warn(`Skipping invalid move "${moveToken}" in game ${gameId}`);
             
             // Stop if too many consecutive failures or game is over
             if (consecutiveFailures >= maxConsecutiveFailures || board.isGameOver()) {
-              console.warn(`Stopping parsing after ${consecutiveFailures} consecutive failures in game ${gameId}`);
+              logger.warn(`Stopping parsing after ${consecutiveFailures} consecutive failures in game ${gameId}`);
               break;
             }
           }
@@ -459,7 +460,7 @@ export async function createGuessSessionFromGame(
       }
       
       if (validMoves.length === 0) {
-        console.error(`Could not parse any valid moves from PGN for game ${gameId}`);
+        logger.error(`Could not parse any valid moves from PGN for game ${gameId}`);
         return null;
       }
       
@@ -493,7 +494,7 @@ export async function createGuessSessionFromGame(
       }
 
       if (positions.length === 0) {
-        console.warn(`No legend positions found in game ${gameId} after move-by-move parsing`);
+        logger.warn(`No legend positions found in game ${gameId} after move-by-move parsing`);
         return null;
       }
       
@@ -501,7 +502,7 @@ export async function createGuessSessionFromGame(
 
       return { game, positions, legendColor: isLegendWhite ? 'white' : 'black' };
     } catch (parseError) {
-      console.error(`Failed to parse PGN for game ${gameId} with move-by-move parsing:`, parseError);
+      logger.error(`Failed to parse PGN for game ${gameId} with move-by-move parsing:`, parseError);
       return null;
     }
   }

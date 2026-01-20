@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getPuzzleGeniusInsight, getQuickInsight, type PuzzleGeniusInsight } from '@/lib/chessGenius';
+import { logger } from '@/lib/logger';
 
 interface PuzzleGeniusPanelProps {
   fen: string;
@@ -51,7 +52,7 @@ export function PuzzleGeniusPanel({
         );
         setInsight(result);
       } catch (err) {
-        console.error('Genius insight error:', err);
+        logger.error('Genius insight error:', err);
         setError('Could not load AI analysis');
       } finally {
         setLoading(false);

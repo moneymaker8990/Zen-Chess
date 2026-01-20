@@ -6,6 +6,7 @@ import { useBoardSize } from '@/hooks/useBoardSize';
 import { useProgressStore } from '@/state/useStore';
 import allOpenings, { type OpeningLine } from '@/data/openings';
 import { playSmartMoveSound } from '@/lib/soundSystem';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // OPENING COURSES - ORGANIZED BY FAMILY
@@ -509,7 +510,7 @@ export function OpeningsPage() {
           requestAnimationFrame(() => window.scrollTo(0, scrollY));
         }
       } catch (e) {
-        console.error('Auto-play error:', move, e);
+        logger.error('Auto-play error:', move, e);
       }
     }, 600);
 
@@ -659,7 +660,7 @@ export function OpeningsPage() {
         };
       }
     } catch (e) {
-      console.error('Error getting hint squares:', e);
+      logger.error('Error getting hint squares:', e);
     }
     
     return {};
@@ -699,11 +700,13 @@ export function OpeningsPage() {
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center justify-between">
-          <div className="flex gap-1 sm:gap-2 overflow-x-auto pb-1">
+          <div className="flex gap-1 sm:gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter openings by color">
             {(['all', 'white', 'black'] as const).map(side => (
               <button
                 key={side}
                 onClick={() => setFilterSide(side)}
+                aria-pressed={filterSide === side}
+                aria-label={`Show ${side === 'all' ? 'all openings' : side === 'white' ? 'white openings only' : 'black openings only'}`}
                 className={`px-2 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
                   filterSide === side
                     ? 'bg-gold-500/20 text-gold-400 border border-gold-500/50'
@@ -714,21 +717,22 @@ export function OpeningsPage() {
               </button>
             ))}
           </div>
-          
+
           <div className="relative">
             <input
               type="text"
               placeholder="Search openings..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search openings by name or description"
               className="w-full sm:w-64 px-4 py-2 pl-10 rounded-lg bg-zen-800/40 border border-zen-700/30 text-zen-200 placeholder-zen-600 focus:outline-none focus:border-gold-500/50"
             />
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zen-600">🔍</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zen-600" aria-hidden="true">🔍</span>
           </div>
         </div>
 
         {/* Course Grid */}
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6" role="list" aria-label="Opening courses">
           {filteredCourses.map(course => (
             <button
               key={course.id}
@@ -736,6 +740,8 @@ export function OpeningsPage() {
                 setSelectedCourse(course);
                 setViewMode('lines');
               }}
+              aria-label={`${course.name}: ${course.tagline}. ${course.forWhite ? 'For White' : 'For Black'}. ${course.learningCount > 0 ? course.learningCount : Math.min(50, course.totalCount)} lines to learn. Difficulty ${course.difficulty} of 5.`}
+              role="listitem"
               className={`group relative overflow-hidden rounded-2xl border border-zen-700/30 p-6 text-left transition-all hover:border-gold-500/30 hover:scale-[1.02] bg-gradient-to-br ${course.color}`}
             >
               {/* Icon */}
@@ -830,16 +836,17 @@ export function OpeningsPage() {
     return (
       <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0 w-full max-w-full overflow-hidden">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm">
+        <nav aria-label="Breadcrumb navigation" className="flex items-center gap-2 text-sm">
           <button
             onClick={() => setViewMode('courses')}
             className="text-zen-500 hover:text-gold-400 transition-colors"
+            aria-label="Go back to all openings"
           >
             Openings
           </button>
-          <span className="text-zen-600">/</span>
-          <span className="text-zen-300">{selectedCourse.name}</span>
-        </div>
+          <span className="text-zen-600" aria-hidden="true">/</span>
+          <span className="text-zen-300" aria-current="page">{selectedCourse.name}</span>
+        </nav>
 
         {/* Course Header */}
         <div className={`rounded-xl sm:rounded-2xl p-4 sm:p-8 bg-gradient-to-br ${selectedCourse.color} border border-zen-700/30`}>
@@ -866,9 +873,11 @@ export function OpeningsPage() {
 
         {/* Lines Mode Toggle */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap" role="group" aria-label="Line display mode">
             <button
               onClick={() => setShowDatabaseLines(false)}
+              aria-pressed={!showDatabaseLines}
+              aria-label={`Show learning lines only - ${courseLines.learning.length} curated lines`}
               className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                 !showDatabaseLines
                   ? 'bg-gold-500/20 text-gold-400 border border-gold-500/50'
@@ -879,6 +888,8 @@ export function OpeningsPage() {
             </button>
             <button
               onClick={() => setShowDatabaseLines(true)}
+              aria-pressed={showDatabaseLines}
+              aria-label={`Show full database - ${courseLines.all.length.toLocaleString()} total lines`}
               className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                 showDatabaseLines
                   ? 'bg-gold-500/20 text-gold-400 border border-gold-500/50'
@@ -902,9 +913,9 @@ export function OpeningsPage() {
         </div>
 
         {/* Lines Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" role="list" aria-label={`${selectedCourse.name} opening lines`}>
           {displayedLines.slice(0, showDatabaseLines ? 100 : undefined).map((opening, index) => (
-            <div key={opening.id} className="glass-card p-4 sm:p-5 hover:border-gold-500/30 transition-all group">
+            <div key={opening.id} className="glass-card p-4 sm:p-5 hover:border-gold-500/30 transition-all group" role="listitem">
               <div className="flex items-start justify-between mb-2 sm:mb-3">
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                   <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zen-800/60 flex items-center justify-center text-gold-400 text-xs sm:text-sm font-mono shrink-0">
@@ -935,6 +946,7 @@ export function OpeningsPage() {
 
               <button
                 onClick={() => startOpening(opening, selectedCourse.forWhite ? 'white' : 'black')}
+                aria-label={`Practice ${opening.variation || opening.name} as ${selectedCourse.forWhite ? 'White' : 'Black'}`}
                 className={`w-full text-xs px-3 py-2 sm:py-2.5 rounded-lg font-medium transition-all ${
                   selectedCourse.forWhite
                     ? 'bg-zinc-200 text-zinc-800 hover:bg-zinc-100'
@@ -966,6 +978,7 @@ export function OpeningsPage() {
             setShowDatabaseLines(false);
           }}
           className="zen-button-ghost"
+          aria-label="Go back to all opening courses"
         >
           ← Back to Openings
         </button>
@@ -980,36 +993,40 @@ export function OpeningsPage() {
     return (
       <div className="space-y-4 sm:space-y-6 animate-fade-in w-full max-w-full overflow-hidden px-2 sm:px-0">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs sm:text-sm flex-wrap">
+        <nav aria-label="Breadcrumb navigation" className="flex items-center gap-2 text-xs sm:text-sm flex-wrap">
           <button
             onClick={() => setViewMode('courses')}
             className="text-zen-500 hover:text-gold-400 transition-colors"
+            aria-label="Go back to all openings"
           >
             Openings
           </button>
-          <span className="text-zen-600">/</span>
+          <span className="text-zen-600" aria-hidden="true">/</span>
           {selectedCourse && (
             <>
               <button
                 onClick={() => setViewMode('lines')}
                 className="text-zen-500 hover:text-gold-400 transition-colors"
+                aria-label={`Go back to ${selectedCourse.name} lines`}
               >
                 {selectedCourse.name}
               </button>
-              <span className="text-zen-600">/</span>
+              <span className="text-zen-600" aria-hidden="true">/</span>
             </>
           )}
-          <span className="text-zen-300 truncate max-w-[150px] sm:max-w-none">{selectedOpening.variation}</span>
-        </div>
+          <span className="text-zen-300 truncate max-w-[150px] sm:max-w-none" aria-current="page">{selectedOpening.variation}</span>
+        </nav>
 
         <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_340px] gap-4 lg:gap-6 w-full max-w-full">
           {/* Board Section */}
           <div className="space-y-4 w-full" style={{ minHeight: boardSize + 100 }}>
             {/* Mode Toggle */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-2">
-              <div className="flex rounded-lg bg-zen-800/40 p-1">
+              <div className="flex rounded-lg bg-zen-800/40 p-1" role="group" aria-label="Practice mode selection">
                 <button
                   onClick={() => setPracticeMode('learn')}
+                  aria-pressed={practiceMode === 'learn'}
+                  aria-label="Learn mode - computer plays opponent moves automatically"
                   className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm transition-all ${
                     practiceMode === 'learn'
                       ? 'bg-gold-500/20 text-gold-400'
@@ -1020,6 +1037,8 @@ export function OpeningsPage() {
                 </button>
                 <button
                   onClick={() => setPracticeMode('test')}
+                  aria-pressed={practiceMode === 'test'}
+                  aria-label="Test mode - recall moves without assistance"
                   className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm transition-all ${
                     practiceMode === 'test'
                       ? 'bg-gold-500/20 text-gold-400'
@@ -1039,7 +1058,7 @@ export function OpeningsPage() {
             </div>
 
             {/* Chessboard */}
-            <div className="board-container" ref={boardContainerRef}>
+            <div className="board-container" ref={boardContainerRef} role="application" aria-label={`Opening trainer: ${selectedOpening.name}. Playing as ${userColor}. Move ${Math.ceil(currentMoveIndex / 2)} of ${Math.ceil(selectedOpening.moves.length / 2)}.`}>
               <div className="board-wrapper">
                 <Chessboard
                   position={game.fen()}
@@ -1077,27 +1096,30 @@ export function OpeningsPage() {
                         You've mastered this variation. 
                         {getOpeningStreak() > 1 && <span className="block text-gold-500 mt-2">🔥 {getOpeningStreak()} openings completed today!</span>}
                       </p>
-                      <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 justify-center">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 justify-center" role="group" aria-label="Completion options">
                         {getNextOpening() && (
-                          <button 
+                          <button
                             onClick={() => {
                               const next = getNextOpening();
                               if (next) startOpening(next, userColor);
                             }}
                             className="zen-button w-full sm:w-auto"
+                            aria-label={`Continue to next opening: ${getNextOpening()?.variation || getNextOpening()?.name}`}
                           >
                             Next Opening →
                           </button>
                         )}
-                        <button 
-                          onClick={resetLine} 
+                        <button
+                          onClick={resetLine}
                           className={getNextOpening() ? "zen-button-ghost w-full sm:w-auto" : "zen-button w-full sm:w-auto"}
+                          aria-label="Practice this opening line again"
                         >
                           Practice Again
                         </button>
                         <button
                           onClick={() => setViewMode('lines')}
                           className="zen-button-ghost w-full sm:w-auto"
+                          aria-label="Go back to course line selection"
                         >
                           Back to Course
                         </button>
@@ -1109,15 +1131,16 @@ export function OpeningsPage() {
             </div>
 
             {/* Controls */}
-            <div className="flex gap-2 sm:gap-3 flex-wrap justify-center">
+            <div className="flex gap-2 sm:gap-3 flex-wrap justify-center" role="group" aria-label="Practice controls">
               <button
                 onClick={() => setShowHint(true)}
                 disabled={showHint || feedback === 'complete'}
+                aria-label="Show hint for the next move"
                 className="zen-button-ghost flex-1 min-w-[100px] text-sm sm:text-base"
               >
                 💡 Hint
               </button>
-              <button onClick={resetLine} className="zen-button-ghost flex-1 min-w-[100px] text-sm sm:text-base">
+              <button onClick={resetLine} aria-label="Reset opening line to starting position" className="zen-button-ghost flex-1 min-w-[100px] text-sm sm:text-base">
                 🔄 Reset
               </button>
             </div>
@@ -1199,6 +1222,7 @@ export function OpeningsPage() {
                 setViewMode('lines');
               }}
               className="w-full zen-button-ghost"
+              aria-label={`Go back to ${selectedCourse?.name || 'course'} line selection`}
             >
               ← Back to Lines
             </button>

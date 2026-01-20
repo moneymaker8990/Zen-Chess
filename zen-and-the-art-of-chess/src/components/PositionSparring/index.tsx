@@ -7,6 +7,7 @@ import { usePositionSparringStore } from '@/state/trainingStore';
 import { stockfish } from '@/engine/stockfish';
 import { PageHeader } from '@/components/Tutorial';
 import { parseUciMove } from '@/lib/moveValidation';
+import { logger } from '@/lib/logger';
 import type { SparringPosition } from '@/lib/trainingTypes';
 
 export function PositionSparring() {
@@ -72,7 +73,7 @@ export function PositionSparring() {
         // Validate UCI move format
         const parsed = parseUciMove(bestMove);
         if (!parsed) {
-          console.error('Invalid move format from engine:', bestMove);
+          logger.error('Invalid move format from engine:', bestMove);
           setIsThinking(false);
           return;
         }
@@ -98,10 +99,10 @@ export function PositionSparring() {
             handleGameOver(gameCopy);
           }
         } else {
-          console.error('Engine move was not legal:', bestMove, 'in position', currentGame.fen());
+          logger.error('Engine move was not legal:', bestMove, 'in position', currentGame.fen());
         }
       } catch (e) {
-        console.error('Engine move error:', e);
+        logger.error('Engine move error:', e);
       } finally {
         setIsThinking(false);
       }

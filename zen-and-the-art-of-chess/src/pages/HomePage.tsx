@@ -172,7 +172,7 @@ export function HomePage() {
       
       <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0">
       {/* Welcome Header */}
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-3" role="region" aria-label="Welcome and stats overview">
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
@@ -211,6 +211,7 @@ export function HomePage() {
             onClick={() => navigate('/daily-challenges')}
             className="w-full card-interactive p-4 sm:p-6 text-left group relative overflow-hidden"
             style={{ background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(234, 88, 12, 0.15) 100%)', border: '1px solid rgba(245, 158, 11, 0.4)' }}
+            aria-label="Start today's daily chess challenge"
           >
             <div className="absolute top-2 right-2 px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold" style={{ background: '#f59e0b', color: 'black' }}>
               NEW TODAY
@@ -244,7 +245,12 @@ export function HomePage() {
           </button>
 
           {/* 🎓 ACADEMY SECTION - The Competitive Content */}
-          <div className="card p-4 sm:p-6" style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%)', border: '1px solid rgba(139, 92, 246, 0.2)' }}>
+          <section
+            className="card p-4 sm:p-6"
+            style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%)', border: '1px solid rgba(139, 92, 246, 0.2)' }}
+            role="region"
+            aria-label="Zen Chess Academy learning options"
+          >
             <div className="flex items-center justify-between mb-4 sm:mb-5">
               <div className="flex items-center gap-2 sm:gap-3">
                 <span className="text-xl sm:text-2xl">🎓</span>
@@ -339,7 +345,7 @@ export function HomePage() {
                 📋 Plan
               </button>
             </div>
-          </div>
+          </section>
 
           {/* Play & Train Row */}
           <div className="grid grid-cols-2 gap-2 sm:gap-4">
@@ -348,6 +354,7 @@ export function HomePage() {
               onClick={() => navigate('/play')}
               className="card-interactive p-3 sm:p-5 text-left group"
               style={{ background: 'linear-gradient(135deg, rgba(129, 182, 76, 0.1) 0%, rgba(129, 182, 76, 0.05) 100%)' }}
+              aria-label="Play chess against the computer"
             >
               <div className="flex items-center gap-2 sm:gap-4">
                 <div 
@@ -372,6 +379,7 @@ export function HomePage() {
               onClick={() => navigate('/train')}
               className="card-interactive p-3 sm:p-5 text-left group"
               style={{ background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%)' }}
+              aria-label={`Solve chess puzzles. ${puzzleStats.puzzlesSolved} solved so far`}
             >
               <div className="flex items-center gap-2 sm:gap-4">
                 <div 
@@ -432,11 +440,12 @@ export function HomePage() {
           )}
 
           {/* Mental Game & Tools */}
-          <div className="grid grid-cols-4 gap-2 sm:gap-3">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3" role="group" aria-label="Mental game and tools">
             <button
               onClick={() => navigate('/beginner')}
               className="card p-2 sm:p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all"
               style={{ background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%)', border: '1px solid rgba(74, 222, 128, 0.2)' }}
+              aria-label="Beginner guide - start here if you're new to chess"
             >
               <div className="text-xl sm:text-2xl mb-1 sm:mb-2">🌱</div>
               <span className="text-xs sm:text-sm font-medium block truncate" style={{ color: '#4ade80' }}>Beginner</span>
@@ -445,6 +454,7 @@ export function HomePage() {
             <button
               onClick={() => navigate('/mind')}
               className="card p-2 sm:p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all"
+              aria-label={`Mind training and meditation. ${progress.meditationMinutes} minutes completed`}
             >
               <div className="text-xl sm:text-2xl mb-1 sm:mb-2">🧘</div>
               <span className="text-xs sm:text-sm font-medium block truncate" style={{ color: 'var(--text-primary)' }}>Mind</span>
@@ -453,6 +463,7 @@ export function HomePage() {
             <button
               onClick={() => navigate('/calm-play')}
               className="card p-2 sm:p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all"
+              aria-label="Calm Play mode - anti-tilt chess practice"
             >
               <div className="text-xl sm:text-2xl mb-1 sm:mb-2">❤️</div>
               <span className="text-xs sm:text-sm font-medium block truncate" style={{ color: 'var(--text-primary)' }}>Calm</span>
@@ -461,6 +472,7 @@ export function HomePage() {
             <button
               onClick={() => navigate('/coach')}
               className="card p-2 sm:p-4 text-center hover:border-[var(--accent-primary)]/30 transition-all"
+              aria-label="AI Coach - personalized chess guidance"
             >
               <div className="text-xl sm:text-2xl mb-1 sm:mb-2">✨</div>
               <span className="text-xs sm:text-sm font-medium block truncate" style={{ color: 'var(--text-primary)' }}>Coach</span>
@@ -470,7 +482,7 @@ export function HomePage() {
         </div>
 
         {/* Right Column - Stats & Activity */}
-        <div className="space-y-4 sm:space-y-6">
+        <aside className="space-y-4 sm:space-y-6" role="complementary" aria-label="Your stats and activity">
           {/* AI Coach - Today's Focus */}
           <TodaysFocusWidget 
             onAction={(actionType: ActionType) => {
@@ -592,14 +604,14 @@ export function HomePage() {
           {/* Inspirational Quote - Hidden on mobile */}
           <div className="card p-4 sm:p-6 hidden lg:block">
             <blockquote className="font-serif italic leading-relaxed text-sm" style={{ color: 'var(--text-secondary)' }}>
-              "Between stimulus and response there is a space. In that space is our 
+              "Between stimulus and response there is a space. In that space is our
               power to choose our response."
             </blockquote>
             <footer className="text-xs sm:text-sm mt-2 sm:mt-3 not-italic" style={{ color: 'var(--text-muted)' }}>
               — Viktor Frankl
             </footer>
           </div>
-        </div>
+        </aside>
       </div>
     </div>
     </>

@@ -57,7 +57,22 @@
   --space-4: 1rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
-  
+
+  /* Layout sizes */
+  --board-default-size: 480px;
+  --board-min-size: 280px;
+  --board-max-size: 560px;
+  --content-max-width: 1280px;
+  --sidebar-width: 280px;
+  --header-height: 64px;
+  --bottom-nav-height: 64px;
+
+  /* Border radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
   /* Safe areas */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -273,7 +288,7 @@ html, body {
 /* Zen button with automatic contrast - always readable */
 .zen-button-primary {
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  color: white !important; /* Ensure contrast */
+  color: white;
   font-weight: 500;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
@@ -380,6 +395,8 @@ html, body {
 
 /* ============================================
    CHESSBOARD OVERRIDES
+   Override react-chessboard library inline styles
+   Note: !important is required to override inline styles
    ============================================ */
 
 /* Remove rounded corners from chessboard */
@@ -612,20 +629,48 @@ a.small,
    CHESS BOARD CONTAINERS - Mobile Responsive
    ============================================ */
 
-/* 
+/*
  * Container for the chessboard.
  * react-chessboard auto-sizes to fill this container when no boardWidth is set.
  */
 .board-container {
   width: 100%;
-  max-width: 480px;
+  max-width: var(--board-default-size);
   margin: 0 auto;
+  /* Prevent board from overflowing on mobile */
+  box-sizing: border-box;
 }
 
-/* 
+/* Mobile: Ensure board fits within viewport with safe padding */
+@media (max-width: 640px) {
+  .board-container {
+    /* Account for page padding and safe areas */
+    max-width: calc(100vw - 1rem);
+    /* Respect safe area insets on notched devices */
+    max-width: calc(100vw - max(0.5rem, env(safe-area-inset-left)) - max(0.5rem, env(safe-area-inset-right)));
+  }
+}
+
+/*
  * Wrapper for the board - simple container.
  */
 .board-wrapper {
   width: 100%;
   position: relative;
+  /* Ensure square aspect ratio */
+  aspect-ratio: 1 / 1;
+  /* Better touch handling on mobile */
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/*
+ * Ensure pieces don't overflow the board wrapper.
+ * Note: !important required to override react-chessboard inline styles
+ */
+.board-wrapper > div {
+  max-width: 100% !important;
+  max-height: 100% !important;
 }

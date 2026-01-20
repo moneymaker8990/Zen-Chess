@@ -16,6 +16,7 @@ import {
   getPlatform,
   addPurchaseListener,
 } from '@/lib/revenuecat';
+import { logger } from '@/lib/logger';
 import type { SubscriptionTier } from '@/lib/premium';
 
 interface Package {
@@ -116,7 +117,7 @@ export function useRevenueCat(userId?: string): UseRevenueCatReturn {
       setWillRenew(status.willRenew);
       setPackages(availablePackages);
     } catch (error) {
-      console.error('Failed to refresh RevenueCat data:', error);
+      logger.error('Failed to refresh RevenueCat data:', error);
     }
   }, []);
 

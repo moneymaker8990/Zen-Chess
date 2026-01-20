@@ -12,7 +12,7 @@
 // ============================================
 
 import { getHumanizedMove, BotLevel, getEngineCandidatesWithFeatures } from './humanizedStockfish';
-import { type LegendId, type OpeningBookNode, type LegendPositionIndex, LEGEND_STYLES } from '@/lib/legendTypes';
+import { type LegendId, type OpeningBookNode, type LegendPositionIndex, type LegendGame, LEGEND_STYLES } from '@/lib/legendTypes';
 import { logger } from '@/lib/logger';
 
 // File paths (relative to public folder for browser)
@@ -658,13 +658,13 @@ export async function getLegendMove(params: {
 /**
  * Get a specific game by ID
  */
-export async function getLegendGame(legend: LegendId, gameId: string): Promise<any | null> {
+export async function getLegendGame(legend: LegendId, gameId: string): Promise<LegendGame | null> {
   try {
     const response = await fetch(`${LEGENDS_DATA_PREFIX}/legend-${legend}-games.json`);
     if (!response.ok) return null;
-    
-    const games = await response.json();
-    return games.find((g: any) => g.id === gameId) || null;
+
+    const games: LegendGame[] = await response.json();
+    return games.find((g) => g.id === gameId) || null;
   } catch (err) {
     logger.error('Error loading legend game:', err);
     return null;
@@ -674,11 +674,11 @@ export async function getLegendGame(legend: LegendId, gameId: string): Promise<a
 /**
  * Get all games for a legend
  */
-export async function getLegendGames(legend: LegendId): Promise<any[]> {
+export async function getLegendGames(legend: LegendId): Promise<LegendGame[]> {
   try {
     const response = await fetch(`${LEGENDS_DATA_PREFIX}/legend-${legend}-games.json`);
     if (!response.ok) return [];
-    
+
     const text = await response.text();
     if (text.trim().startsWith('<!')) {
       const warningKey = `games-${legend}`;
@@ -688,8 +688,8 @@ export async function getLegendGames(legend: LegendId): Promise<any[]> {
       }
       return [];
     }
-    
-    return JSON.parse(text);
+
+    return JSON.parse(text) as LegendGame[];
   } catch (err) {
     return [];
   }

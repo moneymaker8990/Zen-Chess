@@ -175,7 +175,7 @@ export function ChessBoardPanel({
           }
         }
       } catch (e) {
-        console.error('Engine move error:', e);
+        logger.error('Engine move error:', e);
       } finally {
         setIsThinking(false);
       }
@@ -332,7 +332,7 @@ export function ChessBoardPanel({
                   requestAnimationFrame(() => window.scrollTo(0, scrollY));
                 }
               } catch (e) {
-                console.error('Invalid opponent move in solution:', opponentMove, e);
+                logger.error('Invalid opponent move in solution:', opponentMove, e);
               } finally {
                 setWaitingForOpponent(false);
               }

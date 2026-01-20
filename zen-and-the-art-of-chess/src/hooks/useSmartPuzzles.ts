@@ -7,6 +7,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useAIIntelligence, useIntelligentDefaults } from '@/lib/aiIntelligence';
 import { getNextPuzzleAnonymous, getPuzzlesByTheme, type PuzzleWithMeta } from '@/lib/puzzleService';
+import { logger } from '@/lib/logger';
 import type { PatternType } from '@/lib/types';
 
 // ============================================
@@ -124,7 +125,7 @@ async function selectSmartPuzzle(
       }
     }
   } catch (err) {
-    console.error('Failed to select puzzle:', err);
+    logger.error('Failed to select puzzle:', err);
   }
   
   return { puzzle, reason };

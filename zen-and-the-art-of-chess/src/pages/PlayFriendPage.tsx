@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/state/useAuthStore';
 import { useMultiplayerStore } from '@/state/multiplayerStore';
+import { logger } from '@/lib/logger';
 import {
   TIME_CONTROLS,
   getTimeControlLabel,
@@ -79,7 +80,7 @@ export function PlayFriendPage() {
           setOnlineFriends(presenceMap);
         }
       } catch (e) {
-        console.error('Failed to load data:', e);
+        logger.error('Failed to load data:', e);
       } finally {
         setIsLoading(false);
       }

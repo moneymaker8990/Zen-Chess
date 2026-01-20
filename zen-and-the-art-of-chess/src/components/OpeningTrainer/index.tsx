@@ -5,6 +5,7 @@ import { useBoardStyles } from '@/state/boardSettingsStore';
 import { useBoardSize } from '@/hooks/useBoardSize';
 import { allOpenings, type OpeningLine } from '@/data/openings';
 import { PageHeader } from '@/components/Tutorial';
+import { logger } from '@/lib/logger';
 
 type Category = 'all' | 'e4' | 'd4' | 'c4' | 'nf3';
 
@@ -75,7 +76,7 @@ export function OpeningTrainer() {
           requestAnimationFrame(() => window.scrollTo(0, scrollY));
         }
       } catch (e) {
-        console.error('Auto-play error:', move, e);
+        logger.error('Auto-play error:', move, e);
       }
     }, 800);
 

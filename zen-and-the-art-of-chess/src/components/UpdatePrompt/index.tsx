@@ -25,7 +25,7 @@ export function UpdatePrompt() {
       }
     },
     onRegisterError(error) {
-      console.error('SW registration error', error);
+      logger.error('SW registration error', error);
     },
   });
 

@@ -6,6 +6,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // TYPES
@@ -148,7 +149,7 @@ function aggregateFromStorage(): Record<string, WeaknessScore> {
       }
     }
   } catch (e) {
-    console.warn('Could not parse flash stats');
+    logger.warn('Could not parse flash stats');
   }
   
   // Try to get data from Thinking System
@@ -178,7 +179,7 @@ function aggregateFromStorage(): Record<string, WeaknessScore> {
       }
     }
   } catch (e) {
-    console.warn('Could not parse thinking stats');
+    logger.warn('Could not parse thinking stats');
   }
   
   // Try to get data from Intuition Trainer
@@ -190,7 +191,7 @@ function aggregateFromStorage(): Record<string, WeaknessScore> {
       scores['pattern-recognition'].total += parsed.totalAttempts || 0;
     }
   } catch (e) {
-    console.warn('Could not parse intuition stats');
+    logger.warn('Could not parse intuition stats');
   }
   
   // Try to get data from course progress
@@ -228,7 +229,7 @@ function aggregateFromStorage(): Record<string, WeaknessScore> {
       });
     }
   } catch (e) {
-    console.warn('Could not parse course progress');
+    logger.warn('Could not parse course progress');
   }
   
   return scores;

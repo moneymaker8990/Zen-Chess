@@ -3,6 +3,29 @@
 // Comprehensive database with tiered learning
 // Essential lines for learning + full database for exploration
 // ============================================
+//
+// BUNDLE SIZE OPTIMIZATION (2026-01-19):
+// ======================================
+// The pgn-openings.ts file (2.5M lines, 42MB) was REMOVED to fix
+// Vercel memory issues. Current implementation uses curated collections:
+//
+// INCLUDED FILES (Total ~500 lines in bundle):
+// - italianGameLines (~50 lines)
+// - openingLines (~50 lines) - this file
+// - expandedOpenings (~100 lines)
+// - ruyLopezLines (~50 lines)
+// - sicilianLines (~50 lines)
+// - d4OpeningsLines (~50 lines)
+// - otherOpeningsLines (~50 lines)
+// - moreOpenings (~50 lines)
+// - indianDefenseLines (~50 lines)
+//
+// FOR ADDITIONAL OPENINGS:
+// - Use Lichess Opening Explorer API for on-demand lookup
+// - See: https://lichess.org/api#tag/Opening-Explorer
+// - Endpoint: https://explorer.lichess.ovh/masters?fen=...
+//
+// ============================================
 
 export type LinePriority = 'essential' | 'recommended' | 'advanced' | 'reference';
 

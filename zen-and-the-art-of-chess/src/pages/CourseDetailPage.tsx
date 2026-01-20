@@ -8,6 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BackButton } from '@/components/BackButton';
 import { getCourseById, calculateCourseStats, type Course, type CourseChapter, type CourseProgress } from '../data/courses';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // STORAGE HELPERS
@@ -30,7 +31,7 @@ function saveCourseProgress(courseId: string, progress: CourseProgress) {
     allProgress[courseId] = progress;
     localStorage.setItem('courseProgress', JSON.stringify(allProgress));
   } catch {
-    console.error('Failed to save progress');
+    logger.error('Failed to save progress');
   }
 }
 

@@ -7,13 +7,15 @@ import { Chess, Move } from 'chess.js';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { logger } from '@/lib/logger';
-import type { 
-  MultiplayerGame, 
-  GameMove, 
-  GameStatus, 
-  GameResult, 
+import type {
+  MultiplayerGame,
+  GameMove,
+  GameStatus,
+  GameResult,
   GameTermination,
-  PlayerColor 
+  PlayerColor,
+  DatabaseGameRecord,
+  GameUpdatePayload
 } from './types';
 
 // ============================================
@@ -126,7 +128,7 @@ export class MultiplayerGameEngine {
       });
   }
 
-  private handleGameUpdate(gameData: any) {
+  private handleGameUpdate(gameData: DatabaseGameRecord) {
     // Update local state
     this.chess = new Chess(gameData.fen);
     this.whiteTimeMs = gameData.white_time_remaining_ms || 0;
@@ -511,7 +513,7 @@ export class MultiplayerGameEngine {
   // UTILITIES
   // ============================================
 
-  private mapGameFromDb(data: any): MultiplayerGame {
+  private mapGameFromDb(data: DatabaseGameRecord): MultiplayerGame {
     return {
       id: data.id,
       whitePlayerId: data.white_player_id,
@@ -633,7 +635,7 @@ export async function joinGame(gameId: string, userId: string): Promise<boolean>
   }
 
   // Assign to empty slot
-  let update: any = {
+  const update: GameUpdatePayload = {
     status: 'active',
     started_at: new Date().toISOString(),
     last_move_at: new Date().toISOString()
@@ -707,7 +709,7 @@ export async function getGameHistory(userId: string, limit = 20): Promise<Multip
   return data?.map(mapGameFromDb) || [];
 }
 
-function mapGameFromDb(data: any): MultiplayerGame {
+function mapGameFromDb(data: DatabaseGameRecord): MultiplayerGame {
   return {
     id: data.id,
     whitePlayerId: data.white_player_id,

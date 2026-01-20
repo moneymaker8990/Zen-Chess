@@ -21,6 +21,7 @@ import {
   type CreateInviteOptions,
   type TimeControlType,
 } from '@/lib/multiplayer';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // HOOK
@@ -99,7 +100,7 @@ export function useMultiplayer() {
           unsubscribeInvites();
         };
       } catch (error) {
-        console.error('Failed to initialize multiplayer:', error);
+        logger.error('Failed to initialize multiplayer:', error);
         setError('Failed to connect to multiplayer');
       }
     };

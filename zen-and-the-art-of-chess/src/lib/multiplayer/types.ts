@@ -229,6 +229,69 @@ export interface PlayerProfile {
   rating: number;
 }
 
+/**
+ * Raw database record for a game (snake_case fields from Supabase)
+ */
+export interface DatabaseGameRecord {
+  id: string;
+  white_player_id: string | null;
+  black_player_id: string | null;
+  white_player?: DatabasePlayerProfile;
+  black_player?: DatabasePlayerProfile;
+  status: GameStatus;
+  result: GameResult | null;
+  termination: GameTermination | null;
+  winner_id: string | null;
+  fen: string;
+  pgn: string;
+  moves: GameMove[] | null;
+  move_count: number;
+  turn: PlayerColor;
+  time_control_type: TimeControlType;
+  initial_time_seconds: number;
+  increment_seconds: number;
+  white_time_remaining_ms: number | null;
+  black_time_remaining_ms: number | null;
+  last_move_at: string | null;
+  draw_offer_from: string | null;
+  rematch_game_id: string | null;
+  rematch_offered_by: string | null;
+  is_rated: boolean;
+  white_rating_before: number | null;
+  black_rating_before: number | null;
+  white_rating_after: number | null;
+  black_rating_after: number | null;
+  invite_code: string | null;
+  created_at: string;
+  started_at: string | null;
+  ended_at: string | null;
+}
+
+/**
+ * Raw database record for a player profile (snake_case fields from Supabase)
+ */
+export interface DatabasePlayerProfile {
+  id: string;
+  username: string | null;
+  display_name: string | null;
+  avatar_url: string | null;
+  rating: number;
+}
+
+/**
+ * Update payload for game status
+ */
+export interface GameUpdatePayload {
+  status?: GameStatus;
+  white_player_id?: string;
+  black_player_id?: string;
+  draw_offer_from?: string | null;
+  rematch_offered_by?: string | null;
+  started_at?: string;
+  last_move_at?: string;
+  updated_at?: string;
+}
+
 export interface Friendship {
   id: string;
   userId: string;

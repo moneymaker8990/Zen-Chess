@@ -1,7 +1,91 @@
 // ============================================
 // AGENT ORCHESTRATOR
-// Central brain that manages all agents
+// Central brain that manages all 12 AI agents
 // ============================================
+/**
+ * AGENT ORCHESTRATION SYSTEM
+ *
+ * This file is the central coordinator for Zen Chess's 12-agent AI system.
+ * Each agent has a distinct personality, purpose, and trigger conditions.
+ *
+ * ## Architecture Overview
+ *
+ * The system follows a pub/sub pattern:
+ * 1. **Events** are fired via `trigger()` (e.g., PUZZLE_COMPLETE, GAME_OVER)
+ * 2. **Agents** listen for relevant events via `handleTrigger()`
+ * 3. **Messages** are generated and queued for display
+ * 4. **Proactive checks** run periodically for time-based insights
+ *
+ * ## The 12 Agents
+ *
+ * ### Core Visible Agents (user-facing, chatty)
+ * - **coach**: Warm mentor figure, greets user, celebrates wins, offers strategy
+ * - **inner-compass**: Emotional awareness, tilt detection, mindfulness prompts
+ * - **training**: Puzzle coaching, pattern recognition, training suggestions
+ * - **pattern**: Tactical pattern teacher, recognizes and explains patterns
+ * - **journey**: Progress tracker, milestone celebrations, learning path guide
+ * - **mindfulness**: Meditation prompts, breathing exercises, calm play advocacy
+ *
+ * ### Specialized Agents (contextual, domain-specific)
+ * - **opening**: Opening theory expert, repertoire suggestions, book knowledge
+ * - **legend**: Chess legend curator, shares GM insights, historical context
+ *
+ * ### Background Agents (silent analysis, surface insights)
+ * - **insight-engine**: Deep analysis, finds patterns across sessions
+ * - **motivator**: Encouragement during slumps, celebrates comebacks
+ * - **flow-keeper**: Monitors engagement, suggests breaks, pacing advice
+ * - **session-manager**: Time tracking, session boundaries, wrap-up summaries
+ *
+ * ## Cooldown System
+ *
+ * Each agent has a cooldown period (in minutes) to prevent spam:
+ * - Core agents: 10-30 minutes
+ * - Specialized: 15-20 minutes
+ * - Background: 30-60 minutes
+ *
+ * Cooldowns are bypassed for urgent triggers (TILT_DETECTED, LOSING_STREAK).
+ *
+ * ## Verbosity Levels
+ *
+ * Users can control agent chattiness:
+ * - **quiet**: Only urgent/high priority messages
+ * - **normal**: Normal and higher (default)
+ * - **chatty**: All messages including low priority
+ *
+ * ## Memory System
+ *
+ * The orchestrator maintains memory across sessions:
+ * - User preferences (training time, session length)
+ * - Engagement tracking (which agents user responds to)
+ * - Historical observations (strengths, weaknesses, goals)
+ * - Per-agent memories (each agent has its own localStorage)
+ *
+ * ## Message Deduplication
+ *
+ * Messages are deduplicated via signatures (agentId:title) per session.
+ * This prevents the same insight being shown repeatedly.
+ *
+ * ## Integration Points
+ *
+ * - **App.tsx**: Calls `initializeAgents()` on mount
+ * - **Layout**: Tracks page changes via `setCurrentPage()`
+ * - **Game components**: Fire triggers (PUZZLE_COMPLETE, GAME_OVER, etc.)
+ * - **AgentPanel/AgentPresence**: Display agent messages and status
+ *
+ * @example
+ * // Trigger an event from a component:
+ * const trigger = useAgentTrigger();
+ * trigger({ type: 'PUZZLE_COMPLETE', solved: true, time: 45 });
+ *
+ * @example
+ * // Send a direct message from an agent:
+ * import { sendAgentMessage } from '@/lib/agents/agentOrchestrator';
+ * sendAgentMessage('coach', {
+ *   title: 'Great Progress!',
+ *   body: 'You solved 5 puzzles in a row!',
+ *   priority: 'normal',
+ * });
+ */
 
 import { useMemo } from 'react';
 import { create } from 'zustand';

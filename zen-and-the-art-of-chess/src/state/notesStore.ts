@@ -633,3 +633,113 @@ export const useLegendGameReviewStore = create<LegendGameReviewState>()(
   )
 );
 
+// ============================================
+// PUZZLE BOOKMARKS STORE
+// ============================================
+
+export interface BookmarkedPuzzle {
+  puzzleId: string;
+  fen: string;
+  solution: string[];  // Array of moves in SAN
+  rating: number;
+  themes: string[];
+  bookmarkedAt: number;
+  note?: string;       // User note about why they saved it
+  solved: boolean;     // Whether user solved it when bookmarking
+  attempts: number;    // Number of times user has attempted
+}
+
+interface PuzzleBookmarksState {
+  bookmarks: BookmarkedPuzzle[];
+
+  // Add a bookmark
+  addBookmark: (puzzle: Omit<BookmarkedPuzzle, 'bookmarkedAt' | 'attempts'>) => void;
+
+  // Remove a bookmark
+  removeBookmark: (puzzleId: string) => void;
+
+  // Check if puzzle is bookmarked
+  isBookmarked: (puzzleId: string) => boolean;
+
+  // Update note on bookmark
+  updateBookmarkNote: (puzzleId: string, note: string) => void;
+
+  // Increment attempt count
+  recordAttempt: (puzzleId: string) => void;
+
+  // Get bookmarks by theme
+  getBookmarksByTheme: (theme: string) => BookmarkedPuzzle[];
+
+  // Get unsolved bookmarks
+  getUnsolvedBookmarks: () => BookmarkedPuzzle[];
+
+  // Get all bookmarks sorted by date
+  getAllBookmarks: () => BookmarkedPuzzle[];
+
+  // Clear all bookmarks
+  clearBookmarks: () => void;
+}
+
+export const usePuzzleBookmarksStore = create<PuzzleBookmarksState>()(
+  persist(
+    (set, get) => ({
+      bookmarks: [],
+
+      addBookmark: (puzzle) => {
+        const existing = get().bookmarks.find((b) => b.puzzleId === puzzle.puzzleId);
+        if (existing) return; // Already bookmarked
+
+        set((state) => ({
+          bookmarks: [
+            { ...puzzle, bookmarkedAt: Date.now(), attempts: 0 },
+            ...state.bookmarks,
+          ],
+        }));
+      },
+
+      removeBookmark: (puzzleId) => {
+        set((state) => ({
+          bookmarks: state.bookmarks.filter((b) => b.puzzleId !== puzzleId),
+        }));
+      },
+
+      isBookmarked: (puzzleId) => {
+        return get().bookmarks.some((b) => b.puzzleId === puzzleId);
+      },
+
+      updateBookmarkNote: (puzzleId, note) => {
+        set((state) => ({
+          bookmarks: state.bookmarks.map((b) =>
+            b.puzzleId === puzzleId ? { ...b, note } : b
+          ),
+        }));
+      },
+
+      recordAttempt: (puzzleId) => {
+        set((state) => ({
+          bookmarks: state.bookmarks.map((b) =>
+            b.puzzleId === puzzleId ? { ...b, attempts: b.attempts + 1 } : b
+          ),
+        }));
+      },
+
+      getBookmarksByTheme: (theme) => {
+        return get().bookmarks.filter((b) => b.themes.includes(theme));
+      },
+
+      getUnsolvedBookmarks: () => {
+        return get().bookmarks.filter((b) => !b.solved);
+      },
+
+      getAllBookmarks: () => {
+        return [...get().bookmarks].sort((a, b) => b.bookmarkedAt - a.bookmarkedAt);
+      },
+
+      clearBookmarks: () => {
+        set({ bookmarks: [] });
+      },
+    }),
+    { name: 'zen-chess-puzzle-bookmarks' }
+  )
+);
+

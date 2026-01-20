@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChatInterface, VoiceChat, AIStatus } from '@/components/AICoach';
 import { AVAILABLE_AGENTS, type AgentId } from '@/hooks/useAICoach';
+import { logger } from '@/lib/logger';
 import { 
   analyzePosition, 
   generateWeeklyStudyPlan, 
@@ -60,7 +61,7 @@ export function AICoachDashboard() {
       });
       setStudyPlan(plan);
     } catch (error) {
-      console.error('Failed to generate study plan:', error);
+      logger.error('Failed to generate study plan:', error);
     }
     setIsGenerating(false);
   };
@@ -72,7 +73,7 @@ export function AICoachDashboard() {
       const analysis = await analyzePosition(positionFEN, 'white');
       setPositionAnalysis(analysis);
     } catch (error) {
-      console.error('Failed to analyze position:', error);
+      logger.error('Failed to analyze position:', error);
     }
     setIsAnalyzing(false);
   };

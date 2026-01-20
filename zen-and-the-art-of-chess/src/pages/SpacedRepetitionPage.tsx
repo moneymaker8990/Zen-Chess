@@ -16,6 +16,7 @@ import {
   type PuzzleWithMeta 
 } from '@/lib/puzzleService';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 import {
   SRSCard,
   SRSStats,
@@ -196,7 +197,7 @@ export function SpacedRepetitionPage() {
         const available = puzzles.filter(p => !cardIds.has(p.id));
         setAvailablePuzzles(available);
       } catch (err) {
-        console.error('Failed to fetch puzzles:', err);
+        logger.error('Failed to fetch puzzles:', err);
         setAvailablePuzzles([]);
       } finally {
         setIsLoadingPuzzles(false);
