@@ -70,6 +70,10 @@ const AuthPage = lazy(() => import('@/pages/AuthPage'));
 const AuthCallbackPage = lazy(() => import('@/pages/AuthCallbackPage'));
 const AICoachDashboard = lazy(() => import('@/pages/AICoachDashboard'));
 const BeginnerPage = lazy(() => import('@/pages/BeginnerPage'));
+const EndgamesPage = lazy(() => import('@/pages/EndgamesPage'));
+const PerformanceDashboardPage = lazy(() => import('@/pages/PerformanceDashboardPage'));
+const SkillTreePage = lazy(() => import('@/pages/SkillTreePage'));
+const AchievementsPage = lazy(() => import('@/pages/AchievementsPage'));
 const PlayFriendPage = lazy(() => import('@/pages/PlayFriendPage'));
 const LiveGamePage = lazy(() => import('@/pages/LiveGamePage'));
 const HowToPage = lazy(() => import('@/pages/HowToPage'));
@@ -118,11 +122,15 @@ function AnimatedRoutes() {
         <Route path="/play" element={<LazyPage><PlayPage /></LazyPage>} />
         <Route path="/train" element={<LazyPage><PuzzlesPage /></LazyPage>} />
         <Route path="/patterns" element={<LazyPage><PatternsManualPage /></LazyPage>} />
+        <Route path="/endgames" element={<LazyPage><EndgamesPage /></LazyPage>} />
         <Route path="/openings" element={<LazyPage><OpeningsPage /></LazyPage>} />
         <Route path="/games" element={<LazyPage><GamesPage /></LazyPage>} />
         <Route path="/notes" element={<LazyPage><NotesPage /></LazyPage>} />
         <Route path="/study" element={<LazyPage><StudyPage /></LazyPage>} />
         <Route path="/hub" element={<LazyPage><CommandCenterPage /></LazyPage>} />
+        <Route path="/dashboard" element={<LazyPage><PerformanceDashboardPage /></LazyPage>} />
+        <Route path="/skills" element={<LazyPage><SkillTreePage /></LazyPage>} />
+        <Route path="/achievements" element={<LazyPage><AchievementsPage /></LazyPage>} />
         <Route path="/mistakes" element={<LazyPage><MistakesPage /></LazyPage>} />
         <Route path="/sparring" element={<LazyPage><SparringPage /></LazyPage>} />
         <Route path="/settings" element={<LazyPage><SettingsPage /></LazyPage>} />

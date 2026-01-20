@@ -156,6 +156,7 @@ const navSections = [
       { path: '/spaced-repetition', label: 'Spaced Review', icon: Icons.target },
       { path: '/openings', label: 'Openings', icon: Icons.book },
       { path: '/patterns', label: 'Patterns', icon: Icons.building },
+      { path: '/endgames', label: 'Endgames', icon: Icons.chess },
     ],
   },
   {
@@ -180,6 +181,14 @@ const navSections = [
     items: [
       { path: '/coach', label: 'AI Coach', icon: Icons.coach },
       { path: '/study-plan', label: 'Study Plan', icon: Icons.studyPlan },
+    ],
+  },
+  {
+    title: 'Progress',
+    items: [
+      { path: '/dashboard', label: 'Dashboard', icon: Icons.target },
+      { path: '/skills', label: 'Skill Tree', icon: Icons.map },
+      { path: '/achievements', label: 'Achievements', icon: Icons.tournament },
     ],
   },
   {

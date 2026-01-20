@@ -496,6 +496,10 @@ export function CommandCenterPage() {
           {/* Quick Links */}
           <div className="glass-card p-4 space-y-2">
             <h3 className="text-sm text-zen-400 mb-3">Jump To</h3>
+            <QuickLink icon="📊" label="Dashboard" onClick={() => navigate('/dashboard')} />
+            <QuickLink icon="🏆" label="Achievements" onClick={() => navigate('/achievements')} />
+            <QuickLink icon="🌳" label="Skill Tree" onClick={() => navigate('/skills')} />
+            <QuickLink icon="♚" label="Endgames" onClick={() => navigate('/endgames')} />
             <QuickLink icon="📝" label="All Notes" count={notes.length} onClick={() => navigate('/notes')} />
             <QuickLink icon="❌" label="Mistake Library" count={mistakes.length} onClick={() => navigate('/mistakes')} />
             <QuickLink icon="⚔️" label="Sparring Positions" count={sparringPositions.length} onClick={() => navigate('/spar')} />
