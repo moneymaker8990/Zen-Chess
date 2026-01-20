@@ -17,9 +17,16 @@ export function useBoardSize(
   // Initial size based on viewport to prevent flicker - will be updated by measurement
   const [size, setSize] = useState(() => {
     if (typeof window === 'undefined') return 300;
-    // On mobile, use viewport width minus padding as initial guess
     const vw = window.innerWidth;
-    if (vw < 640) return Math.min(vw - 48, maxWidth);
+    const vh = window.innerHeight;
+    // On mobile, constrain by both width and height
+    // Use at most 55% of viewport height to leave room for UI elements
+    // This accounts for: header, page headers, controls, info panels, and padding
+    if (vw < 640) {
+      const widthBased = vw - 48;
+      const heightBased = Math.floor(vh * 0.55);
+      return Math.min(widthBased, heightBased, maxWidth);
+    }
     return Math.min(maxWidth, 400);
   });
   const rafRef = useRef<number | null>(null);
@@ -31,14 +38,29 @@ export function useBoardSize(
       // Use clientWidth to get the actual available space
       const containerWidth = containerRef.current.clientWidth;
 
+      // Get viewport dimensions
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
       // Calculate the maximum safe width on mobile
       // Account for Layout p-4 padding (32px total) plus some buffer
-      const vw = window.innerWidth;
-      const mobileSafeMax = vw < 640 ? vw - 32 : vw;
+      const mobileSafeMaxWidth = vw < 640 ? vw - 32 : vw;
 
-      // Use the smaller of: container width, mobile safe max, or maxWidth
+      // Calculate height-based constraint on mobile
+      // Use at most 55% of viewport height to leave room for UI
+      let mobileSafeMaxHeight = vh;
+      if (vw < 640) {
+        // Primary constraint: percentage of viewport
+        const percentBased = Math.floor(vh * 0.55);
+        // Secondary constraint: based on container position (if board is lower on page, make it smaller)
+        const rect = containerRef.current.getBoundingClientRect();
+        const positionBased = vh - rect.top - 180; // Leave 180px for content below board
+        mobileSafeMaxHeight = Math.min(percentBased, positionBased);
+      }
+
+      // Use the smaller of: container width, mobile safe max width, mobile safe max height, or maxWidth
       // Subtract 4px for sub-pixel rendering issues
-      const constrainedWidth = Math.min(containerWidth, mobileSafeMax, maxWidth);
+      const constrainedWidth = Math.min(containerWidth, mobileSafeMaxWidth, mobileSafeMaxHeight, maxWidth);
       const newSize = Math.max(Math.floor(constrainedWidth - 4), 200);
 
       // Only update if changed to prevent unnecessary re-renders
@@ -92,8 +114,11 @@ export function useBoardSizeViewport(maxWidth: number = 480): number {
   const [size, setSize] = useState(() => {
     if (typeof window === 'undefined') return Math.min(maxWidth, 320);
     const vw = window.innerWidth;
-    if (vw < 400) return Math.min(maxWidth, vw - 48);
-    if (vw < 640) return Math.min(maxWidth, vw - 64);
+    const vh = window.innerHeight;
+    // On mobile, use at most 55% of viewport height
+    const heightBased = Math.floor(vh * 0.55);
+    if (vw < 400) return Math.min(maxWidth, vw - 48, heightBased);
+    if (vw < 640) return Math.min(maxWidth, vw - 64, heightBased);
     if (vw < 1024) return Math.min(maxWidth, vw - 80, 480);
     return maxWidth;
   });
@@ -101,9 +126,12 @@ export function useBoardSizeViewport(maxWidth: number = 480): number {
   useEffect(() => {
     const calculate = () => {
       const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const heightBased = Math.floor(vh * 0.55);
       let newSize: number;
-      if (vw < 400) newSize = Math.min(maxWidth, vw - 48);
-      else if (vw < 640) newSize = Math.min(maxWidth, vw - 64);
+      // On mobile, use at most 55% of viewport height
+      if (vw < 400) newSize = Math.min(maxWidth, vw - 48, heightBased);
+      else if (vw < 640) newSize = Math.min(maxWidth, vw - 64, heightBased);
       else if (vw < 1024) newSize = Math.min(maxWidth, vw - 80, 480);
       else newSize = maxWidth;
       setSize(newSize);

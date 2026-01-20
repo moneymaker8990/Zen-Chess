@@ -651,8 +651,6 @@ a.small,
 @media (max-width: 640px) {
   .board-container {
     /* Account for Layout p-4 padding (1rem each side = 2rem total) + safe areas */
-    max-width: calc(100vw - 2rem);
-    /* Respect safe area insets on notched devices - add extra padding for them */
     max-width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
   }
 }
@@ -683,6 +681,16 @@ a.small,
 .board-wrapper > div {
   max-width: 100% !important;
   max-height: 100% !important;
+}
+
+/* Mobile: Constrain board height to ensure page content fits in viewport */
+@media (max-width: 640px) {
+  .board-wrapper {
+    /* Use at most 55% of viewport height to leave room for UI elements */
+    max-height: 55dvh;
+    /* Width follows height due to aspect-ratio: 1/1 */
+    max-width: 55dvh;
+  }
 }
 
 /* ============================================
