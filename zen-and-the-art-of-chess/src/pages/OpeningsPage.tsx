@@ -1070,7 +1070,6 @@ export function OpeningsPage() {
                   customLightSquareStyle={boardStyles.customLightSquareStyle}
                   animationDuration={boardStyles.animationDuration}
                   arePiecesDraggable={isUserTurn && feedback !== 'complete'}
-                  boardWidth={boardSize}
                 />
               
                 {/* Correct Move Feedback */}

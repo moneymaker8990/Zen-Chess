@@ -728,7 +728,6 @@ export function MoveTrainer({
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
                 animationDuration={boardStyles.animationDuration}
                 arePiecesDraggable={phase === 'playing' && isUserMove}
-                boardWidth={boardSize}
               />
             </div>
             

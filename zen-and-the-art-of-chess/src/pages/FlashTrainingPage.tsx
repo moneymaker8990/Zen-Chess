@@ -1133,7 +1133,6 @@ export function FlashTrainingPage() {
                       customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                       customLightSquareStyle={boardStyles.customLightSquareStyle}
                       arePiecesDraggable={false}
-                      boardWidth={boardSize}
                     />
                   
                     {/* Countdown warning overlay */}
@@ -1383,7 +1382,6 @@ export function FlashTrainingPage() {
                   customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                   customLightSquareStyle={boardStyles.customLightSquareStyle}
                   arePiecesDraggable={false}
-                boardWidth={boardSize}
               />
               </div>
             </div>
