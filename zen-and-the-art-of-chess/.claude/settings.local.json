@@ -7,7 +7,11 @@
       "Bash(do echo -n \"$cat: \")",
       "Bash(done)",
       "Bash(for cat in SPACE_ADVANTAGE WEAK_PAWNS PROPHYLAXIS PAWN_STRUCTURE OPEN_FILES MINORITY_ATTACK GOOD_BAD_BISHOP BISHOP_PAIR OUTPOSTS PIECE_COORDINATION PAWN_BREAKS KNIGHT_PLACEMENT KING_ACTIVITY EXCHANGE_STRATEGY CENTRALIZATION BLOCKADE)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nComplete pattern coverage: 245 patterns across 16 categories\n\nPattern Coverage \\(126 → 245 patterns\\):\n- WEAK_PAWNS: 18 patterns\n- SPACE_ADVANTAGE: 17 patterns\n- All other categories: 15 patterns each\n  \\(PROPHYLAXIS, PAWN_STRUCTURE, OPEN_FILES, MINORITY_ATTACK,\n   GOOD_BAD_BISHOP, BISHOP_PAIR, OUTPOSTS, PIECE_COORDINATION,\n   PAWN_BREAKS, KNIGHT_PLACEMENT, KING_ACTIVITY, EXCHANGE_STRATEGY,\n   CENTRALIZATION, BLOCKADE\\)\n\nRefactoring & Improvements:\n- Unified board component \\(ZenChessboard\\) across all pages\n- Added accessibility: aria-labels, role=\"switch\", keyboard nav\n- Created Lichess Opening Explorer API utility\n- Added puzzle bookmarks store\n- Added Supabase sync schema documentation\n- Store architecture documentation \\(trainingStore vs coachStore\\)\n- Removed deprecated CustomDragChessboard, ResponsiveBoard\n- Added UI components \\(Badge, Card, Input, Modal, Tooltip\\)\n- Added LiveRegion for screen reader announcements\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npm install)",
+      "Bash(node scripts/bump-version.mjs:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

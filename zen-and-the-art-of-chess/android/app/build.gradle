@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+// Load signing config from properties file (if exists)
+def signingPropsFile = file('signing.properties')
+def signingProps = new Properties()
+if (signingPropsFile.exists()) {
+    signingProps.load(new FileInputStream(signingPropsFile))
+}
+
 android {
     namespace "com.zenchess.app"
     compileSdk rootProject.ext.compileSdkVersion
@@ -16,10 +23,30 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+
+    // Signing configurations for release builds
+    signingConfigs {
+        release {
+            // Check for CI/CD environment variables first, then fall back to properties file
+            storeFile file(System.getenv('ANDROID_KEYSTORE_PATH') ?: signingProps.getProperty('STORE_FILE', 'release-key.keystore'))
+            storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD') ?: signingProps.getProperty('STORE_PASSWORD', '')
+            keyAlias System.getenv('ANDROID_KEY_ALIAS') ?: signingProps.getProperty('KEY_ALIAS', 'zen-chess')
+            keyPassword System.getenv('ANDROID_KEY_PASSWORD') ?: signingProps.getProperty('KEY_PASSWORD', '')
+        }
+    }
+
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Use release signing config if available
+            if (signingPropsFile.exists() || System.getenv('ANDROID_KEYSTORE_PASSWORD')) {
+                signingConfig signingConfigs.release
+            }
+        }
+        debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }

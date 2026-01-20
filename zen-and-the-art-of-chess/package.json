@@ -25,10 +25,15 @@
     "legends:download": "node scripts/downloadLegendGames.mjs",
     "legends:parse": "tsx scripts/parseLegendPGNs.ts",
     "legends:setup": "node scripts/setupCompleteDatabases.ps1 || bash scripts/setupCompleteDatabases.sh",
-    "download-puzzles": "npx tsx scripts/downloadLichessPuzzles.ts"
+    "download-puzzles": "npx tsx scripts/downloadLichessPuzzles.ts",
+    "version:patch": "node scripts/bump-version.mjs patch",
+    "version:minor": "node scripts/bump-version.mjs minor",
+    "version:major": "node scripts/bump-version.mjs major"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.0",
+    "@sentry/react": "^8.45.0",
+    "posthog-js": "^1.194.0",
     "@capacitor/android": "^7.4.4",
     "@capacitor/cli": "^7.4.4",
     "@capacitor/core": "^7.4.4",

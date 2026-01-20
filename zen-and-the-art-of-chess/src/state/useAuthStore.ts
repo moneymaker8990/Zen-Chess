@@ -11,6 +11,8 @@ import type { Profile } from '@/lib/database.types';
 import type { SubscriptionTier, PremiumFeature } from '@/lib/premium';
 import { TIER_LIMITS, getRemainingUsage } from '@/lib/premium';
 import { logger } from '@/lib/logger';
+import { setUser as setSentryUser } from '@/lib/sentry';
+import { identifyUser, resetUser, trackEvent, AnalyticsEvents, setUserProperties } from '@/lib/analytics';
 
 // ============================================
 // TYPES
@@ -123,6 +125,13 @@ export const useAuthStore = create<AuthState>()(
               .eq('id', session.user.id)
               .single();
             
+            // Set user context for error tracking and analytics
+            setSentryUser({ id: session.user.id, email: session.user.email || undefined });
+            identifyUser(session.user.id, {
+              email: session.user.email,
+              subscription_tier: profile?.subscription_tier || 'free',
+            });
+
             set({
               user: session.user,
               session,
@@ -134,6 +143,7 @@ export const useAuthStore = create<AuthState>()(
               isInitialized: true,
             });
           } else {
+            setSentryUser(null);
             set({ isLoading: false, isInitialized: true });
           }
           
@@ -145,7 +155,15 @@ export const useAuthStore = create<AuthState>()(
                 .select('*')
                 .eq('id', session.user.id)
                 .single();
-              
+
+              // Update user context for error tracking and analytics
+              setSentryUser({ id: session.user.id, email: session.user.email || undefined });
+              identifyUser(session.user.id, {
+                email: session.user.email,
+                subscription_tier: profile?.subscription_tier || 'free',
+              });
+              trackEvent(AnalyticsEvents.LOGIN_COMPLETED);
+
               set({
                 user: session.user,
                 session,
@@ -155,6 +173,11 @@ export const useAuthStore = create<AuthState>()(
                 subscriptionEndDate: profile?.subscription_end_date || null,
               });
             } else if (event === 'SIGNED_OUT') {
+              // Clear user context
+              setSentryUser(null);
+              resetUser();
+              trackEvent(AnalyticsEvents.LOGOUT);
+
               set({
                 user: null,
                 session: null,
