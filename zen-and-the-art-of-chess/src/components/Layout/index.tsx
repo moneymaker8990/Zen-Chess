@@ -203,8 +203,13 @@ export function Layout({ children }: LayoutProps) {
   const { receivedInvites } = useMultiplayerStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const setCurrentPage = useAgentStore((s) => s.setCurrentPage);
-  
+
   const inviteCount = receivedInvites.length;
+
+  // Scroll to top on page navigation
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // Track page changes for agents
   useEffect(() => {

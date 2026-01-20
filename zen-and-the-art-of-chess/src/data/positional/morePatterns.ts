@@ -10210,6 +10210,2012 @@ const additionalPatterns: EnhancedPattern[] = [
     difficulty: 2,
     estimatedMinutes: 5,
     source: "Prophylactic play"
+  },
+
+  // ============================================
+  // ADDITIONAL PATTERNS TO COMPLETE 15 PER CATEGORY
+  // ============================================
+
+  // OUTPOSTS - need 3 more (12 → 15)
+  {
+    id: 'outposts-knight-outpost-d5',
+    category: 'OUTPOSTS',
+    title: "Knight Outpost on d5",
+    subtitle: "The classic central outpost",
+    fen: 'r1bqkb1r/pp3ppp/2n1pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "The d5 square is one of the most powerful outpost squares for a knight. When Black's c-pawn is gone or blocked, a knight on d5 cannot be challenged by pawns.",
+    keyIdeas: [
+      "d5 controls key central squares",
+      "Knight on d5 attacks c7, e7, b6, f6",
+      "Cannot be driven away by pawns",
+      "Dominates the center"
+    ],
+    mainLine: [
+      {
+        move: "cxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "First we open the c-file and clear d5.",
+        conceptTag: ""
+      },
+      {
+        move: "exd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures.",
+        conceptTag: ""
+      },
+      {
+        move: "Bg5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Pinning the knight and preparing to control d5.",
+        conceptTag: ""
+      },
+      {
+        move: "Be7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black breaks the pin.",
+        conceptTag: ""
+      },
+      {
+        move: "Nd5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The knight lands on the outpost! It dominates from d5.",
+        highlights: ["d5"],
+        conceptTag: "Outpost"
+      }
+    ],
+    summary: "The d5 outpost is a dream square for knights. Once established, the knight controls the center and cannot be challenged by pawns.",
+    keyTakeaways: [
+      "d5 is a premier knight outpost",
+      "Knights dominate from central outposts",
+      "Outpost knights can't be driven by pawns",
+      "Control the center from the outpost"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Classical positional play"
+  },
+
+  {
+    id: 'outposts-bishop-outpost',
+    category: 'OUTPOSTS',
+    title: "Bishop on an Outpost",
+    subtitle: "Bishops need outposts too",
+    fen: 'r1bq1rk1/pp2bppp/2n1pn2/3p4/3P4/2N1BN2/PP2PPPP/R2QKB1R w KQ - 0 7',
+    toMove: 'white',
+    introduction: "While knights are the most common outpost pieces, bishops can also benefit from protected outpost squares, especially when they control long diagonals.",
+    keyIdeas: [
+      "Bishops can occupy outposts too",
+      "Diagonal control from outpost",
+      "Protected by pawns ideally",
+      "Combines outpost and diagonal power"
+    ],
+    mainLine: [
+      {
+        move: "Bd3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing towards the kingside.",
+        conceptTag: ""
+      },
+      {
+        move: "Bd7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling to safety.",
+        conceptTag: ""
+      },
+      {
+        move: "Rc8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black activates the rook.",
+        conceptTag: ""
+      },
+      {
+        move: "Bf4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The bishop finds an excellent square. It controls the h2-b8 diagonal and cannot be challenged easily.",
+        highlights: ["f4"],
+        conceptTag: "Outpost"
+      }
+    ],
+    summary: "Bishops can use outpost squares when they control important diagonals. A bishop on an outpost combines stability with long-range power.",
+    keyTakeaways: [
+      "Bishops benefit from outposts too",
+      "Choose outposts on key diagonals",
+      "Protected squares add stability",
+      "Long-range power from safe squares"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Positional understanding"
+  },
+
+  {
+    id: 'outposts-creating-outposts',
+    category: 'OUTPOSTS',
+    title: "Creating Outpost Squares",
+    subtitle: "Building your own strongpoints",
+    fen: 'r1bqkb1r/pp3ppp/2n1pn2/2pp4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "Outposts don't just appear - you create them. By exchanging pawns or advancing them strategically, you can manufacture outpost squares for your pieces.",
+    keyIdeas: [
+      "Exchange pawns to create holes",
+      "Advance pawns to fix weaknesses",
+      "Plan piece occupation of outposts",
+      "Outposts are created, not given"
+    ],
+    mainLine: [
+      {
+        move: "cxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Exchanging to create the d5 outpost.",
+        conceptTag: ""
+      },
+      {
+        move: "cxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures with the c-pawn.",
+        conceptTag: ""
+      },
+      {
+        move: "Bb5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Now we pin and prepare to exploit d5. The c6 knight can't guard d5 forever.",
+        highlights: ["b5", "d5"],
+        conceptTag: "Preparation"
+      },
+      {
+        move: "Bd7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black tries to break the pin.",
+        conceptTag: ""
+      },
+      {
+        move: "Bxc6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Exchanging to weaken d5.",
+        conceptTag: ""
+      },
+      {
+        move: "Bxc6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures.",
+        conceptTag: ""
+      },
+      {
+        move: "Ne5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The knight heads for d3 then the d5 outpost we created!",
+        highlights: ["e5"],
+        conceptTag: "Outpost Creation"
+      }
+    ],
+    summary: "Create outposts through strategic pawn exchanges. Remove the pawns that guard key squares, then occupy those squares with your pieces.",
+    keyTakeaways: [
+      "Exchange pawns to create outposts",
+      "Target squares no longer guarded",
+      "Plan the piece that will occupy",
+      "Creating outposts is a skill"
+    ],
+    difficulty: 3,
+    estimatedMinutes: 6,
+    source: "Strategic planning"
+  },
+
+  // BISHOP_PAIR - need 2 more (13 → 15)
+  {
+    id: 'bishop-pair-open-game',
+    category: 'BISHOP_PAIR',
+    title: "Bishop Pair in Open Games",
+    subtitle: "Maximizing diagonal control",
+    fen: 'r1bq1rk1/ppp2ppp/2n2n2/3pp3/2B1P3/2N2N2/PPPP1PPP/R1BQ1RK1 w - - 0 6',
+    toMove: 'white',
+    introduction: "The bishop pair is most powerful in open positions where diagonals are clear. Two bishops working together can dominate the entire board.",
+    keyIdeas: [
+      "Open positions favor bishops",
+      "Control both color diagonals",
+      "Bishops restrict knight movement",
+      "Long-range pressure is decisive"
+    ],
+    mainLine: [
+      {
+        move: "exd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Opening the position for our bishops.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "We exchange knights to enhance our bishop pair.",
+        conceptTag: ""
+      },
+      {
+        move: "Qxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures with the queen.",
+        conceptTag: ""
+      },
+      {
+        move: "Bb3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Both bishops now rake the board! The queen is pushed back.",
+        highlights: ["b3"],
+        conceptTag: "Bishop Pair"
+      },
+      {
+        move: "Qd8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "The queen retreats.",
+        conceptTag: ""
+      },
+      {
+        move: "Bf4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The bishop pair controls everything. Light and dark squares are dominated.",
+        highlights: ["f4", "b3"],
+        conceptTag: "Domination"
+      }
+    ],
+    summary: "In open positions, the bishop pair is a significant advantage. Exchange knights and open the position to maximize the bishops' long-range power.",
+    keyTakeaways: [
+      "Open positions favor the bishop pair",
+      "Trade knights to enhance bishops",
+      "Control both color complexes",
+      "Bishop pair can dominate games"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Classical theory"
+  },
+
+  {
+    id: 'bishop-pair-endgame-power',
+    category: 'BISHOP_PAIR',
+    title: "Bishop Pair in Endgames",
+    subtitle: "Converting the advantage",
+    fen: '4r1k1/ppp2ppp/8/3p4/2PP4/8/PP3PPP/2B1R1K1 w - - 0 20',
+    toMove: 'white',
+    introduction: "In endgames, the bishop pair can be decisive. The two bishops can cut off the enemy king, control key squares, and support passed pawns from afar.",
+    keyIdeas: [
+      "Bishops dominate endgames",
+      "Cut off the enemy king",
+      "Support passed pawn creation",
+      "Control both colors to win"
+    ],
+    mainLine: [
+      {
+        move: "Bb2",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The bishop takes the long diagonal, eyeing g7 and the queenside.",
+        highlights: ["b2"],
+        conceptTag: ""
+      },
+      {
+        move: "Kf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black tries to activate.",
+        conceptTag: ""
+      },
+      {
+        move: "cxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Creating a passed pawn!",
+        conceptTag: ""
+      },
+      {
+        move: "Rxe1+",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black exchanges rooks.",
+        conceptTag: ""
+      },
+      {
+        move: "Bxe1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "We recapture with the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black's king comes to blockade.",
+        conceptTag: ""
+      },
+      {
+        move: "Bc3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Both bishops coordinate! One supports the passed pawn, the other cuts off the king.",
+        highlights: ["c3", "b2"],
+        conceptTag: "Coordination"
+      }
+    ],
+    summary: "The bishop pair shines in endgames. Use them to support passed pawns, cut off the enemy king, and control both color complexes for victory.",
+    keyTakeaways: [
+      "Bishop pair dominates endgames",
+      "Cut off the enemy king",
+      "Support passed pawn advances",
+      "Coordinate both bishops"
+    ],
+    difficulty: 3,
+    estimatedMinutes: 6,
+    source: "Endgame technique"
+  },
+
+  // BLOCKADE - need 2 more (13 → 15)
+  {
+    id: 'blockade-rook-blockade',
+    category: 'BLOCKADE',
+    title: "Rook as Blockader",
+    subtitle: "When rooks must blockade",
+    fen: '8/8/4k3/8/3P4/8/8/4R1K1 w - - 0 40',
+    toMove: 'white',
+    introduction: "Rooks are generally poor blockaders because they're most effective on open files. However, sometimes a rook blockade is necessary - understand when this sacrifice of activity is worth it.",
+    keyIdeas: [
+      "Rooks dislike blockading",
+      "Rooks are passive as blockaders",
+      "Sometimes necessary evil",
+      "Look for better alternatives"
+    ],
+    mainLine: [
+      {
+        move: "d5+",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Pushing the pawn! Black must blockade.",
+        highlights: ["d5"],
+        conceptTag: "Passed Pawn"
+      },
+      {
+        move: "Kd6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "The king blockades - the best blockader!",
+        conceptTag: ""
+      },
+      {
+        move: "Re6+",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Driving the king away from the blockade.",
+        highlights: ["e6"],
+        conceptTag: "Driving"
+      },
+      {
+        move: "Kd7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "The king retreats.",
+        conceptTag: ""
+      },
+      {
+        move: "d6",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Now the pawn advances. Black needs to find a blockader.",
+        highlights: ["d6"],
+        conceptTag: "Advance"
+      }
+    ],
+    summary: "Rooks are poor blockaders because they lose activity. Always look for knights or kings to blockade instead. Use rooks behind passed pawns, not in front.",
+    keyTakeaways: [
+      "Rooks are poor blockaders",
+      "They become passive",
+      "Kings and knights blockade better",
+      "Rooks belong behind passed pawns"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Endgame principles"
+  },
+
+  {
+    id: 'blockade-knight-blockade',
+    category: 'BLOCKADE',
+    title: "Knight as Ideal Blockader",
+    subtitle: "The perfect blockading piece",
+    fen: '8/5pk1/8/3P4/8/5N2/5K2/8 w - - 0 40',
+    toMove: 'white',
+    introduction: "Knights are the ideal blockading piece. On a blockading square, the knight controls squares in all directions while preventing the pawn's advance. It loses no effectiveness.",
+    keyIdeas: [
+      "Knights are ideal blockaders",
+      "Don't lose effectiveness",
+      "Control squares in all directions",
+      "Can't be driven by pawns"
+    ],
+    mainLine: [
+      {
+        move: "Nd4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The knight centralizes, ready to blockade if needed.",
+        highlights: ["d4"],
+        conceptTag: ""
+      },
+      {
+        move: "Kf6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black's king approaches.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Our king supports the knight and pawn.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black tries to attack d5.",
+        conceptTag: ""
+      },
+      {
+        move: "Nc6+",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The knight defends d5 while checking! Perfectly flexible.",
+        highlights: ["c6"],
+        conceptTag: "Flexibility"
+      }
+    ],
+    summary: "Knights make ideal blockaders because they control squares in all directions from the blockading square. They don't lose effectiveness like rooks or bishops.",
+    keyTakeaways: [
+      "Knights are ideal blockaders",
+      "Control all directions from blockade",
+      "Lose no effectiveness",
+      "Can defend while blockading"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Nimzowitsch's theory"
+  },
+
+  // CENTRALIZATION - need 2 more (13 → 15)
+  {
+    id: 'centralization-all-pieces',
+    category: 'CENTRALIZATION',
+    title: "Centralizing All Pieces",
+    subtitle: "Army in the center",
+    fen: 'r2q1rk1/ppp2ppp/2nb1n2/3pp3/8/2NPBN2/PPP1BPPP/R2Q1RK1 w - - 0 9',
+    toMove: 'white',
+    introduction: "True central control comes from coordinating all pieces toward the center. When your entire army is centralized, you have maximum flexibility and power.",
+    keyIdeas: [
+      "Centralize all pieces, not just one",
+      "Central pieces support each other",
+      "Maximum flexibility from center",
+      "Coordinated army is powerful"
+    ],
+    mainLine: [
+      {
+        move: "Qd2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "The queen connects to the center.",
+        conceptTag: ""
+      },
+      {
+        move: "Qe7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black also centralizes.",
+        conceptTag: ""
+      },
+      {
+        move: "Rad1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Rook to the central file.",
+        highlights: ["d1"],
+        conceptTag: ""
+      },
+      {
+        move: "Rad8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black contests.",
+        conceptTag: ""
+      },
+      {
+        move: "Rfe1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Both rooks now eye the center. All pieces are centrally placed!",
+        highlights: ["e1", "d1"],
+        conceptTag: "Full Centralization"
+      }
+    ],
+    summary: "Centralize your entire army, not just one piece. When all pieces point toward the center, you have maximum flexibility to attack on either wing.",
+    keyTakeaways: [
+      "Centralize all pieces",
+      "Rooks on central files",
+      "Queen connected to center",
+      "Coordinated army wins"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Classical development"
+  },
+
+  {
+    id: 'centralization-king-center-endgame',
+    category: 'CENTRALIZATION',
+    title: "King Centralization in Endgames",
+    subtitle: "The king becomes active",
+    fen: '8/8/4k3/8/3P4/4K3/8/8 w - - 0 40',
+    toMove: 'white',
+    introduction: "In endgames, the king transforms from a piece needing protection to an active fighter. Centralizing the king is often the key to winning endgames.",
+    keyIdeas: [
+      "King is strong in endgames",
+      "Centralize king early",
+      "King supports pawn advances",
+      "Active king often decisive"
+    ],
+    mainLine: [
+      {
+        move: "Ke4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Centralizing the king! It supports the pawn and controls key squares.",
+        highlights: ["e4"],
+        conceptTag: "King Activity"
+      },
+      {
+        move: "Kd6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black's king also centralizes.",
+        conceptTag: ""
+      },
+      {
+        move: "Kf5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Outflanking! The king goes around.",
+        highlights: ["f5"],
+        conceptTag: "Outflanking"
+      },
+      {
+        move: "Kd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black blocks.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Opposition!",
+        conceptTag: ""
+      }
+    ],
+    summary: "In endgames, centralize your king immediately. The king becomes a powerful piece that can support pawns, attack enemy pawns, and outflank the opponent.",
+    keyTakeaways: [
+      "Centralize king in endgames",
+      "King becomes powerful piece",
+      "Support pawn advances",
+      "Active king wins games"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Endgame fundamentals"
+  },
+
+  // EXCHANGE_STRATEGY - need 2 more (13 → 15)
+  {
+    id: 'exchange-improve-position',
+    category: 'EXCHANGE_STRATEGY',
+    title: "Exchange to Improve Position",
+    subtitle: "Strategic piece trading",
+    fen: 'r1bq1rk1/ppp2ppp/2n2n2/3pp3/2B1P3/2N2N2/PPPP1PPP/R1BQ1RK1 w - - 0 6',
+    toMove: 'white',
+    introduction: "Sometimes an exchange improves your position even if it doesn't gain material. Trading a less active piece for an active one, or eliminating a defender, can be powerful.",
+    keyIdeas: [
+      "Trade bad pieces for good ones",
+      "Eliminate key defenders",
+      "Improve pawn structure via trades",
+      "Quality over quantity of pieces"
+    ],
+    mainLine: [
+      {
+        move: "exd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Opening the position.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures actively.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Exchanging knights. Why? Our knight was passive, theirs was central. Now we have the bishop pair!",
+        highlights: ["d5"],
+        conceptTag: "Good Trade"
+      },
+      {
+        move: "Qxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures.",
+        conceptTag: ""
+      },
+      {
+        move: "Be3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Development continues. We traded a passive knight and kept our bishop pair.",
+        highlights: ["e3"],
+        conceptTag: "Bishop Pair"
+      }
+    ],
+    summary: "Exchange strategically to improve your position. Trade passive pieces for active ones, eliminate key defenders, or achieve the bishop pair advantage.",
+    keyTakeaways: [
+      "Trade passive pieces for active",
+      "Achieve the bishop pair",
+      "Eliminate key defenders",
+      "Position > material sometimes"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Strategic thinking"
+  },
+
+  {
+    id: 'exchange-simplify-to-win',
+    category: 'EXCHANGE_STRATEGY',
+    title: "Exchange When Ahead",
+    subtitle: "Simplify to convert",
+    fen: 'r4rk1/ppp2ppp/2n2n2/3p4/3P4/2N2N2/PPP2PPP/R4RK1 w - - 0 12',
+    toMove: 'white',
+    introduction: "When you have an advantage - material, pawn structure, or positional - exchanges often help convert it. Fewer pieces mean fewer complications and easier technique.",
+    keyIdeas: [
+      "Exchange when materially ahead",
+      "Simplify positional advantages",
+      "Fewer pieces = clearer win",
+      "Avoid complications when winning"
+    ],
+    mainLine: [
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Initiating exchanges when we have a better structure.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures.",
+        conceptTag: ""
+      },
+      {
+        move: "Rxf8+",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "More exchanges! Simplifying favors the side with the better position.",
+        highlights: ["f8"],
+        conceptTag: "Simplify"
+      },
+      {
+        move: "Rxf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black must recapture.",
+        conceptTag: ""
+      },
+      {
+        move: "Rxf8+",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Another exchange.",
+        conceptTag: ""
+      },
+      {
+        move: "Kxf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black takes.",
+        conceptTag: ""
+      },
+      {
+        move: "Ne5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Now with fewer pieces, our knight dominates. The advantage is easier to convert.",
+        highlights: ["e5"],
+        conceptTag: "Conversion"
+      }
+    ],
+    summary: "When ahead, exchange pieces to simplify. Fewer pieces means fewer complications and a clearer path to victory. Don't give counterplay.",
+    keyTakeaways: [
+      "Exchange when winning",
+      "Fewer pieces = easier win",
+      "Avoid complications",
+      "Technique beats creativity"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Winning technique"
+  },
+
+  // GOOD_BAD_BISHOP - need 2 more (13 → 15)
+  {
+    id: 'good-bad-bishop-outside-chain',
+    category: 'GOOD_BAD_BISHOP',
+    title: "Bishop Outside Pawn Chain",
+    subtitle: "Activating the bad bishop",
+    fen: 'r1bqkb1r/pp3ppp/2n1pn2/2ppP3/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "A bad bishop (one blocked by its own pawns) can be activated by placing it outside the pawn chain. This maneuver transforms weakness into strength.",
+    keyIdeas: [
+      "Bad bishops can be activated",
+      "Place bishop outside chain",
+      "a3-f8 or a6-f1 diagonals",
+      "Transformation through maneuver"
+    ],
+    mainLine: [
+      {
+        move: "Be2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "First develop normally.",
+        conceptTag: ""
+      },
+      {
+        move: "cxd4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black exchanges.",
+        conceptTag: ""
+      },
+      {
+        move: "Nxd4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Recapturing.",
+        conceptTag: ""
+      },
+      {
+        move: "Bc5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black's bishop is outside its pawn chain and active!",
+        conceptTag: ""
+      },
+      {
+        move: "Be3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Our bishop also goes outside the pawn chain on e3. Now it's not blocked by e5.",
+        highlights: ["e3"],
+        conceptTag: "Outside Chain"
+      }
+    ],
+    summary: "A bad bishop can be rehabilitated by placing it outside the pawn chain. This maneuver activates the bishop and transforms a weakness into a strength.",
+    keyTakeaways: [
+      "Bad bishops can improve",
+      "Place outside pawn chain",
+      "Common maneuver in French",
+      "Transform weakness to strength"
+    ],
+    difficulty: 3,
+    estimatedMinutes: 6,
+    source: "French Defense strategy"
+  },
+
+  {
+    id: 'good-bad-bishop-exchange',
+    category: 'GOOD_BAD_BISHOP',
+    title: "Exchanging the Bad Bishop",
+    subtitle: "Trade weakness away",
+    fen: 'r1bqk2r/ppp1bppp/2n1pn2/3p4/3P4/3BPN2/PPP2PPP/RNBQK2R w KQkq - 0 6',
+    toMove: 'white',
+    introduction: "If you can't activate your bad bishop, exchange it! Trading a bad bishop for an opponent's good piece eliminates your weakness.",
+    keyIdeas: [
+      "Exchange bad bishops",
+      "Trade weakness for opponent's strength",
+      "b1-a2-xc4 maneuver is common",
+      "Don't suffer with bad pieces"
+    ],
+    mainLine: [
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling first.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "b3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Preparing to fianchetto and exchange the bad bishop!",
+        highlights: ["b3"],
+        conceptTag: "Preparation"
+      },
+      {
+        move: "c5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black challenges the center.",
+        conceptTag: ""
+      },
+      {
+        move: "Ba3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The bad bishop finds activity! It pressures c5 and eyes the b8-h2 diagonal.",
+        highlights: ["a3"],
+        conceptTag: "Activation"
+      }
+    ],
+    summary: "Don't suffer with a bad bishop - exchange it or find active squares. Trading weakness away is often the practical solution.",
+    keyTakeaways: [
+      "Exchange bad bishops when possible",
+      "Trade weakness for strength",
+      "Fianchetto helps activate",
+      "Don't keep passive pieces"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Practical play"
+  },
+
+  // KING_ACTIVITY - need 2 more (13 → 15)
+  {
+    id: 'king-activity-endgame-advanced',
+    category: 'KING_ACTIVITY',
+    title: "King Activity in Complex Endgames",
+    subtitle: "King as attacking piece",
+    fen: 'r5k1/ppp2ppp/8/3p4/8/8/PPP2PPP/R5K1 w - - 0 25',
+    toMove: 'white',
+    introduction: "In endgames with rooks and pawns, the king must be active. An active king supports its own pawns, attacks enemy pawns, and can even join in mating attacks.",
+    keyIdeas: [
+      "King is fighting piece in endgames",
+      "Centralize before opponent does",
+      "King supports rook operations",
+      "Active king often decisive"
+    ],
+    mainLine: [
+      {
+        move: "Kf2",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The king immediately heads toward the center!",
+        highlights: ["f2"],
+        conceptTag: "Activation"
+      },
+      {
+        move: "Kf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black's king also activates.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Centralizing further. The king eyes d4 and e4.",
+        highlights: ["e3"],
+        conceptTag: ""
+      },
+      {
+        move: "Ke7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black follows suit.",
+        conceptTag: ""
+      },
+      {
+        move: "Kd4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The king reaches a dominant central post! It supports everything.",
+        highlights: ["d4"],
+        conceptTag: "Centralization"
+      }
+    ],
+    summary: "In endgames, race to centralize your king. The active king supports pawns, attacks weaknesses, and often makes the difference between winning and drawing.",
+    keyTakeaways: [
+      "Centralize king immediately",
+      "King is a fighting piece",
+      "Support pawns and rook operations",
+      "Active king often wins"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Endgame mastery"
+  },
+
+  {
+    id: 'king-activity-opposition',
+    category: 'KING_ACTIVITY',
+    title: "King Opposition Technique",
+    subtitle: "Mastering king endings",
+    fen: '8/8/8/4k3/8/4K3/4P3/8 w - - 0 50',
+    toMove: 'white',
+    introduction: "Opposition is when kings face each other with one square between. The side NOT to move has the opposition and can outflank the opponent. This is fundamental to king activity.",
+    keyIdeas: [
+      "Opposition controls key squares",
+      "Side not to move has it",
+      "Use to outflank opponent",
+      "Fundamental endgame technique"
+    ],
+    mainLine: [
+      {
+        move: "Kf3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Taking the opposition! Black must give way.",
+        highlights: ["f3"],
+        conceptTag: "Opposition"
+      },
+      {
+        move: "Kf5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black tries to stay near the pawn.",
+        conceptTag: ""
+      },
+      {
+        move: "e4+",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Pushing with check!",
+        highlights: ["e4"],
+        conceptTag: ""
+      },
+      {
+        move: "Ke5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black blocks.",
+        conceptTag: ""
+      },
+      {
+        move: "Ke3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Taking opposition again! The king will escort the pawn forward.",
+        highlights: ["e3"],
+        conceptTag: "Outflanking"
+      }
+    ],
+    summary: "Opposition is key to king activity in pawn endings. The side with opposition can outflank the opponent and escort pawns to promotion.",
+    keyTakeaways: [
+      "Opposition is fundamental",
+      "Side not to move has it",
+      "Use to outflank",
+      "Escort pawns with king"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Pawn endgames"
+  },
+
+  // KNIGHT_PLACEMENT - need 2 more (13 → 15)
+  {
+    id: 'knight-central-square',
+    category: 'KNIGHT_PLACEMENT',
+    title: "Knights in the Center",
+    subtitle: "Maximum knight power",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 0 4',
+    toMove: 'white',
+    introduction: "Knights are most powerful in the center where they control the maximum number of squares. A knight on e4, d4, e5, or d5 controls 8 squares; on the rim, only 4.",
+    keyIdeas: [
+      "Central knights control 8 squares",
+      "Edge knights control only 4",
+      "Knights love e4, d4, e5, d5",
+      "A knight on the rim is dim"
+    ],
+    mainLine: [
+      {
+        move: "Bb5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing while preparing d4.",
+        conceptTag: ""
+      },
+      {
+        move: "a6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black kicks the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Ba4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Maintaining the pin.",
+        conceptTag: ""
+      },
+      {
+        move: "Nf6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      },
+      {
+        move: "d3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Preparing to maneuver Nd5 later. The knight aims for the center!",
+        highlights: ["d3"],
+        conceptTag: "Preparation"
+      }
+    ],
+    summary: "Place knights in the center for maximum power. A centralized knight controls 8 squares and influences the entire board. Avoid the rim.",
+    keyTakeaways: [
+      "Central knights are powerful",
+      "They control 8 squares",
+      "Aim for e4, d4, e5, d5",
+      "Avoid the rim"
+    ],
+    difficulty: 1,
+    estimatedMinutes: 4,
+    source: "Basic principles"
+  },
+
+  {
+    id: 'knight-eternal-knight',
+    category: 'KNIGHT_PLACEMENT',
+    title: "The Eternal Knight",
+    subtitle: "Unassailable position",
+    fen: 'r1bq1rk1/pp3ppp/2n1pn2/2Np4/3P4/4PN2/PP3PPP/R1BQKB1R w KQ - 0 8',
+    toMove: 'white',
+    introduction: "An 'eternal knight' is one placed on a square where it cannot be driven away. This often occurs when the opponent lacks a pawn that could challenge the square.",
+    keyIdeas: [
+      "Eternal knight can't be challenged",
+      "No pawn can drive it away",
+      "Permanently strong position",
+      "Worth more than exchange"
+    ],
+    mainLine: [
+      {
+        move: "Bd3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing.",
+        conceptTag: ""
+      },
+      {
+        move: "Bd7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling.",
+        conceptTag: ""
+      },
+      {
+        move: "Rc8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black activates.",
+        conceptTag: ""
+      },
+      {
+        move: "b4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The knight on c5 is eternal! Black's b7 pawn cannot challenge it, and b4 supports the outpost.",
+        highlights: ["b4", "c5"],
+        conceptTag: "Eternal Knight"
+      }
+    ],
+    summary: "An eternal knight on a supported square is extremely powerful. When no enemy pawn can challenge it, the knight dominates that part of the board.",
+    keyTakeaways: [
+      "Eternal knights can't be driven",
+      "Support with pawns",
+      "Worth more than exchange",
+      "Dominates the position"
+    ],
+    difficulty: 3,
+    estimatedMinutes: 6,
+    source: "Strategic concepts"
+  },
+
+  // MINORITY_ATTACK - need 2 more (13 → 15)
+  {
+    id: 'minority-attack-classic',
+    category: 'MINORITY_ATTACK',
+    title: "The Classic Minority Attack",
+    subtitle: "Attacking with fewer pawns",
+    fen: 'r1bq1rk1/pp1n1ppp/2pbpn2/8/2PP4/2N2N2/PPQ1PPPP/R1B1KB1R w KQ - 0 8',
+    toMove: 'white',
+    introduction: "In a minority attack, you advance pawns on the side where you have fewer pawns to create weaknesses in the opponent's pawn structure. The classic setup is b4-b5xc6.",
+    keyIdeas: [
+      "Advance minority pawns (a and b)",
+      "b4-b5 attacks c6 pawn",
+      "Creates isolated or backward pawns",
+      "Then attack the weakness"
+    ],
+    mainLine: [
+      {
+        move: "Rb1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The rook prepares the minority attack. b4-b5 is coming.",
+        highlights: ["b1"],
+        conceptTag: "Preparation"
+      },
+      {
+        move: "Qe7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      },
+      {
+        move: "b4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The minority attack begins! The b-pawn advances.",
+        highlights: ["b4"],
+        conceptTag: "Minority Attack"
+      },
+      {
+        move: "a6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black tries to slow the attack.",
+        conceptTag: ""
+      },
+      {
+        move: "a4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Preparing b5! After bxa6, Black gets a weak c6 pawn or isolated a-pawn.",
+        highlights: ["a4"],
+        conceptTag: "Advance"
+      }
+    ],
+    summary: "The minority attack uses fewer pawns to attack more pawns, creating structural weaknesses. The classic b4-b5xc6 leaves Black with an isolated c-pawn or backward b-pawn.",
+    keyTakeaways: [
+      "Minority attacks fewer with more",
+      "b4-b5 is the classic setup",
+      "Creates isolated or backward pawns",
+      "Attack the resulting weakness"
+    ],
+    difficulty: 3,
+    estimatedMinutes: 6,
+    source: "Carlsbad structure"
+  },
+
+  {
+    id: 'minority-attack-defense',
+    category: 'MINORITY_ATTACK',
+    title: "Defending Against Minority Attack",
+    subtitle: "Counter-strategies",
+    fen: 'r1bq1rk1/pppn1ppp/3bpn2/8/1PPP4/2N2N2/P1Q1PPPP/R1B1KB1R b KQ - 0 8',
+    toMove: 'black',
+    introduction: "When facing a minority attack, you have several defenses: counterattack on the kingside, play ...c5 to exchange pawns, or prepare ...a5 to blunt the attack.",
+    keyIdeas: [
+      "Kingside counterattack",
+      "...c5 break dissolves tension",
+      "...a5 blunts the b5 push",
+      "Activity over passivity"
+    ],
+    mainLine: [
+      {
+        move: "a5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Fighting the minority attack! This stops b5 cold.",
+        highlights: ["a5"],
+        conceptTag: "Defense"
+      },
+      {
+        move: "b5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White tries anyway.",
+        conceptTag: ""
+      },
+      {
+        move: "a4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The pawn is immune! Black has blunted the attack and fixed the queenside.",
+        highlights: ["a4"],
+        conceptTag: "Counterplay"
+      },
+      {
+        move: "Rb1",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White regroups.",
+        conceptTag: ""
+      },
+      {
+        move: "Ne4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Black gets counterplay with piece activity!",
+        highlights: ["e4"],
+        conceptTag: "Activity"
+      }
+    ],
+    summary: "Defend against minority attacks with ...a5 to stop b5, ...c5 to dissolve the structure, or kingside counterattack. Activity beats passivity.",
+    keyTakeaways: [
+      "...a5 stops b5",
+      "...c5 dissolves the structure",
+      "Kingside counter is possible",
+      "Don't be passive"
+    ],
+    difficulty: 3,
+    estimatedMinutes: 6,
+    source: "Defensive technique"
+  },
+
+  // OPEN_FILES - need 2 more (13 → 15)
+  {
+    id: 'open-files-creating',
+    category: 'OPEN_FILES',
+    title: "Creating Open Files",
+    subtitle: "Manufacturing rook highways",
+    fen: 'r1bq1rk1/ppp2ppp/2n1pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQ - 0 6',
+    toMove: 'white',
+    introduction: "Rooks need open files to be effective. You can create open files by advancing pawns and forcing exchanges. The resulting open file gives your rooks activity.",
+    keyIdeas: [
+      "Open files with pawn exchanges",
+      "Plan which file to open",
+      "Rook needs highway to function",
+      "Create then occupy"
+    ],
+    mainLine: [
+      {
+        move: "cxd5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Opening the c-file! Our rook will use it.",
+        highlights: ["d5"],
+        conceptTag: "Opening File"
+      },
+      {
+        move: "exd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures.",
+        conceptTag: ""
+      },
+      {
+        move: "Bg5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing with tempo.",
+        conceptTag: ""
+      },
+      {
+        move: "Be7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black breaks the pin.",
+        conceptTag: ""
+      },
+      {
+        move: "Rc1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Occupying the open file immediately! The rook is now active.",
+        highlights: ["c1"],
+        conceptTag: "Occupation"
+      }
+    ],
+    summary: "Create open files through pawn exchanges, then occupy them with rooks. A rook on an open file controls the entire file and invades the enemy position.",
+    keyTakeaways: [
+      "Exchange pawns to open files",
+      "Occupy immediately after opening",
+      "Open files = rook activity",
+      "Plan which file benefits you"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Positional play"
+  },
+
+  {
+    id: 'open-files-7th-rank',
+    category: 'OPEN_FILES',
+    title: "Rook on the 7th Rank",
+    subtitle: "The dream invasion",
+    fen: 'r4rk1/ppp2ppp/2n2n2/3p4/8/2N2N2/PPP2PPP/R4RK1 w - - 0 12',
+    toMove: 'white',
+    introduction: "A rook on the 7th rank is one of the most powerful pieces in chess. It attacks pawns from behind, restricts the enemy king, and often leads to decisive advantages.",
+    keyIdeas: [
+      "7th rank attacks pawns from behind",
+      "Restricts enemy king to back rank",
+      "Two rooks on 7th often wins",
+      "Goal of open file control"
+    ],
+    mainLine: [
+      {
+        move: "Re1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Controlling the e-file, aiming for e7.",
+        highlights: ["e1"],
+        conceptTag: ""
+      },
+      {
+        move: "Rf7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black defends.",
+        conceptTag: ""
+      },
+      {
+        move: "Re7",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The 7th rank! The rook attacks from behind.",
+        highlights: ["e7"],
+        conceptTag: "7th Rank"
+      },
+      {
+        move: "Raf8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black doubles rooks.",
+        conceptTag: ""
+      },
+      {
+        move: "Rae1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Doubling on the e-file! Threatening Re8 with pressure.",
+        highlights: ["e1"],
+        conceptTag: "Doubling"
+      }
+    ],
+    summary: "The 7th rank is the ultimate goal of rook play. A rook on the 7th attacks pawns, restricts the king, and often wins material or the game outright.",
+    keyTakeaways: [
+      "7th rank is extremely powerful",
+      "Attacks pawns from behind",
+      "Restricts the enemy king",
+      "Two rooks on 7th is devastating"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Classical technique"
+  },
+
+  // PAWN_BREAKS - need 2 more (13 → 15)
+  {
+    id: 'pawn-break-c5-break',
+    category: 'PAWN_BREAKS',
+    title: "The ...c5 Break",
+    subtitle: "Challenging the center",
+    fen: 'r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P4/2N1PN2/PPP2PPP/R1BQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "The ...c5 break is Black's way of challenging White's d4 pawn and fighting for central control. Timing this break correctly is crucial to achieving equality.",
+    keyIdeas: [
+      "...c5 challenges d4 directly",
+      "Opens the c-file",
+      "Frees Black's position",
+      "Timing is everything"
+    ],
+    mainLine: [
+      {
+        move: "Bd3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White develops.",
+        conceptTag: ""
+      },
+      {
+        move: "cxd4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The c5 break executes! Black challenges the center.",
+        highlights: ["d4"],
+        conceptTag: "Break"
+      },
+      {
+        move: "exd4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "White recaptures.",
+        conceptTag: ""
+      },
+      {
+        move: "Bb4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Black is active after the break. The position is open and Black has easy development.",
+        highlights: ["b4"],
+        conceptTag: "Activity"
+      }
+    ],
+    summary: "The ...c5 break challenges the d4 center and opens Black's position. Time it when you're ready to handle the resulting open game.",
+    keyTakeaways: [
+      "...c5 fights for center",
+      "Opens position for pieces",
+      "Timing must be right",
+      "Creates active play"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Queen's Gambit Declined"
+  },
+
+  {
+    id: 'pawn-break-thematic-e5',
+    category: 'PAWN_BREAKS',
+    title: "The e5 Break",
+    subtitle: "Opening the center",
+    fen: 'r1bq1rk1/ppp2ppp/2n1pn2/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 0 7',
+    toMove: 'white',
+    introduction: "The e5 break, when prepared correctly, can blow open the center and create attacking chances. It often comes with tempo if it attacks a piece.",
+    keyIdeas: [
+      "e5 opens the center",
+      "Often attacks the f6 knight",
+      "Creates pawn on e5 wedge",
+      "Requires preparation"
+    ],
+    mainLine: [
+      {
+        move: "Bd3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing and preparing e4-e5.",
+        conceptTag: ""
+      },
+      {
+        move: "dxc4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black takes.",
+        conceptTag: ""
+      },
+      {
+        move: "Bxc4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Recapturing.",
+        conceptTag: ""
+      },
+      {
+        move: "b6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black fianchettoes.",
+        conceptTag: ""
+      },
+      {
+        move: "e4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Preparing e5! The break is coming.",
+        highlights: ["e4"],
+        conceptTag: "Preparation"
+      },
+      {
+        move: "Bb7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      },
+      {
+        move: "e5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The break! The knight must retreat and White gets a central wedge.",
+        highlights: ["e5"],
+        conceptTag: "e5 Break"
+      }
+    ],
+    summary: "The e5 break opens the center and often comes with tempo against the f6 knight. A pawn on e5 can be a powerful wedge in the opponent's position.",
+    keyTakeaways: [
+      "e5 opens the position",
+      "Often gains tempo",
+      "e5 pawn can be a wedge",
+      "Needs proper preparation"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Central breaks"
+  },
+
+  // PAWN_STRUCTURE - need 2 more (13 → 15)
+  {
+    id: 'pawn-structure-doubled-pawns',
+    category: 'PAWN_STRUCTURE',
+    title: "Doubled Pawns Dynamics",
+    subtitle: "Weakness and compensation",
+    fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 0 4',
+    toMove: 'white',
+    introduction: "Doubled pawns are often weak, but not always. The compensation can include open files, central control, or bishop pair. Understanding when doubled pawns help or hurt is key.",
+    keyIdeas: [
+      "Doubled pawns can be weak",
+      "Open files as compensation",
+      "Extra central control possible",
+      "Context determines value"
+    ],
+    mainLine: [
+      {
+        move: "Bxf6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Creating doubled pawns in Black's camp.",
+        conceptTag: ""
+      },
+      {
+        move: "gxf6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black must recapture, creating doubled f-pawns.",
+        conceptTag: ""
+      },
+      {
+        move: "d4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Opening the center.",
+        conceptTag: ""
+      },
+      {
+        move: "d6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black solidifies.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Black has doubled pawns but the half-open g-file and bishop pair compensate. The position is complex.",
+        highlights: ["f6"],
+        conceptTag: "Compensation"
+      }
+    ],
+    summary: "Doubled pawns are not automatically bad. They can provide open files and central control. Judge each position on its own merits.",
+    keyTakeaways: [
+      "Doubled pawns: context matters",
+      "Open files compensate",
+      "Central control can help",
+      "Not automatically weak"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Pawn structure theory"
+  },
+
+  {
+    id: 'pawn-structure-backward-pawn',
+    category: 'PAWN_STRUCTURE',
+    title: "The Backward Pawn",
+    subtitle: "Understanding this weakness",
+    fen: 'r1bqkb1r/pp3ppp/2n1pn2/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQkq - 0 5',
+    toMove: 'white',
+    introduction: "A backward pawn cannot be protected by other pawns and sits on a semi-open file. The square in front of it becomes an outpost for the opponent's pieces.",
+    keyIdeas: [
+      "Backward pawn can't advance safely",
+      "Square in front is an outpost",
+      "Target for rook attacks",
+      "Creates positional weakness"
+    ],
+    mainLine: [
+      {
+        move: "cxd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Exchanging.",
+        conceptTag: ""
+      },
+      {
+        move: "exd5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black recaptures, creating an isolated pawn.",
+        conceptTag: ""
+      },
+      {
+        move: "Bd3",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Developing while eyeing the isolated pawn.",
+        highlights: ["d3"],
+        conceptTag: ""
+      },
+      {
+        move: "Bd6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "Nd4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "The knight occupies the square in front of the isolated pawn! This is a typical blockade.",
+        highlights: ["d4"],
+        conceptTag: "Blockade"
+      }
+    ],
+    summary: "A backward or isolated pawn is weak because the square in front becomes an outpost. Blockade it with a piece and pile up pressure.",
+    keyTakeaways: [
+      "Backward pawns are targets",
+      "Square in front is an outpost",
+      "Blockade then attack",
+      "Rooks attack on the file"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Structural weaknesses"
+  },
+
+  // PIECE_COORDINATION - need 2 more (13 → 15)
+  {
+    id: 'piece-coordination-rooks-knights',
+    category: 'PIECE_COORDINATION',
+    title: "Rooks and Knights Together",
+    subtitle: "Complementary powers",
+    fen: 'r3r1k1/ppp2ppp/2n2n2/3p4/8/2N2N2/PPP2PPP/R3R1K1 w - - 0 14',
+    toMove: 'white',
+    introduction: "Rooks and knights complement each other well. Rooks control files and ranks while knights control complex patterns of squares. Together they cover the board.",
+    keyIdeas: [
+      "Rooks control linear squares",
+      "Knights control non-linear squares",
+      "Together they cover everything",
+      "Coordinate for attacks"
+    ],
+    mainLine: [
+      {
+        move: "Ne5",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Knight centralizes powerfully!",
+        highlights: ["e5"],
+        conceptTag: ""
+      },
+      {
+        move: "Nxe5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black exchanges.",
+        conceptTag: ""
+      },
+      {
+        move: "Rxe5",
+        isMainLine: true,
+        annotation: "",
+        explanation: "The rook takes over the central file.",
+        conceptTag: ""
+      },
+      {
+        move: "Re6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black contests.",
+        conceptTag: ""
+      },
+      {
+        move: "Rae1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Doubled rooks! Now Nd4 is coming.",
+        highlights: ["e1"],
+        conceptTag: ""
+      },
+      {
+        move: "Rae8",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black also doubles.",
+        conceptTag: ""
+      },
+      {
+        move: "Nd4",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Knight and rooks coordinate beautifully. The knight eyes c6 and e6.",
+        highlights: ["d4"],
+        conceptTag: "Coordination"
+      }
+    ],
+    summary: "Rooks and knights work well together. Rooks handle files and ranks while knights handle the complex squares. Coordinate them for maximum effect.",
+    keyTakeaways: [
+      "Rooks and knights complement",
+      "Different square control patterns",
+      "Coordinate for attacks",
+      "Cover each other's weaknesses"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Piece coordination"
+  },
+
+  {
+    id: 'piece-coordination-battery',
+    category: 'PIECE_COORDINATION',
+    title: "Creating Batteries",
+    subtitle: "Lined up power",
+    fen: 'r1bq1rk1/ppp2ppp/2n1pn2/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 0 7',
+    toMove: 'white',
+    introduction: "A battery is two pieces lined up on the same file or diagonal, with the less valuable piece in front. Queen-bishop and queen-rook batteries create powerful threats.",
+    keyIdeas: [
+      "Line up pieces on same line",
+      "Less valuable piece in front",
+      "Queen-bishop diagonal battery",
+      "Queen-rook file battery"
+    ],
+    mainLine: [
+      {
+        move: "Bd3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing the bishop.",
+        conceptTag: ""
+      },
+      {
+        move: "Be7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "Qc2",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Creating a queen-bishop battery on the b1-h7 diagonal! This eyes h7 and creates threats.",
+        highlights: ["c2", "d3"],
+        conceptTag: "Battery"
+      }
+    ],
+    summary: "Batteries multiply the power of pieces by lining them up. The classic Qc2+Bd3 battery aims at h7 and is a common attacking setup.",
+    keyTakeaways: [
+      "Batteries multiply power",
+      "Queen behind the bishop",
+      "Qc2+Bd3 is classic",
+      "Creates strong threats"
+    ],
+    difficulty: 2,
+    estimatedMinutes: 5,
+    source: "Attacking play"
+  },
+
+  // PROPHYLAXIS - need 2 more (13 → 15)
+  {
+    id: 'prophylaxis-preventing-breaks',
+    category: 'PROPHYLAXIS',
+    title: "Preventing Pawn Breaks",
+    subtitle: "Stopping liberating advances",
+    fen: 'r1bq1rk1/ppp2ppp/2n1pn2/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 0 7',
+    toMove: 'white',
+    introduction: "A key prophylactic idea is preventing the opponent's pawn breaks. By stopping their liberating advances, you keep them cramped and without counterplay.",
+    keyIdeas: [
+      "Identify opponent's pawn breaks",
+      "Prevent them proactively",
+      "Keep opponent cramped",
+      "No counterplay = winning"
+    ],
+    mainLine: [
+      {
+        move: "Bd3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Developing while controlling e4.",
+        conceptTag: ""
+      },
+      {
+        move: "dxc4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black exchanges.",
+        conceptTag: ""
+      },
+      {
+        move: "Bxc4",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Recapturing.",
+        conceptTag: ""
+      },
+      {
+        move: "b6",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black prepares ...Bb7.",
+        conceptTag: ""
+      },
+      {
+        move: "Qe2",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Prophylaxis! This prevents ...e5 by controlling the e5 square. Black remains cramped.",
+        highlights: ["e2"],
+        conceptTag: "Prophylaxis"
+      }
+    ],
+    summary: "Prevent your opponent's pawn breaks to keep them cramped. Controlling the squares where breaks would occur is key prophylactic technique.",
+    keyTakeaways: [
+      "Identify pawn breaks",
+      "Control break squares",
+      "Keep opponent cramped",
+      "Prophylaxis before attack"
+    ],
+    difficulty: 3,
+    estimatedMinutes: 6,
+    source: "Prophylactic thinking"
+  },
+
+  {
+    id: 'prophylaxis-overprotection',
+    category: 'PROPHYLAXIS',
+    title: "Overprotection",
+    subtitle: "Defending key squares multiple times",
+    fen: 'r1bq1rk1/ppp2ppp/2n1pn2/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 0 7',
+    toMove: 'white',
+    introduction: "Overprotection means defending a key square or pawn multiple times - more than strictly necessary. This frees pieces for other tasks while maintaining rock-solid control.",
+    keyIdeas: [
+      "Defend key squares multiple times",
+      "More protection than needed",
+      "Frees pieces for other duties",
+      "Nimzowitsch's concept"
+    ],
+    mainLine: [
+      {
+        move: "Bd3",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Development.",
+        conceptTag: ""
+      },
+      {
+        move: "Be7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Castling.",
+        conceptTag: ""
+      },
+      {
+        move: "O-O",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black castles.",
+        conceptTag: ""
+      },
+      {
+        move: "Qc2",
+        isMainLine: true,
+        annotation: "",
+        explanation: "The queen overprotects e4.",
+        conceptTag: ""
+      },
+      {
+        move: "Bd7",
+        isMainLine: true,
+        annotation: "",
+        explanation: "Black develops.",
+        conceptTag: ""
+      },
+      {
+        move: "Rfe1",
+        isMainLine: true,
+        annotation: "!",
+        explanation: "Triple overprotection of e4! Now pieces can move freely - e4 is rock solid.",
+        highlights: ["e1"],
+        conceptTag: "Overprotection"
+      }
+    ],
+    summary: "Overprotection gives pieces freedom. By defending key points multiple times, individual pieces can leave their posts temporarily without losing control.",
+    keyTakeaways: [
+      "Defend key points multiply",
+      "Frees pieces for other tasks",
+      "Rock-solid control",
+      "Nimzowitsch's key concept"
+    ],
+    difficulty: 3,
+    estimatedMinutes: 6,
+    source: "Nimzowitsch's system"
   }
 ];
 
