@@ -9,6 +9,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
 import { useBoardSize } from '@/hooks/useBoardSize';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 
 // ============================================
 // TYPES
@@ -243,6 +244,7 @@ export function IntuitionTrainerPage() {
   const navigate = useNavigate();
   const boardContainerRef = useRef<HTMLDivElement>(null);
   const boardSize = useBoardSize(boardContainerRef, 480);
+  const boardStyles = useBoardStyles();
   
   // State
   const [stats, setStats] = useState<IntuitionStats>(() => {
@@ -674,8 +676,8 @@ export function IntuitionTrainerPage() {
               <Chessboard
                 position={currentPosition.fen}
                 boardOrientation="white"
-                customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
                 arePiecesDraggable={false}
                 boardWidth={boardSize}
               />

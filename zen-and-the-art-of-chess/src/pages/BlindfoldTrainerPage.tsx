@@ -9,6 +9,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
 import { useBoardSize } from '@/hooks/useBoardSize';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 
 // ============================================
 // TYPES
@@ -186,6 +187,7 @@ export function BlindfoldTrainerPage() {
   const navigate = useNavigate();
   const boardContainerRef = useRef<HTMLDivElement>(null);
   const boardSize = useBoardSize(boardContainerRef, 480);
+  const boardStyles = useBoardStyles();
   
   // State
   const [mode, setMode] = useState<TrainingMode>('menu');
@@ -740,8 +742,8 @@ export function BlindfoldTrainerPage() {
                 <Chessboard
                   position={currentFen}
                   boardOrientation="white"
-                  customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                  customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                  customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                  customLightSquareStyle={boardStyles.customLightSquareStyle}
                   arePiecesDraggable={false}
                   boardWidth={boardSize}
                 />

@@ -10,6 +10,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
 import { useBoardSize } from '@/hooks/useBoardSize';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 
 // ============================================
@@ -1730,7 +1731,8 @@ export function DailyChallengesPage() {
   const dateString = getDateString();
   const boardContainerRef = useRef<HTMLDivElement>(null);
   const boardSize = useBoardSize(boardContainerRef, 480);
-  
+  const boardStyles = useBoardStyles();
+
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
   const [stats, setStats] = useState<DailyChallengeStats>(() => {
@@ -2223,8 +2225,8 @@ export function DailyChallengesPage() {
                 position={game.fen()}
                 onSquareClick={onSquareClick}
                 boardOrientation={game.turn() === 'w' ? 'white' : 'black'}
-                customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
                 customSquareStyles={{
                   ...optionSquares,
                   ...(lastMove && {
@@ -2503,8 +2505,8 @@ export function DailyChallengesPage() {
               position={game.fen()}
               onSquareClick={onSquareClick}
               boardOrientation={game.turn() === 'w' ? 'white' : 'black'}
-              customDarkSquareStyle={{ backgroundColor: '#779556' }}
-              customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+              customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+              customLightSquareStyle={boardStyles.customLightSquareStyle}
               customSquareStyles={{
                 ...optionSquares,
                 ...(lastMove && {

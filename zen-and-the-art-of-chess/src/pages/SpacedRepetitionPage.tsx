@@ -10,6 +10,7 @@ import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
 import { useBoardSize } from '@/hooks/useBoardSize';
 import { playSmartMoveSound } from '@/lib/soundSystem';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 import { 
   getPuzzlesByTheme, 
   getNextPuzzleAnonymous,
@@ -74,6 +75,7 @@ export function SpacedRepetitionPage() {
   const navigate = useNavigate();
   const boardContainerRef = useRef<HTMLDivElement>(null);
   const boardSize = useBoardSize(boardContainerRef, 480);
+  const boardStyles = useBoardStyles();
   
   // Load state from localStorage
   const [srsState, setSrsState] = useState<SRSState>(() => {
@@ -687,8 +689,8 @@ export function SpacedRepetitionPage() {
                 position={game.fen()}
                 onSquareClick={onSquareClick}
                 boardOrientation={game.turn() === 'w' ? 'white' : 'black'}
-                customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
                 customSquareStyles={{
                   ...optionSquares,
                   ...(lastMove && {

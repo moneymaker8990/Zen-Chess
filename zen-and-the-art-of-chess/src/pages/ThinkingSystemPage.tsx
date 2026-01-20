@@ -9,6 +9,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
 import { useBoardSize } from '@/hooks/useBoardSize';
+import { useBoardStyles } from '@/state/boardSettingsStore';
 
 // ============================================
 // TYPES & INTERFACES
@@ -493,6 +494,7 @@ export function ThinkingSystemPage() {
   const navigate = useNavigate();
   const boardContainerRef = useRef<HTMLDivElement>(null);
   const boardSize = useBoardSize(boardContainerRef, 480);
+  const boardStyles = useBoardStyles();
   
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
@@ -855,8 +857,8 @@ export function ThinkingSystemPage() {
                   <Chessboard
                     position={currentLesson.examples[exampleIndex].fen}
                     boardOrientation="white"
-                    customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                    customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                    customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                    customLightSquareStyle={boardStyles.customLightSquareStyle}
                     arePiecesDraggable={false}
                     boardWidth={boardSize}
                   customSquareStyles={
@@ -944,8 +946,8 @@ export function ThinkingSystemPage() {
               <Chessboard
                 position={question.fen}
                 boardOrientation={new Chess(question.fen).turn() === 'w' ? 'white' : 'black'}
-                customDarkSquareStyle={{ backgroundColor: '#779556' }}
-                customLightSquareStyle={{ backgroundColor: '#ebecd0' }}
+                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
+                customLightSquareStyle={boardStyles.customLightSquareStyle}
                 arePiecesDraggable={false}
                 boardWidth={boardSize}
               customSquareStyles={

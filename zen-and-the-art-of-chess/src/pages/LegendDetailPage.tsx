@@ -633,6 +633,8 @@ export function LegendDetailPage() {
                     position={game.fen()}
                     onSquareClick={onSquareClick}
                     onPieceDrop={onDrop}
+                    onPieceDragBegin={() => setIsBoardDragging(true)}
+                    onPieceDragEnd={() => setIsBoardDragging(false)}
                     boardOrientation={playerColor}
                     customSquareStyles={{
                       ...optionSquares,
@@ -645,6 +647,7 @@ export function LegendDetailPage() {
                     customLightSquareStyle={boardStyles.customLightSquareStyle}
                     animationDuration={boardStyles.animationDuration}
                     arePiecesDraggable={!isThinking}
+                    snapToCursor={false}
                   />
                 </div>
               </div>
@@ -912,11 +915,14 @@ export function LegendDetailPage() {
                           handleGuessMove(source, target);
                           return !showFeedback;
                         }}
+                        onPieceDragBegin={() => setIsBoardDragging(true)}
+                        onPieceDragEnd={() => setIsBoardDragging(false)}
                         boardOrientation={guessSession?.legendColor || 'white'}
                         customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                         customLightSquareStyle={boardStyles.customLightSquareStyle}
                         animationDuration={boardStyles.animationDuration}
                         arePiecesDraggable={!showFeedback && !guessAnimating}
+                        snapToCursor={false}
                       />
                     )}
                     
