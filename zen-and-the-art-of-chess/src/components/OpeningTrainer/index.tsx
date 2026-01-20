@@ -321,7 +321,6 @@ export function OpeningTrainer() {
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
                 animationDuration={200}
                 arePiecesDraggable={isUserTurn && feedback !== 'complete'}
-                boardWidth={boardSize}
               />
               </div>
             </div>

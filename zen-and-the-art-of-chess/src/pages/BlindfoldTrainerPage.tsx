@@ -745,7 +745,6 @@ export function BlindfoldTrainerPage() {
                   customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                   customLightSquareStyle={boardStyles.customLightSquareStyle}
                   arePiecesDraggable={false}
-                  boardWidth={boardSize}
                 />
                 {mode === 'move-sequence' && moveSequence.length > 0 && (
                   <div className="mt-4 p-4 rounded-xl" style={{ background: 'var(--bg-tertiary)' }}>

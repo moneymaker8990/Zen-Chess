@@ -815,7 +815,6 @@ export default function CourseLearningPage() {
                   onPieceDrop={handleMove}
                   onSquareClick={handleSquareClick}
                   boardOrientation={currentVariation.toMove === 'white' ? 'white' : 'black'}
-                  boardWidth={boardSize}
                 customArrows={customArrows}
                 customSquareStyles={customSquareStyles}
                 customDarkSquareStyle={boardStyles.customDarkSquareStyle}

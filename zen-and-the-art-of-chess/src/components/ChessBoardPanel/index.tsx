@@ -497,7 +497,6 @@ export function ChessBoardPanel({
         customLightSquareStyle={customLightSquareStyle}
         animationDuration={200}
         arePiecesDraggable={allowMoves && !isAnimatingSetup && !isThinking && !waitingForOpponent && moveResult !== 'solved'}
-        boardWidth={boardSize}
       />
 
       {/* Puzzle solved message */}

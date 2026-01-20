@@ -794,7 +794,6 @@ export function PlayPage() {
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
                 animationDuration={boardStyles.animationDuration}
                 arePiecesDraggable={!isThinking}
-                boardWidth={boardSize}
               />
             </div>
           </div>

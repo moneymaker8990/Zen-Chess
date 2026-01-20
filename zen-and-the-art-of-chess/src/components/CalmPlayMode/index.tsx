@@ -824,7 +824,6 @@ export function CalmPlayMode({ onExit }: CalmPlayModeProps) {
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={300}
               arePiecesDraggable={!isThinking && game.turn() === 'w' && !showPreMoveBreath}
-              boardWidth={boardSize}
             />
           </div>
           </div>

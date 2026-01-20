@@ -679,7 +679,6 @@ export function IntuitionTrainerPage() {
                 customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
                 arePiecesDraggable={false}
-                boardWidth={boardSize}
               />
             </div>
           </div>

@@ -703,7 +703,6 @@ export function SpacedRepetitionPage() {
                 }}
                 arePiecesDraggable={!isAnimatingSetup && !solved && !failed}
                 onPieceDrop={(from, to) => handleMove(from as Square, to as Square)}
-                boardWidth={boardSize}
               />
             </div>
             

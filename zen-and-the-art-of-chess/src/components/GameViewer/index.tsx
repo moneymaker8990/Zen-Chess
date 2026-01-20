@@ -182,7 +182,6 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
               position={getCurrentFen()}
               orientation="white"
               arePiecesDraggable={false}
-              boardWidth={boardSize}
               mode="analysis"
               disableSounds
               ariaLabel={`Game viewer: ${game.white} vs ${game.black}. Move ${currentMoveIndex + 1} of ${effectiveMoves.length}`}

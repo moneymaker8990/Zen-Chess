@@ -184,7 +184,6 @@ export function LearnPage() {
                   <div className="board-wrapper rounded-xl overflow-hidden shadow-2xl">
                     <Chessboard
                       position={currentStep.fen}
-                      boardWidth={boardSize}
                       arePiecesDraggable={false}
                       customDarkSquareStyle={boardStyles.customDarkSquareStyle}
                       customLightSquareStyle={boardStyles.customLightSquareStyle}

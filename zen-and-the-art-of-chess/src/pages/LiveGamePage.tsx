@@ -391,7 +391,6 @@ export function LiveGamePage() {
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               animationDuration={150}
               arePiecesDraggable={isMyTurn}
-              boardWidth={boardSize}
             />
             </div>
           </div>

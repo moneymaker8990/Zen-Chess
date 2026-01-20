@@ -310,7 +310,6 @@ export function PositionSparring() {
                 customLightSquareStyle={boardStyles.customLightSquareStyle}
                 animationDuration={200}
                 arePiecesDraggable={isPlaying && !isThinking && !gameResult}
-                boardWidth={boardSize}
               />
               </div>
             </div>

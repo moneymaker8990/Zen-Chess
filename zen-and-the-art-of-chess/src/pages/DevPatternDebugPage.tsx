@@ -307,7 +307,6 @@ function PatternDetailView({ pattern }: { pattern: EnhancedPattern }) {
             <div className="board-wrapper">
             <Chessboard
               position={gameState.fen()}
-              boardWidth={boardSize}
               customDarkSquareStyle={boardStyles.customDarkSquareStyle}
               customLightSquareStyle={boardStyles.customLightSquareStyle}
               customSquareStyles={customSquareStyles}
