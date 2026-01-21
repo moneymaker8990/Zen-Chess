@@ -23,6 +23,7 @@ import { useProgressStore } from '@/state/useStore';
 import { useAuthStore } from '@/state/useAuthStore';
 import { initializeCoach } from '@/state/coachStore';
 import { useNavigationHistory } from '@/state/navigationHistoryStore';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 // ============================================
 // LAZY-LOADED PAGES FOR FASTER INITIAL LOAD
@@ -88,10 +89,7 @@ const DevPatternDebugPage = lazy(() => import('@/pages/DevPatternDebugPage'));
 function PageLoader() {
   return (
     <div className="min-h-[50vh] flex items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <div className="w-8 h-8 border-2 border-t-transparent border-[var(--accent-primary)] rounded-full animate-spin" />
-        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading...</p>
-      </div>
+      <LoadingSpinner size="md" label="Loading..." />
     </div>
   );
 }
