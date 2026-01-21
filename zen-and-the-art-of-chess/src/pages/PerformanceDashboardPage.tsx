@@ -5,6 +5,7 @@
 
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
+import { BackButton } from '@/components/BackButton';
 import { useProgressStore } from '@/state/useStore';
 import {
   useMistakeLibraryStore,
@@ -157,6 +158,8 @@ export function PerformanceDashboardPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <BackButton fallback="/" className="mb-4" />
+
       {/* Header */}
       <section className="flex items-center justify-between">
         <div className="flex items-center gap-4">

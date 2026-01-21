@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
+import { BackButton } from '@/components/BackButton';
 import {
   enhancedEndgamePatterns,
   endgameCategoryInfo,
@@ -222,6 +223,8 @@ export function EndgamesPage() {
 
     return (
       <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
+        <BackButton fallback="/" className="mb-4" />
+
         {/* Hero Header */}
         <section className="text-center lg:text-left">
           <div className="flex items-center gap-4 mb-4">

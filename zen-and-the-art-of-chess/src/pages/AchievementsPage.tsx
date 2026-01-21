@@ -5,6 +5,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BackButton } from '@/components/BackButton';
 import {
   ACHIEVEMENTS,
   useAchievements,
@@ -81,6 +82,8 @@ export function AchievementsPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <BackButton fallback="/" className="mb-4" />
+
       {/* Header */}
       <section className="text-center">
         <div className="flex items-center justify-center gap-4 mb-4">

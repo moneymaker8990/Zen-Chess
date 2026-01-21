@@ -6,6 +6,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BackButton } from '@/components/BackButton';
 import { useProgressStore } from '@/state/useStore';
 import { loadPatternProgress } from '@/lib/spacedRepetition';
 
@@ -136,6 +137,8 @@ export function SkillTreePage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <BackButton fallback="/" className="mb-4" />
+
       {/* Header */}
       <section className="text-center">
         <div className="flex items-center justify-center gap-4 mb-4">
