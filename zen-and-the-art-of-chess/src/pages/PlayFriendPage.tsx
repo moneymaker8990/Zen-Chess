@@ -450,21 +450,30 @@ function JoinByCodeCard({ onJoin, isLoading }: { onJoin: (code: string) => void;
   );
 }
 
-function InviteCard({ 
-  invite, 
-  type, 
-  onAccept, 
-  onCopy 
-}: { 
-  invite: GameInvite; 
+function InviteCard({
+  invite,
+  type,
+  onAccept,
+  onCopy
+}: {
+  invite: GameInvite;
   type: 'received' | 'sent';
   onAccept?: () => void;
   onCopy?: () => void;
 }) {
+  const [copyFeedback, setCopyFeedback] = useState(false);
   const timeControl = Object.values(TIME_CONTROLS).find(
-    tc => tc.type === invite.timeControlType && 
+    tc => tc.type === invite.timeControlType &&
          tc.initialSeconds === invite.initialTimeSeconds
   );
+
+  const handleCopy = () => {
+    if (onCopy) {
+      onCopy();
+      setCopyFeedback(true);
+      setTimeout(() => setCopyFeedback(false), 2000);
+    }
+  };
 
   return (
     <motion.div
@@ -517,8 +526,8 @@ function InviteCard({
           </button>
         )}
         {type === 'sent' && onCopy && (
-          <button onClick={onCopy} className="btn-secondary">
-            📋 Copy Link
+          <button onClick={handleCopy} className="btn-secondary">
+            {copyFeedback ? '✓ Copied!' : '📋 Copy Link'}
           </button>
         )}
       </div>
