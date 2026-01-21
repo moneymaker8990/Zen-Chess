@@ -86,6 +86,18 @@
   - Rarity legend
 - [x] Added /achievements route
 
+### 2026-01-21 - UI Polish Sprint
+- [x] Replace browser alerts with styled inline messages (PlayPage, SpacedRepetitionPage)
+- [x] Standardize disabled button states across all button classes
+- [x] Add cursor-pointer to all interactive elements globally
+- [x] Add reusable EmptyState component for list pages (GamesPage, AchievementsPage)
+- [x] Create reusable LoadingSpinner component with size variants
+- [x] Fix mobile tap targets - add 44px minimum rule for touch devices
+- [x] Add visible engine initialization error handling on PlayPage
+- [x] Add copy-to-clipboard feedback in InviteCard
+- [x] Add ESC key support to modals (AchievementsPage, KeyboardShortcutsHelp)
+- [x] Add focus-visible styles for keyboard accessibility
+
 ---
 
 ## Skipped Items
