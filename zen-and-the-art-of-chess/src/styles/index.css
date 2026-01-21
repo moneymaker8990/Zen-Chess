@@ -212,9 +212,17 @@ html, body {
   min-width: 44px;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   transform: scale(1.02);
   box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
 }
 
 .btn-secondary {
@@ -226,8 +234,14 @@ html, body {
   transition: all 0.2s ease;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
   background: var(--bg-hover);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .btn-ghost {
@@ -237,9 +251,15 @@ html, body {
   transition: all 0.15s ease;
 }
 
-.btn-ghost:hover {
+.btn-ghost:hover:not(:disabled) {
   background: var(--bg-tertiary);
   color: var(--text-primary);
+}
+
+.btn-ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Study Plan Cards */
@@ -267,9 +287,17 @@ html, body {
   transition: all 0.2s ease;
 }
 
-.zen-button:hover {
+.zen-button:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+}
+
+.zen-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
 }
 
 .zen-button-ghost {
@@ -280,9 +308,15 @@ html, body {
   transition: all 0.15s ease;
 }
 
-.zen-button-ghost:hover {
+.zen-button-ghost:hover:not(:disabled) {
   border-color: var(--accent-primary);
   color: var(--accent-primary);
+}
+
+.zen-button-ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Zen button with automatic contrast - always readable */
@@ -295,7 +329,7 @@ html, body {
   transition: all 0.2s ease;
 }
 
-.zen-button-primary:hover {
+.zen-button-primary:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
 }
@@ -303,7 +337,9 @@ html, body {
 .zen-button-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
+  transform: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
 }
 
 /* Button that ensures contrast on any background */
@@ -317,8 +353,14 @@ html, body {
   transition: all 0.2s ease;
 }
 
-.btn-contrast:hover {
+.btn-contrast:hover:not(:disabled) {
   filter: brightness(1.1);
+}
+
+.btn-contrast:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Badges */
