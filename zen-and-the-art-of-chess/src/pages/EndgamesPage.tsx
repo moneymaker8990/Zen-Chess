@@ -20,6 +20,7 @@ import {
   calculateQuality,
   type PatternProgress,
 } from '@/lib/spacedRepetition';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // TYPES & CONSTANTS
@@ -42,7 +43,7 @@ function loadEndgameProgress(): PatternProgress {
       return JSON.parse(saved);
     }
   } catch (e) {
-    console.error('Failed to load endgame progress:', e);
+    logger.error('Failed to load endgame progress:', e);
   }
   return {
     cards: {},
@@ -57,7 +58,7 @@ function saveEndgameProgress(progress: PatternProgress): void {
   try {
     localStorage.setItem(ENDGAME_STORAGE_KEY, JSON.stringify(progress));
   } catch (e) {
-    console.error('Failed to save endgame progress:', e);
+    logger.error('Failed to save endgame progress:', e);
   }
 }
 
