@@ -3,7 +3,7 @@
 // Display all achievements and progress
 // ============================================
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BackButton } from '@/components/BackButton';
 import {
@@ -80,6 +80,20 @@ export function AchievementsPage() {
     });
     return stats;
   }, [unlockedAchievements]);
+
+  // Handle ESC key to close modal
+  const handleEscapeKey = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape' && selectedAchievement) {
+      setSelectedAchievement(null);
+    }
+  }, [selectedAchievement]);
+
+  useEffect(() => {
+    if (selectedAchievement) {
+      document.addEventListener('keydown', handleEscapeKey);
+      return () => document.removeEventListener('keydown', handleEscapeKey);
+    }
+  }, [selectedAchievement, handleEscapeKey]);
 
   return (
     <div className="space-y-6 animate-fade-in">
