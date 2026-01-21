@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Chess } from 'chess.js';
+import { ZenChessboard } from '@/components/ZenChessboard';
 import { useProgressStore } from '@/state/useStore';
 import { useAutoTutorial, TutorialModal } from '@/components/Tutorial';
 
@@ -67,9 +69,30 @@ export function BeginnerPage() {
   const { progress } = useProgressStore();
   const [currentStep, setCurrentStep] = useState(0);
   const [showPieces, setShowPieces] = useState(false);
-  
+  const [showBoard, setShowBoard] = useState(false);
+  const [game, setGame] = useState(() => new Chess());
+
   // Auto-show tutorial for first-time visitors
   const { showTutorial, closeTutorial } = useAutoTutorial('beginner');
+
+  // Handle piece moves on the interactive board
+  const handleMove = (from: string, to: string) => {
+    try {
+      const gameCopy = new Chess(game.fen());
+      const move = gameCopy.move({ from, to, promotion: 'q' });
+      if (move) {
+        setGame(gameCopy);
+        return true;
+      }
+    } catch {
+      // Invalid move
+    }
+    return false;
+  };
+
+  const resetBoard = () => {
+    setGame(new Chess());
+  };
   
   const step = BEGINNER_STEPS[currentStep];
   const isLastStep = currentStep === BEGINNER_STEPS.length - 1;
@@ -221,15 +244,64 @@ export function BeginnerPage() {
                 </button>
               ) : (
                 <button
-                  onClick={() => setShowPieces(true)}
+                  onClick={() => { setShowPieces(true); setShowBoard(true); }}
                   className="px-6 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:scale-105"
                   style={{ background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)' }}
                 >
-                  See the Pieces →
+                  See the Board & Pieces →
                 </button>
               )}
             </div>
           </motion.div>
+        </AnimatePresence>
+
+        {/* Interactive Board (Expandable) */}
+        <AnimatePresence>
+          {showBoard && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div
+                className="rounded-2xl p-6"
+                style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-display font-bold" style={{ color: 'var(--text-primary)' }}>
+                    Try Moving the Pieces!
+                  </h3>
+                  <button
+                    onClick={resetBoard}
+                    className="px-3 py-1.5 rounded-lg text-sm transition-all"
+                    style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}
+                  >
+                    Reset Board
+                  </button>
+                </div>
+                <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
+                  Drag any piece to see how it moves. Don't worry about rules yet—just explore!
+                </p>
+                <div className="flex justify-center">
+                  <div className="board-container max-w-[400px]">
+                    <div className="board-wrapper">
+                      <ZenChessboard
+                        position={game.fen()}
+                        onMove={handleMove}
+                        orientation="white"
+                        mode="learning"
+                        ariaLabel="Interactive chess board for beginners"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-center mt-4" style={{ color: 'var(--text-tertiary)' }}>
+                  White pieces start at the bottom, black at the top. White always moves first!
+                </p>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
 
         {/* Pieces Overview (Expandable) */}
@@ -241,7 +313,7 @@ export function BeginnerPage() {
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden"
             >
-              <div 
+              <div
                 className="rounded-2xl p-6"
                 style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)' }}
               >
@@ -250,7 +322,7 @@ export function BeginnerPage() {
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {PIECE_INFO.map((piece) => (
-                    <div 
+                    <div
                       key={piece.name}
                       className="rounded-xl p-4 text-center"
                       style={{ background: 'var(--bg-tertiary)' }}
@@ -262,7 +334,7 @@ export function BeginnerPage() {
                       <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                         {piece.moves}
                       </p>
-                      <span 
+                      <span
                         className="inline-block mt-2 px-2 py-0.5 rounded text-xs"
                         style={{ background: 'rgba(74, 222, 128, 0.15)', color: '#4ade80' }}
                       >

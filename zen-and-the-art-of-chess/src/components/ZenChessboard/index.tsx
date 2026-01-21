@@ -576,6 +576,7 @@ export function ZenChessboard({
           boardWidth={boardWidth}
           showBoardNotation={showBoardNotation && boardStyles.showCoordinates}
           customArrows={arrows}
+          snapToCenterOnDrop={true}
         />
 
         {/* Visual check/checkmate indicator - icon + animation (not color-only) */}

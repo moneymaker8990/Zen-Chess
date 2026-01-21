@@ -648,6 +648,7 @@ export function LegendDetailPage() {
                     animationDuration={boardStyles.animationDuration}
                     arePiecesDraggable={!isThinking}
                     snapToCursor={false}
+                    snapToCenterOnDrop={true}
                   />
                 </div>
               </div>
@@ -923,6 +924,7 @@ export function LegendDetailPage() {
                         animationDuration={boardStyles.animationDuration}
                         arePiecesDraggable={!showFeedback && !guessAnimating}
                         snapToCursor={false}
+                        snapToCenterOnDrop={true}
                       />
                     )}
                     
