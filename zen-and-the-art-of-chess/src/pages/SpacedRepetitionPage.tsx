@@ -116,6 +116,7 @@ export function SpacedRepetitionPage() {
   const [failed, setFailed] = useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
   const [hintsUsed, setHintsUsed] = useState(0);
+  const [hintText, setHintText] = useState('');
   const [startTime, setStartTime] = useState<number>(Date.now());
   const [sessionStats, setSessionStats] = useState({ correct: 0, incorrect: 0, total: 0 });
   const [lastMove, setLastMove] = useState<{ from: Square; to: Square } | null>(null);
@@ -215,6 +216,7 @@ export function SpacedRepetitionPage() {
     setFailed(false);
     setShowAnswer(false);
     setHintsUsed(0);
+    setHintText('');
     setMoveFrom(null);
     setOptionSquares({});
     setShowCorrectFeedback(false);
@@ -754,14 +756,20 @@ export function SpacedRepetitionPage() {
               </div>
             </div>
             
+            {/* Hint Display */}
+            {hintText && !solved && !failed && (
+              <div className="p-3 rounded-lg mb-3 bg-amber-500/10 border border-amber-500/20 text-amber-300 text-sm">
+                💡 {hintText}
+              </div>
+            )}
+
             {/* Controls */}
             {!solved && !failed && (
               <div className="flex gap-3">
                 <button
                   onClick={() => {
                     setHintsUsed(prev => prev + 1);
-                    // Show first move of solution as hint
-                    alert(`Hint: Consider ${currentCard.solution[moveIndex]}`);
+                    setHintText(`Consider ${currentCard.solution[moveIndex]}`);
                   }}
                   className="btn-secondary flex-1"
                 >

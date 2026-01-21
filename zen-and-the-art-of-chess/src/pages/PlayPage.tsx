@@ -41,6 +41,7 @@ export function PlayPage() {
   const [engineLoading, setEngineLoading] = useState(true);
   const [selectedMode, setSelectedMode] = useState<GameMode>('FREE_PLAY');
   const [customFen, setCustomFen] = useState('');
+  const [fenError, setFenError] = useState('');
   const [game, setGame] = useState(new Chess());
   const [evaluation, setEvaluation] = useState<EngineEvaluation | null>(null);
   const [prevEvaluation, setPrevEvaluation] = useState<number | null>(null);
@@ -605,9 +606,10 @@ export function PlayPage() {
         setMoveHistory([]);
         setLastMove(null);
         setCustomFen('');
+        setFenError('');
       } catch (e) {
         logger.error('Invalid FEN:', e);
-        alert('Invalid FEN position');
+        setFenError('Invalid FEN position. Please check the format.');
       }
     }
   }, [customFen]);
@@ -839,11 +841,17 @@ export function PlayPage() {
               }}
               aria-label="FEN notation input"
               aria-describedby="fen-loader-label"
+              onFocus={() => setFenError('')}
             />
+            {fenError && (
+              <div className="text-xs text-red-400 mb-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
+                {fenError}
+              </div>
+            )}
             <button
               onClick={handleLoadFen}
               disabled={!customFen.trim()}
-              className="btn-secondary w-full text-sm disabled:opacity-50"
+              className="btn-secondary w-full text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Load position from FEN notation"
             >
               Load FEN
