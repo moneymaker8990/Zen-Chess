@@ -2,12 +2,27 @@
 // KEYBOARD SHORTCUTS HELP MODAL
 // ============================================
 
+import { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShortcutsStore, SHORTCUT_CATEGORIES, useGlobalShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 export function KeyboardShortcutsHelp() {
   const { showHelp, setShowHelp } = useShortcutsStore();
   const { shortcuts } = useGlobalShortcuts();
+
+  // Handle ESC key to close modal
+  const handleEscapeKey = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape' && showHelp) {
+      setShowHelp(false);
+    }
+  }, [showHelp, setShowHelp]);
+
+  useEffect(() => {
+    if (showHelp) {
+      document.addEventListener('keydown', handleEscapeKey);
+      return () => document.removeEventListener('keydown', handleEscapeKey);
+    }
+  }, [showHelp, handleEscapeKey]);
 
   // Group shortcuts by category
   const groupedShortcuts = shortcuts.reduce((acc, shortcut) => {
