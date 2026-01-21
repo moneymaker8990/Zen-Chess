@@ -5,10 +5,10 @@
 // ============================================
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { Chessboard } from 'react-chessboard';
 import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
-import { useBoardStyles } from '@/state/boardSettingsStore';
+import { ZenChessboard } from '@/components/ZenChessboard';
+import { BackButton } from '@/components/BackButton';
 
 // ============================================
 // TYPES & INTERFACES
@@ -491,7 +491,6 @@ type ViewMode = 'overview' | 'lesson' | 'practice' | 'reference';
 
 export function ThinkingSystemPage() {
   const navigate = useNavigate();
-  const boardStyles = useBoardStyles();
   
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
@@ -602,13 +601,7 @@ export function ThinkingSystemPage() {
       <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <header>
-          <div className="flex items-center gap-2 text-sm mb-4">
-            <button onClick={() => navigate('/')} className="hover:text-white transition-colors" style={{ color: 'var(--text-muted)' }}>
-              Home
-            </button>
-            <span style={{ color: 'var(--text-muted)' }}>/</span>
-            <span style={{ color: 'var(--text-secondary)' }}>Thinking System</span>
-          </div>
+          <BackButton fallback="/" className="mb-4" />
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
             🧠 The 5-Step Thinking System
           </h1>
@@ -849,23 +842,17 @@ export function ThinkingSystemPage() {
           {/* Example slides */}
           {isOnExample && currentLesson.examples[exampleIndex] && (
             <div className="grid lg:grid-cols-2 gap-8 items-center">
-              <div className="board-container">
-                <div className="board-wrapper">
-                  <Chessboard
-                    position={currentLesson.examples[exampleIndex].fen}
-                    boardOrientation="white"
-                    customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                    customLightSquareStyle={boardStyles.customLightSquareStyle}
-                    arePiecesDraggable={false}
-                  customSquareStyles={
-                    currentLesson.examples[exampleIndex].highlightSquares?.reduce((acc, sq) => ({
-                      ...acc,
-                      [sq]: { backgroundColor: stepInfo.color + '60' }
-                    }), {})
-                  }
-                />
-                </div>
-              </div>
+              <ZenChessboard
+                position={currentLesson.examples[exampleIndex].fen}
+                orientation="white"
+                arePiecesDraggable={false}
+                highlightSquares={
+                  currentLesson.examples[exampleIndex].highlightSquares?.reduce((acc, sq) => ({
+                    ...acc,
+                    [sq]: { backgroundColor: stepInfo.color + '60' }
+                  }), {}) || {}
+                }
+              />
               <div>
                 <h3 className="text-xl font-medium mb-4" style={{ color: 'var(--text-primary)' }}>
                   Example {exampleIndex + 1}
@@ -937,23 +924,17 @@ export function ThinkingSystemPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Board */}
-          <div className="board-container">
-            <div className="board-wrapper">
-              <Chessboard
-                position={question.fen}
-                boardOrientation={new Chess(question.fen).turn() === 'w' ? 'white' : 'black'}
-                customDarkSquareStyle={boardStyles.customDarkSquareStyle}
-                customLightSquareStyle={boardStyles.customLightSquareStyle}
-                arePiecesDraggable={false}
-              customSquareStyles={
-                question.highlightSquares?.reduce((acc, sq) => ({
-                  ...acc,
-                  [sq]: { backgroundColor: stepInfo.color + '50' }
-                }), {})
-              }
-            />
-            </div>
-          </div>
+          <ZenChessboard
+            position={question.fen}
+            orientation={new Chess(question.fen).turn() === 'w' ? 'white' : 'black'}
+            arePiecesDraggable={false}
+            highlightSquares={
+              question.highlightSquares?.reduce((acc, sq) => ({
+                ...acc,
+                [sq]: { backgroundColor: stepInfo.color + '50' }
+              }), {}) || {}
+            }
+          />
           
           {/* Question */}
           <div className="space-y-6">

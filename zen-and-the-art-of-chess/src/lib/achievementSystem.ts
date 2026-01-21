@@ -390,7 +390,44 @@ export const useAchievementStore = create<AchievementState>()(
         }
       },
     }),
-    { name: 'zen-chess-achievements' }
+    {
+      name: 'zen-chess-achievements',
+      version: 1,
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as Partial<AchievementState>;
+
+        // Version 0 -> 1: Ensure all stats fields exist
+        if (version < 1) {
+          const defaultStats: UserStats = {
+            gamesPlayed: 0,
+            gamesWon: 0,
+            puzzlesSolved: 0,
+            puzzleStreak: 0,
+            bestPuzzleStreak: 0,
+            dayStreak: 0,
+            bestDayStreak: 0,
+            totalPracticeMinutes: 0,
+            coursesCompleted: 0,
+            lessonsCompleted: 0,
+            meditationMinutes: 0,
+            openingsStudied: 0,
+            legendGamesStudied: 0,
+            accuracyAbove80Count: 0,
+            accuracyAbove90Count: 0,
+            calmPlayGames: 0,
+            missedBreathing: 0,
+            tookBreaks: 0,
+          };
+
+          state.stats = { ...defaultStats, ...state.stats };
+          state.unlockedAchievements = state.unlockedAchievements ?? [];
+          state.newlyUnlocked = state.newlyUnlocked ?? [];
+          state.totalXP = state.totalXP ?? 0;
+        }
+
+        return state as AchievementState;
+      },
+    }
   )
 );
 

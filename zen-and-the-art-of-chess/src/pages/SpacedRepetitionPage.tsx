@@ -10,6 +10,7 @@ import { Chess, Square } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { BackButton } from '@/components/BackButton';
 import { 
   getPuzzlesByTheme, 
   getNextPuzzleAnonymous,
@@ -427,13 +428,7 @@ export function SpacedRepetitionPage() {
       <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <header>
-          <div className="flex items-center gap-2 text-sm mb-4">
-            <button onClick={() => navigate('/')} className="hover:text-white transition-colors" style={{ color: 'var(--text-muted)' }}>
-              Home
-            </button>
-            <span style={{ color: 'var(--text-muted)' }}>/</span>
-            <span style={{ color: 'var(--text-secondary)' }}>Spaced Repetition</span>
-          </div>
+          <BackButton fallback="/" className="mb-4" />
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
             🧠 Spaced Repetition
           </h1>

@@ -6,66 +6,81 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+// Maximum history entries to prevent unbounded growth
+const MAX_HISTORY_SIZE = 50;
+
 interface NavigationHistoryState {
   history: string[];
   push: (path: string) => void;
   pop: () => string | null;
   canGoBack: () => boolean;
   clear: () => void;
+  peek: () => string | null;
 }
 
 export const useNavigationHistory = create<NavigationHistoryState>()(
   persist(
     (set, get) => ({
       history: [],
-      
+
       /**
        * Push a new path to history
        * Ignores if it's the same as the current top
+       * Trims old entries if exceeding MAX_HISTORY_SIZE
        */
       push: (path: string) => {
         set((state) => {
           const currentTop = state.history[state.history.length - 1];
           // Don't add duplicate consecutive entries
           if (currentTop === path) return state;
-          
-          return {
-            history: [...state.history, path],
-          };
+
+          let newHistory = [...state.history, path];
+
+          // Trim old entries if exceeding max size
+          if (newHistory.length > MAX_HISTORY_SIZE) {
+            newHistory = newHistory.slice(-MAX_HISTORY_SIZE);
+          }
+
+          return { history: newHistory };
         });
       },
-      
+
       /**
-       * Pop the top path from history and return it
-       * Returns null if history is empty
+       * Pop the current path and return the previous path to navigate to.
+       * Returns null if no previous path exists.
        */
       pop: () => {
         const state = get();
-        if (state.history.length === 0) return null;
-        
-        // Remove current path
+
+        // Need at least 2 entries: current + previous
+        if (state.history.length < 2) return null;
+
         const newHistory = [...state.history];
+        // Remove current path
         newHistory.pop();
-        
-        // Get previous path
-        const previousPath = newHistory[newHistory.length - 1] || null;
-        
-        // Remove previous path too so we don't go back to it again
-        if (previousPath && newHistory.length > 0) {
-          newHistory.pop();
-        }
-        
+        // Get the previous path (will become current after navigation)
+        const previousPath = newHistory[newHistory.length - 1];
+
         set({ history: newHistory });
         return previousPath;
       },
-      
+
       /**
-       * Check if we can go back
+       * Check if we can go back (need at least 2 entries)
        */
       canGoBack: () => {
-        return get().history.length > 1;
+        return get().history.length >= 2;
       },
-      
+
+      /**
+       * Peek at the previous path without modifying history
+       */
+      peek: () => {
+        const history = get().history;
+        if (history.length < 2) return null;
+        return history[history.length - 2];
+      },
+
       /**
        * Clear all history
        */

@@ -356,6 +356,28 @@ export const useProgressStore = create<ProgressStore>()(
     }),
     {
       name: 'zen-chess-progress',
+      version: 1,
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as { progress?: UserProgress };
+
+        // Version 0 -> 1: Add missing fields with defaults
+        if (version < 1) {
+          if (state.progress) {
+            // Ensure all required fields exist with defaults
+            state.progress.puzzlesFailed = state.progress.puzzlesFailed ?? 0;
+            state.progress.meditationMinutes = state.progress.meditationMinutes ?? 0;
+            state.progress.tiltEvents = state.progress.tiltEvents ?? [];
+            state.progress.completedOpenings = state.progress.completedOpenings ?? new Set<string>();
+            state.progress.openingStreak = state.progress.openingStreak ?? 0;
+            state.progress.settings = {
+              ...initialProgress.settings,
+              ...state.progress.settings,
+            };
+          }
+        }
+
+        return state as ProgressStore;
+      },
     }
   )
 );

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ZenChessboard } from '@/components/ZenChessboard';
+import { BackButton } from '@/components/BackButton';
 import type { InstructiveGame, AnnotatedMove } from '@/data/instructiveGames/types';
 import { 
   fetchLegendGames, 
@@ -153,12 +154,16 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <button
-            onClick={onBack}
-            className="text-zen-500 hover:text-zen-300 text-sm mb-2 flex items-center gap-1"
-          >
-            ← Back to Games
-          </button>
+          {onBack ? (
+            <button
+              onClick={onBack}
+              className="text-zen-500 hover:text-zen-300 text-sm mb-2 flex items-center gap-1"
+            >
+              ← Back to Games
+            </button>
+          ) : (
+            <BackButton fallback="/games" label="Back to Games" className="mb-2" />
+          )}
           <h1 className="text-2xl font-serif text-zen-100">{game.title}</h1>
           <div className="flex items-center gap-3 mt-2 text-sm text-zen-500">
             <span>{game.white} vs {game.black}</span>
@@ -175,14 +180,16 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
         {/* Board and controls */}
         <div className="space-y-4 flex flex-col items-center lg:items-start">
           <div className="board-container">
-            <ZenChessboard
-              position={getCurrentFen()}
-              orientation="white"
-              arePiecesDraggable={false}
-              mode="analysis"
-              disableSounds
-              ariaLabel={`Game viewer: ${game.white} vs ${game.black}. Move ${currentMoveIndex + 1} of ${effectiveMoves.length}`}
-            />
+            <div className="board-wrapper">
+              <ZenChessboard
+                position={getCurrentFen()}
+                orientation="white"
+                arePiecesDraggable={false}
+                mode="analysis"
+                disableSounds
+                ariaLabel={`Game viewer: ${game.white} vs ${game.black}. Move ${currentMoveIndex + 1} of ${effectiveMoves.length}`}
+              />
+            </div>
           </div>
 
           {/* Navigation controls */}

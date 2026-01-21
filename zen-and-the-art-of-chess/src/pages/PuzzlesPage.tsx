@@ -7,6 +7,7 @@ import { useBoardSettingsStore, useBoardStyles, useMoveOptions } from '@/state/b
 import { useAgentTrigger } from '@/lib/agents/agentOrchestrator';
 import { AgentWatching, ContextualAgentTip } from '@/components/AgentPresence';
 import { PuzzleGeniusPanel } from '@/components/PuzzleGeniusPanel';
+import { BackButton } from '@/components/BackButton';
 import { UISounds, playSmartMoveSound } from '@/lib/soundSystem';
 import { MOVE_HINT_STYLES } from '@/lib/constants';
 import {
@@ -1183,6 +1184,9 @@ export function PuzzlesPage() {
 
     return (
       <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
+        {/* Back Button */}
+        <BackButton fallback="/" className="mb-2" />
+
         {/* Hero Header */}
         <section className="text-center lg:text-left">
           <div className="flex items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-1 sm:mb-2">

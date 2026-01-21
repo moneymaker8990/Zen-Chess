@@ -4,7 +4,7 @@
 // Builds "at a glance" intuition that separates masters from amateurs
 // ============================================
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ import {
   type FlashQuestion
 } from '@/data/flashPositions';
 import { useBoardStyles } from '@/state/boardSettingsStore';
+import { BackButton } from '@/components/BackButton';
 import { logger } from '@/lib/logger';
 
 // ============================================
@@ -681,13 +682,7 @@ export function FlashTrainingPage() {
       <div className="space-y-4 sm:space-y-8 animate-fade-in px-2 sm:px-0">
         {/* Header */}
         <header>
-          <div className="flex items-center gap-2 text-xs sm:text-sm mb-2 sm:mb-4">
-            <button onClick={() => navigate('/')} className="hover:text-white transition-colors" style={{ color: 'var(--text-muted)' }}>
-              Home
-            </button>
-            <span style={{ color: 'var(--text-muted)' }}>/</span>
-            <span style={{ color: 'var(--text-secondary)' }}>Flash</span>
-          </div>
+          <BackButton fallback="/" className="mb-4" />
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-medium mb-1 sm:mb-2" style={{ color: 'var(--text-primary)' }}>
             ⚡ Flash Training
           </h1>
@@ -1112,7 +1107,7 @@ export function FlashTrainingPage() {
         {/* Main Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0 max-w-full">
           {/* Board */}
-          <div className="board-container" ref={boardContainerRef}>
+          <div className="board-container">
             <div className="board-wrapper">
               <div className="relative w-full h-full">
                 {/* Show board during position flash, result, or study mode during questions */}
