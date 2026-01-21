@@ -39,6 +39,7 @@ export function PlayPage() {
   const navigate = useNavigate();
   const [engineReady, setEngineReady] = useState(false);
   const [engineLoading, setEngineLoading] = useState(true);
+  const [engineError, setEngineError] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<GameMode>('FREE_PLAY');
   const [customFen, setCustomFen] = useState('');
   const [fenError, setFenError] = useState('');
@@ -100,6 +101,7 @@ export function PlayPage() {
 
     const initEngine = async () => {
       setEngineLoading(true);
+      setEngineError(null);
       try {
         const ready = await stockfish.init();
         setEngineReady(ready);
@@ -107,9 +109,11 @@ export function PlayPage() {
           stockfish.setStrength(progress.settings.engineStrength);
           logger.debug('Engine initialized successfully');
         } else {
+          setEngineError('Engine failed to initialize. Analysis and VS Engine modes may not work.');
           logger.error('Engine failed to initialize');
         }
       } catch (error) {
+        setEngineError('Engine initialization failed. Try refreshing the page.');
         logger.error('Failed to initialize engine:', error);
       } finally {
         setEngineLoading(false);
@@ -738,6 +742,34 @@ export function PlayPage() {
           </button>
         ))}
       </div>
+
+      {/* Engine error warning - shows when engine fails and user is in a mode that needs it */}
+      {engineError && (selectedMode === 'VS_ENGINE' || selectedMode === 'ANALYSIS') && (
+        <div
+          className="flex items-center gap-3 p-3 rounded-lg border"
+          style={{
+            background: 'rgba(239, 68, 68, 0.1)',
+            borderColor: 'rgba(239, 68, 68, 0.3)',
+            color: '#fca5a5'
+          }}
+          role="alert"
+        >
+          <span className="text-lg">⚠️</span>
+          <div className="flex-1">
+            <p className="text-sm font-medium">{engineError}</p>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              Free Play mode is still available without the engine.
+            </p>
+          </div>
+          <button
+            onClick={() => setEngineError(null)}
+            className="text-xs px-2 py-1 rounded hover:bg-white/10 transition-colors"
+            aria-label="Dismiss error"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Main content */}
       <div className="flex flex-col lg:grid lg:grid-cols-[auto_1fr_320px] gap-4 sm:gap-6">
