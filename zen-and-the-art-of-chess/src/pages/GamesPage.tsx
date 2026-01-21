@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { allInstructiveGames, type InstructiveGame, type Era, type Category } from '@/data/instructiveGames';
 import { GameViewer } from '@/components/GameViewer';
 import { PageHeader } from '@/components/Tutorial';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 type FilterEra = Era | 'all';
 type FilterCategory = Category | 'all';
@@ -222,19 +223,17 @@ export function GamesPage() {
 
       {/* Empty state */}
       {filteredGames.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-zen-400 mb-4">No games match your filters.</p>
-          <button
-            onClick={() => {
-              setSearchQuery('');
-              setFilterEra('all');
-              setFilterCategory('all');
-            }}
-            className="px-6 py-2.5 rounded-lg bg-gold-500/20 text-gold-400 hover:bg-gold-500/30 border border-gold-500/30 transition-all font-medium"
-          >
-            Clear Filters
-          </button>
-        </div>
+        <EmptyState
+          icon="🔍"
+          title="No games found"
+          description="No games match your current filters. Try adjusting your search or filter settings."
+          actionLabel="Clear Filters"
+          onAction={() => {
+            setSearchQuery('');
+            setFilterEra('all');
+            setFilterCategory('all');
+          }}
+        />
       )}
 
       {/* Legend */}

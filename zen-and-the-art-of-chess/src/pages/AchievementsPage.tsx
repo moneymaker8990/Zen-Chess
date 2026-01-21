@@ -15,6 +15,7 @@ import {
   type Achievement,
 } from '@/lib/achievementSystem';
 import { AchievementBadge } from '@/components/AchievementNotification';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 // ============================================
 // TYPES
@@ -252,15 +253,17 @@ export function AchievementsPage() {
 
       {/* Empty State */}
       {filteredAchievements.length === 0 && (
-        <div className="card p-12 text-center">
-          <div className="text-4xl mb-4">🔍</div>
-          <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
-            No achievements found
-          </h3>
-          <p style={{ color: 'var(--text-muted)' }}>
-            Try adjusting your filters to see more achievements.
-          </p>
-        </div>
+        <EmptyState
+          icon="🔍"
+          title="No achievements found"
+          description="Try adjusting your filters to see more achievements."
+          actionLabel="Clear Filters"
+          onAction={() => {
+            setCategoryFilter('all');
+            setRarityFilter('all');
+            setShowUnlockedOnly(false);
+          }}
+        />
       )}
 
       {/* Achievement Detail Modal */}
