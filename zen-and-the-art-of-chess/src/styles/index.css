@@ -104,6 +104,17 @@ summary,
   cursor: pointer;
 }
 
+/* Mobile tap target accessibility - ensure minimum 44px hit area */
+@media (pointer: coarse) {
+  button:not(.tap-target-exempt),
+  [role="button"]:not(.tap-target-exempt),
+  a[href]:not(.tap-target-exempt),
+  select:not(.tap-target-exempt) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
 /* Safe area padding for notched devices */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0);
