@@ -176,10 +176,15 @@ export function GameViewer({ game, onBack }: GameViewerProps) {
         <span className="text-xs text-zen-600 font-mono">{game.eco}</span>
       </div>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,480px)_minmax(300px,400px)] gap-4 lg:gap-6 px-2 sm:px-0">
+      <div className="flex flex-col lg:grid lg:grid-cols-[minmax(280px,420px)_minmax(300px,1fr)] gap-4 lg:gap-6 px-2 sm:px-0">
         {/* Board and controls */}
         <div className="space-y-4 flex flex-col items-center lg:items-start w-full">
-          <div className="board-container max-w-[min(480px,100%)]">
+          <div
+            className="w-full"
+            style={{
+              maxWidth: 'min(420px, 100%, 60vh)',
+            }}
+          >
             <div className="board-wrapper">
               <ZenChessboard
                 position={getCurrentFen()}
