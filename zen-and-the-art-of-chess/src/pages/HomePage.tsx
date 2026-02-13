@@ -65,6 +65,7 @@ function AgentInsightBanner() {
           onClick={() => dismissMessage(topMessage.id)}
           className="p-1.5 rounded-lg transition-colors hover:bg-white/10 sm:hidden"
           style={{ color: 'var(--text-muted)' }}
+          aria-label="Dismiss message"
         >
           ✕
         </button>
@@ -106,6 +107,7 @@ function AgentInsightBanner() {
           onClick={() => dismissMessage(topMessage.id)}
           className="hidden sm:block p-2 rounded-lg transition-colors hover:bg-white/10"
           style={{ color: 'var(--text-muted)' }}
+          aria-label="Dismiss message"
         >
           ✕
         </button>
@@ -265,7 +267,6 @@ export function HomePage() {
             
             {/* Core Learning Features */}
             <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-4">
-              {/* Courses - temporarily removed */}
               {/* Thinking System */}
               <button
                 onClick={() => navigate('/thinking-system')}
@@ -332,6 +333,9 @@ export function HomePage() {
 
             {/* Quick links */}
             <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              <button onClick={() => navigate('/courses')} className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm transition-all hover:bg-[var(--bg-hover)]" style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
+                🎓 Courses
+              </button>
               <button onClick={() => navigate('/openings')} className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm transition-all hover:bg-[var(--bg-hover)]" style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
                 📚 Openings
               </button>

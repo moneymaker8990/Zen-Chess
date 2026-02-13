@@ -4,6 +4,7 @@ import { Chess, Square } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { BackButton } from '@/components/BackButton';
+import { NotFoundState } from '@/components/ui/NotFoundState';
 import { stockfish } from '@/engine/stockfish';
 import { getLegendMove, getLegendGames } from '@/engine/legendEngine';
 import {
@@ -12,7 +13,7 @@ import {
   generateSessionSummary,
   generateStudyNote,
 } from '@/engine/guessTheMove';
-import { LEGEND_STYLES, type GuessMoveResult, type LegendId } from '@/lib/legendTypes';
+import { LEGEND_STYLES, type GuessMoveResult, type GuessSessionSummary, type LegendGame, type LegendId } from '@/lib/legendTypes';
 import { useNotesStore, useStudyStore, useLegendGameReviewStore } from '@/state/notesStore';
 import type { BotLevel } from '@/engine/humanizedStockfish';
 import { parseUciMove, isValidFen } from '@/lib/moveValidation';
@@ -36,22 +37,12 @@ export function LegendDetailPage() {
   if (!legendData) {
     return (
       <div className="space-y-6 animate-fade-in">
-        <BackButton to="/greats" label="Back to Legends" />
-        <div className="card p-8 text-center">
-          <div className="text-5xl mb-4">🔍</div>
-          <h2 className="text-2xl font-display font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
-            Legend Not Found
-          </h2>
-          <p className="mb-6" style={{ color: 'var(--text-tertiary)' }}>
-            We couldn't find a legend named "{legendId}".
-          </p>
-          <button
-            onClick={() => navigate('/greats')}
-            className="btn-primary px-6 py-2"
-          >
-            Browse All Legends
-          </button>
-        </div>
+        <NotFoundState
+          title="Legend not found"
+          description="This chess master could not be found."
+          backTo="/greats"
+          backLabel="Browse Legends"
+        />
       </div>
     );
   }
@@ -71,17 +62,17 @@ export function LegendDetailPage() {
   const [optionSquares, setOptionSquares] = useState<Record<string, { backgroundColor: string }>>({});
 
   // Guess the Move state
-  const [availableGames, setAvailableGames] = useState<any[]>([]);
+  const [availableGames, setAvailableGames] = useState<LegendGame[]>([]);
   const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
   const [guessSession, setGuessSession] = useState<{
-    game: any;
+    game: LegendGame;
     positions: Array<{ fen: string; move: string; moveNumber: number }>;
     legendColor: 'white' | 'black';
   } | null>(null);
   const [currentPositionIndex, setCurrentPositionIndex] = useState(0);
   const [guessResults, setGuessResults] = useState<GuessMoveResult[]>([]);
   const [sessionComplete, setSessionComplete] = useState(false);
-  const [sessionSummary, setSessionSummary] = useState<any>(null);
+  const [sessionSummary, setSessionSummary] = useState<GuessSessionSummary | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState<GuessMoveResult | null>(null);
   
@@ -153,30 +144,39 @@ export function LegendDetailPage() {
 
   // Load available games for Guess the Move
   useEffect(() => {
-    if (legend && activeTab === 'guess') {
-      getLegendGames(legend).then((games) => {
+    if (!legend || activeTab !== 'guess') return;
+    let cancelled = false;
+
+    getLegendGames(legend).then((games) => {
+      if (!cancelled) {
         setAvailableGames(games);
-        // Don't auto-select - let user browse the game library first
-      }).catch((err) => {
+      }
+    }).catch((err) => {
+      if (!cancelled) {
         logger.warn('Could not load games:', err);
         setAvailableGames([]);
-      });
-    }
+      }
+    });
+
+    return () => { cancelled = true; };
   }, [legend, activeTab]);
 
   // Start guess session when game is selected
   useEffect(() => {
-    if (legend && selectedGameId && activeTab === 'guess') {
-      createGuessSessionFromGame(legend, selectedGameId).then((session) => {
-        if (session) {
-          setGuessSession(session);
-          setCurrentPositionIndex(0);
-          setGuessResults([]);
-          setSessionComplete(false);
-          setShowFeedback(false);
-        }
-      });
-    }
+    if (!legend || !selectedGameId || activeTab !== 'guess') return;
+    let cancelled = false;
+
+    createGuessSessionFromGame(legend, selectedGameId).then((session) => {
+      if (!cancelled && session) {
+        setGuessSession(session);
+        setCurrentPositionIndex(0);
+        setGuessResults([]);
+        setSessionComplete(false);
+        setShowFeedback(false);
+      }
+    });
+
+    return () => { cancelled = true; };
   }, [legend, selectedGameId, activeTab]);
 
   // Play vs Legend: Make legend move
@@ -438,8 +438,8 @@ export function LegendDetailPage() {
           if (move) {
             playSmartMoveSound(guessGame, move, { isCapture });
           }
-        } catch {
-          // Sound failed, continue anyway
+        } catch (e) {
+          logger.debug('Sound playback failed during guess move:', e);
         }
 
         // Score the guess
@@ -571,12 +571,12 @@ export function LegendDetailPage() {
 
   if (!legend || !legendData) {
     return (
-      <div className="text-center py-12">
-        <p className="text-zen-400">Legend not found</p>
-        <button onClick={() => navigate('/greats')} className="zen-button-primary mt-4">
-          Back to Greats
-        </button>
-      </div>
+      <NotFoundState
+        title="Legend not found"
+        description="This chess master could not be found."
+        backTo="/greats"
+        backLabel="Browse Legends"
+      />
     );
   }
 
@@ -648,7 +648,6 @@ export function LegendDetailPage() {
                     animationDuration={boardStyles.animationDuration}
                     arePiecesDraggable={!isThinking}
                     snapToCursor={false}
-                    snapToCenterOnDrop={true}
                   />
                 </div>
               </div>
@@ -713,7 +712,7 @@ export function LegendDetailPage() {
                     </div>
                   </div>
 
-                  <button onClick={resetGame} className="zen-button-primary w-full">
+                  <button onClick={() => resetGame()} className="zen-button-primary w-full">
                     New Game
                   </button>
                 </div>
@@ -913,8 +912,14 @@ export function LegendDetailPage() {
                       <Chessboard
                         position={guessChess.fen()}
                         onPieceDrop={(source, target) => {
-                          handleGuessMove(source, target);
-                          return !showFeedback;
+                          if (showFeedback || guessAnimating || !guessSession) return false;
+                          const currentPos = guessSession.positions[currentPositionIndex];
+                          if (!currentPos) return false;
+                          const userMove = `${source}${target}`;
+                          const legendMove = currentPos.move;
+                          const isCorrect = userMove === legendMove || (userMove + 'q') === legendMove;
+                          void handleGuessMove(source, target);
+                          return isCorrect;
                         }}
                         onPieceDragBegin={() => setIsBoardDragging(true)}
                         onPieceDragEnd={() => setIsBoardDragging(false)}
@@ -924,7 +929,6 @@ export function LegendDetailPage() {
                         animationDuration={boardStyles.animationDuration}
                         arePiecesDraggable={!showFeedback && !guessAnimating}
                         snapToCursor={false}
-                        snapToCenterOnDrop={true}
                       />
                     )}
                     
@@ -1154,7 +1158,7 @@ function GameSelector({
 }: {
   legend: LegendId;
   legendName: string;
-  games: any[];
+  games: LegendGame[];
   onSelectGame: (gameId: string) => void;
   isGameReviewed: (legendId: string, gameId: string) => boolean;
   getGameReview: (legendId: string, gameId: string) => { score: number; reviewedAt: number } | undefined;
@@ -1334,7 +1338,7 @@ function GameSelector({
 
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as 'date-asc' | 'date-desc' | 'opponent' | 'event')}
             className="px-3 py-2 rounded-lg bg-zen-900/50 border border-zen-700/30 text-zen-300"
           >
             <option value="date-asc">Earliest First</option>
@@ -1348,7 +1352,7 @@ function GameSelector({
         <div className="mt-3 flex items-center gap-4">
           <select
             value={filterReviewed}
-            onChange={(e) => setFilterReviewed(e.target.value as any)}
+            onChange={(e) => setFilterReviewed(e.target.value as 'all' | 'reviewed' | 'not-reviewed')}
             className="px-3 py-2 rounded-lg bg-zen-900/50 border border-zen-700/30 text-zen-300"
           >
             <option value="all">All Games</option>

@@ -45,5 +45,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Zen Chess uses the microphone for voice chat with the AI coach.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Zen Chess uses speech recognition to enable voice interaction with the AI coach.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

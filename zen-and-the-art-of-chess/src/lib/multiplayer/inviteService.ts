@@ -70,7 +70,7 @@ export async function createInvite(
 export function getInviteLink(inviteCode: string): string {
   const baseUrl = typeof window !== 'undefined' 
     ? window.location.origin 
-    : 'https://yourapp.com';
+    : (import.meta.env.VITE_APP_URL || 'https://zenchess.app');
   return `${baseUrl}/play/friend/${inviteCode}`;
 }
 
@@ -312,7 +312,26 @@ function generateInviteCode(): string {
   return result;
 }
 
-function mapInviteFromDb(data: any): GameInvite {
+interface DbInviteRow {
+  id: string;
+  from_user_id: string;
+  to_user_id: string | null;
+  from_user?: { id: string; username: string | null; display_name: string | null; avatar_url: string | null; rating: number };
+  to_user?: { id: string; username: string | null; display_name: string | null; avatar_url: string | null; rating: number };
+  status: string;
+  time_control_type: string;
+  initial_time_seconds: number;
+  increment_seconds: number;
+  is_rated: boolean;
+  challenger_color: string;
+  invite_code: string | null;
+  game_id: string | null;
+  created_at: string;
+  expires_at: string;
+  responded_at: string | null;
+}
+
+function mapInviteFromDb(data: DbInviteRow): GameInvite {
   return {
     id: data.id,
     fromUserId: data.from_user_id,

@@ -151,6 +151,7 @@ const navSections = [
   {
     title: '🎓 Academy',
     items: [
+      { path: '/courses', label: 'Courses', icon: Icons.courses },
       { path: '/thinking-system', label: 'Thinking System', icon: Icons.mind },
       { path: '/flash-training', label: 'Flash Training', icon: Icons.lightning },
       { path: '/spaced-repetition', label: 'Spaced Review', icon: Icons.target },
@@ -550,6 +551,7 @@ export function Layout({ children }: LayoutProps) {
                   background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
                   color: 'white',
                 }}
+                aria-label="Account settings"
               >
                 {user.email?.[0]?.toUpperCase() || '?'}
               </button>

@@ -67,9 +67,9 @@ export function createMotivatorAgent(): Agent {
   }
 
   return {
-    id: 'motivator' as any,
+    id: 'motivator',
     personality: {
-      id: 'motivator' as any,
+      id: 'motivator',
       name: 'Motivator',
       icon: '💪',
       color: '#f59e0b',

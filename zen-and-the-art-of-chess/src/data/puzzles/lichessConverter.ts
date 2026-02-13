@@ -6,6 +6,7 @@
 
 import { Chess } from 'chess.js';
 import type { PatternType } from '@/lib/types';
+import { logger } from '@/lib/logger';
 
 // Theme mapping from Lichess to our PatternType
 export const LICHESS_TO_PATTERN: Record<string, PatternType> = {
@@ -109,7 +110,7 @@ export function convertLichessPuzzle(puzzle: LichessPuzzleRaw): ConvertedPuzzle 
     // We need to play that move first, then the solution starts
     const setupMove = uciToSan(game, uciMoves[0]);
     if (!setupMove) {
-      console.warn(`Invalid setup move in puzzle ${puzzle.id}`);
+      logger.warn(`Invalid setup move in puzzle ${puzzle.id}`);
       return null;
     }
     
@@ -120,7 +121,7 @@ export function convertLichessPuzzle(puzzle: LichessPuzzleRaw): ConvertedPuzzle 
     for (let i = 1; i < uciMoves.length; i++) {
       const san = uciToSan(game, uciMoves[i]);
       if (!san) {
-        console.warn(`Invalid move ${uciMoves[i]} in puzzle ${puzzle.id}`);
+        logger.warn(`Invalid move ${uciMoves[i]} in puzzle ${puzzle.id}`);
         return null;
       }
       sanMoves.push(san);
@@ -138,7 +139,7 @@ export function convertLichessPuzzle(puzzle: LichessPuzzleRaw): ConvertedPuzzle 
       explanation: generateExplanation(puzzle.themes),
     };
   } catch (e) {
-    console.warn(`Error converting puzzle ${puzzle.id}:`, e);
+    logger.warn(`Error converting puzzle ${puzzle.id}:`, e);
     return null;
   }
 }

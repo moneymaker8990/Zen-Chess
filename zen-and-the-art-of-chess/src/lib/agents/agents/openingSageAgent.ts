@@ -6,6 +6,10 @@
 import type { Agent, AgentTrigger, AgentOrchestratorState, AgentMessage } from '../agentTypes';
 import { createMessage } from '../agentTypes';
 
+interface RecentGame {
+  accuracy?: { opening?: number };
+}
+
 interface OpeningMemory {
   repertoireSize: number;
   lastOpeningStudy: number;
@@ -48,7 +52,7 @@ export function createOpeningSageAgent(): Agent {
         const parsed = JSON.parse(coachData);
         const games = parsed?.state?.state?.recentGames || [];
         
-        games.forEach((game: any) => {
+        games.forEach((game: RecentGame) => {
           const openingAccuracy = game.accuracy?.opening || 50;
           // Track opening performance (simplified - would need actual opening detection)
           if (openingAccuracy < 60 && !memory.weakestOpening) {
@@ -65,9 +69,9 @@ export function createOpeningSageAgent(): Agent {
   }
 
   return {
-    id: 'opening' as any,
+    id: 'opening',
     personality: {
-      id: 'opening' as any,
+      id: 'opening',
       name: 'Opening Sage',
       icon: '📖',
       color: '#f59e0b',

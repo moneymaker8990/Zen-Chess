@@ -127,23 +127,24 @@ export function JourneyPage() {
           const { completed, total, unlocked } = getSectionProgress(section, sectionIndex);
           const isExpanded = expandedSection === section.id;
           const isCurrent = sectionIndex === currentSectionIndex;
+          const hasLessons = section.lessons.length > 0;
           
           return (
             <div key={section.id} className="relative">
               {/* Section Header */}
               <button
-                onClick={() => setExpandedSection(isExpanded ? null : section.id)}
-                disabled={!unlocked}
+                onClick={() => hasLessons ? setExpandedSection(isExpanded ? null : section.id) : undefined}
+                disabled={!unlocked || !hasLessons}
                 className={`
                   w-full rounded-2xl p-5 text-left transition-all duration-300
-                  ${unlocked 
+                  ${unlocked && hasLessons
                     ? 'hover:scale-[1.01] cursor-pointer' 
                     : 'opacity-50 cursor-not-allowed'
                   }
-                  ${isCurrent && unlocked ? 'ring-2 ring-offset-2 ring-offset-[var(--bg-primary)] ring-green-500' : ''}
+                  ${isCurrent && unlocked && hasLessons ? 'ring-2 ring-offset-2 ring-offset-[var(--bg-primary)] ring-green-500' : ''}
                 `}
                 style={{ 
-                  background: unlocked 
+                  background: unlocked && hasLessons
                     ? `linear-gradient(135deg, ${section.bgColor} 0%, ${section.bgColor}dd 100%)`
                     : 'var(--bg-tertiary)',
                 }}
@@ -152,26 +153,33 @@ export function JourneyPage() {
                   <div className="flex items-center gap-4">
                     {/* Section Icon */}
                     <div 
-                      className={`w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg transform rotate-45 ${unlocked ? `bg-gradient-to-br ${section.color}` : 'bg-gray-600'}`}
+                      className={`w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg transform rotate-45 ${unlocked && hasLessons ? `bg-gradient-to-br ${section.color}` : 'bg-gray-600'}`}
                     >
                       <span className="-rotate-45">
-                        {unlocked ? (completed === total ? '✓' : section.lessons[0].icon) : '🔒'}
+                        {!hasLessons ? '🔜' : unlocked ? (completed === total && total > 0 ? '✓' : section.lessons[0]?.icon ?? section.icon) : '🔒'}
                       </span>
                     </div>
                     
                     <div>
-                      <h2 className="text-xl font-display font-bold text-white">
-                        {section.title}
-                      </h2>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-xl font-display font-bold text-white">
+                          {section.title}
+                        </h2>
+                        {!hasLessons && (
+                          <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            Coming Soon
+                          </span>
+                        )}
+                      </div>
                       <p className="text-sm text-white/70">
                         {section.subtitle}
                       </p>
-                      {unlocked && (
+                      {unlocked && hasLessons && (
                         <div className="flex items-center gap-2 mt-2">
                           <div className="w-32 h-1.5 rounded-full bg-white/20 overflow-hidden">
                             <div 
                               className="h-full rounded-full bg-white/80 transition-all"
-                              style={{ width: `${(completed / total) * 100}%` }}
+                              style={{ width: `${total > 0 ? (completed / total) * 100 : 0}%` }}
                             />
                           </div>
                           <span className="text-xs text-white/60">
@@ -179,7 +187,7 @@ export function JourneyPage() {
                           </span>
                         </div>
                       )}
-                      {!unlocked && (
+                      {!unlocked && hasLessons && (
                         <p className="text-xs text-white/50 mt-1">
                           Requires {section.requiredXP} XP to unlock
                         </p>
@@ -188,7 +196,7 @@ export function JourneyPage() {
                   </div>
                   
                   {/* Expand Arrow */}
-                  {unlocked && (
+                  {unlocked && hasLessons && (
                     <svg 
                       className={`w-6 h-6 text-white/60 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                       fill="none" 
@@ -202,7 +210,7 @@ export function JourneyPage() {
               </button>
 
               {/* Lessons Grid */}
-              {isExpanded && unlocked && (
+              {isExpanded && unlocked && hasLessons && (
                 <div className="mt-3 grid gap-2 animate-fade-in">
                   {section.lessons.map((lesson, lessonIndex) => {
                     const lessonUnlocked = lessonIndex <= completed;
@@ -302,8 +310,9 @@ export function JourneyPage() {
           </button>
           <button
             onClick={() => {
-              // Navigate to the next incomplete lesson
+              // Navigate to the next incomplete lesson (skip empty sections)
               for (const section of CURRICULUM) {
+                if (section.lessons.length === 0) continue;
                 const { completed, unlocked } = getSectionProgress(section, CURRICULUM.indexOf(section));
                 if (unlocked && completed < section.lessons.length) {
                   navigate(`/learn/${section.lessons[completed].id}`);

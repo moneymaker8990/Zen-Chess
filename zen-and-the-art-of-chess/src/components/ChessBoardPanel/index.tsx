@@ -408,7 +408,8 @@ export function ChessBoardPanel({
         executeMove(gameCopy, move, sourceSquare, targetSquare);
         return true;
       }
-    } catch {
+    } catch (e) {
+      logger.debug('Move execution failed:', e);
       return false;
     }
     return false;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
@@ -17,6 +17,7 @@ export function AuthCallbackPage() {
   const { initialize } = useAuthStore();
   const [state, setState] = useState<CallbackState>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const redirectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -59,7 +60,7 @@ export function AuthCallbackPage() {
             trackEvent(AnalyticsEvents.SIGNUP_COMPLETED);
             setState('email_verified');
             // Auto-redirect after 3 seconds
-            setTimeout(() => {
+            redirectTimerRef.current = setTimeout(() => {
               navigate('/');
             }, 3000);
             return;
@@ -89,6 +90,12 @@ export function AuthCallbackPage() {
     };
 
     handleAuthCallback();
+
+    return () => {
+      if (redirectTimerRef.current) {
+        clearTimeout(redirectTimerRef.current);
+      }
+    };
   }, [navigate, searchParams, initialize]);
 
   // Email verified success state
@@ -216,3 +223,4 @@ export function AuthCallbackPage() {
   );
 }
 
+export default AuthCallbackPage;

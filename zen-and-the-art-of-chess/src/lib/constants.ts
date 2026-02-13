@@ -254,6 +254,29 @@ export const XP_REWARDS = {
   gameAnalyzed: 15,
 } as const;
 
+// ============================================
+// PUZZLE GAME CONSTANTS
+// ============================================
+
+export const PUZZLE_RUSH_TIME_LIMIT = 180; // seconds
+export const PUZZLE_STREAK_MAX_STRIKES = 3;
+
+export const PUZZLE_TIER_THRESHOLDS = {
+  BRONZE: 0,
+  SILVER: 800,
+  GOLD: 1200,
+  PLATINUM: 1600,
+  DIAMOND: 2000,
+  MASTER: 2400,
+} as const;
+
+// ============================================
+// APP LIMITS
+// ============================================
+
+export const NAVIGATION_HISTORY_MAX_SIZE = 50;
+export const COGNITIVE_METRICS_GAME_LIMIT = 500;
+
 // Export types
 export type BoardTheme = keyof typeof BOARD_THEMES;
 export type PieceStyle = keyof typeof PIECE_STYLES;

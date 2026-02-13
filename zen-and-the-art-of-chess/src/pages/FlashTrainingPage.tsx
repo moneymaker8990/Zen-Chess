@@ -302,12 +302,6 @@ export function FlashTrainingPage() {
     }
   }, [learningPathMode, sessionActive, mode, learningPathProgress, positionsCompleted, showingPosition, showingQuestion, showLearningPathTutorial]);
   
-  // Temporary debug: clear localStorage position on mount to test randomization
-  useEffect(() => {
-    logger.debug('[Flash Training] Clearing localStorage position for debug');
-    localStorage.removeItem(LAST_POSITION_STORAGE_KEY);
-  }, []);
-  
   // Get filtered positions based on mode
   const getPositionsForMode = useCallback((selectedMode: FlashMode): FlashPosition[] => {
     if (selectedMode === 'mixed' || selectedMode === 'blitz-challenge') return FLASH_POSITIONS;

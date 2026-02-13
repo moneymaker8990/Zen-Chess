@@ -13,6 +13,7 @@ import {
   getRarityColor,
   getRarityLabel,
   type Achievement,
+  type UserStats,
 } from '@/lib/achievementSystem';
 import { AchievementBadge } from '@/components/AchievementNotification';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -342,7 +343,7 @@ function AchievementDetail({
 }: {
   achievement: Achievement;
   isUnlocked: boolean;
-  stats: any;
+  stats: UserStats;
   onClose: () => void;
 }) {
   const rarityColor = getRarityColor(achievement.rarity);

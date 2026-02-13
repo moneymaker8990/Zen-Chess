@@ -5,7 +5,7 @@
 // ============================================
 
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { Chessboard, Square as BoardSquare } from 'react-chessboard';
+import { Chessboard } from 'react-chessboard';
 import { Chess, Square, Move } from 'chess.js';
 import { useBoardStyles, useMoveOptions } from '@/state/boardSettingsStore';
 import { ChessSounds } from '@/lib/soundSystem';
@@ -131,7 +131,7 @@ interface ZenChessboardProps {
   feedbackState?: 'correct' | 'incorrect' | 'check' | null;
 
   // Arrows and annotations
-  arrows?: [BoardSquare, BoardSquare][];
+  arrows?: [Square, Square][];
 
   // Advanced - custom styles override settings store
   customSquareStyles?: Record<string, React.CSSProperties>;
@@ -261,8 +261,8 @@ export function ZenChessboard({
     if (enableKeyboard && keyboardGame.current) {
       try {
         keyboardGame.current.load(position);
-      } catch {
-        // Invalid FEN, keep current state
+      } catch (e) {
+        logger.debug('Invalid FEN, keeping current board state:', e);
       }
     }
   }, [position, enableKeyboard]);
@@ -405,8 +405,8 @@ export function ZenChessboard({
   // ============================================
   
   const handlePieceDrop = useCallback((
-    sourceSquare: BoardSquare,
-    targetSquare: BoardSquare,
+    sourceSquare: Square,
+    targetSquare: Square,
     piece: string
   ): boolean => {
     if (!onMove) return false;
@@ -436,8 +436,8 @@ export function ZenChessboard({
           promotion: promotion as 'q' | 'r' | 'b' | 'n' | undefined
         });
         playMoveSound(gameCopy, sourceSquare as Square, targetSquare as Square, isCapture);
-      } catch {
-        // Move was valid via callback but we couldn't replay it - still play a sound
+      } catch (e) {
+        logger.debug('Could not replay move for sound, falling back to basic sound:', e);
         if (isCapture) {
           ChessSounds.capture();
         } else {
@@ -569,14 +569,13 @@ export function ZenChessboard({
           onPieceDrop={handlePieceDrop}
           boardOrientation={orientation}
           customSquareStyles={combinedSquareStyles}
-          customDarkSquareStyle={darkSquareStyle}
-          customLightSquareStyle={lightSquareStyle}
+          customDarkSquareStyle={darkSquareStyle as Record<string, string>}
+          customLightSquareStyle={lightSquareStyle as Record<string, string>}
           animationDuration={animationDuration}
           arePiecesDraggable={arePiecesDraggable && !showEngineThinking}
           boardWidth={boardWidth}
           showBoardNotation={showBoardNotation && boardStyles.showCoordinates}
           customArrows={arrows}
-          snapToCenterOnDrop={true}
         />
 
         {/* Visual check/checkmate indicator - icon + animation (not color-only) */}

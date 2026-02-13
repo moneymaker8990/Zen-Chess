@@ -306,7 +306,7 @@ function ExperienceStep({
         {options.map((option) => (
           <button
             key={option.id}
-            onClick={() => onChange(option.id as any)}
+            onClick={() => onChange(option.id as 'beginner' | 'intermediate' | 'advanced')}
             className={`w-full p-4 rounded-xl text-left transition-all hover:scale-[1.02] ${
               value === option.id ? 'ring-2 ring-purple-500' : ''
             }`}
@@ -451,7 +451,7 @@ function StyleStep({
           {tiltOptions.map((option) => (
             <button
               key={option.id}
-              onClick={() => onChangeTilt(option.id as any)}
+              onClick={() => onChangeTilt(option.id as 'low' | 'medium' | 'high')}
               className={`p-3 rounded-xl text-center transition-all ${
                 tiltValue === option.id ? 'ring-2 ring-red-500' : ''
               }`}
@@ -477,7 +477,7 @@ function StyleStep({
           {timeOptions.map((option) => (
             <button
               key={option.id}
-              onClick={() => onChangeTime(option.id as any)}
+              onClick={() => onChangeTime(option.id as 'morning' | 'afternoon' | 'evening' | 'night')}
               className={`p-3 rounded-xl text-center transition-all ${
                 timeValue === option.id ? 'ring-2 ring-blue-500' : ''
               }`}

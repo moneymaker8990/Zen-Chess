@@ -7,6 +7,22 @@ import { Capacitor } from '@capacitor/core';
 import type { SubscriptionTier } from './premium';
 import { logger } from './logger';
 
+// Allowlisted domains for subscription management redirects
+const ALLOWED_MANAGEMENT_DOMAINS = [
+  'apps.apple.com',
+  'play.google.com',
+  'billing.stripe.com',
+];
+
+function isAllowedManagementUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return ALLOWED_MANAGEMENT_DOMAINS.some(domain => parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`));
+  } catch {
+    return false;
+  }
+}
+
 // RevenueCat types (SDK loaded dynamically)
 interface CustomerInfo {
   entitlements: {
@@ -194,8 +210,8 @@ export async function getOfferings(): Promise<Offerings | null> {
   if (!isInitialized || !Purchases) return null;
 
   try {
-    const { offerings } = await Purchases.getOfferings();
-    return offerings as Offerings;
+    const offerings = await Purchases.getOfferings();
+    return offerings as unknown as Offerings;
   } catch (error) {
     logger.error('RevenueCat: Failed to get offerings', error);
     return null;
@@ -222,7 +238,7 @@ export async function purchasePackage(packageToPurchase: Package): Promise<{
 
   try {
     const { customerInfo } = await Purchases.purchasePackage({
-      aPackage: packageToPurchase,
+      aPackage: packageToPurchase as unknown as import('@revenuecat/purchases-capacitor').PurchasesPackage,
     });
 
     const isPremium = customerInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID]?.isActive;
@@ -295,8 +311,12 @@ export async function openManageSubscriptions(): Promise<void> {
     const { customerInfo } = await Purchases.getCustomerInfo();
     
     if (customerInfo.managementURL) {
-      // Open the management URL
-      window.open(customerInfo.managementURL, '_blank');
+      // Open the management URL only if it's from a trusted domain
+      if (isAllowedManagementUrl(customerInfo.managementURL)) {
+        window.open(customerInfo.managementURL, '_blank');
+      } else {
+        logger.error('Blocked management URL redirect to untrusted domain:', customerInfo.managementURL);
+      }
     } else {
       // Fallback to platform-specific URLs
       if (Capacitor.getPlatform() === 'ios') {

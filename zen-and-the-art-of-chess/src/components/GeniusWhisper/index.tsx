@@ -183,6 +183,7 @@ export function GeniusWhisper({
               }}
               className="flex-shrink-0 p-1 rounded-full opacity-50 hover:opacity-100 transition-opacity"
               style={{ color: 'var(--text-muted)' }}
+              aria-label="Dismiss whisper"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -249,6 +250,7 @@ export function InlineWhisper({ type, content, onDismiss, className = '' }: Inli
         <button
           onClick={onDismiss}
           className="p-1 opacity-50 hover:opacity-100 transition-opacity"
+          aria-label="Dismiss"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

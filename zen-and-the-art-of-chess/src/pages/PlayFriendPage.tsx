@@ -24,6 +24,7 @@ import {
   subscribeToInvites,
   startPresenceHeartbeat,
   type TimeControl,
+  type TimeControlType,
   type GameInvite,
   type PlayerProfile,
 } from '@/lib/multiplayer';
@@ -666,7 +667,7 @@ function CreateGameModal({
           {Object.entries(timeControlGroups).map(([type, controls]) => (
             <div key={type} className="space-y-2">
               <div className="text-xs font-medium capitalize" style={{ color: 'var(--text-secondary)' }}>
-                {getTimeControlLabel(type as any)}
+                {getTimeControlLabel(type as TimeControlType)}
               </div>
               <div className="flex flex-wrap gap-2">
                 {controls.map(([key, tc]) => (

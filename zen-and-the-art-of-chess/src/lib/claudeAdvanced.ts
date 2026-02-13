@@ -3,14 +3,9 @@
 // Cutting-edge AI coaching that blows the competition away
 // ============================================
 
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from './anthropicClient';
 import { AGENT_PERSONAS, type CoachingContext, type AgentMessage } from './claude';
 import { logger } from './logger';
-
-const anthropic = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
 
 // ============================================
 // 1. REAL-TIME POSITION ANALYSIS
@@ -741,17 +736,7 @@ export async function testClaudeConnection(): Promise<{
 }> {
   const startTime = Date.now();
   
-  // Check if API key is configured
-  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-  if (!apiKey || apiKey.trim() === '') {
-    return {
-      connected: false,
-      latency: 0,
-      model: 'unknown',
-      error: 'API key not configured. Set VITE_ANTHROPIC_API_KEY in .env',
-    };
-  }
-  
+  // The API key is now server-side only; test by making a real request.
   try {
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
@@ -780,7 +765,7 @@ export async function testClaudeConnection(): Promise<{
       errorMessage = error.message;
       
       // Check if it's an Anthropic API error with more details
-      const apiError = error as any;
+      const apiError = error as { request_id?: string; status?: number; type?: string; message?: string };
       if ('request_id' in apiError || 'status' in apiError || 'type' in apiError) {
         const parts: string[] = [];
         

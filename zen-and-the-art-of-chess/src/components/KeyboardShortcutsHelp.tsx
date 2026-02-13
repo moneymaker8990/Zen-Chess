@@ -73,6 +73,7 @@ export function KeyboardShortcutsHelp() {
               onClick={() => setShowHelp(false)}
               className="p-2 rounded-lg hover:bg-white/10 transition-colors"
               style={{ color: 'var(--text-muted)' }}
+              aria-label="Close"
             >
               ✕
             </button>

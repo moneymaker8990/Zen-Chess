@@ -26,6 +26,7 @@ export {
 
 // Re-export as the main puzzles array for backwards compatibility
 export { verifiedPuzzles as puzzles } from './verified-puzzles';
+export { verifiedPuzzles as allPuzzles } from './verified-puzzles';
 
 // Converter utilities
 export {

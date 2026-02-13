@@ -5,6 +5,7 @@
 // ============================================
 
 import { enhancedPatterns } from '@/data/positional/enhancedPatterns';
+import type { Square } from 'chess.js';
 import { 
   validateAllPatterns, 
   formatValidationReport,
@@ -12,6 +13,7 @@ import {
   type ValidationReport,
   type PatternValidationResult,
 } from './patternSchema';
+import { logger } from './logger';
 
 // ============================================
 // ADAPTER: Convert EnhancedPattern to PatternSchema
@@ -33,11 +35,11 @@ function adaptEnhancedPattern(pattern: typeof enhancedPatterns[0]): PatternSchem
       annotation: move.annotation,
       explanation: move.explanation,
       arrows: move.arrows?.map(a => ({
-        from: a.from as `${string}${string}`,
-        to: a.to as `${string}${string}`,
+        from: a.from as Square,
+        to: a.to as Square,
         color: a.color,
       })),
-      highlights: move.highlights as `${string}${string}`[] | undefined,
+      highlights: move.highlights as Square[] | undefined,
       alternativeMoves: move.alternativeMoves,
       conceptTag: move.conceptTag,
     })),
@@ -115,24 +117,21 @@ export function runDevValidation(): void {
     return;
   }
   
-  console.group('🔍 Pattern Validation');
-  
   const startTime = performance.now();
   const report = validateEnhancedPatterns();
   const duration = performance.now() - startTime;
   
   if (report.invalidPatterns > 0) {
-    console.error(formatValidationReport(report));
-    console.error(`❌ ${report.invalidPatterns} invalid pattern(s) found`);
+    logger.error(formatValidationReport(report));
+    logger.error(`Pattern Validation: ${report.invalidPatterns} invalid pattern(s) found`);
   } else if (report.totalWarnings > 0) {
-    console.warn(formatValidationReport(report));
-    console.warn(`⚠️ ${report.totalWarnings} warning(s) in patterns`);
+    logger.warn(formatValidationReport(report));
+    logger.warn(`Pattern Validation: ${report.totalWarnings} warning(s) in patterns`);
   } else {
-    console.log(`✅ All ${report.totalPatterns} patterns validated successfully`);
+    logger.info(`Pattern Validation: All ${report.totalPatterns} patterns validated successfully`);
   }
   
-  console.log(`Validation completed in ${duration.toFixed(2)}ms`);
-  console.groupEnd();
+  logger.debug(`Pattern validation completed in ${duration.toFixed(2)}ms`);
 }
 
 /**

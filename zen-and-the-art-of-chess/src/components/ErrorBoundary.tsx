@@ -5,6 +5,7 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { captureError, addBreadcrumb } from '@/lib/sentry';
+import { logger } from '@/lib/logger';
 
 interface Props {
   children: ReactNode;
@@ -34,8 +35,8 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ errorInfo });
 
-    // Log error to console
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // Log error
+    logger.error('ErrorBoundary caught an error:', error, errorInfo);
 
     // Report to Sentry
     captureError(error, {
@@ -230,7 +231,7 @@ export class MiniErrorBoundary extends Component<MiniBoundaryProps, MiniBoundary
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error(`Error in ${this.props.name || 'component'}:`, error, errorInfo);
+    logger.error(`Error in ${this.props.name || 'component'}:`, error, errorInfo);
 
     // Report to Sentry with component context
     captureError(error, {

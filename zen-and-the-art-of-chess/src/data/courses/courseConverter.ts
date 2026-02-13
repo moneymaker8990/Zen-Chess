@@ -7,6 +7,7 @@
 import { Chess } from 'chess.js';
 import type { ChessPuzzle, PatternType } from '@/lib/types';
 import type { CourseVariation, AnnotatedCourseMove } from './courseTypes';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // MOVE VALIDATION
@@ -105,7 +106,7 @@ const themeTakeaways: Partial<Record<PatternType, string>> = {
 export function puzzleToCourseVariation(puzzle: ChessPuzzle): CourseVariation | null {
   // Validate first
   if (!validatePuzzle(puzzle)) {
-    console.warn(`Skipping invalid puzzle ${puzzle.id}`);
+    logger.warn(`Skipping invalid puzzle ${puzzle.id}`);
     return null;
   }
   
@@ -133,7 +134,7 @@ export function puzzleToCourseVariation(puzzle: ChessPuzzle): CourseVariation | 
       }
       
       if (!result) {
-        console.warn(`Invalid move ${moveSan} in puzzle ${puzzle.id}`);
+        logger.warn(`Invalid move ${moveSan} in puzzle ${puzzle.id}`);
         return null;
       }
       
@@ -188,7 +189,7 @@ export function puzzleToCourseVariation(puzzle: ChessPuzzle): CourseVariation | 
       difficulty: puzzle.difficulty,
     };
   } catch (e) {
-    console.warn(`Error converting puzzle ${puzzle.id}:`, e);
+    logger.warn(`Error converting puzzle ${puzzle.id}:`, e);
     return null;
   }
 }

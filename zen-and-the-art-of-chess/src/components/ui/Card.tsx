@@ -24,7 +24,7 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }
 
-export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {
+export interface CardHeaderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Title text or element */
   title?: ReactNode;
   /** Subtitle or description */

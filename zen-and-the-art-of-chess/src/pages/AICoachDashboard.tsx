@@ -15,6 +15,7 @@ import {
   testClaudeConnection,
   type DailyMessage,
   type WeeklyStudyPlan,
+  type PositionAnalysis,
 } from '@/lib/claudeAdvanced';
 
 type Tab = 'chat' | 'voice' | 'analyze' | 'study' | 'agents';
@@ -26,7 +27,7 @@ export function AICoachDashboard() {
   const [studyPlan, setStudyPlan] = useState<WeeklyStudyPlan | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [positionFEN, setPositionFEN] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
-  const [positionAnalysis, setPositionAnalysis] = useState<any>(null);
+  const [positionAnalysis, setPositionAnalysis] = useState<PositionAnalysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   // Load daily message on mount

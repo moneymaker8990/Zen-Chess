@@ -12,6 +12,7 @@ import type { Square } from 'chess.js';
 import { useAuthStore } from '@/state/useAuthStore';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { ChessSounds, playSmartMoveSound } from '@/lib/soundSystem';
+import { NotFoundState } from '@/components/ui/NotFoundState';
 import {
   MultiplayerGameEngine,
   formatTime,
@@ -190,7 +191,9 @@ export function LiveGamePage() {
     const engine = engineRef.current;
     if (!engine || !engine.isMyTurn) return false;
 
-    return handleMove(sourceSquare, targetSquare);
+    // Fire async handler -- board state updates via handleMove's setState calls
+    void handleMove(sourceSquare, targetSquare);
+    return true;
   }, []);
 
   // Make a move
@@ -327,15 +330,12 @@ export function LiveGamePage() {
 
   if (error || !game) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4">❌</div>
-          <p style={{ color: 'var(--text-primary)' }}>{error || 'Game not found'}</p>
-          <button onClick={() => navigate('/play/friend')} className="btn-primary mt-4">
-            Back to Lobby
-          </button>
-        </div>
-      </div>
+      <NotFoundState
+        title="Game not found"
+        description="This game could not be found or may have ended."
+        backTo="/play/friend"
+        backLabel="Play a Friend"
+      />
     );
   }
 

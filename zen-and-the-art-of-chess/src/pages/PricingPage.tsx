@@ -61,13 +61,13 @@ const PLANS = [
 
 export function PricingPage() {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuthStore();
+  const { user } = useAuthStore();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   const handleSelectPlan = async (planId: string) => {
     if (planId === 'free') return;
     
-    if (!isAuthenticated) {
+    if (!user) {
       navigate('/auth');
       return;
     }

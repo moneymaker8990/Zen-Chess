@@ -105,7 +105,7 @@ export function SkillTreePage() {
     return (
       progress.puzzlesSolved * 2 +
       progress.currentDay * 5 +
-      progress.completedOpenings.length * 10 +
+      (progress.completedOpenings?.size ?? 0) * 10 +
       (patternProgress.totalXP || 0) +
       (endgameProgress.totalXP || 0)
     );
@@ -186,8 +186,9 @@ export function SkillTreePage() {
               style={{
                 background: `linear-gradient(135deg, ${info.bgGlow}, transparent)`,
                 borderColor: isSelected ? info.color : 'transparent',
-                ringColor: info.color,
-              }}
+                // Ring color is set via --tw-ring-color custom property (Tailwind)
+                '--tw-ring-color': info.color,
+              } as React.CSSProperties}
             >
               <div className="flex items-center justify-between mb-3">
                 <div

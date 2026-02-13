@@ -3,7 +3,7 @@
 // Real-time game synchronization with Supabase
 // ============================================
 
-import { Chess, Move } from 'chess.js';
+import { Chess, Move, Square } from 'chess.js';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { logger } from '@/lib/logger';
@@ -506,7 +506,7 @@ export class MultiplayerGameEngine {
   }
 
   getLegalMovesForSquare(square: string): string[] {
-    return this.chess.moves({ square: square as any, verbose: true }).map(m => m.to);
+    return this.chess.moves({ square: square as Square, verbose: true }).map(m => m.to);
   }
 
   // ============================================

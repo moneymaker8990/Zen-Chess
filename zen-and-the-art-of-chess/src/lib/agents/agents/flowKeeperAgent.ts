@@ -63,9 +63,9 @@ export function createFlowKeeperAgent(): Agent {
   }
 
   return {
-    id: 'flow-keeper' as any,
+    id: 'flow-keeper',
     personality: {
-      id: 'flow-keeper' as any,
+      id: 'flow-keeper',
       name: 'Flow Keeper',
       icon: '🌊',
       color: '#06b6d4',

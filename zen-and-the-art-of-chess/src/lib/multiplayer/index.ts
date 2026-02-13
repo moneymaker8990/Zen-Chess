@@ -27,7 +27,8 @@ export {
   getReceivedInvites,
   getSentInvites,
   getInviteByCode,
-  subscribeToInvites
+  subscribeToInvites,
+  type CreateInviteOptions,
 } from './inviteService';
 
 // Friend service

@@ -28,6 +28,17 @@ interface SkillData {
   color: string;
 }
 
+interface GameHistoryEntry {
+  id: string;
+  date: number;
+  result: 'win' | 'loss' | 'draw';
+  accuracy?: number;
+}
+
+interface SRSCardWithStatus {
+  status: string;
+}
+
 // ============================================
 // MAIN COMPONENT
 // ============================================
@@ -54,7 +65,7 @@ export function PerformanceDashboardPage() {
   }, []);
 
   // Load game history from localStorage
-  const gameHistory = useMemo(() => {
+  const gameHistory = useMemo((): GameHistoryEntry[] => {
     try {
       const data = localStorage.getItem('zenChessGameHistory');
       return data ? JSON.parse(data) : [];
@@ -70,20 +81,20 @@ export function PerformanceDashboardPage() {
     const cutoff = timeRange === '7d'
       ? now - 7 * 24 * 60 * 60 * 1000
       : now - 30 * 24 * 60 * 60 * 1000;
-    return gameHistory.filter((g: any) => g.date > cutoff);
+    return gameHistory.filter((g: GameHistoryEntry) => g.date > cutoff);
   }, [gameHistory, timeRange]);
 
   // Calculate overview stats
   const overviewStats = useMemo(() => {
-    const wins = filteredGames.filter((g: any) => g.result === 'win').length;
-    const losses = filteredGames.filter((g: any) => g.result === 'loss').length;
-    const draws = filteredGames.filter((g: any) => g.result === 'draw').length;
+    const wins = filteredGames.filter((g: GameHistoryEntry) => g.result === 'win').length;
+    const losses = filteredGames.filter((g: GameHistoryEntry) => g.result === 'loss').length;
+    const draws = filteredGames.filter((g: GameHistoryEntry) => g.result === 'draw').length;
     const total = filteredGames.length;
     const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
 
-    const withAccuracy = filteredGames.filter((g: any) => g.accuracy !== undefined);
+    const withAccuracy = filteredGames.filter((g: GameHistoryEntry) => g.accuracy !== undefined);
     const avgAccuracy = withAccuracy.length > 0
-      ? Math.round(withAccuracy.reduce((s: number, g: any) => s + (g.accuracy || 0), 0) / withAccuracy.length)
+      ? Math.round(withAccuracy.reduce((s: number, g: GameHistoryEntry) => s + (g.accuracy || 0), 0) / withAccuracy.length)
       : 0;
 
     return { wins, losses, draws, total, winRate, avgAccuracy };
@@ -91,42 +102,59 @@ export function PerformanceDashboardPage() {
 
   // Calculate skill radar data
   const skillRadar = useMemo((): SkillData[] => {
-    const cogProfile = cognitiveStore.getProfile();
     const mistakeStats = mistakeStore.getMistakeStats();
-    const patternProfiles = patternStore.getAllPatternProfiles();
+    const patternProfilesValues = patternStore.profiles;
 
     // Calculate pattern success rate
-    const patternSuccessRate = Object.values(patternProfiles).length > 0
-      ? Object.values(patternProfiles).reduce((sum, p) => sum + (p as any).successRate, 0) / Object.values(patternProfiles).length * 100
+    const patternSuccessRate = patternProfilesValues.length > 0
+      ? patternProfilesValues.reduce((sum, p) => sum + p.successRate, 0) / patternProfilesValues.length * 100
       : 50;
 
-    // Calculate opening mastery
-    const openingMastery = openingStore.getRepertoireStats('white').completionRate || 50;
+    // Calculate opening mastery from repertoires
+    const whiteRep = openingStore.repertoires.find((r) => r.color === 'white');
+    const openingMastery = whiteRep && whiteRep.totalPositions > 0
+      ? Math.round((whiteRep.masteredPositions / whiteRep.totalPositions) * 100)
+      : 50;
 
     // Calculate SRS mastery for patterns
-    const patternCards = Object.values(patternProgress.cards);
-    const masteredPatterns = patternCards.filter((c: any) => c.status === 'mastered').length;
+    const patternCards = Object.values(patternProgress.cards) as SRSCardWithStatus[];
+    const masteredPatterns = patternCards.filter((c) => c.status === 'mastered').length;
     const totalPatternCards = patternCards.length || 1;
     const patternMastery = Math.round((masteredPatterns / totalPatternCards) * 100) || 0;
 
     // Calculate endgame mastery
-    const endgameCards = Object.values(endgameProgress.cards || {});
-    const masteredEndgames = endgameCards.filter((c: any) => c.status === 'mastered').length;
+    const endgameCards = Object.values(endgameProgress.cards || {}) as SRSCardWithStatus[];
+    const masteredEndgames = endgameCards.filter((c) => c.status === 'mastered').length;
     const totalEndgameCards = endgameCards.length || 1;
     const endgameMastery = Math.round((masteredEndgames / Math.max(totalEndgameCards, 1)) * 100) || 0;
+
+    // Phase accuracies from cognitive metrics
+    const metrics = cognitiveStore.gameMetrics;
+    const openingPhase = metrics.length > 0 ? Math.round(metrics.reduce((s, m) => s + m.openingAccuracy, 0) / metrics.length) : 50;
+    const middlegamePhase = metrics.length > 0 ? Math.round(metrics.reduce((s, m) => s + m.middlegameAccuracy, 0) / metrics.length) : 50;
 
     return [
       { name: 'Tactics', value: patternSuccessRate, max: 100, color: '#f43f5e' },
       { name: 'Openings', value: openingMastery, max: 100, color: '#3b82f6' },
       { name: 'Patterns', value: patternMastery, max: 100, color: '#8b5cf6' },
       { name: 'Endgames', value: endgameMastery, max: 100, color: '#f59e0b' },
-      { name: 'Opening Phase', value: cogProfile.openingAccuracy, max: 100, color: '#22c55e' },
-      { name: 'Middlegame', value: cogProfile.middlegameAccuracy, max: 100, color: '#06b6d4' },
+      { name: 'Opening Phase', value: openingPhase, max: 100, color: '#22c55e' },
+      { name: 'Middlegame', value: middlegamePhase, max: 100, color: '#06b6d4' },
     ];
   }, [cognitiveStore, mistakeStore, patternStore, openingStore, patternProgress, endgameProgress]);
 
   // Get cognitive profile
-  const cogProfile = useMemo(() => cognitiveStore.getProfile(), [cognitiveStore]);
+  // Dashboard expects extended profile; compute from cognitive store
+  const cogProfile = useMemo(() => {
+    const p = cognitiveStore.profile;
+    const trends = cognitiveStore.getRecentTrends();
+    const metrics = cognitiveStore.gameMetrics;
+    const avgOpening = metrics.length > 0 ? Math.round(metrics.reduce((s, m) => s + m.openingAccuracy, 0) / metrics.length) : 50;
+    const avgMiddle = metrics.length > 0 ? Math.round(metrics.reduce((s, m) => s + m.middlegameAccuracy, 0) / metrics.length) : 50;
+    const avgEnd = metrics.length > 0 ? Math.round(metrics.reduce((s, m) => s + m.endgameAccuracy, 0) / metrics.length) : 50;
+    const performanceTrend = trends.accuracyTrend === 'UP' ? 'IMPROVING' : trends.accuracyTrend === 'DOWN' ? 'DECLINING' : 'STABLE';
+    return p ? { ...p, performanceTrend, openingAccuracy: avgOpening, middlegameAccuracy: avgMiddle, endgameAccuracy: avgEnd } : { performanceTrend: 'STABLE' as const, openingAccuracy: 50, middlegameAccuracy: 50, endgameAccuracy: 50, strongestPhase: 'OPENING' as const, weakestPhase: 'ENDGAME' as const };
+  }, [cognitiveStore]);
 
   // Get mistake stats
   const mistakeStats = useMemo(() => mistakeStore.getMistakeStats(), [mistakeStore]);
@@ -143,7 +171,7 @@ export function PerformanceDashboardPage() {
       const dayStart = new Date(dateStr).getTime();
       const dayEnd = dayStart + 24 * 60 * 60 * 1000;
 
-      const dayGames = gameHistory.filter((g: any) => g.date >= dayStart && g.date < dayEnd).length;
+      const dayGames = gameHistory.filter((g) => g.date >= dayStart && g.date < dayEnd).length;
 
       activity.push({
         day: date.toLocaleDateString('en', { weekday: 'short' }),
@@ -201,8 +229,8 @@ export function PerformanceDashboardPage() {
         <StatCard label="Games" value={overviewStats.total} icon="🎮" color="#3b82f6" />
         <StatCard label="Win Rate" value={`${overviewStats.winRate}%`} icon="📈" color={overviewStats.winRate >= 50 ? '#22c55e' : '#ef4444'} />
         <StatCard label="Accuracy" value={`${overviewStats.avgAccuracy}%`} icon="🎯" color={overviewStats.avgAccuracy >= 70 ? '#22c55e' : '#f59e0b'} />
-        <StatCard label="Streak" value={`${progressStore.streakDays}d`} icon="🔥" color="#f97316" />
-        <StatCard label="Puzzles" value={progressStore.puzzlesSolved} icon="🧩" color="#8b5cf6" />
+        <StatCard label="Streak" value={`${progressStore.progress?.streakDays ?? 0}d`} icon="🔥" color="#f97316" />
+        <StatCard label="Puzzles" value={progressStore.progress?.puzzlesSolved ?? 0} icon="🧩" color="#8b5cf6" />
         <StatCard label="XP" value={patternProgress.totalXP + endgameProgress.totalXP} icon="⭐" color="#eab308" />
       </div>
 
@@ -305,28 +333,28 @@ export function PerformanceDashboardPage() {
         <div className="grid md:grid-cols-4 gap-6">
           <ProgressModule
             title="Positional Patterns"
-            mastered={Object.values(patternProgress.cards).filter((c: any) => c.status === 'mastered').length}
+            mastered={(Object.values(patternProgress.cards) as SRSCardWithStatus[]).filter((c) => c.status === 'mastered').length}
             total={126}
             icon="📚"
             color="#8b5cf6"
           />
           <ProgressModule
             title="Endgames"
-            mastered={Object.values(endgameProgress.cards || {}).filter((c: any) => c.status === 'mastered').length}
+            mastered={(Object.values(endgameProgress.cards || {}) as SRSCardWithStatus[]).filter((c) => c.status === 'mastered').length}
             total={25}
             icon="♚"
             color="#f59e0b"
           />
           <ProgressModule
             title="Openings"
-            mastered={progressStore.completedOpenings.length}
+            mastered={progressStore.progress?.completedOpenings?.size ?? 0}
             total={100}
             icon="📖"
             color="#3b82f6"
           />
           <ProgressModule
             title="Puzzles Solved"
-            mastered={progressStore.puzzlesSolved}
+            mastered={progressStore.progress?.puzzlesSolved ?? 0}
             total={1000}
             icon="🧩"
             color="#22c55e"
@@ -358,7 +386,7 @@ export function PerformanceDashboardPage() {
           )}
           <RecommendationCard
             title="Maintain Your Streak"
-            description={`You're on a ${progressStore.streakDays} day streak. Keep the momentum!`}
+            description={`You're on a ${progressStore.progress?.streakDays ?? 0} day streak. Keep the momentum!`}
             icon="🔥"
             color="#22c55e"
           />

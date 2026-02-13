@@ -26,3 +26,6 @@ export type { CardProps, CardVariant, CardPadding, CardHeaderProps, CardFooterPr
 // Input
 export { Input, Textarea } from './Input';
 export type { InputProps, TextareaProps, InputSize, InputVariant } from './Input';
+
+// NotFoundState
+export { NotFoundState } from './NotFoundState';

@@ -52,6 +52,8 @@ export function useMultiplayer() {
   useEffect(() => {
     if (!user) return;
 
+    let cancelled = false;
+
     const initialize = async () => {
       try {
         // Load all data in parallel
@@ -62,6 +64,9 @@ export function useMultiplayer() {
           getFriends(user.id),
         ]);
 
+        // Bail out if unmounted during the async calls
+        if (cancelled) return;
+
         setReceivedInvites(receivedData);
         setSentInvites(sentData);
         setMyGames(activeData);
@@ -70,6 +75,7 @@ export function useMultiplayer() {
         // Get friend presence
         if (friendsData.length > 0) {
           const presenceMap = await getPresence(friendsData.map(f => f.id));
+          if (cancelled) return;
           setOnlineFriends(presenceMap);
         }
 
@@ -94,20 +100,29 @@ export function useMultiplayer() {
           }
         );
 
-        // Store cleanup functions
-        cleanupRef.current = () => {
+        // Store cleanup functions (only if still mounted)
+        if (cancelled) {
+          // Already unmounted — clean up immediately
           stopHeartbeat();
           unsubscribeInvites();
-        };
+        } else {
+          cleanupRef.current = () => {
+            stopHeartbeat();
+            unsubscribeInvites();
+          };
+        }
       } catch (error) {
-        logger.error('Failed to initialize multiplayer:', error);
-        setError('Failed to connect to multiplayer');
+        if (!cancelled) {
+          logger.error('Failed to initialize multiplayer:', error);
+          setError('Failed to connect to multiplayer');
+        }
       }
     };
 
     initialize();
 
     return () => {
+      cancelled = true;
       cleanupRef.current?.();
     };
   }, [user]);

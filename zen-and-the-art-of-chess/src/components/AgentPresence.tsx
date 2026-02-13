@@ -61,6 +61,8 @@ export function AgentStatusBar() {
               background: 'rgba(15, 23, 42, 0.6)',
               border: '1px solid rgba(255,255,255,0.05)',
             }}
+            aria-label={showDetails ? 'Hide AI coaching details' : 'Show AI coaching details'}
+            aria-expanded={showDetails}
           >
             {/* Pulsing indicator */}
             <span className="relative flex h-1.5 w-1.5">
@@ -334,6 +336,7 @@ export function FloatingAgentAvatar({
             background: `linear-gradient(135deg, ${personality.color}, ${personality.color}80)`,
             boxShadow: `0 4px 20px ${personality.color}40`,
           }}
+          aria-label={isExpanded ? `Collapse ${personality.name} message` : `Expand ${personality.name} message`}
         >
           {personality.icon}
         </button>

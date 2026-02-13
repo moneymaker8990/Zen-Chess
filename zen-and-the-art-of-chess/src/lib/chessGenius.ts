@@ -3,15 +3,9 @@
 // Genius-level AI insights for every interaction
 // ============================================
 
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from './anthropicClient';
 import type { Square } from 'chess.js';
 import { logger } from './logger';
-
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
 
 // ============================================
 // TYPES

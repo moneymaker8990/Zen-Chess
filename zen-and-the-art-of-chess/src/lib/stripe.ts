@@ -6,6 +6,22 @@
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { logger } from './logger';
 
+// Allowlisted domains for payment redirects
+const ALLOWED_REDIRECT_DOMAINS = [
+  'checkout.stripe.com',
+  'billing.stripe.com',
+  'dashboard.stripe.com',
+];
+
+function isAllowedRedirectUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return ALLOWED_REDIRECT_DOMAINS.some(domain => parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`));
+  } catch {
+    return false;
+  }
+}
+
 let stripePromise: Promise<Stripe | null>;
 
 const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '';
@@ -38,11 +54,10 @@ interface CreateCheckoutParams {
   cancelUrl?: string;
 }
 
-export async function createCheckoutSession(params: CreateCheckoutParams): Promise<{ sessionId?: string; error?: string }> {
+export async function createCheckoutSession(params: CreateCheckoutParams): Promise<{ sessionId?: string; url?: string; error?: string }> {
   const { priceId, userId, userEmail, successUrl, cancelUrl } = params;
   
   // In production, this calls your backend API
-  // For now, we'll use Stripe's client-side checkout
   const apiUrl = import.meta.env.VITE_API_URL || '';
   
   if (!apiUrl) {
@@ -70,8 +85,8 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
       throw new Error('Failed to create checkout session');
     }
     
-    const { sessionId } = await response.json();
-    return { sessionId };
+    const data = await response.json();
+    return { sessionId: data.sessionId, url: data.url };
   } catch (error) {
     logger.error('Checkout error:', error);
     return { error: 'Failed to start checkout. Please try again.' };
@@ -82,20 +97,19 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
 // REDIRECT TO CHECKOUT
 // ============================================
 
-export async function redirectToCheckout(sessionId: string): Promise<{ error?: string }> {
-  const stripe = await getStripe();
-  
-  if (!stripe) {
-    return { error: 'Stripe not loaded' };
+export async function redirectToCheckout(sessionUrl: string): Promise<{ error?: string }> {
+  // Stripe.js v4+ removed stripe.redirectToCheckout().
+  // Modern approach: backend returns the Checkout Session URL, we redirect to it.
+  try {
+    if (!isAllowedRedirectUrl(sessionUrl)) {
+      logger.error('Blocked redirect to untrusted URL:', sessionUrl);
+      return { error: 'Invalid checkout URL' };
+    }
+    window.location.href = sessionUrl;
+    return {};
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : 'Checkout redirect failed' };
   }
-  
-  const { error } = await stripe.redirectToCheckout({ sessionId });
-  
-  if (error) {
-    return { error: error.message };
-  }
-  
-  return {};
 }
 
 // ============================================
@@ -127,6 +141,10 @@ export async function redirectToCustomerPortal(customerId: string): Promise<{ er
     }
     
     const { url } = await response.json();
+    if (!isAllowedRedirectUrl(url)) {
+      logger.error('Blocked portal redirect to untrusted URL:', url);
+      return { error: 'Invalid portal URL' };
+    }
     window.location.href = url;
     return {};
   } catch (error) {

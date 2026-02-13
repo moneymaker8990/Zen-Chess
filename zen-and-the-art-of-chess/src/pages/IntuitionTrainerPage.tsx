@@ -4,7 +4,7 @@
 // Build GM-level position assessment at a glance
 // ============================================
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useNavigate } from 'react-router-dom';

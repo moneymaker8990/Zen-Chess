@@ -5,6 +5,8 @@ import { useBoardStyles } from '@/state/boardSettingsStore';
 import { PageHeader } from '@/components/Tutorial';
 import type { ChessNote, NoteCategory } from '@/lib/notesTypes';
 
+type NewNoteData = Omit<ChessNote, 'id' | 'createdAt' | 'updatedAt'>;
+
 const categoryLabels: Record<NoteCategory, string> = {
   OPENING: '📖 Opening',
   MIDDLEGAME: '⚔️ Middlegame',
@@ -241,7 +243,7 @@ export function MasterNotebook() {
                 if (editingNote) {
                   updateNote(editingNote.id, noteData);
                 } else {
-                  addNote(noteData as any);
+                  addNote(noteData as NewNoteData);
                   recordNoteCreated(); // Auto-track
                 }
                 setIsCreating(false);

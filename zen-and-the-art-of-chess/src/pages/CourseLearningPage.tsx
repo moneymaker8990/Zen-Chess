@@ -13,6 +13,7 @@ import { useBoardStyles } from '@/state/boardSettingsStore';
 import { useBackNavigation } from '@/components/BackButton';
 import { playSmartMoveSound } from '@/lib/soundSystem';
 import { logger } from '@/lib/logger';
+import { NotFoundState } from '@/components/ui/NotFoundState';
 import { 
   getCourseById, 
   type Course, 
@@ -147,6 +148,7 @@ function AICoachPanel({ fen, currentMove, variationTitle, onClose }: AICoachPane
         <button
           onClick={onClose}
           className="p-2 text-slate-400 hover:text-white transition-colors"
+          aria-label="Close"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -274,6 +276,7 @@ export default function CourseLearningPage() {
 
   // Course data
   const [course, setCourse] = useState<Course | null>(null);
+  const [hasCheckedCourse, setHasCheckedCourse] = useState(false);
   const [currentVariationIndex, setCurrentVariationIndex] = useState(0);
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   
@@ -313,6 +316,7 @@ export default function CourseLearningPage() {
         setCourse(foundCourse);
         setProgress(loadCourseProgress(courseId));
       }
+      setHasCheckedCourse(true);
     }
   }, [courseId]);
 
@@ -671,6 +675,17 @@ export default function CourseLearningPage() {
   }, [currentMove, selectedSquare, game, showHint]);
 
   if (!course || !currentVariation) {
+    // Show NotFoundState only after we've checked and course doesn't exist
+    if (hasCheckedCourse && courseId && !course) {
+      return (
+        <NotFoundState
+          title="Course not found"
+          description="This course could not be found."
+          backTo="/courses"
+          backLabel="Browse Courses"
+        />
+      );
+    }
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-slate-400">Loading...</div>
@@ -690,6 +705,7 @@ export default function CourseLearningPage() {
           <button 
             onClick={goBack}
             className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors active:scale-95"
+            aria-label="Exit course"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -720,6 +736,7 @@ export default function CourseLearningPage() {
                 : 'text-slate-400 hover:text-white hover:bg-slate-700'
             }`}
             title="Toggle AI Coach (A)"
+            aria-label={showAICoach ? 'Hide AI Coach' : 'Show AI Coach'}
           >
             <span className="text-xl">🧠</span>
           </button>
@@ -831,6 +848,7 @@ export default function CourseLearningPage() {
                     : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
                 }`}
                 title="Previous Puzzle (P)"
+                aria-label="Previous variation"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />
@@ -846,6 +864,7 @@ export default function CourseLearningPage() {
                     : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
                 }`}
                 title="Back One Move (←)"
+                aria-label="Back one move"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -874,6 +893,7 @@ export default function CourseLearningPage() {
                     : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
                 }`}
                 title="Show Hint (H)"
+                aria-label={showHint ? 'Hide hint' : 'Show hint for next move'}
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -884,6 +904,7 @@ export default function CourseLearningPage() {
                 onClick={advanceMove}
                 className="p-2 sm:p-3 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
                 title="Next Move (→)"
+                aria-label="Forward one move"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -894,6 +915,7 @@ export default function CourseLearningPage() {
                 onClick={nextVariation}
                 className="p-2 sm:p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors"
                 title="Next Puzzle (N)"
+                aria-label="Next variation"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />

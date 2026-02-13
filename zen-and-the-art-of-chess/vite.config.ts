@@ -1,10 +1,12 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development'
+  // Load ALL env vars (including non-VITE_ ones) for use in server config
+  const env = loadEnv(mode, process.cwd(), '')
   
   return {
   plugins: [
@@ -67,22 +69,8 @@ export default defineConfig(({ mode }) => {
             purpose: 'maskable'
           }
         ],
-        screenshots: [
-          {
-            src: 'screenshot-wide.png',
-            sizes: '1280x720',
-            type: 'image/png',
-            form_factor: 'wide',
-            label: 'Zen Chess Dashboard'
-          },
-          {
-            src: 'screenshot-narrow.png',
-            sizes: '390x844',
-            type: 'image/png',
-            form_factor: 'narrow',
-            label: 'Zen Chess Mobile'
-          }
-        ]
+        // screenshots: Add screenshot-wide.png (1280x720) and screenshot-narrow.png (390x844)
+        // to public/ to enable PWA rich install UI
       },
       workbox: {
         globPatterns: ['**/*.{css,html,ico,png,svg,wasm}'],
@@ -177,26 +165,52 @@ export default defineConfig(({ mode }) => {
     host: '0.0.0.0', // Listen on all network interfaces
     port: 5173,
     strictPort: false, // Try next available port if 5173 is busy
+    proxy: {
+      // Proxy Anthropic API calls through the dev server so the
+      // API key stays server-side (mirrors the Vercel Edge Function in prod)
+      '/api/anthropic': {
+        target: 'https://api.anthropic.com',
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/api\/anthropic/, ''),
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            const key = env.ANTHROPIC_API_KEY || env.VITE_ANTHROPIC_API_KEY || '';
+            if (key) {
+              proxyReq.setHeader('x-api-key', key);
+            }
+          });
+        },
+      },
+    },
   },
   optimizeDeps: {
     exclude: ['stockfish.wasm']
   },
   assetsInclude: ['**/*.wasm'],
+  esbuild: {
+    // Remove console/debugger in production builds
+    drop: isDev ? [] : ['console', 'debugger'],
+  },
   build: {
     // Optimize chunk splitting for faster loading
     rollupOptions: {
       output: {
-        manualChunks: {
+        manualChunks(id) {
           // Core vendor chunks
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-chess': ['chess.js', 'react-chessboard'],
-          'vendor-animation': ['framer-motion'],
-          // Heavy components in separate chunk
-          'chunk-ai': [
-            './src/lib/claude.ts',
-            './src/lib/claudeAdvanced.ts',
-            './src/lib/chessGenius.ts',
-          ],
+          if (id.includes('node_modules/react-dom')) return 'vendor-react';
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-router')) return 'vendor-react';
+          if (id.includes('node_modules/chess.js') || id.includes('node_modules/react-chessboard')) return 'vendor-chess';
+          if (id.includes('node_modules/framer-motion')) return 'vendor-animation';
+          // AI libs in separate chunk
+          if (id.includes('/lib/claude') || id.includes('/lib/chessGenius')) return 'chunk-ai';
+          // Data chunks - keep large data files in their own chunks
+          if (id.includes('/data/puzzles/')) return 'data-puzzles';
+          if (id.includes('/data/openings/')) return 'data-openings';
+          if (id.includes('/data/instructiveGames/')) return 'data-games';
+          if (id.includes('/data/positional/')) return 'data-patterns';
+          if (id.includes('/data/courses/')) return 'data-courses';
+          if (id.includes('/data/curriculum/')) return 'data-curriculum';
+          if (id.includes('/data/endgames/')) return 'data-endgames';
         },
       },
     },
@@ -204,14 +218,8 @@ export default defineConfig(({ mode }) => {
     cssCodeSplit: true,
     // Reduce chunk size warnings threshold
     chunkSizeWarningLimit: 1000,
-    // Minify for smaller bundles
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.logs in production
-        drop_debugger: true,
-      },
-    },
+    // Minify for smaller bundles (esbuild is built into Vite)
+    minify: 'esbuild',
   },
   }
 })

@@ -3,14 +3,8 @@
 // Anthropic's Claude for AI Coaching Agents
 // ============================================
 
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from './anthropicClient';
 import { logger } from './logger';
-
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true, // For client-side usage - consider moving to edge function for production
-});
 
 // ============================================
 // TYPES

@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Chessboard } from 'react-chessboard';
+import type { Square } from 'chess.js';
 import { useBoardStyles } from '@/state/boardSettingsStore';
 import { BackButton } from '@/components/BackButton';
+import { NotFoundState } from '@/components/ui/NotFoundState';
 import { CURRICULUM } from '@/data/curriculum';
 import type { Lesson, LessonStep } from '@/data/curriculum';
 
@@ -69,17 +71,11 @@ export function LearnPage() {
 
   if (!lesson || !section) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl mb-4">📚</div>
-          <h1 className="text-2xl font-display mb-4" style={{ color: 'var(--text-primary)' }}>
-            Lesson not found
-          </h1>
-          <button onClick={() => navigate('/journey')} className="btn-primary">
-            Back to Journey
-          </button>
-        </div>
-      </div>
+      <NotFoundState
+        title="Lesson not found"
+        backTo="/journey"
+        backLabel="Learning Path"
+      />
     );
   }
 
@@ -189,7 +185,7 @@ export function LearnPage() {
                       }), {})
                     }
                     customArrows={
-                      currentStep.arrows?.map(([from, to]) => [from, to, 'rgba(0, 150, 255, 0.8)']) as any
+                      currentStep.arrows?.map(([from, to]) => [from as Square, to as Square, 'rgba(0, 150, 255, 0.8)']) as [Square, Square, string][]
                     }
                   />
                   </div>

@@ -9,6 +9,7 @@ import {
   type EndgameCategory,
   type EnhancedEndgamePattern,
 } from '@/data/endgames/enhancedEndgamePatterns';
+import type { EnhancedPattern } from '@/data/positional/enhancedPatterns';
 import { MoveTrainer } from '@/components/MoveTrainer/MoveTrainer';
 import {
   loadPatternProgress,
@@ -193,16 +194,16 @@ export function EndgamesPage() {
   // RENDER: TRAINING VIEW
   // ============================================
   if (viewMode === 'training' && selectedPattern) {
-    // Convert endgame pattern to format expected by MoveTrainer
-    const trainerPattern = {
+    // Convert endgame pattern to format expected by MoveTrainer (EnhancedPattern)
+    const trainerPattern: EnhancedPattern = {
       ...selectedPattern,
-      category: selectedPattern.category as unknown as string,
+      category: selectedPattern.category as unknown as EnhancedPattern['category'],
     };
 
     return (
       <MoveTrainer
         key={selectedPattern.id}
-        pattern={trainerPattern as any}
+        pattern={trainerPattern}
         mode={trainingMode}
         onComplete={handleTrainingComplete}
         onExit={handleTrainingExit}

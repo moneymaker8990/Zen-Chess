@@ -18,8 +18,10 @@ import { parseUciMove } from '@/lib/moveValidation';
 import { logger } from '@/lib/logger';
 import { useMistakeLibraryStore } from '@/state/trainingStore';
 import type { GameMode, EngineEvaluation } from '@/lib/types';
+import type { GameResult } from '@/lib/coachTypes';
 import type { MistakeType, RootCause } from '@/lib/trainingTypes';
 import type { Square } from 'chess.js';
+import { useLiveRegion } from '@/components/LiveRegion';
 
 // Interface for tracking detected mistakes during game
 interface DetectedMistake {
@@ -72,6 +74,8 @@ export function PlayPage() {
   const { addMistake } = useMistakeLibraryStore();
   const boardStyles = useBoardStyles();
   const triggerAgent = useAgentTrigger();
+  const { announce, LiveRegion } = useLiveRegion();
+  const lastAnnouncedMoveCountRef = useRef<number>(0);
 
   // Tilt detection system (gentle awareness)
   const {
@@ -268,8 +272,9 @@ export function PlayPage() {
       triggerAgent({ type: 'GAME_END', result, accuracy });
       
       // Check for losing streak
-      const recentGames = JSON.parse(localStorage.getItem('zen-chess-coach') || '{}')?.state?.state?.recentGames || [];
-      const consecutiveLosses = recentGames.filter((g: any, i: number) => {
+      const coachData = JSON.parse(localStorage.getItem('zen-chess-coach') || '{}') as { state?: { state?: { recentGames?: { result?: GameResult }[] } } };
+      const recentGames = coachData?.state?.state?.recentGames || [];
+      const consecutiveLosses = recentGames.filter((g: { result?: GameResult }, i: number) => {
         if (i >= 3) return false;
         return g.result === 'LOSS';
       }).length;
@@ -278,7 +283,7 @@ export function PlayPage() {
         triggerAgent({ type: 'LOSING_STREAK', count: consecutiveLosses + 1 });
       }
       if (result === 'win') {
-        const consecutiveWins = recentGames.filter((g: any, i: number) => {
+        const consecutiveWins = recentGames.filter((g: { result?: GameResult }, i: number) => {
           if (i >= 5) return false;
           return g.result === 'WIN';
         }).length;
@@ -295,6 +300,27 @@ export function PlayPage() {
       }
     }
   }, [game, selectedMode, orientation, moveHistory.length, recordGame, recordEvent, triggerAgent, addMistake]);
+
+  // Screen reader: announce game result when game ends
+  useEffect(() => {
+    if (game.isGameOver() && moveHistory.length > 0 && lastAnnouncedMoveCountRef.current !== moveHistory.length) {
+      let message = '';
+      if (game.isCheckmate()) {
+        message = `Checkmate! ${game.turn() === 'w' ? 'Black' : 'White'} wins`;
+      } else if (game.isStalemate()) {
+        message = 'Stalemate';
+      } else if (game.isDraw()) {
+        message = 'Draw';
+      }
+      if (message) {
+        announce(message);
+        lastAnnouncedMoveCountRef.current = moveHistory.length;
+      }
+    }
+    if (moveHistory.length === 0) {
+      lastAnnouncedMoveCountRef.current = 0;
+    }
+  }, [game, moveHistory.length, announce]);
 
   // Get possible moves for a square
   const getMoveOptions = useCallback((square: Square) => {
@@ -661,7 +687,8 @@ export function PlayPage() {
   const status = getGameStatus();
 
   return (
-    <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0 max-w-full overflow-hidden">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in px-2 sm:px-0 max-w-full overflow-hidden relative">
+      <LiveRegion aria-live="polite" />
       {/* Tilt Intervention Overlay */}
       {showIntervention && tiltState.interventionType !== 'NONE' && (
         <TiltIntervention

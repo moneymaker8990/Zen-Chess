@@ -494,7 +494,24 @@ function ResultsPie({ wins, losses, draws }: { wins: number; losses: number; dra
 // INSIGHTS LIST
 // ============================================
 
-function InsightsList({ stats, coachData }: { stats: any; coachData: any }) {
+interface InsightsStats {
+  wins: number;
+  losses: number;
+  draws: number;
+  total: number;
+  winRate: number;
+  avgAccuracy: number;
+}
+
+interface CoachData {
+  emotionalProfile?: {
+    chessProfile?: {
+      weakestPhase?: string;
+    };
+  };
+}
+
+function InsightsList({ stats, coachData }: { stats: InsightsStats; coachData: CoachData | null }) {
   const insights: { icon: string; text: string; type: 'positive' | 'negative' | 'neutral' }[] = [];
   
   // Generate insights based on data

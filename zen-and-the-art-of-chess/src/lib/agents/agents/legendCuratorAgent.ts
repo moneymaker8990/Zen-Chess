@@ -111,9 +111,9 @@ export function createLegendCuratorAgent(): Agent {
   }
 
   return {
-    id: 'legend' as any,
+    id: 'legend',
     personality: {
-      id: 'legend' as any,
+      id: 'legend',
       name: 'Legend Curator',
       icon: '👑',
       color: '#eab308',

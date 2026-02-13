@@ -20,6 +20,7 @@ import {
   type OpeningInsight,
 } from '@/lib/chessGenius';
 import { useCoachStore } from '@/state/coachStore';
+import { logger } from '@/lib/logger';
 
 // ============================================
 // TYPES
@@ -44,7 +45,7 @@ interface UseChessGeniusReturn {
   explainCurrentMove: (fen: string, move: string, context?: Parameters<typeof explainMove>[2]) => Promise<MoveExplanation>;
   getPuzzleInsight: (fen: string, solution: string[], themes: string[], solved: boolean, time: number) => Promise<PuzzleGeniusInsight>;
   getOpeningInfo: (name: string, moves: string[], fen: string) => Promise<OpeningInsight>;
-  analyzeMistakeContext: (fen: string, wrong: string, correct: string, context?: Parameters<typeof analyzeMistake>[3]) => Promise<ReturnType<typeof analyzeMistake>>;
+  analyzeMistakeContext: (fen: string, wrong: string, correct: string, context?: Parameters<typeof analyzeMistake>[3]) => Promise<Awaited<ReturnType<typeof analyzeMistake>>>;
   askGenius: (fen: string, question: string) => Promise<string>;
   dismissWhisper: () => void;
   clearInsight: () => void;
@@ -293,7 +294,7 @@ export function useChessGenius(options: UseChessGeniusOptions = {}): UseChessGen
           currentActivity: 'idle', // Would be determined by context
           recentEvents: [],
           userState: {
-            tiltLevel: coachState.currentMood === 'FRUSTRATED' ? 60 : 20,
+            tiltLevel: coachState.currentMood === 'TILTED' ? 60 : 20,
             timeInSession: (now - coachState.sessionStartTime) / 60000,
           },
         });
@@ -304,7 +305,7 @@ export function useChessGenius(options: UseChessGeniusOptions = {}): UseChessGen
         }
       } catch (err) {
         // Silently fail for whispers
-        console.debug('Whisper check failed:', err);
+        logger.debug('Whisper check failed:', err);
       }
     };
     

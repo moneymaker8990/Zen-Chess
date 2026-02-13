@@ -83,6 +83,7 @@ export function AgentToast({ message, onDismiss }: { message: AgentMessage; onDi
           onClick={onDismiss}
           className="p-1 rounded-lg transition-colors hover:bg-white/10"
           style={{ color: 'var(--text-muted)' }}
+          aria-label="Dismiss notification"
         >
           ✕
         </button>
@@ -163,6 +164,8 @@ export function AgentNotificationCenter() {
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 rounded-lg transition-all hover:bg-white/10"
         style={{ color: 'var(--text-secondary)' }}
+        aria-label={isOpen ? 'Close agent notifications' : `Open agent notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
+        aria-expanded={isOpen}
       >
         <svg 
           className="w-6 h-6" 
@@ -287,6 +290,7 @@ export function AgentNotificationCenter() {
                           }}
                           className="p-1 rounded hover:bg-white/10 shrink-0"
                           style={{ color: 'var(--text-muted)' }}
+                          aria-label="Dismiss message"
                         >
                           ✕
                         </button>

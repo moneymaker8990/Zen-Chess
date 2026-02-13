@@ -4,7 +4,8 @@
 // ============================================
 
 import type { Agent, AgentTrigger, AgentOrchestratorState, AgentMessage } from '../agentTypes';
-import { AGENT_PERSONALITIES, createMessage } from '../agentTypes';
+import { createMessage } from '../agentTypes';
+import type { EnhancedGameMetrics } from '@/lib/coachTypes';
 
 interface InsightMemory {
   lastAnalysis: number;
@@ -38,14 +39,14 @@ export function createInsightEngineAgent(): Agent {
       const coachData = localStorage.getItem('zen-chess-coach');
       if (!coachData) return null;
       
-      const parsed = JSON.parse(coachData);
-      const recentGames = parsed?.state?.state?.recentGames || [];
+      const parsed = JSON.parse(coachData) as { state?: { state?: { recentGames?: EnhancedGameMetrics[] } } };
+      const recentGames: EnhancedGameMetrics[] = parsed?.state?.state?.recentGames || [];
       
       if (recentGames.length < 5) return null;
       
       // Analyze accuracy trend
       const last10 = recentGames.slice(0, 10);
-      const avgAccuracy = last10.reduce((sum: number, g: any) => sum + (g.accuracy?.overall || 0), 0) / last10.length;
+      const avgAccuracy = last10.reduce((sum: number, g: EnhancedGameMetrics) => sum + (g.accuracy?.overall || 0), 0) / last10.length;
       
       memory.accuracyTrend.push(avgAccuracy);
       if (memory.accuracyTrend.length > 20) memory.accuracyTrend.shift();
@@ -66,7 +67,7 @@ export function createInsightEngineAgent(): Agent {
       
       // Analyze time patterns
       const timeGroups: Record<string, number[]> = {};
-      recentGames.forEach((g: any) => {
+      recentGames.forEach((g: EnhancedGameMetrics) => {
         const time = g.timeOfDay || 'UNKNOWN';
         if (!timeGroups[time]) timeGroups[time] = [];
         timeGroups[time].push(g.accuracy?.overall || 0);
@@ -96,9 +97,9 @@ export function createInsightEngineAgent(): Agent {
       }
       
       // Analyze phase weaknesses
-      const openingAvg = recentGames.reduce((s: number, g: any) => s + (g.accuracy?.opening || 0), 0) / recentGames.length;
-      const middleAvg = recentGames.reduce((s: number, g: any) => s + (g.accuracy?.middlegame || 0), 0) / recentGames.length;
-      const endgameAvg = recentGames.reduce((s: number, g: any) => s + (g.accuracy?.endgame || 0), 0) / recentGames.length;
+      const openingAvg = recentGames.reduce((s: number, g: EnhancedGameMetrics) => s + (g.accuracy?.opening || 0), 0) / recentGames.length;
+      const middleAvg = recentGames.reduce((s: number, g: EnhancedGameMetrics) => s + (g.accuracy?.middlegame || 0), 0) / recentGames.length;
+      const endgameAvg = recentGames.reduce((s: number, g: EnhancedGameMetrics) => s + (g.accuracy?.endgame || 0), 0) / recentGames.length;
       
       const phases = [
         { name: 'opening', avg: openingAvg },
@@ -118,9 +119,9 @@ export function createInsightEngineAgent(): Agent {
   }
 
   return {
-    id: 'insight-engine' as any,
+    id: 'insight-engine',
     personality: {
-      id: 'insight-engine' as any,
+      id: 'insight-engine',
       name: 'Insight Engine',
       icon: '🔮',
       color: '#8b5cf6',

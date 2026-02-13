@@ -79,7 +79,7 @@ let loadingPromises: Map<string, Promise<AudioBuffer | null>> = new Map();
 
 function getAudioContext(): AudioContext {
   if (!audioContext) {
-    audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
   }
   if (audioContext.state === 'suspended') {
     audioContext.resume();
@@ -289,7 +289,7 @@ let uiAudioContext: AudioContext | null = null;
 
 function getUIAudioContext(): AudioContext {
   if (!uiAudioContext) {
-    uiAudioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    uiAudioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
   }
   if (uiAudioContext.state === 'suspended') {
     uiAudioContext.resume();
@@ -462,7 +462,7 @@ export const UISounds = {
 // Automatically plays the right sound based on game state
 // ============================================
 
-import type { Chess, Move } from 'chess.js';
+import type { Chess, Move, Square } from 'chess.js';
 
 export function playSmartMoveSound(
   game: Chess,
@@ -493,7 +493,7 @@ export function playSmartMoveSound(
   }
   
   // Check for castling
-  const san = 'san' in move ? move.san : '';
+  const san = ('san' in move ? move.san : '') || '';
   if (san.includes('O-O') || san.includes('0-0')) {
     ChessSounds.castle();
     return;
@@ -503,7 +503,7 @@ export function playSmartMoveSound(
   if (move.from && move.to) {
     const fromFile = move.from.charCodeAt(0);
     const toFile = move.to.charCodeAt(0);
-    const piece = game.get(move.to as any);
+    const piece = game.get(move.to as Square);
     if (piece?.type === 'k' && Math.abs(toFile - fromFile) >= 2) {
       ChessSounds.castle();
       return;

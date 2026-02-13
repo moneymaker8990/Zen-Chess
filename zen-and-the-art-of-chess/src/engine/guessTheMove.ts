@@ -27,10 +27,8 @@ export async function scoreGuessMove(args: {
   const chessUser = new Chess(fen);
   const chessLegend = new Chess(fen);
 
-  // @ts-expect-error - sloppy option exists in chess.js but not in types
-  const userMoveObj = chessUser.move(userMove, { sloppy: true });
-  // @ts-expect-error - sloppy option exists in chess.js but not in types
-  const legendMoveObj = chessLegend.move(legendMove, { sloppy: true });
+  const userMoveObj = chessUser.move(userMove, { strict: false });
+  const legendMoveObj = chessLegend.move(legendMove, { strict: false });
 
   if (!userMoveObj || !legendMoveObj) {
     return {
@@ -261,8 +259,7 @@ export async function createGuessSessionFromGame(
       .join('\n');
     
     const chess = new Chess();
-    // @ts-expect-error - sloppy option exists in chess.js but not in types
-    chess.loadPgn(cleanedPgn, { sloppy: true });
+    chess.loadPgn(cleanedPgn, { strict: false });
 
     const moveHistory = chess.history({ verbose: true });
     
@@ -425,8 +422,7 @@ export async function createGuessSessionFromGame(
       
       for (const moveToken of moveTokens) {
         try {
-          // @ts-expect-error - sloppy option exists in chess.js but not in types
-          let move = board.move(moveToken, { sloppy: true });
+          let move = board.move(moveToken, { strict: false });
           if (move) {
             validMoves.push(move);
             consecutiveFailures = 0; // Reset counter on success

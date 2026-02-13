@@ -3,6 +3,7 @@ import { useStudyStore, useNotesStore, useWeaknessStore } from '@/state/notesSto
 import { useMistakeLibraryStore, usePatternRecognitionStore } from '@/state/trainingStore';
 import { useAIIntelligence } from '@/lib/aiIntelligence';
 import type { RootCause, MistakeType, TacticalPattern } from '@/lib/trainingTypes';
+import type { NoteCategory } from '@/lib/notesTypes';
 
 // ============================================
 // AUTO-TRACKING HOOKS
@@ -81,7 +82,7 @@ export function useAutoTrackGame() {
         } else if (evalDrop > 200) {
           // Create new weakness for significant mistakes
           addWeakness({
-            type: 'CALCULATION' as any, // Use generic type for tracking
+            type: 'CALCULATION_ERROR',
             description: `${rootCause.replace('_', ' ')} errors`,
             severity: evalDrop > 300 ? 'HIGH' : 'MEDIUM',
             status: 'ACTIVE',
@@ -222,7 +223,7 @@ export function useAutoNote() {
     const noteId = addNote({
       title,
       content,
-      category: category as any,
+      category: category as NoteCategory,
       importance: 3,
       tags: Array.from(autoTags),
       needsReview: false,
@@ -274,7 +275,7 @@ export function useAutoDetectWeakness() {
         } else {
           // Create new weakness
           addWeakness({
-            type: 'CALCULATION' as any,
+            type: 'CALCULATION_ERROR',
             description: `Recurring ${cause.replace('_', ' ').toLowerCase()} issues`,
             severity: count >= 5 ? 'HIGH' : 'MEDIUM',
             status: 'ACTIVE',

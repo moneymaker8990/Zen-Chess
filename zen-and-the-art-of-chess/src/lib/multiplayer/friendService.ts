@@ -392,7 +392,7 @@ export function subscribeToPresence(
       },
       (payload) => {
         if (payload.new) {
-          const p = payload.new as any;
+          const p = payload.new as { user_id: string; status: OnlineStatus; current_game_id: string | null; last_seen_at: string };
           onPresenceChange({
             userId: p.user_id,
             status: p.status,
@@ -470,7 +470,18 @@ async function getFriendshipById(id: string): Promise<Friendship | null> {
 // UTILITIES
 // ============================================
 
-function mapFriendshipFromDb(data: any): Friendship {
+interface DbFriendshipRow {
+  id: string;
+  user_id: string;
+  friend_id: string;
+  status: string;
+  user?: { id: string; username: string | null; display_name: string | null; avatar_url: string | null; rating: number };
+  friend?: { id: string; username: string | null; display_name: string | null; avatar_url: string | null; rating: number };
+  created_at: string;
+  accepted_at: string | null;
+}
+
+function mapFriendshipFromDb(data: DbFriendshipRow): Friendship {
   return {
     id: data.id,
     userId: data.user_id,

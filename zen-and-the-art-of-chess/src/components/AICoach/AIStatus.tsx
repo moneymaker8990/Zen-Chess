@@ -212,7 +212,7 @@ export function AIStatus({ showDetails = false, onStatusChange }: AIStatusProps)
           >
             <p className="font-medium text-red-400 mb-2">Troubleshooting:</p>
             <ul className="text-sm text-red-300 space-y-1">
-              <li>• Check that VITE_ANTHROPIC_API_KEY is set in .env</li>
+              <li>• Check that ANTHROPIC_API_KEY is set in your environment</li>
               <li>• Verify your API key is valid and has credits</li>
               <li>• Ensure you're not being rate limited</li>
               <li>• Try refreshing the page</li>

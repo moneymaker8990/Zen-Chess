@@ -20,7 +20,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
-export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+// Omit HTML attributes that conflict with framer-motion's motion.div
+type ConflictingHTMLProps = 'title' | 'onAnimationStart' | 'onDrag' | 'onDragEnd' | 'onDragStart';
+
+export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, ConflictingHTMLProps> {
   /** Whether the modal is open */
   isOpen: boolean;
   /** Callback when modal should close */

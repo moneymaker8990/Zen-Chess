@@ -5,6 +5,7 @@
 // Docs: https://posthog.com/docs/libraries/react
 
 import posthog from 'posthog-js';
+import { logger } from '@/lib/logger';
 
 const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY;
 const POSTHOG_HOST = import.meta.env.VITE_POSTHOG_HOST || 'https://app.posthog.com';
@@ -19,7 +20,7 @@ let isInitialized = false;
 export function initAnalytics() {
   if (!POSTHOG_KEY) {
     if (IS_PRODUCTION) {
-      console.warn('[Analytics] No PostHog key configured - analytics disabled');
+      logger.warn('[Analytics] No PostHog key configured - analytics disabled');
     }
     return;
   }
@@ -89,7 +90,7 @@ export function trackEvent(
   properties?: Record<string, unknown>
 ) {
   if (!POSTHOG_KEY) {
-    console.debug('[Analytics]', eventName, properties);
+    logger.debug('[Analytics]', eventName, properties);
     return;
   }
 

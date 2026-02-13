@@ -20,7 +20,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 
-export interface TooltipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'content'> {
+// Omit HTML attributes that conflict with framer-motion's motion.div
+type ConflictingHTMLProps = 'content' | 'onAnimationStart' | 'onDrag' | 'onDragEnd' | 'onDragStart';
+
+export interface TooltipProps extends Omit<HTMLAttributes<HTMLDivElement>, ConflictingHTMLProps> {
   /** Tooltip content */
   content: ReactNode;
   /** Position relative to trigger */

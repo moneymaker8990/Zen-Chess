@@ -35,14 +35,14 @@ import { NotFoundPage } from '@/pages/NotFoundPage';
 
 // Lazy-loaded pages (loaded on demand)
 const PlayPage = lazy(() => import('@/pages/PlayPage'));
-const PuzzlesPage = lazy(() => import('@/pages/PuzzlesPage'));
+const PuzzlesPage = lazy(() => import('@/pages/Puzzles'));
 const OpeningsPage = lazy(() => import('@/pages/OpeningsPage'));
 const GamesPage = lazy(() => import('@/pages/GamesPage'));
 const NotesPage = lazy(() => import('@/pages/NotesPage'));
 const StudyPage = lazy(() => import('@/pages/StudyPage'));
 const MistakesPage = lazy(() => import('@/pages/MistakesPage'));
 const SparringPage = lazy(() => import('@/pages/SparringPage'));
-const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
+const SettingsPage = lazy(() => import('@/pages/Settings'));
 const CalmPlayPage = lazy(() => import('@/pages/CalmPlayPage'));
 const MindTrainingPage = lazy(() => import('@/pages/MindTrainingPage'));
 const JourneyPage = lazy(() => import('@/pages/JourneyPage'));
@@ -52,10 +52,9 @@ const LegendDetailPage = lazy(() => import('@/pages/LegendDetailPage'));
 const CommandCenterPage = lazy(() => import('@/pages/CommandCenterPage'));
 const PatternsManualPage = lazy(() => import('@/pages/PatternsManualPage'));
 const CoachPage = lazy(() => import('@/pages/CoachPage'));
-// Courses pages - temporarily removed from UI
-// const CoursesPage = lazy(() => import('@/pages/CoursesPage'));
-// const CourseDetailPage = lazy(() => import('@/pages/CourseDetailPage'));
-// const CourseLearningPage = lazy(() => import('@/pages/CourseLearningPage'));
+const CoursesPage = lazy(() => import('@/pages/CoursesPage'));
+const CourseDetailPage = lazy(() => import('@/pages/CourseDetailPage'));
+const CourseLearningPage = lazy(() => import('@/pages/CourseLearningPage'));
 const SocialPage = lazy(() => import('@/pages/SocialPage'));
 const StudyPlanPage = lazy(() => import('@/pages/StudyPlanPage'));
 const TournamentPrepPage = lazy(() => import('@/pages/TournamentPrepPage'));
@@ -82,7 +81,6 @@ const PrivacyPage = lazy(() => import('@/pages/PrivacyPage'));
 const TermsPage = lazy(() => import('@/pages/TermsPage'));
 
 // Dev-only pages (only loaded in development)
-const DevUIAuditPage = lazy(() => import('@/pages/DevUIAuditPage'));
 const DevPatternDebugPage = lazy(() => import('@/pages/DevPatternDebugPage'));
 
 // Loading fallback component
@@ -106,10 +104,6 @@ function LazyPage({ children }: { children: React.ReactNode }) {
 // Wrapper component that adds page transitions to routes
 function AnimatedRoutes() {
   const location = useLocation();
-  // #region agent log
-  // Debug telemetry removed
-  // #endregion
-  
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
@@ -139,12 +133,11 @@ function AnimatedRoutes() {
         <Route path="/learn/:lessonId" element={<LazyPage><LearnPage /></LazyPage>} />
         <Route path="/greats" element={<LazyPage><PlayTheGreatsPage /></LazyPage>} />
         <Route path="/greats/:legendId" element={<LazyPage><LegendDetailPage /></LazyPage>} />
-        {/* Courses routes - temporarily removed from UI */}
-        {/* <Route path="/courses" element={<LazyPage><CoursesPage /></LazyPage>} /> */}
-        {/* <Route path="/courses/:courseId" element={<LazyPage><CourseDetailPage /></LazyPage>} /> */}
-        {/* <Route path="/courses/:courseId/learn" element={<LazyPage><CourseLearningPage /></LazyPage>} /> */}
-        {/* <Route path="/courses/:courseId/chapter/:chapterId" element={<LazyPage><CourseLearningPage /></LazyPage>} /> */}
-        {/* <Route path="/courses/:courseId/review" element={<LazyPage><CourseLearningPage /></LazyPage>} /> */}
+        <Route path="/courses" element={<LazyPage><CoursesPage /></LazyPage>} />
+        <Route path="/courses/:courseId" element={<LazyPage><CourseDetailPage /></LazyPage>} />
+        <Route path="/courses/:courseId/learn" element={<LazyPage><CourseLearningPage /></LazyPage>} />
+        <Route path="/courses/:courseId/chapter/:chapterId" element={<LazyPage><CourseLearningPage /></LazyPage>} />
+        <Route path="/courses/:courseId/review" element={<LazyPage><CourseLearningPage /></LazyPage>} />
         
         {/* New Feature Routes */}
         <Route path="/social" element={<LazyPage><SocialPage /></LazyPage>} />
@@ -186,7 +179,6 @@ function AnimatedRoutes() {
         {/* Dev-only routes (only accessible in development) */}
         {import.meta.env.DEV && (
           <>
-            <Route path="/_dev/ui-audit" element={<LazyPage><DevUIAuditPage /></LazyPage>} />
             <Route path="/_dev/patterns" element={<LazyPage><DevPatternDebugPage /></LazyPage>} />
             <Route path="/_dev/patterns/:id" element={<LazyPage><DevPatternDebugPage /></LazyPage>} />
           </>

@@ -78,9 +78,9 @@ export function createSessionManagerAgent(): Agent {
   }
 
   return {
-    id: 'session-manager' as any,
+    id: 'session-manager',
     personality: {
-      id: 'session-manager' as any,
+      id: 'session-manager',
       name: 'Session Manager',
       icon: '⏱️',
       color: '#64748b',

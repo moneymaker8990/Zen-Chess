@@ -196,13 +196,13 @@ export function MistakeLibrary() {
                   {/* CTA buttons */}
                   <div className="flex flex-wrap gap-3 justify-center">
                     <a 
-                      href="/review"
+                      href="/games"
                       className="btn-primary px-4 py-2 inline-flex items-center gap-2"
                     >
                       📊 Review a Game
                     </a>
                     <a 
-                      href="/puzzles"
+                      href="/train"
                       className="btn-secondary px-4 py-2 inline-flex items-center gap-2"
                     >
                       ♟️ Practice Puzzles

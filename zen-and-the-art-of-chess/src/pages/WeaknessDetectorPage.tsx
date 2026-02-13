@@ -7,6 +7,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logger } from '@/lib/logger';
+import type { CourseProgress } from '@/data/courses/courseTypes';
 
 // ============================================
 // TYPES
@@ -198,13 +199,13 @@ function aggregateFromStorage(): Record<string, WeaknessScore> {
   try {
     const courseProgress = localStorage.getItem('zenChessCourseProgress');
     if (courseProgress) {
-      const parsed = JSON.parse(courseProgress);
+      const parsed = JSON.parse(courseProgress) as Record<string, CourseProgress>;
       // Map course IDs to skill areas
-      Object.entries(parsed).forEach(([courseId, progress]: [string, any]) => {
+      Object.entries(parsed).forEach(([courseId, progress]) => {
         if (progress.variationScores) {
-          const totalScores = Object.values(progress.variationScores) as any[];
+          const totalScores = Object.values(progress.variationScores);
           const avgScore = totalScores.length > 0 
-            ? totalScores.reduce((sum: number, s: any) => sum + (s.lastScore || 0), 0) / totalScores.length
+            ? totalScores.reduce((sum: number, s) => sum + (s.lastScore || 0), 0) / totalScores.length
             : 0;
           
           if (courseId.includes('tactical') || courseId.includes('woodpecker')) {

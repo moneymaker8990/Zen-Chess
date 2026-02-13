@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { allInstructiveGames, type InstructiveGame, type Era, type Category } from '@/data/instructiveGames';
+import { useState, useMemo, useEffect } from 'react';
+import type { InstructiveGame, Era, Category } from '@/data/instructiveGames';
 import { GameViewer } from '@/components/GameViewer';
 import { PageHeader } from '@/components/Tutorial';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -8,15 +8,31 @@ type FilterEra = Era | 'all';
 type FilterCategory = Category | 'all';
 
 export function GamesPage() {
+  const [allGames, setAllGames] = useState<InstructiveGame[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedGame, setSelectedGame] = useState<InstructiveGame | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterEra, setFilterEra] = useState<FilterEra>('all');
   const [filterCategory, setFilterCategory] = useState<FilterCategory>('all');
   const [sortBy, setSortBy] = useState<'day' | 'year' | 'name'>('day');
 
+  // Lazy-load games data on mount
+  useEffect(() => {
+    let cancelled = false;
+    async function loadGames() {
+      const { allInstructiveGames } = await import('@/data/instructiveGames');
+      if (!cancelled) {
+        setAllGames(allInstructiveGames);
+        setIsLoading(false);
+      }
+    }
+    loadGames();
+    return () => { cancelled = true; };
+  }, []);
+
   // Filter and sort games
   const filteredGames = useMemo(() => {
-    let result = allInstructiveGames.filter(game => {
+    let result = allGames.filter(game => {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -55,7 +71,35 @@ export function GamesPage() {
   }, [searchQuery, filterEra, filterCategory, sortBy]);
 
   // Stats
-  const gamesWithAnnotations = allInstructiveGames.filter(g => g.moves.length > 0).length;
+  const gamesWithAnnotations = allGames.filter(g => g.moves.length > 0).length;
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <PageHeader
+          tutorialId="games"
+          title="365 Instructive Games"
+          subtitle="Loading games..."
+        />
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div key={i} className="glass-card p-4 animate-pulse">
+              <div className="flex items-start justify-between mb-2">
+                <div className="h-5 w-12 bg-zen-800/60 rounded" />
+                <div className="h-4 w-8 bg-zen-800/60 rounded" />
+              </div>
+              <div className="h-5 w-3/4 bg-zen-800/60 rounded mt-2" />
+              <div className="h-4 w-1/2 bg-zen-800/60 rounded mt-2" />
+              <div className="flex gap-1 mt-3">
+                <div className="h-5 w-16 bg-zen-800/40 rounded-full" />
+                <div className="h-5 w-16 bg-zen-800/40 rounded-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (selectedGame) {
     return <GameViewer game={selectedGame} onBack={() => setSelectedGame(null)} />;
@@ -98,7 +142,7 @@ export function GamesPage() {
       <PageHeader
         tutorialId="games"
         title="365 Instructive Games"
-        subtitle={`One masterpiece for each day • ${gamesWithAnnotations} fully annotated • ${allInstructiveGames.length - gamesWithAnnotations} from legend databases`}
+        subtitle={`One masterpiece for each day • ${gamesWithAnnotations} fully annotated • ${allGames.length - gamesWithAnnotations} from legend databases`}
       />
 
       {/* Search and Filters */}

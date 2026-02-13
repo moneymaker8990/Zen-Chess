@@ -4,6 +4,7 @@
 // Docs: https://docs.sentry.io/platforms/javascript/guides/react/
 
 import * as Sentry from '@sentry/react';
+import { logger } from '@/lib/logger';
 
 const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN;
 const IS_PRODUCTION = import.meta.env.PROD;
@@ -15,7 +16,7 @@ const IS_PRODUCTION = import.meta.env.PROD;
 export function initSentry() {
   if (!SENTRY_DSN) {
     if (IS_PRODUCTION) {
-      console.warn('[Sentry] No DSN configured - error tracking disabled');
+      logger.warn('[Sentry] No DSN configured - error tracking disabled');
     }
     return;
   }
@@ -86,7 +87,7 @@ export function initSentry() {
  */
 export function captureError(error: Error, context?: Record<string, unknown>) {
   if (!SENTRY_DSN) {
-    console.error('[Error]', error, context);
+    logger.error('[Error]', error, context);
     return;
   }
 
@@ -100,7 +101,7 @@ export function captureError(error: Error, context?: Record<string, unknown>) {
  */
 export function captureMessage(message: string, level: Sentry.SeverityLevel = 'info') {
   if (!SENTRY_DSN) {
-    console.log(`[${level}]`, message);
+    logger.info(`[${level}]`, message);
     return;
   }
 

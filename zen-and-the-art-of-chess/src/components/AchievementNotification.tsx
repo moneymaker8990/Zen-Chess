@@ -10,7 +10,7 @@ import {
   getAchievementById, 
   getRarityColor 
 } from '@/lib/achievementSystem';
-import type { Achievement } from '@/lib/achievementSystem';
+import type { Achievement, UserStats } from '@/lib/achievementSystem';
 
 export function AchievementNotificationContainer() {
   const { newlyUnlocked, clearNewlyUnlocked } = useAchievementStore();
@@ -187,7 +187,7 @@ export function AchievementBadge({
   achievement: Achievement;
   unlocked?: boolean;
   showProgress?: boolean;
-  stats?: any;
+  stats?: UserStats;
   size?: 'small' | 'medium' | 'large';
 }) {
   const rarityColor = unlocked ? getRarityColor(achievement.rarity) : '#374151';
