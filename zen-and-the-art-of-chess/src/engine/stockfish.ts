@@ -45,7 +45,17 @@ class StockfishEngine {
   async init(): Promise<boolean> {
     if (this.initPromise) return this.initPromise;
     if (this.isReady && this.worker) return true;
-    this.initPromise = this.doInit();
+    this.initPromise = this.doInit()
+      .then((ready) => {
+        if (!ready) {
+          this.initPromise = null;
+        }
+        return ready;
+      })
+      .catch((error) => {
+        this.initPromise = null;
+        throw error;
+      });
     return this.initPromise;
   }
 
@@ -126,12 +136,15 @@ class StockfishEngine {
       }
     }
     
-    if (this.currentRequest?.reject) {
-      this.currentRequest.reject(new Error('Engine worker crashed'));
-    }
-    
-    this.currentRequest = null;
+    this.cancelCurrentRequest('Engine worker crashed');
     this.isReady = false;
+  }
+
+  private cancelCurrentRequest(reason: string) {
+    if (this.currentRequest?.reject) {
+      this.currentRequest.reject(new Error(reason));
+    }
+    this.currentRequest = null;
   }
 
   private handleMessage(msg: string) {
@@ -377,17 +390,24 @@ class StockfishEngine {
     this.currentEvalCallback = null;
     this.currentBestMoveCallback = null;
     
-    // Cancel current request but don't reject - it will naturally fail
-    this.currentRequest = null;
+    this.cancelCurrentRequest('Engine stopped');
   }
 
   reset() {
     this.send('stop');
     this.send('ucinewgame');
+
+    this.cancelCurrentRequest('Engine reset');
     
-    // Clear the request queue
+    // Clear the request queue and reject pending requests
+    while (this.requestQueue.length > 0) {
+      const req = this.requestQueue.shift();
+      if (req?.reject) {
+        req.reject(new Error('Engine reset'));
+      }
+    }
+
     this.requestQueue = [];
-    this.currentRequest = null;
     this.currentEvalCallback = null;
     this.currentBestMoveCallback = null;
   }

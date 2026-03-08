@@ -68,7 +68,7 @@ export interface PuzzleActions {
   backToMenu: () => void;
   
   // Puzzle flow
-  getNextPuzzle: () => Promise<void>;
+  getNextPuzzle: (modeOverride?: PuzzleMode) => Promise<void>;
   submitResult: (solved: boolean, timeTakenMs?: number, hintsUsed?: number) => Promise<RatingUpdate>;
   
   // Rush mode
@@ -127,18 +127,30 @@ export function usePuzzleSystem(): PuzzleState & PuzzleActions {
   // ============================================
   
   useEffect(() => {
-    // Load initial stats
-    const loadStats = async () => {
-      // Check for logged in user
-      if (isSupabaseConfigured) {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          setUserId(user.id);
-        }
+    let cancelled = false;
+
+    const resolveUser = async () => {
+      if (!isSupabaseConfigured) return;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!cancelled) {
+        setUserId(user?.id || null);
       }
-      
-      // Load puzzle stats
+    };
+
+    void resolveUser();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadStats = async () => {
       const stats = await getPuzzleStats(userId || undefined);
+      if (cancelled) return;
+
       setState(prev => ({
         ...prev,
         userRating: stats.rating,
@@ -149,28 +161,32 @@ export function usePuzzleSystem(): PuzzleState & PuzzleActions {
         currentStreak: stats.currentStreak,
         bestStreak: stats.bestStreak,
       }));
-      
-      // Load seen puzzle IDs from localStorage
+
       const localData = getLocalPuzzleData();
       seenPuzzleIds.current = new Set(localData.recentPuzzleIds);
     };
-    
-    loadStats();
+
+    void loadStats();
+
+    return () => {
+      cancelled = true;
+    };
   }, [userId]);
   
   // ============================================
   // PUZZLE SELECTION
   // ============================================
   
-  const getNextPuzzle = useCallback(async () => {
+  const getNextPuzzle = useCallback(async (modeOverride?: PuzzleMode) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
     
     try {
       let puzzle: PuzzleWithMeta | null = null;
       const excludeIds = Array.from(seenPuzzleIds.current);
+      const activeMode = modeOverride ?? state.mode;
       
       // ALWAYS fetch from Supabase (Lichess puzzles) - for ALL users
-      switch (state.mode) {
+      switch (activeMode) {
         case 'daily':
           puzzle = await getDailyPuzzle();
           break;
@@ -323,8 +339,7 @@ export function usePuzzleSystem(): PuzzleState & PuzzleActions {
     
     setState(prev => ({ ...prev, ...modeState }));
     
-    // Auto-fetch first puzzle
-    setTimeout(() => getNextPuzzle(), 0);
+    void getNextPuzzle(mode);
   }, [getNextPuzzle]);
   
   const backToMenu = useCallback(() => {

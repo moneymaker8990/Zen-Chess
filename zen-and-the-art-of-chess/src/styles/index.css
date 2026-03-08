@@ -15,6 +15,7 @@
   --bg-primary: #161512;
   --bg-secondary: #1e1c19;
   --bg-tertiary: #262421;
+  --bg-card: #1e1c19;
   --bg-hover: #2d2b28;
   --bg-elevated: #2a2825;
   
@@ -32,6 +33,7 @@
   /* Border colors */
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.24);
   
   /* Status colors */
   --success: #4ade80;
@@ -76,8 +78,18 @@
   /* Safe areas */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
+
+  /* Z-index layer scale */
+  --z-base: 1;
+  --z-dropdown: 20;
+  --z-sticky: 30;
+  --z-overlay: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-tooltip: 70;
 }
 
 /* ============================================
@@ -646,6 +658,13 @@ textarea:focus-visible {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.z-layer-dropdown { z-index: var(--z-dropdown); }
+.z-layer-sticky { z-index: var(--z-sticky); }
+.z-layer-overlay { z-index: var(--z-overlay); }
+.z-layer-modal { z-index: var(--z-modal); }
+.z-layer-toast { z-index: var(--z-toast); }
+.z-layer-tooltip { z-index: var(--z-tooltip); }
 
 /* ============================================
    MOBILE ACCESSIBILITY & SPACING

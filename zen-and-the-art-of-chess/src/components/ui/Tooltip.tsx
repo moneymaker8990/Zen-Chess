@@ -155,7 +155,7 @@ export function Tooltip({
           variants={variants}
           transition={{ duration: 0.15 }}
           role="tooltip"
-          className={`fixed z-[9999] px-3 py-2 text-sm rounded-lg shadow-lg pointer-events-none ${className}`}
+          className={`fixed z-layer-tooltip px-3 py-2 text-sm rounded-lg shadow-lg pointer-events-none ${className}`}
           style={{
             left: coords.x,
             top: coords.y,

@@ -188,8 +188,8 @@ export default defineConfig(({ mode }) => {
   },
   assetsInclude: ['**/*.wasm'],
   esbuild: {
-    // Remove console/debugger in production builds
-    drop: isDev ? [] : ['console', 'debugger'],
+    // Keep console statements until telemetry parity is complete; only strip debugger.
+    drop: isDev ? [] : ['debugger'],
   },
   build: {
     // Optimize chunk splitting for faster loading

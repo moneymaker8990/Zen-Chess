@@ -45,8 +45,8 @@ export function initSentry() {
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration({
         // Mask all text and block all media for privacy
-        maskAllText: false,
-        blockAllMedia: false,
+        maskAllText: true,
+        blockAllMedia: true,
       }),
     ],
 

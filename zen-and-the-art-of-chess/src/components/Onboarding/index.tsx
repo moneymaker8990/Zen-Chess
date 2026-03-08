@@ -6,63 +6,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { useProgressStore } from '@/state/useStore';
 import { useBoardSettingsStore } from '@/state/boardSettingsStore';
-
-// ============================================
-// ONBOARDING STORE
-// ============================================
-
-interface OnboardingState {
-  hasCompletedOnboarding: boolean;
-  currentStep: number;
-  userProfile: {
-    name: string;
-    experience: 'beginner' | 'intermediate' | 'advanced' | '';
-    goals: string[];
-    preferredTime: 'morning' | 'afternoon' | 'evening' | 'night' | '';
-    tiltTendency: 'low' | 'medium' | 'high' | '';
-  };
-  completeOnboarding: () => void;
-  setStep: (step: number) => void;
-  updateProfile: (profile: Partial<OnboardingState['userProfile']>) => void;
-  resetOnboarding: () => void;
-}
-
-export const useOnboardingStore = create<OnboardingState>()(
-  persist(
-    (set) => ({
-      hasCompletedOnboarding: false,
-      currentStep: 0,
-      userProfile: {
-        name: '',
-        experience: '',
-        goals: [],
-        preferredTime: '',
-        tiltTendency: '',
-      },
-      completeOnboarding: () => set({ hasCompletedOnboarding: true }),
-      setStep: (step) => set({ currentStep: step }),
-      updateProfile: (profile) => set((state) => ({
-        userProfile: { ...state.userProfile, ...profile }
-      })),
-      resetOnboarding: () => set({
-        hasCompletedOnboarding: false,
-        currentStep: 0,
-        userProfile: {
-          name: '',
-          experience: '',
-          goals: [],
-          preferredTime: '',
-          tiltTendency: '',
-        }
-      }),
-    }),
-    { name: 'zen-chess-onboarding' }
-  )
-);
+import { useOnboardingStore, type OnboardingState } from '@/state/onboardingStore';
 
 // ============================================
 // ONBOARDING STEPS

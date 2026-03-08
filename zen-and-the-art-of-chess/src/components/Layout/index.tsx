@@ -4,11 +4,26 @@ import { useProgressStore } from '@/state/useStore';
 import { useAuthStore } from '@/state/useAuthStore';
 import { useMultiplayerStore } from '@/state/multiplayerStore';
 import { isSupabaseConfigured } from '@/lib/supabase';
+import { ROUTES } from '@/lib/routes';
 import { AgentNotificationCenter } from '@/components/AgentPanel';
 import { useAgentStore } from '@/lib/agents/agentOrchestrator';
 
 interface LayoutProps {
   children: ReactNode;
+}
+
+interface NavItemConfig {
+  path: string;
+  label: string;
+  icon: ReactNode;
+  highlight?: boolean;
+  badge?: string;
+  isMultiplayer?: boolean;
+}
+
+interface NavSection {
+  title: string | null;
+  items: NavItemConfig[];
 }
 
 // SVG Icons as components for cleaner look
@@ -140,64 +155,64 @@ const Icons = {
 };
 
 // Navigation items grouped by section
-const navSections = [
+const navSections: NavSection[] = [
   {
     title: null, // Primary - no title
     items: [
-      { path: '/', label: 'Home', icon: Icons.home },
-      { path: '/daily-challenges', label: 'Daily Challenge', icon: Icons.target, highlight: true },
+      { path: ROUTES.home, label: 'Home', icon: Icons.home },
+      { path: ROUTES.dailyChallenges, label: 'Daily Challenge', icon: Icons.target, highlight: true },
     ],
   },
   {
     title: '🎓 Academy',
     items: [
-      { path: '/courses', label: 'Courses', icon: Icons.courses },
-      { path: '/thinking-system', label: 'Thinking System', icon: Icons.mind },
-      { path: '/flash-training', label: 'Flash Training', icon: Icons.lightning },
-      { path: '/spaced-repetition', label: 'Spaced Review', icon: Icons.target },
-      { path: '/openings', label: 'Openings', icon: Icons.book },
-      { path: '/patterns', label: 'Patterns', icon: Icons.building },
-      { path: '/endgames', label: 'Endgames', icon: Icons.chess },
+      { path: ROUTES.courses, label: 'Courses', icon: Icons.courses },
+      { path: ROUTES.thinkingSystem, label: 'Thinking System', icon: Icons.mind },
+      { path: ROUTES.flashTraining, label: 'Flash Training', icon: Icons.lightning },
+      { path: ROUTES.spacedRepetition, label: 'Spaced Review', icon: Icons.target },
+      { path: ROUTES.openings, label: 'Openings', icon: Icons.book },
+      { path: ROUTES.patterns, label: 'Patterns', icon: Icons.building },
+      { path: ROUTES.endgames, label: 'Endgames', icon: Icons.chess },
     ],
   },
   {
     title: 'Play & Train',
     items: [
-      { path: '/play', label: 'Play', icon: Icons.play },
-      { path: '/play/friend', label: 'Play a Friend', icon: Icons.social, isMultiplayer: true },
-      { path: '/train', label: 'Puzzles', icon: Icons.lightning },
-      { path: '/greats', label: 'Legends', icon: Icons.crown },
-      { path: '/games', label: '365 Games', icon: Icons.chess, badge: '365' },
+      { path: ROUTES.play, label: 'Play', icon: Icons.play },
+      { path: ROUTES.playFriend, label: 'Play a Friend', icon: Icons.social, isMultiplayer: true },
+      { path: ROUTES.train, label: 'Puzzles', icon: Icons.lightning },
+      { path: ROUTES.greats, label: 'Legends', icon: Icons.crown },
+      { path: ROUTES.games, label: '365 Games', icon: Icons.chess, badge: '365' },
     ],
   },
   {
     title: 'Learn',
     items: [
-      { path: '/beginner', label: 'New to Chess?', icon: Icons.lotus, highlight: true },
-      { path: '/journey', label: 'Learning Path', icon: Icons.map },
+      { path: ROUTES.beginner, label: 'New to Chess?', icon: Icons.lotus, highlight: true },
+      { path: ROUTES.journey, label: 'Learning Path', icon: Icons.map },
     ],
   },
   {
     title: 'Tools',
     items: [
-      { path: '/coach', label: 'AI Coach', icon: Icons.coach },
-      { path: '/study-plan', label: 'Study Plan', icon: Icons.studyPlan },
+      { path: ROUTES.coach, label: 'AI Coach', icon: Icons.coach },
+      { path: ROUTES.studyPlan, label: 'Study Plan', icon: Icons.studyPlan },
     ],
   },
   {
     title: 'Progress',
     items: [
-      { path: '/dashboard', label: 'Dashboard', icon: Icons.target },
-      { path: '/skills', label: 'Skill Tree', icon: Icons.map },
-      { path: '/achievements', label: 'Achievements', icon: Icons.tournament },
+      { path: ROUTES.dashboard, label: 'Dashboard', icon: Icons.target },
+      { path: ROUTES.skills, label: 'Skill Tree', icon: Icons.map },
+      { path: ROUTES.achievements, label: 'Achievements', icon: Icons.tournament },
     ],
   },
   {
     title: 'Mental Game',
     items: [
-      { path: '/mind', label: 'Mind Training', icon: Icons.mind },
-      { path: '/calm-play', label: 'Calm Play', icon: Icons.calm },
-      { path: '/mistakes', label: 'Mistakes', icon: Icons.alert },
+      { path: ROUTES.mind, label: 'Mind Training', icon: Icons.mind },
+      { path: ROUTES.calmPlay, label: 'Calm Play', icon: Icons.calm },
+      { path: ROUTES.mistakes, label: 'Mistakes', icon: Icons.alert },
     ],
   },
 ];
@@ -282,18 +297,18 @@ export function Layout({ children }: LayoutProps) {
                     className={({ isActive }) => `
                       nav-item
                       ${isActive ? 'active' : ''}
-                      ${'highlight' in item && item.highlight ? 'nav-highlight' : ''}
+                      ${item.highlight ? 'nav-highlight' : ''}
                     `}
                   >
                     {item.icon}
                     <span className="flex-1 min-w-0 truncate">{item.label}</span>
-                    {'badge' in item && item.badge && (
+                    {item.badge && (
                       <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
                         style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' }}>
                         {item.badge}
                       </span>
                     )}
-                    {'isMultiplayer' in item && item.isMultiplayer && inviteCount > 0 && (
+                    {item.isMultiplayer && inviteCount > 0 && (
                       <span className="w-5 h-5 flex items-center justify-center text-[10px] rounded-full font-bold animate-pulse"
                         style={{ background: '#ef4444', color: 'white' }}>
                         {inviteCount}
@@ -333,7 +348,7 @@ export function Layout({ children }: LayoutProps) {
           {/* User Account Button */}
           {user ? (
             <NavLink
-              to="/settings"
+              to={ROUTES.settings}
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
               <div 
@@ -354,7 +369,7 @@ export function Layout({ children }: LayoutProps) {
             </NavLink>
           ) : (
             <button
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate(ROUTES.auth)}
               className="nav-item w-full text-left"
               style={{ color: '#a855f7' }}
             >
@@ -368,21 +383,13 @@ export function Layout({ children }: LayoutProps) {
 
           {/* How to Use / Help */}
           <NavLink
-            to="/how-to"
+            to={ROUTES.howTo}
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             {Icons.help}
             <span>How to Use</span>
           </NavLink>
 
-          {/* Settings link */}
-          <NavLink
-            to="/settings"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-          >
-            {Icons.settings}
-            <span>Settings</span>
-          </NavLink>
         </div>
       </aside>
 
@@ -467,7 +474,7 @@ export function Layout({ children }: LayoutProps) {
             </div>
           ) : (
             <NavLink
-              to="/auth"
+            to={ROUTES.auth}
               onClick={() => setSidebarOpen(false)}
               className="nav-item"
               style={{ color: '#a855f7' }}
@@ -478,7 +485,7 @@ export function Layout({ children }: LayoutProps) {
           )}
           
           <NavLink
-            to="/how-to"
+            to={ROUTES.howTo}
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
@@ -486,14 +493,6 @@ export function Layout({ children }: LayoutProps) {
             <span>How to Use</span>
           </NavLink>
           
-          <NavLink
-            to="/settings"
-            onClick={() => setSidebarOpen(false)}
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-          >
-            {Icons.settings}
-            <span>Settings</span>
-          </NavLink>
         </nav>
       </aside>
 
@@ -545,7 +544,7 @@ export function Layout({ children }: LayoutProps) {
             {/* User Button - Mobile */}
             {user ? (
               <button
-                onClick={() => navigate('/settings')}
+                onClick={() => navigate(ROUTES.settings)}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
                 style={{ 
                   background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
@@ -557,7 +556,7 @@ export function Layout({ children }: LayoutProps) {
               </button>
             ) : (
               <button
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate(ROUTES.auth)}
                 className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                 style={{ 
                   background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',

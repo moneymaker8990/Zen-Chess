@@ -4,9 +4,10 @@
 // ============================================
 
 import { useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { ROUTES } from '@/lib/routes';
 
 // ============================================
 // SHORTCUTS STORE
@@ -52,81 +53,44 @@ export const SHORTCUT_CATEGORIES = {
   misc: 'Miscellaneous',
 };
 
+function buildShortcuts(
+  navigate: ReturnType<typeof useNavigate>,
+  showHelp: boolean,
+  setShowHelp: (show: boolean) => void
+): Shortcut[] {
+  return [
+    { key: 'h', description: 'Go to Home', category: 'navigation', action: () => navigate(ROUTES.home) },
+    { key: 'p', description: 'Go to Play', category: 'navigation', action: () => navigate(ROUTES.play) },
+    { key: 't', description: 'Go to Training/Puzzles', category: 'navigation', action: () => navigate(ROUTES.train) },
+    { key: 'c', description: 'Go to Coach', category: 'navigation', action: () => navigate(ROUTES.coach) },
+    { key: 'o', description: 'Go to Openings', category: 'navigation', action: () => navigate(ROUTES.openings) },
+    { key: 'm', description: 'Go to Mind Training', category: 'navigation', action: () => navigate(ROUTES.mind) },
+    { key: 'j', description: 'Go to Journey', category: 'navigation', action: () => navigate(ROUTES.journey) },
+    { key: 's', description: 'Go to Settings', category: 'navigation', action: () => navigate(ROUTES.settings) },
+    {
+      key: '?',
+      shift: true,
+      description: 'Show keyboard shortcuts',
+      category: 'misc',
+      action: () => setShowHelp(!showHelp),
+    },
+    {
+      key: 'Escape',
+      description: 'Close dialogs / Cancel',
+      category: 'misc',
+      action: () => setShowHelp(false),
+    },
+  ];
+}
+
 // ============================================
 // GLOBAL SHORTCUTS HOOK
 // ============================================
 
 export function useGlobalShortcuts() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { enabled, showHelp, setShowHelp } = useShortcutsStore();
-
-  const shortcuts: Shortcut[] = [
-    // Navigation
-    { 
-      key: 'h', 
-      description: 'Go to Home', 
-      category: 'navigation',
-      action: () => navigate('/'),
-    },
-    { 
-      key: 'p', 
-      description: 'Go to Play', 
-      category: 'navigation',
-      action: () => navigate('/play'),
-    },
-    { 
-      key: 't', 
-      description: 'Go to Training/Puzzles', 
-      category: 'navigation',
-      action: () => navigate('/train'),
-    },
-    { 
-      key: 'c', 
-      description: 'Go to Coach', 
-      category: 'navigation',
-      action: () => navigate('/coach'),
-    },
-    { 
-      key: 'o', 
-      description: 'Go to Openings', 
-      category: 'navigation',
-      action: () => navigate('/openings'),
-    },
-    { 
-      key: 'm', 
-      description: 'Go to Mind Training', 
-      category: 'navigation',
-      action: () => navigate('/mind'),
-    },
-    { 
-      key: 'j', 
-      description: 'Go to Journey', 
-      category: 'navigation',
-      action: () => navigate('/journey'),
-    },
-    { 
-      key: 's', 
-      description: 'Go to Settings', 
-      category: 'navigation',
-      action: () => navigate('/settings'),
-    },
-    
-    // Misc
-    { 
-      key: '?', 
-      shift: true,
-      description: 'Show keyboard shortcuts', 
-      category: 'misc',
-      action: () => setShowHelp(!showHelp),
-    },
-    { 
-      key: 'Escape', 
-      description: 'Close dialogs / Cancel', 
-      category: 'misc',
-      action: () => setShowHelp(false),
-    },
-  ];
+  const shortcuts = buildShortcuts(navigate, showHelp, setShowHelp);
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (!enabled) return;
@@ -161,6 +125,12 @@ export function useGlobalShortcuts() {
   }, [handleKeyDown]);
 
   return { shortcuts, showHelp, setShowHelp };
+}
+
+export function useShortcutCatalog() {
+  const navigate = useNavigate();
+  const { showHelp, setShowHelp } = useShortcutsStore();
+  return buildShortcuts(navigate, showHelp, setShowHelp);
 }
 
 // ============================================

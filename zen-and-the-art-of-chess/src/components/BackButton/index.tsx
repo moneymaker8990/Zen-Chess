@@ -22,17 +22,17 @@ export function BackButton({
   style = {}
 }: BackButtonProps) {
   const navigate = useNavigate();
-  const { pop: popHistory } = useNavigationHistory();
+  const { pop: popHistory, canGoBack } = useNavigationHistory();
 
   const handleBack = useCallback(() => {
-    const previousPath = popHistory();
-    if (previousPath) {
-      navigate(previousPath, { replace: true });
+    if (canGoBack() && window.history.length > 1) {
+      // Keep internal navigation history in sync, but trust browser/router history for actual navigation.
+      popHistory();
+      navigate(-1);
     } else {
-      // No history - navigate to fallback
-      navigate(fallback, { replace: true });
+      navigate(fallback);
     }
-  }, [navigate, fallback, popHistory]);
+  }, [canGoBack, navigate, fallback, popHistory]);
 
   return (
     <button
@@ -60,16 +60,16 @@ export function BackButton({
  */
 export function useBackNavigation(fallback: string = '/') {
   const navigate = useNavigate();
-  const { pop: popHistory } = useNavigationHistory();
+  const { pop: popHistory, canGoBack } = useNavigationHistory();
   
   return useCallback(() => {
-    const previousPath = popHistory();
-    if (previousPath) {
-      navigate(previousPath, { replace: true });
+    if (canGoBack() && window.history.length > 1) {
+      popHistory();
+      navigate(-1);
     } else {
-      navigate(fallback, { replace: true });
+      navigate(fallback);
     }
-  }, [navigate, fallback, popHistory]);
+  }, [canGoBack, navigate, fallback, popHistory]);
 }
 
 export default BackButton;

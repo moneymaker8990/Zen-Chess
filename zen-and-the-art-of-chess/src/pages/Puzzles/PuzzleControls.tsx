@@ -30,7 +30,7 @@ export function PuzzleControls({
         <span className="text-xs">Hint</span>
       </button>
 
-      {/* Back/Reset Button */}
+      {/* Reset Button */}
       <button
         onClick={onReset}
         disabled={feedback === 'complete'}
@@ -40,10 +40,10 @@ export function PuzzleControls({
         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
-        <span className="text-xs">Back</span>
+        <span className="text-xs">Reset</span>
       </button>
 
-      {/* Forward/Next Button */}
+      {/* Check/Next Button */}
       <button
         onClick={onForwardOrNext}
         className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white/5 transition-colors"
@@ -52,7 +52,7 @@ export function PuzzleControls({
         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
-        <span className="text-xs">{feedback === 'complete' ? 'Next' : 'Forward'}</span>
+        <span className="text-xs">{feedback === 'complete' ? 'Next' : 'Check'}</span>
       </button>
     </div>
   );

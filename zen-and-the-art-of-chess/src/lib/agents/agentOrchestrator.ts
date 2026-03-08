@@ -214,6 +214,10 @@ const agents = {
   'session-manager': createSessionManagerAgent(),
 };
 
+let orchestratorInitialized = false;
+let proactiveCheckTimeout: ReturnType<typeof setTimeout> | null = null;
+let proactiveCheckInterval: ReturnType<typeof setInterval> | null = null;
+
 // ============================================
 // STORE INTERFACE
 // ============================================
@@ -583,6 +587,9 @@ export const useAgentStore = create<AgentStore>()(
       // ==========================================
       
       initialize: () => {
+        if (orchestratorInitialized) return;
+        orchestratorInitialized = true;
+
         const store = get();
         
         // Initialize all agents
@@ -594,12 +601,12 @@ export const useAgentStore = create<AgentStore>()(
         store.trigger({ type: 'SESSION_START' });
         
         // Check for proactive messages
-        setTimeout(() => {
+        proactiveCheckTimeout = setTimeout(() => {
           store.checkProactiveMessages();
         }, 2000);
         
         // Set up periodic check
-        setInterval(() => {
+        proactiveCheckInterval = setInterval(() => {
           store.checkProactiveMessages();
         }, 5 * 60 * 1000); // Every 5 minutes
       },
@@ -675,6 +682,19 @@ export function useAgentTrigger() {
 /** Initialize agents - call once on app start */
 export function initializeAgents() {
   useAgentStore.getState().initialize();
+}
+
+/** Shutdown agents and clear background timers */
+export function shutdownAgents() {
+  if (proactiveCheckTimeout) {
+    clearTimeout(proactiveCheckTimeout);
+    proactiveCheckTimeout = null;
+  }
+  if (proactiveCheckInterval) {
+    clearInterval(proactiveCheckInterval);
+    proactiveCheckInterval = null;
+  }
+  orchestratorInitialized = false;
 }
 
 // ============================================

@@ -5,7 +5,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User, Session } from '@supabase/supabase-js';
+import type { User, Session, Subscription } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import type { Profile } from '@/lib/database.types';
 import type { SubscriptionTier, PremiumFeature } from '@/lib/premium';
@@ -13,6 +13,7 @@ import { TIER_LIMITS, getRemainingUsage } from '@/lib/premium';
 import { logger } from '@/lib/logger';
 import { setUser as setSentryUser } from '@/lib/sentry';
 import { identifyUser, resetUser, trackEvent, AnalyticsEvents, setUserProperties } from '@/lib/analytics';
+import { fetchUserProfile, getSubscriptionState } from '@/lib/authSession';
 
 // ============================================
 // TYPES
@@ -43,6 +44,7 @@ interface AuthState {
   
   // Actions
   initialize: () => Promise<void>;
+  cleanup: () => void;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
@@ -89,6 +91,16 @@ function resetDailyUsageIfNeeded(usage: DailyUsage): DailyUsage {
   return usage;
 }
 
+let authInitPromise: Promise<void> | null = null;
+let authSubscription: Subscription | null = null;
+
+function clearAuthSubscription() {
+  if (authSubscription) {
+    authSubscription.unsubscribe();
+    authSubscription = null;
+  }
+}
+
 // ============================================
 // STORE
 // ============================================
@@ -113,85 +125,95 @@ export const useAuthStore = create<AuthState>()(
           set({ isLoading: false, isInitialized: true });
           return;
         }
-        
-        try {
-          const { data: { session } } = await supabase.auth.getSession();
-          
-          if (session?.user) {
-            // Fetch profile
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
-            
-            // Set user context for error tracking and analytics
-            setSentryUser({ id: session.user.id, email: session.user.email || undefined });
-            identifyUser(session.user.id, {
-              email: session.user.email,
-              subscription_tier: profile?.subscription_tier || 'free',
-            });
 
-            set({
-              user: session.user,
-              session,
-              profile,
-              subscriptionTier: profile?.subscription_tier || 'free',
-              subscriptionStatus: profile?.subscription_status || null,
-              subscriptionEndDate: profile?.subscription_end_date || null,
-              isLoading: false,
-              isInitialized: true,
-            });
-          } else {
-            setSentryUser(null);
-            set({ isLoading: false, isInitialized: true });
-          }
-          
-          // Listen for auth changes
-          supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'SIGNED_IN' && session?.user) {
-              const { data: profile } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', session.user.id)
-                .single();
+        if (get().isInitialized) return;
+        if (authInitPromise) return authInitPromise;
 
-              // Update user context for error tracking and analytics
+        authInitPromise = (async () => {
+          set({ isLoading: true });
+          clearAuthSubscription();
+
+          try {
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (session?.user) {
+              const profile = await fetchUserProfile(session.user.id);
+
               setSentryUser({ id: session.user.id, email: session.user.email || undefined });
               identifyUser(session.user.id, {
                 email: session.user.email,
                 subscription_tier: profile?.subscription_tier || 'free',
               });
-              trackEvent(AnalyticsEvents.LOGIN_COMPLETED);
 
               set({
                 user: session.user,
                 session,
                 profile,
-                subscriptionTier: profile?.subscription_tier || 'free',
-                subscriptionStatus: profile?.subscription_status || null,
-                subscriptionEndDate: profile?.subscription_end_date || null,
+                ...getSubscriptionState(profile),
+                isLoading: false,
+                isInitialized: true,
               });
-            } else if (event === 'SIGNED_OUT') {
-              // Clear user context
+            } else {
               setSentryUser(null);
-              resetUser();
-              trackEvent(AnalyticsEvents.LOGOUT);
-
-              set({
-                user: null,
-                session: null,
-                profile: null,
-                subscriptionTier: 'free',
-                subscriptionStatus: null,
-                subscriptionEndDate: null,
-              });
+              set({ isLoading: false, isInitialized: true });
             }
-          });
-        } catch (error) {
-          logger.error('Auth initialization error:', error);
-          set({ isLoading: false, isInitialized: true });
-        }
+
+            const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
+              void (async () => {
+                try {
+                  if (event === 'SIGNED_IN' && nextSession?.user) {
+                    const profile = await fetchUserProfile(nextSession.user.id);
+
+                    setSentryUser({ id: nextSession.user.id, email: nextSession.user.email || undefined });
+                    identifyUser(nextSession.user.id, {
+                      email: nextSession.user.email,
+                      subscription_tier: profile?.subscription_tier || 'free',
+                    });
+                    trackEvent(AnalyticsEvents.LOGIN_COMPLETED);
+
+                    set({
+                      user: nextSession.user,
+                      session: nextSession,
+                      profile,
+                      ...getSubscriptionState(profile),
+                    });
+                    return;
+                  }
+
+                  if (event === 'SIGNED_OUT') {
+                    setSentryUser(null);
+                    resetUser();
+                    trackEvent(AnalyticsEvents.LOGOUT);
+
+                    set({
+                      user: null,
+                      session: null,
+                      profile: null,
+                      subscriptionTier: 'free',
+                      subscriptionStatus: null,
+                      subscriptionEndDate: null,
+                    });
+                  }
+                } catch (callbackError) {
+                  logger.error('Auth state change handling error:', callbackError);
+                }
+              })();
+            });
+            authSubscription = subscription;
+          } catch (error) {
+            logger.error('Auth initialization error:', error);
+            set({ isLoading: false, isInitialized: true });
+          } finally {
+            authInitPromise = null;
+          }
+        })();
+
+        return authInitPromise;
+      },
+
+      cleanup: () => {
+        clearAuthSubscription();
+        authInitPromise = null;
       },
       
       signUp: async (email, password) => {
@@ -216,7 +238,7 @@ export const useAuthStore = create<AuthState>()(
         
         // Create profile
         if (data.user) {
-          await supabase.from('profiles').insert({
+          await (supabase as any).from('profiles').insert({
             id: data.user.id,
             email: data.user.email,
             subscription_tier: 'free',
@@ -290,7 +312,7 @@ export const useAuthStore = create<AuthState>()(
           return { error: new Error('Not authenticated') };
         }
         
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('profiles')
           .update(updates)
           .eq('id', user.id);
@@ -308,7 +330,7 @@ export const useAuthStore = create<AuthState>()(
         const { user } = get();
         if (!user || !isSupabaseConfigured) return;
         
-        const { data: profile } = await supabase
+        const { data: profile } = await (supabase as any)
           .from('profiles')
           .select('subscription_tier, subscription_status, subscription_end_date')
           .eq('id', user.id)

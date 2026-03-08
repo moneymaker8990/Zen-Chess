@@ -49,6 +49,10 @@ const VOICE_SETTINGS = {
   default: { pitch: 1.0, rate: 0.95, voiceName: 'English' },
 };
 
+export function shouldSpeakAutoResponse(autoSpeak: boolean, response?: string | null): boolean {
+  return autoSpeak && Boolean(response && response.trim().length > 0);
+}
+
 // ============================================
 // HOOK IMPLEMENTATION
 // ============================================
@@ -210,12 +214,14 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     try {
       const response = await aiCoach.sendMessage(transcript);
       
-      if (autoSpeak && response) {
+      if (shouldSpeakAutoResponse(autoSpeak, response)) {
         speak(response);
       }
     } catch (error) {
       logger.error('Failed to get AI response:', error);
-      speak("I'm having trouble responding right now. Please try again.");
+      if (autoSpeak) {
+        speak("I'm having trouble responding right now. Please try again.");
+      }
     }
 
     setTranscript('');

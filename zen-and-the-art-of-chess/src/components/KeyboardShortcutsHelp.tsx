@@ -4,11 +4,11 @@
 
 import { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useShortcutsStore, SHORTCUT_CATEGORIES, useGlobalShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useShortcutsStore, SHORTCUT_CATEGORIES, useShortcutCatalog } from '@/hooks/useKeyboardShortcuts';
 
 export function KeyboardShortcutsHelp() {
   const { showHelp, setShowHelp } = useShortcutsStore();
-  const { shortcuts } = useGlobalShortcuts();
+  const shortcuts = useShortcutCatalog();
 
   // Handle ESC key to close modal
   const handleEscapeKey = useCallback((e: KeyboardEvent) => {

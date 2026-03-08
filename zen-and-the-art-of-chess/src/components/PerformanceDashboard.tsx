@@ -24,6 +24,11 @@ interface PuzzleData {
   rating?: number;
 }
 
+export function calculateAccuracyChartX(index: number, total: number): number {
+  if (total <= 1) return 200;
+  return (index / (total - 1)) * 400;
+}
+
 // ============================================
 // MAIN DASHBOARD
 // ============================================
@@ -372,7 +377,7 @@ function AccuracyChart({ data }: { data: { game: number; accuracy: number; resul
           stroke="#a855f7"
           strokeWidth="2"
           points={data.map((d, i) => 
-            `${(i / (data.length - 1)) * 400},${160 - ((d.accuracy - min) / range) * 140}`
+            `${calculateAccuracyChartX(i, data.length)},${160 - ((d.accuracy - min) / range) * 140}`
           ).join(' ')}
         />
         
@@ -380,7 +385,7 @@ function AccuracyChart({ data }: { data: { game: number; accuracy: number; resul
         {data.map((d, i) => (
           <circle
             key={i}
-            cx={(i / (data.length - 1)) * 400}
+            cx={calculateAccuracyChartX(i, data.length)}
             cy={160 - ((d.accuracy - min) / range) * 140}
             r="4"
             fill={d.result === 'win' ? '#22c55e' : d.result === 'loss' ? '#ef4444' : '#f59e0b'}

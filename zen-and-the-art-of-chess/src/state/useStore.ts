@@ -357,6 +357,34 @@ export const useProgressStore = create<ProgressStore>()(
     {
       name: 'zen-chess-progress',
       version: 1,
+      partialize: (state) => ({
+        ...state,
+        progress: {
+          ...state.progress,
+          completedOpenings: Array.from(state.progress.completedOpenings || []),
+        },
+      }),
+      merge: (persistedState, currentState) => {
+        const merged = {
+          ...currentState,
+          ...(persistedState as ProgressStore),
+        };
+        const persistedProgress = (persistedState as ProgressStore | undefined)?.progress;
+        if (persistedProgress) {
+          merged.progress = {
+            ...currentState.progress,
+            ...persistedProgress,
+            completedOpenings: new Set(
+              Array.isArray((persistedProgress as unknown as { completedOpenings?: unknown }).completedOpenings)
+                ? ((persistedProgress as unknown as { completedOpenings: string[] }).completedOpenings)
+                : Array.from(
+                    ((persistedProgress as unknown as { completedOpenings?: Set<string> }).completedOpenings || new Set<string>())
+                  ),
+            ),
+          };
+        }
+        return merged;
+      },
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as { progress?: UserProgress };
 
@@ -367,13 +395,23 @@ export const useProgressStore = create<ProgressStore>()(
             state.progress.puzzlesFailed = state.progress.puzzlesFailed ?? 0;
             state.progress.meditationMinutes = state.progress.meditationMinutes ?? 0;
             state.progress.tiltEvents = state.progress.tiltEvents ?? [];
-            state.progress.completedOpenings = state.progress.completedOpenings ?? new Set<string>();
+            const rawOpenings = state.progress.completedOpenings as unknown;
+            state.progress.completedOpenings = Array.isArray(rawOpenings)
+              ? new Set(rawOpenings as string[])
+              : (rawOpenings instanceof Set ? rawOpenings : new Set<string>());
             state.progress.openingStreak = state.progress.openingStreak ?? 0;
             state.progress.settings = {
               ...initialProgress.settings,
               ...state.progress.settings,
             };
           }
+        }
+
+        if (version >= 1 && state.progress) {
+          const rawOpenings = state.progress.completedOpenings as unknown;
+          state.progress.completedOpenings = Array.isArray(rawOpenings)
+            ? new Set(rawOpenings as string[])
+            : (rawOpenings instanceof Set ? rawOpenings : new Set<string>());
         }
 
         return state as ProgressStore;

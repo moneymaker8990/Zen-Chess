@@ -38,6 +38,7 @@ export class MultiplayerGameEngine {
   private blackTimeMs: number = 0;
   private isActivePlayer: boolean = false;
   private incrementMs: number = 0;
+  private moveHistory: GameMove[] = [];
 
   constructor(gameId: string, playerId: string) {
     this.gameId = gameId;
@@ -57,7 +58,7 @@ export class MultiplayerGameEngine {
 
     try {
       // Fetch game data
-      const { data: game, error } = await supabase
+      const { data: game, error } = await (supabase as any)
         .from('games')
         .select(`
           *,
@@ -87,6 +88,7 @@ export class MultiplayerGameEngine {
       this.incrementMs = (game.increment_seconds || 0) * 1000;
       this.lastMoveTime = game.last_move_at ? new Date(game.last_move_at).getTime() : Date.now();
       this.isActivePlayer = this.playerColor === game.turn;
+      this.moveHistory = game.moves || [];
 
       // Subscribe to realtime updates
       this.subscribeToGame();
@@ -128,22 +130,23 @@ export class MultiplayerGameEngine {
       });
   }
 
-  private handleGameUpdate(gameData: DatabaseGameRecord) {
+  private handleGameUpdate(gameData: DatabaseGameRecord | Record<string, any>) {
     // Update local state
     this.chess = new Chess(gameData.fen);
     this.whiteTimeMs = gameData.white_time_remaining_ms || 0;
     this.blackTimeMs = gameData.black_time_remaining_ms || 0;
     this.lastMoveTime = gameData.last_move_at ? new Date(gameData.last_move_at).getTime() : Date.now();
     this.isActivePlayer = this.playerColor === gameData.turn;
+    this.moveHistory = gameData.moves || [];
 
     // Handle game end
     if (gameData.status === 'completed' || gameData.status === 'abandoned') {
       this.stopClock();
-      this.onGameEnd?.(gameData.result, gameData.termination);
+      this.onGameEnd?.((gameData.result || 'aborted') as GameResult, gameData.termination as GameTermination);
     }
 
     // Notify listeners
-    this.onGameUpdate?.(this.mapGameFromDb(gameData));
+    this.onGameUpdate?.(this.mapGameFromDb(gameData as DatabaseGameRecord));
   }
 
   async disconnect() {
@@ -197,17 +200,16 @@ export class MultiplayerGameEngine {
   private async handleTimeout() {
     this.stopClock();
     
-    // The player who ran out of time loses
-    const result: GameResult = this.playerColor === 'w' ? 'black_wins' : 'white_wins';
-    const winnerId = this.playerColor === 'w' 
-      ? await this.getOpponentId() 
-      : this.playerId;
+    // The side to move is the side that flagged
+    const timedOutColor = this.chess.turn();
+    const { winnerColor, result } = resolveTimeoutResult(timedOutColor as PlayerColor);
+    const winnerId = await this.getPlayerIdByColor(winnerColor);
     
     await this.endGame(result, 'timeout', winnerId);
   }
 
   private async getOpponentId(): Promise<string | null> {
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from('games')
       .select('white_player_id, black_player_id')
       .eq('id', this.gameId)
@@ -258,12 +260,12 @@ export class MultiplayerGameEngine {
       };
 
       // Update database
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('games')
         .update({
           fen: this.chess.fen(),
           pgn: this.chess.pgn(),
-          moves: supabase.rpc('array_append', { arr: 'moves', val: gameMove }),
+          moves: [...this.moveHistory, gameMove],
           move_count: this.chess.history().length,
           turn: this.chess.turn(),
           white_time_remaining_ms: newWhiteTime,
@@ -280,6 +282,7 @@ export class MultiplayerGameEngine {
       }
 
       // Update local time
+      this.moveHistory = [...this.moveHistory, gameMove];
       this.whiteTimeMs = newWhiteTime;
       this.blackTimeMs = newBlackTime;
       this.lastMoveTime = now;
@@ -315,7 +318,7 @@ export class MultiplayerGameEngine {
   }
 
   private async getPlayerIdByColor(color: PlayerColor): Promise<string | null> {
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from('games')
       .select('white_player_id, black_player_id')
       .eq('id', this.gameId)
@@ -339,7 +342,7 @@ export class MultiplayerGameEngine {
   }
 
   async offerDraw(): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('games')
       .update({
         draw_offer_from: this.playerId,
@@ -355,7 +358,7 @@ export class MultiplayerGameEngine {
   }
 
   async declineDraw(): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('games')
       .update({
         draw_offer_from: null,
@@ -367,7 +370,7 @@ export class MultiplayerGameEngine {
   }
 
   async offerRematch(): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('games')
       .update({
         rematch_offered_by: this.playerId,
@@ -380,7 +383,7 @@ export class MultiplayerGameEngine {
 
   async acceptRematch(): Promise<string | null> {
     // Get current game details
-    const { data: currentGame } = await supabase
+    const { data: currentGame } = await (supabase as any)
       .from('games')
       .select('*')
       .eq('id', this.gameId)
@@ -393,7 +396,7 @@ export class MultiplayerGameEngine {
     const newBlackId = currentGame.white_player_id;
 
     // Create new game
-    const { data: newGame, error } = await supabase
+    const { data: newGame, error } = await (supabase as any)
       .from('games')
       .insert({
         white_player_id: newWhiteId,
@@ -413,7 +416,7 @@ export class MultiplayerGameEngine {
     if (error || !newGame) return null;
 
     // Update old game with rematch link
-    await supabase
+    await (supabase as any)
       .from('games')
       .update({ rematch_game_id: newGame.id })
       .eq('id', this.gameId);
@@ -424,7 +427,7 @@ export class MultiplayerGameEngine {
   private async endGame(result: GameResult, termination: GameTermination, winnerId: string | null): Promise<boolean> {
     this.stopClock();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('games')
       .update({
         status: 'completed',
@@ -438,7 +441,7 @@ export class MultiplayerGameEngine {
 
     if (!error) {
       // Update ratings
-      await supabase.rpc('update_ratings_after_game', { p_game_id: this.gameId });
+      await (supabase as any).rpc('update_ratings_after_game', { p_game_id: this.gameId });
       this.onGameEnd?.(result, termination);
     }
 
@@ -563,6 +566,14 @@ export class MultiplayerGameEngine {
   }
 }
 
+export function resolveTimeoutResult(timedOutColor: PlayerColor): { winnerColor: PlayerColor; result: GameResult } {
+  const winnerColor: PlayerColor = timedOutColor === 'w' ? 'b' : 'w';
+  return {
+    winnerColor,
+    result: winnerColor === 'w' ? 'white_wins' : 'black_wins',
+  };
+}
+
 // ============================================
 // GAME CREATION FUNCTIONS
 // ============================================
@@ -595,7 +606,7 @@ export async function createGame(
     whitePlayerId = userId;
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('games')
     .insert({
       white_player_id: whitePlayerId,
@@ -621,7 +632,7 @@ export async function joinGame(gameId: string, userId: string): Promise<boolean>
   if (!isSupabaseConfigured) return false;
 
   // Get game
-  const { data: game } = await supabase
+  const { data: game } = await (supabase as any)
     .from('games')
     .select('*')
     .eq('id', gameId)
@@ -649,7 +660,7 @@ export async function joinGame(gameId: string, userId: string): Promise<boolean>
     return false; // Game is full
   }
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('games')
     .update(update)
     .eq('id', gameId);
@@ -661,7 +672,7 @@ export async function joinGameByCode(inviteCode: string, userId: string): Promis
   if (!isSupabaseConfigured) return null;
 
   // Find game by invite code
-  const { data: game } = await supabase
+  const { data: game } = await (supabase as any)
     .from('games')
     .select('id')
     .eq('invite_code', inviteCode)
@@ -677,7 +688,7 @@ export async function joinGameByCode(inviteCode: string, userId: string): Promis
 export async function getActiveGames(userId: string): Promise<MultiplayerGame[]> {
   if (!isSupabaseConfigured) return [];
 
-  const { data } = await supabase
+  const { data } = await (supabase as any)
     .from('games')
     .select(`
       *,
@@ -694,7 +705,7 @@ export async function getActiveGames(userId: string): Promise<MultiplayerGame[]>
 export async function getGameHistory(userId: string, limit = 20): Promise<MultiplayerGame[]> {
   if (!isSupabaseConfigured) return [];
 
-  const { data } = await supabase
+  const { data } = await (supabase as any)
     .from('games')
     .select(`
       *,

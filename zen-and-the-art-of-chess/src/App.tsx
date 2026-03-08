@@ -12,11 +12,12 @@ import { AchievementNotificationContainer } from '@/components/AchievementNotifi
 import { AskAnything } from '@/components/AskAnything';
 import { GeniusWhisper } from '@/components/GeniusWhisper';
 import { AIAmbience } from '@/components/AIAmbience';
-import { initializeAgents } from '@/lib/agents/agentOrchestrator';
+import { initializeAgents, shutdownAgents } from '@/lib/agents/agentOrchestrator';
 import { useAIPreferencesStore } from '@/state/aiPreferencesStore';
 import { useAgentAwareness } from '@/hooks/useAgentAwareness';
 import { useGlobalShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useAIIntelligenceTracking } from '@/lib/aiIntelligence';
+import { ROUTES } from '@/lib/routes';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { OfflineIndicator } from '@/components/OfflineIndicator';
 import { useProgressStore } from '@/state/useStore';
@@ -108,73 +109,73 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
         {/* Homepage - not lazy loaded for fastest initial paint */}
-        <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+        <Route path={ROUTES.home} element={<PageTransition><HomePage /></PageTransition>} />
         
         {/* Core Training Routes */}
-        <Route path="/play" element={<LazyPage><PlayPage /></LazyPage>} />
-        <Route path="/train" element={<LazyPage><PuzzlesPage /></LazyPage>} />
-        <Route path="/patterns" element={<LazyPage><PatternsManualPage /></LazyPage>} />
-        <Route path="/endgames" element={<LazyPage><EndgamesPage /></LazyPage>} />
-        <Route path="/openings" element={<LazyPage><OpeningsPage /></LazyPage>} />
-        <Route path="/games" element={<LazyPage><GamesPage /></LazyPage>} />
-        <Route path="/notes" element={<LazyPage><NotesPage /></LazyPage>} />
-        <Route path="/study" element={<LazyPage><StudyPage /></LazyPage>} />
-        <Route path="/hub" element={<LazyPage><CommandCenterPage /></LazyPage>} />
-        <Route path="/dashboard" element={<LazyPage><PerformanceDashboardPage /></LazyPage>} />
-        <Route path="/skills" element={<LazyPage><SkillTreePage /></LazyPage>} />
-        <Route path="/achievements" element={<LazyPage><AchievementsPage /></LazyPage>} />
-        <Route path="/mistakes" element={<LazyPage><MistakesPage /></LazyPage>} />
+        <Route path={ROUTES.play} element={<LazyPage><PlayPage /></LazyPage>} />
+        <Route path={ROUTES.train} element={<LazyPage><PuzzlesPage /></LazyPage>} />
+        <Route path={ROUTES.patterns} element={<LazyPage><PatternsManualPage /></LazyPage>} />
+        <Route path={ROUTES.endgames} element={<LazyPage><EndgamesPage /></LazyPage>} />
+        <Route path={ROUTES.openings} element={<LazyPage><OpeningsPage /></LazyPage>} />
+        <Route path={ROUTES.games} element={<LazyPage><GamesPage /></LazyPage>} />
+        <Route path={ROUTES.notes} element={<LazyPage><NotesPage /></LazyPage>} />
+        <Route path={ROUTES.study} element={<LazyPage><StudyPage /></LazyPage>} />
+        <Route path={ROUTES.commandCenter} element={<LazyPage><CommandCenterPage /></LazyPage>} />
+        <Route path={ROUTES.dashboard} element={<LazyPage><PerformanceDashboardPage /></LazyPage>} />
+        <Route path={ROUTES.skills} element={<LazyPage><SkillTreePage /></LazyPage>} />
+        <Route path={ROUTES.achievements} element={<LazyPage><AchievementsPage /></LazyPage>} />
+        <Route path={ROUTES.mistakes} element={<LazyPage><MistakesPage /></LazyPage>} />
         <Route path="/sparring" element={<LazyPage><SparringPage /></LazyPage>} />
-        <Route path="/settings" element={<LazyPage><SettingsPage /></LazyPage>} />
-        <Route path="/calm-play" element={<LazyPage><CalmPlayPage /></LazyPage>} />
-        <Route path="/mind" element={<LazyPage><MindTrainingPage /></LazyPage>} />
-        <Route path="/journey" element={<LazyPage><JourneyPage /></LazyPage>} />
-        <Route path="/beginner" element={<LazyPage><BeginnerPage /></LazyPage>} />
+        <Route path={ROUTES.settings} element={<LazyPage><SettingsPage /></LazyPage>} />
+        <Route path={ROUTES.calmPlay} element={<LazyPage><CalmPlayPage /></LazyPage>} />
+        <Route path={ROUTES.mind} element={<LazyPage><MindTrainingPage /></LazyPage>} />
+        <Route path={ROUTES.journey} element={<LazyPage><JourneyPage /></LazyPage>} />
+        <Route path={ROUTES.beginner} element={<LazyPage><BeginnerPage /></LazyPage>} />
         <Route path="/learn/:lessonId" element={<LazyPage><LearnPage /></LazyPage>} />
-        <Route path="/greats" element={<LazyPage><PlayTheGreatsPage /></LazyPage>} />
+        <Route path={ROUTES.greats} element={<LazyPage><PlayTheGreatsPage /></LazyPage>} />
         <Route path="/greats/:legendId" element={<LazyPage><LegendDetailPage /></LazyPage>} />
-        <Route path="/courses" element={<LazyPage><CoursesPage /></LazyPage>} />
+        <Route path={ROUTES.courses} element={<LazyPage><CoursesPage /></LazyPage>} />
         <Route path="/courses/:courseId" element={<LazyPage><CourseDetailPage /></LazyPage>} />
         <Route path="/courses/:courseId/learn" element={<LazyPage><CourseLearningPage /></LazyPage>} />
         <Route path="/courses/:courseId/chapter/:chapterId" element={<LazyPage><CourseLearningPage /></LazyPage>} />
         <Route path="/courses/:courseId/review" element={<LazyPage><CourseLearningPage /></LazyPage>} />
         
         {/* New Feature Routes */}
-        <Route path="/social" element={<LazyPage><SocialPage /></LazyPage>} />
-        <Route path="/study-plan" element={<LazyPage><StudyPlanPage /></LazyPage>} />
-        <Route path="/coach" element={<LazyPage><CoachPage /></LazyPage>} />
-        <Route path="/tournament" element={<LazyPage><TournamentPrepPage /></LazyPage>} />
+        <Route path={ROUTES.social} element={<LazyPage><SocialPage /></LazyPage>} />
+        <Route path={ROUTES.studyPlan} element={<LazyPage><StudyPlanPage /></LazyPage>} />
+        <Route path={ROUTES.coach} element={<LazyPage><CoachPage /></LazyPage>} />
+        <Route path={ROUTES.tournament} element={<LazyPage><TournamentPrepPage /></LazyPage>} />
         
         {/* Cutting-Edge Training Features */}
-        <Route path="/flash-training" element={<LazyPage><FlashTrainingPage /></LazyPage>} />
-        <Route path="/thinking-system" element={<LazyPage><ThinkingSystemPage /></LazyPage>} />
-        <Route path="/daily-challenges" element={<LazyPage><DailyChallengesPage /></LazyPage>} />
-        <Route path="/spaced-repetition" element={<LazyPage><SpacedRepetitionPage /></LazyPage>} />
+        <Route path={ROUTES.flashTraining} element={<LazyPage><FlashTrainingPage /></LazyPage>} />
+        <Route path={ROUTES.thinkingSystem} element={<LazyPage><ThinkingSystemPage /></LazyPage>} />
+        <Route path={ROUTES.dailyChallenges} element={<LazyPage><DailyChallengesPage /></LazyPage>} />
+        <Route path={ROUTES.spacedRepetition} element={<LazyPage><SpacedRepetitionPage /></LazyPage>} />
         
         {/* Phase 2 Killer Features */}
-        <Route path="/blindfold" element={<LazyPage><BlindfoldTrainerPage /></LazyPage>} />
-        <Route path="/intuition" element={<LazyPage><IntuitionTrainerPage /></LazyPage>} />
-        <Route path="/weakness-detector" element={<LazyPage><WeaknessDetectorPage /></LazyPage>} />
+        <Route path={ROUTES.blindfold} element={<LazyPage><BlindfoldTrainerPage /></LazyPage>} />
+        <Route path={ROUTES.intuition} element={<LazyPage><IntuitionTrainerPage /></LazyPage>} />
+        <Route path={ROUTES.weaknessDetector} element={<LazyPage><WeaknessDetectorPage /></LazyPage>} />
         
         {/* Auth & Monetization */}
-        <Route path="/pricing" element={<LazyPage><PricingPage /></LazyPage>} />
-        <Route path="/auth" element={<LazyPage><AuthPage /></LazyPage>} />
-        <Route path="/auth/callback" element={<LazyPage><AuthCallbackPage /></LazyPage>} />
+        <Route path={ROUTES.pricing} element={<LazyPage><PricingPage /></LazyPage>} />
+        <Route path={ROUTES.auth} element={<LazyPage><AuthPage /></LazyPage>} />
+        <Route path={ROUTES.authCallback} element={<LazyPage><AuthCallbackPage /></LazyPage>} />
         
         {/* AI Coach Hub */}
-        <Route path="/ai-coach" element={<LazyPage><AICoachDashboard /></LazyPage>} />
+        <Route path={ROUTES.aiCoach} element={<LazyPage><AICoachDashboard /></LazyPage>} />
         
         {/* Multiplayer - Play with Friends */}
-        <Route path="/play/friend" element={<LazyPage><PlayFriendPage /></LazyPage>} />
+        <Route path={ROUTES.playFriend} element={<LazyPage><PlayFriendPage /></LazyPage>} />
         <Route path="/play/friend/:inviteCode" element={<LazyPage><PlayFriendPage /></LazyPage>} />
         <Route path="/play/live/:gameId" element={<LazyPage><LiveGamePage /></LazyPage>} />
         
         {/* Help & Documentation */}
-        <Route path="/how-to" element={<LazyPage><HowToPage /></LazyPage>} />
+        <Route path={ROUTES.howTo} element={<LazyPage><HowToPage /></LazyPage>} />
         
         {/* Legal Pages */}
-        <Route path="/privacy" element={<LazyPage><PrivacyPage /></LazyPage>} />
-        <Route path="/terms" element={<LazyPage><TermsPage /></LazyPage>} />
+        <Route path={ROUTES.privacy} element={<LazyPage><PrivacyPage /></LazyPage>} />
+        <Route path={ROUTES.terms} element={<LazyPage><TermsPage /></LazyPage>} />
         
         {/* Dev-only routes (only accessible in development) */}
         {import.meta.env.DEV && (
@@ -276,6 +277,11 @@ function App() {
     initializeCoach();
     initializeAgents();
     initializeAuth();
+
+    return () => {
+      shutdownAgents();
+      useAuthStore.getState().cleanup();
+    };
   }, [updateStreak, initializeAuth]);
 
   return (
