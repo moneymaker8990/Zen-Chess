@@ -69,6 +69,7 @@ function getExperimentalBase(legend: LegendId): number {
     alekhine: 0.20,     // Creative and unpredictable
     morphy: 0.18,       // Would try romantic lines
     kasparov: 0.15,     // Deep prep but sometimes surprising
+    judit: 0.17,        // Dynamic and concrete with ambitious choices
     fischer: 0.10,      // Principled but could surprise
     spassky: 0.12,      // Universal, could play anything
     lasker: 0.15,       // Psychological, adapted to opponent

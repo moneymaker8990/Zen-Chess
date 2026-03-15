@@ -9,6 +9,7 @@ export type LegendId =
   | "alekhine" 
   | "spassky"
   | "kasparov"
+  | "judit"
   | "karpov"
   | "tal"
   | "botvinnik"
@@ -272,6 +273,43 @@ export const LEGEND_STYLES: Record<LegendId, LegendStyle> = {
         "If you wish to succeed, you must brave the risk of failure."
       ],
       legacy: "Kasparov transformed chess into a more dynamic, computer-influenced game. His books and courses continue to educate players worldwide. He proved that combining natural talent with unprecedented preparation could achieve domination, and his games remain the benchmark for aggressive, dynamic play."
+    }
+  },
+  judit: {
+    name: "Judit Polgar",
+    tagline: "Fearless initiative, tactical clarity, uncompromising ambition.",
+    description: "Dynamic, concrete, and relentlessly active chess against the world's strongest opposition.",
+    styleTags: ["attacking", "initiative", "calculation", "fearless"],
+    aggressiveness: 0.86,   // Constantly seeks active play and king pressure
+    simplifyBias: 0.30,     // Usually avoids sterile simplification
+    kingSafetyBias: 0.52,   // Will accept king risk for active counterplay
+    materialism: 0.48,      // Ready to sacrifice for initiative and coordination
+    bio: {
+      fullName: "Judit Polgar",
+      born: "July 23, 1976 – Budapest, Hungary",
+      nationality: "Hungarian",
+      peakRating: 2735,
+      titles: ["Grandmaster", "8x Hungarian Chess Olympiad Representative", "World No. 8 (2005)", "Strongest female player in chess history"],
+      biography: "Judit Polgar is widely regarded as the strongest female chess player of all time. Trained in the famous Polgar educational experiment, she became a grandmaster at 15 years and 4 months, breaking Bobby Fischer's age record at the time. Unlike most elite women players of her era, she consistently competed in open events against top grandmasters and world champions, defeating many of them in classical chess. Her rise reshaped expectations in professional chess and remains a landmark achievement in modern chess history.",
+      playingStyle: "Polgar's style is dynamic, concrete, and deeply practical. She thrives in positions where activity and initiative matter more than static factors, and her tactical calculation under pressure is elite. Her openings often aim for rich middlegames with imbalances, where she can attack the king or create direct threats. Even in quieter structures, she looks for energetic piece play and forcing sequences that keep opponents solving difficult problems.",
+      whatMakesThemGreat: [
+        "Broke into the global top-10 and proved she could consistently beat elite world-class opposition",
+        "Combined tactical sharpness with strategic understanding, making her dangerous in every phase",
+        "Developed a universal but ambitious repertoire against the very best opening preparation",
+        "Maintained fighting intent in nearly every game, rarely settling for passive equality",
+        "Expanded the competitive horizon of modern chess through results, not symbolism"
+      ],
+      famousGames: [
+        "Polgar vs Kasparov, 2002 (historic classical victory against the former world champion)",
+        "Polgar vs Anand, 1998 (high-level tactical battle showcasing attacking precision)",
+        "Polgar vs Topalov, 2005 (complex dynamic struggle in elite tournament play)"
+      ],
+      famousQuotes: [
+        "I was never really obsessed with titles. I wanted to be the best player I could be.",
+        "Chess is 30 to 40 percent psychology. You don't have this when you play a computer. I can't confuse it.",
+        "I have always wanted to compete against the strongest players in the world."
+      ],
+      legacy: "Polgar changed what serious chess ambition looked like for an entire generation. Her career demonstrated that preparation quality, fighting spirit, and competitive standards are not bounded by category. Her games remain essential study material for players who want to understand practical attacking chess at elite level, and her influence continues through her teaching, writing, and advocacy for educational chess."
     }
   },
   karpov: {

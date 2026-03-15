@@ -201,6 +201,7 @@ function detectLegendColor(legend: LegendId, whiteName: string, blackName: strin
     alekhine: ['alekhine', 'alekhin', 'alexander', 'alexandre'],
     tal: ['tal', 'mikhail', 'misha'],
     kasparov: ['kasparov', 'garry', 'gary', 'kasparoff'],
+    judit: ['judit', 'polgar', 'j. polgar', 'polgar, judit'],
     karpov: ['karpov', 'anatoly', 'anatoli'],
     carlsen: ['carlsen', 'magnus'],
     lasker: ['lasker', 'emanuel', 'emmanuel'],

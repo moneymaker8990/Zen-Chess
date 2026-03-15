@@ -16,7 +16,7 @@ import path from "path";
 import { Chess } from "chess.js";
 import * as pgnParser from "@mliebelt/pgn-parser";
 
-type LegendId = "fischer" | "capablanca" | "steinitz" | "alekhine" | "spassky" | "kasparov" | "karpov" | "tal" | "botvinnik" | "morphy" | "carlsen" | "lasker";
+type LegendId = "fischer" | "capablanca" | "steinitz" | "alekhine" | "spassky" | "kasparov" | "judit" | "karpov" | "tal" | "botvinnik" | "morphy" | "carlsen" | "lasker";
 
 type LegendGame = {
   id: string;
@@ -61,6 +61,14 @@ const LEGEND_NAME_PATTERNS: Record<LegendId, string[]> = {
   alekhine: ["Alekhine", "Alexander Alekhine", "Aleksandr Alekhine"],
   spassky: ["Spassky", "Boris Spassky", "Boris V Spassky"],
   kasparov: ["Kasparov", "Garry Kasparov", "Gary Kasparov", "Garri Kasparov"],
+  judit: [
+    "Judit Polgar",
+    "Polgar, Judit",
+    "Polgar,Judit",
+    "J. Polgar",
+    "Polgar J",
+    "Judit",
+  ],
   karpov: ["Karpov", "Anatoly Karpov", "Anatoli Karpov"],
   tal: ["Tal,", "Mikhail Tal", "Mihail Tal", "Tal, M", "Tal, Mikhail"],
   botvinnik: ["Botvinnik", "Mikhail Botvinnik", "Michail Botvinnik"],
@@ -281,7 +289,7 @@ function buildStructuresFromGames(
 
       for (const move of moveHistory) {
         const fenBefore = board.fen();
-        const fullmove = board.fullMoveNumber;
+        const fullmove = Number.parseInt(fenBefore.split(" ")[5] ?? "1", 10);
         const sideToMove = board.turn(); // 'w' or 'b'
 
         try {
@@ -349,13 +357,13 @@ async function main() {
       "Usage: tsx scripts/parseLegendPGNs.ts <legendId> <input-pgn-path> [output-dir]"
     );
     console.error(
-      "legendId one of: fischer, capablanca, steinitz, alekhine, spassky"
+      "legendId one of: fischer, capablanca, steinitz, alekhine, spassky, kasparov, judit, karpov, tal, botvinnik, morphy, carlsen, lasker"
     );
     process.exit(1);
   }
 
   const legend = legendArg as LegendId;
-  const validLegends = ["fischer", "capablanca", "steinitz", "alekhine", "spassky", "kasparov", "karpov", "tal", "botvinnik", "morphy", "carlsen", "lasker"];
+  const validLegends = ["fischer", "capablanca", "steinitz", "alekhine", "spassky", "kasparov", "judit", "karpov", "tal", "botvinnik", "morphy", "carlsen", "lasker"];
   if (!validLegends.includes(legend)) {
     console.error(`Invalid legendId. Use one of: ${validLegends.join(", ")}`);
     process.exit(1);

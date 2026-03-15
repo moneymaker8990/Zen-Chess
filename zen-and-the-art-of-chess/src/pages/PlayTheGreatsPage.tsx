@@ -5,7 +5,7 @@ export function PlayTheGreatsPage() {
   const navigate = useNavigate();
 
   const legends: LegendId[] = [
-    'fischer', 'capablanca', 'kasparov', 'carlsen',
+    'fischer', 'capablanca', 'kasparov', 'judit', 'carlsen',
     'tal', 'karpov', 'alekhine', 'botvinnik',
     'lasker', 'morphy', 'steinitz', 'spassky'
   ];
@@ -42,6 +42,7 @@ export function PlayTheGreatsPage() {
                    legendId === 'steinitz' ? '📜' :
                    legendId === 'alekhine' ? '⚔️' :
                    legendId === 'kasparov' ? '🔥' :
+                   legendId === 'judit' ? '♛' :
                    legendId === 'karpov' ? '🐍' :
                    legendId === 'tal' ? '🎭' :
                    legendId === 'botvinnik' ? '🔬' :
